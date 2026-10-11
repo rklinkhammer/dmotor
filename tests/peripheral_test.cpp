@@ -1,3 +1,4 @@
+#include "timing_fixture.hpp"
 #include "dmotor/peripheral.hpp"
 #include "dmotor/registers.hpp"
 #include <cstdlib>
@@ -33,7 +34,7 @@ int main() {
     access(true, false, IDENTITY);
     CHECK(result == 0x444d4f54);
     access(true, false, CLOCK_HZ);
-    CHECK(result == 100000000);
+    CHECK(result == dmotor::timing::fabric_hz);
     access(true, true, REOPEN, 1, 1);
     CHECK(error);
     access(true, true, REOPEN + 1, 1);
@@ -63,7 +64,7 @@ int main() {
     expected = 2;
     access(true, true, REFRESH_SEQUENCE, 1);
     CHECK(error);
-    CHECK(timeout == 100000 && configured);
+    CHECK(timeout == test_timing::cycles_us(1000) && configured);
     ready = true;
     access(false, false);
     CHECK(activated && seq == 0);

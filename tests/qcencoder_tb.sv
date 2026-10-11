@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 module qcencoder_tb;
-    reg clk=0; always #5 clk=~clk;
+    reg clk=0; always #(0.5e9 / dmotor_timing::FABRIC_HZ) clk=~clk;
     reg reset=1,initialize=0,qa=0,qb=0,invert=0;
     reg [1:0] mode=2;
     reg signed [63:0] initial_position=0;
@@ -10,7 +10,7 @@ module qcencoder_tb;
     qcencoder dut(clk,reset,initialize,qa,qb,invert,mode,initial_position,
                   position,errors,fault,event_valid,event_negative,,);
     task state(input [1:0] value); begin
-        @(negedge clk); {qa,qb}=value; repeat(1000) @(negedge clk);
+        @(negedge clk); {qa,qb}=value; repeat(dmotor_timing::ENCODER_MIN_EDGE_CYCLES - 1) @(negedge clk);
     end endtask
     integer m;
     initial begin

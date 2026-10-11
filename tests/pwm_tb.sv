@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 module pwm_tb;
-    reg clk=0; always #5 clk=~clk;
+    reg clk=0; always #(0.5e9 / dmotor_timing::FABRIC_HZ) clk=~clk;
     reg reset=1,inhibit=0;
     reg signed [31:0] duty=32768;
     wire pwm,enabled,direction,reversing;

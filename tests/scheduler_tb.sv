@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 module scheduler_tb;
-    reg clk=0; always #5 clk=~clk;
+    reg clk=0; always #(0.5e9 / dmotor_timing::FABRIC_HZ) clk=~clk;
     reg reset=1,inhibit=0,ready=0,done=0;
     wire start,busy,valid,fault,engine_reset;
     wire [31:0] latency,maximum;

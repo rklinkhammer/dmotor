@@ -1,3 +1,4 @@
+#include "timing_fixture.hpp"
 #include "dmotor/velocity.hpp"
 #include <cstdlib>
 #include <iostream>
@@ -14,7 +15,7 @@ static int32_t speed;
 static bool negative;
 static void call(bool reset = false, uint32_t generation = 1) {
     dmotor_velocity(reset, now, count, edge, direction_epoch, invalid, negative, generation, 10296,
-                    5, 10000000, speed, age, status);
+                    5, test_timing::cycles_us(100000), speed, age, status);
 }
 static void init(bool reverse = false) {
     now = 0;
@@ -34,9 +35,9 @@ int main() {
             uint64_t next = 1;
             unsigned assessed = 0;
             for (unsigned tick = 1; tick <= 400; ++tick) {
-                now = static_cast<uint64_t>(tick) * 100000;
-                while ((next * 6000000000ULL * 5) / (static_cast<uint64_t>(rpm) * 10296) <= now) {
-                    edge = (next * 6000000000ULL * 5) / (static_cast<uint64_t>(rpm) * 10296);
+                now = static_cast<uint64_t>(tick) * test_timing::tick_cycles;
+                while ((next * (60ULL * dmotor::timing::fabric_hz) * 5) / (static_cast<uint64_t>(rpm) * 10296) <= now) {
+                    edge = (next * (60ULL * dmotor::timing::fabric_hz) * 5) / (static_cast<uint64_t>(rpm) * 10296);
                     ++count;
                     ++next;
                 }
@@ -54,79 +55,79 @@ int main() {
     }
     init();
     for (unsigned tick = 1; tick <= 99; ++tick) {
-        now += 100000;
+        now += test_timing::tick_cycles;
         call();
         CHECK(!(status & 1));
     }
-    now += 100000;
+    now += test_timing::tick_cycles;
     call();
-    CHECK((status & 3) == 3 && speed == 0 && age == 10000000);
+    CHECK((status & 3) == 3 && speed == 0 && age == test_timing::cycles_us(100000));
     // First edge after timed-out zero invalidates the zero; second qualifies speed.
-    now += 100000;
+    now += test_timing::tick_cycles;
     edge = now;
     ++count;
     call();
     CHECK(!(status & 1));
-    now += 100000;
+    now += test_timing::tick_cycles;
     edge = now;
     ++count;
     call();
     CHECK((status & 1) && speed > 0);
     ++direction_epoch;
     negative = true;
-    now += 100000;
+    now += test_timing::tick_cycles;
     edge = now;
     ++count;
     call();
     CHECK(!(status & 1));
-    now += 100000;
+    now += test_timing::tick_cycles;
     edge = now;
     ++count;
     call();
     CHECK((status & 1) && speed < 0);
     // Even a reversal and return between snapshots invalidates the interval.
     direction_epoch += 2;
-    now += 100000;
+    now += test_timing::tick_cycles;
     edge = now;
     count += 2;
     call();
     CHECK(!(status & 1));
-    now += 100000;
+    now += test_timing::tick_cycles;
     edge = now;
     ++count;
     call();
     CHECK(status & 1);
     ++invalid;
-    now += 100000;
+    now += test_timing::tick_cycles;
     call();
     CHECK(!(status & 1));
-    now += 100000;
+    now += test_timing::tick_cycles;
     edge = now;
     ++count;
     call();
     CHECK(!(status & 1));
-    now += 100000;
+    now += test_timing::tick_cycles;
     edge = now;
     ++count;
     call();
     CHECK(status & 1);
     // A configuration change requires an explicit estimator reset.
-    now += 100000;
+    now += test_timing::tick_cycles;
     call(false, 2);
     CHECK((status >> 8) & 2);
     CHECK(!(status & 1));
     init();
-    now = 200000;
+    now = (2 * test_timing::tick_cycles);
     call();
     CHECK((status >> 8) & 2);
     init();
-    now = 100000;
+    now = test_timing::tick_cycles;
     count = 101;
     edge = now;
     call();
     CHECK((status >> 8) & 4);
     init();
-    now = 100000;
+    now = test_timing::tick_cycles;
     count = 1;
     edge = now + 1;
     call();
@@ -138,15 +139,18 @@ int main() {
             for (uint32_t events : {1U, 99U, 100U}) {
                 for (bool reverse : {false, true}) {
                     dmotor_velocity(true, 0, 0, 0, 0, 0, reverse, 1, num, den,
-                                    1000000000, speed, age, status);
+                                    dmotor::timing::zero_timeout_max_cycles, speed, age, status);
                     dmotor_velocity(false, 0, 0, 0, 0, 0, reverse, 1, num, den,
-                                    1000000000, speed, age, status);
-                    dmotor_velocity(false, 100000, 1, 100000, 0, 0, reverse, 1, num, den,
-                                    1000000000, speed, age, status);
-                    dmotor_velocity(false, 200000, 1 + events, 200000, 0, 0, reverse,
-                                    1, num, den, 1000000000, speed, age, status);
-                    const uint64_t numerator = uint64_t{events} * 6000000000000ULL * den;
-                    const uint64_t denominator = uint64_t{100000} * num;
+                                    dmotor::timing::zero_timeout_max_cycles, speed, age, status);
+                    dmotor_velocity(false, test_timing::tick_cycles, 1, test_timing::tick_cycles, 0,
+                                    0, reverse, 1, num, den,
+                                    dmotor::timing::zero_timeout_max_cycles, speed, age, status);
+                    dmotor_velocity(false, (2 * test_timing::tick_cycles), 1 + events,
+                                    (2 * test_timing::tick_cycles), 0, 0, reverse, 1, num, den,
+                                    dmotor::timing::zero_timeout_max_cycles, speed, age, status);
+                    const uint64_t numerator =
+                        uint64_t{events} * (60ULL * dmotor::timing::fabric_hz * 1000) * den;
+                    const uint64_t denominator = uint64_t{test_timing::tick_cycles} * num;
                     const uint64_t expected = (numerator + denominator / 2) / denominator;
                     if (expected > 1000000) {
                         CHECK((status >> 8) == 8 && speed == 0 && !(status & 1));
@@ -163,8 +167,10 @@ int main() {
     for (bool bad_num : {false, true}) {
         const uint32_t num = bad_num ? 1048577U : 1U;
         const uint32_t den = bad_num ? 1U : 16385U;
-        dmotor_velocity(true, 0, 0, 0, 0, 0, false, 1, num, den, 10000000, speed, age, status);
-        dmotor_velocity(false, 0, 0, 0, 0, 0, false, 1, num, den, 10000000, speed, age, status);
+        dmotor_velocity(true, 0, 0, 0, 0, 0, false, 1, num, den, test_timing::cycles_us(100000),
+                        speed, age, status);
+        dmotor_velocity(false, 0, 0, 0, 0, 0, false, 1, num, den, test_timing::cycles_us(100000),
+                        speed, age, status);
         CHECK((status >> 8) == 1 && speed == 0 && !(status & 1));
     }
     std::cout << "velocity: both-direction 1/5/30/130 RPM sweep, zero timeout, restart, reversal, "

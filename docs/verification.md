@@ -782,3 +782,99 @@ this refactoring does not claim a new HLS utilization measurement. Isolated
 profile generation and safety RTL phase sweeps also pass at 100, 20, 10 and 1 MHz
 (`evidence/timing_profile_checks.log`). These lower-clock checks cover only the
 HALT synchronizer/inhibit path, not a complete lower-frequency controller.
+
+## 20 MHz clock evaluation
+
+Evaluated an isolated copy in `build/clock20` from revision `0eccb45`, with
+CLOCK_HZ set to 20,000,000 and all timing/RTL/HLS constants regenerated. The
+active source profile remains at 100 MHz. The only retained executable changes
+are clock-independent test fixtures and `tools/prepare_clock_profile.py`.
+Existing 100 MHz synthesis reports remain the baseline; new reports live in
+`evidence/clock20/`.
+
+The test fixtures now express 1 ms snapshots, 100 ms zero qualification, 60 ms
+acquisition, watchdog conversions and ideal encoder timestamps using the selected
+clock. Speed, acceleration, gain and microsecond command values are unchanged.
+RTL test clocks also follow the profile. The encoder test holds each state for
+exactly the minimum event interval; the generated-motion integration measures
+50% duty over a complete profile-derived PWM frame.
+
+At 20 MHz the 1 kHz tick is 20,000 clocks; the 800 us computation deadline is
+16,000 clocks. A 20 kHz PWM frame is 1,000 clocks, giving 0.1% duty increments
+versus 0.02% at 100 MHz. The 100 kHz encoder envelope permits 200 clocks per
+transition. The five-clock local HALT implementation bound becomes 250 ns,
+well inside the approved 10 us digital-inhibit budget. The MMIO contract remains
+2,048 clocks, or 102.4 us at this clock; it is not a fixed 20.48 us requirement.
+
+Lowering the clock does not automatically narrow the declared 64-bit timestamps
+or RTL counters. HLS can schedule fewer pipeline registers and more work within
+each clock; that can substantially reduce FF use without reducing LUTs. PWM
+quantization, loaded 1 RPM operation, routed timing, CDC, shared HALT and the
+motor-driver electrical response still require platform/integration validation.
+No lower power consumption has been measured.
+
+To reproduce in a new directory:
+
+```sh
+python3 tools/prepare_clock_profile.py --hz 20000000 --output build/clock20-repeat
+cd build/clock20-repeat
+cmake -S . -B build  # Supply Icarus paths if not on PATH.
+cmake --build build -j4
+python3 tools/vitis_check.py --kernel motion
+python3 tools/vitis_check.py --kernel velocity
+python3 tools/vitis_check.py --kernel controller
+python3 tools/vitis_check.py --kernel dispatcher
+python3 tools/vitis_check.py --kernel peripheral
+cmake -S . -B build  # Discover the generated-RTL integration tests.
+ctest --test-dir build --output-on-failure
+```
+
+These kernels cover the integrated arithmetic and register peripheral; the
+standalone PI and command-engine tops were not separately resynthesized in this
+experiment. The dispatcher is still not connected to the complete physical
+AXI/controller/output path, so component bounds do not prove end-to-end arbitration.
+
+Vitis 2026.1 synthesis comparison, same xc7z020clg400-1 target:
+
+| Kernel | LUT 100 → 20 MHz | FF 100 → 20 MHz | DSP | BRAM_18K | Max clocks 100 → 20 MHz | Max time at 20 MHz |
+|---|---:|---:|---:|---:|---:|---:|
+| Motion | 16300 → 16835 | 9942 → 7327 | 32 | 0 | 913 → 752 | 37.60 us |
+| Velocity | 3858 → 3746 | 3011 → 1942 | 7 | 0 | 145 → 132 | 6.60 us |
+| Controller | 24415 → 24381 | 15469 → 10932 | 39 | 0 | 999 → 951 | 47.55 us |
+| Dispatcher | 25215 → 25174 | 16461 → 12630 | 39 | 4 | 1251 → 1064 | 53.20 us |
+| Peripheral | 9816 → 9490 | 3268 → 2699 | 0 | 4 | 125 → 119 | 5.95 us |
+
+DSP/BRAM counts do not change. Dispatcher savings are only 41 LUT (0.16%),
+but 3831 FF (23.27%). Motion alone grows by 535 LUT (3.28%). The dispatcher
+uses 6.65% of the 800 us compute budget by the HLS worst-latency estimate,
+excluding external arbitration/handshake overhead. Four independent dispatchers
+still total 100,696 LUT against the device's 53,200 LUT; this clock change does
+not solve four-motor capacity.
+
+Estimated paths at 20 MHz are motion 32.316 ns, velocity 23.369 ns, controller
+36.442 ns, dispatcher 34.854 ns and peripheral 14.220 ns. All meet the 36.5 ns
+HLS effective budget (50 ns period minus 13.5 ns default uncertainty), although
+the controller is close to that budget. These remain pre-route estimates.
+
+Validation completed: Vitis C simulation, synthesis and Verilog co-simulation
+pass for all five evaluated kernels. All 21 native/RTL tests pass at 20 MHz,
+including generated peripheral and motion RTL integrations; see
+`evidence/clock20/native_rtl_20mhz.log`. The updated fixtures also pass all 19
+native/unit-RTL tests at the unchanged 100 MHz profile
+(`evidence/clock20/native_rtl_100mhz.log`; generated-RTL integrations were not
+rerun at 100 MHz in this experiment).
+
+The 20 MHz AXI integration observed maximum write/read responses of 99/103
+clocks (4.95/5.15 us). The motion integration observed a maximum of 223 clocks
+(11.15 us) for its finite open-loop/fault scenario, verified 50% duty over the
+1,000-clock PWM frame, and rejected stale output after mid-flight inhibit.
+That observed motion latency does not replace the 752-clock synthesis worst
+bound. HALT passed ten input phases against both 250 ns pipeline and 10 us
+physical-time ceilings. Encoder X1/X2/X4 forward/reverse tests passed with a
+200-clock (10 us) transition interval.
+
+Conclusion: 20 MHz is viable for the tested component timing, with much lower
+FF use but negligible integrated LUT savings. Keep the production profile at
+100 MHz pending an explicit adoption decision and platform validation. Further
+LUT work should target motion arithmetic widths and mux/control structure,
+rather than expecting a lower fabric clock alone to solve capacity.

@@ -1,3 +1,4 @@
+#include "timing_fixture.hpp"
 #include "dmotor/motion.hpp"
 #include <cstdlib>
 #include <iostream>
@@ -14,7 +15,7 @@ static uint32_t command[16] = {}, reply[16] = {};
 static uint64_t time_cycles = 0;
 static void tick(bool valid = false, int64_t position = 0, int32_t speed = 0, bool feedback = true,
                  bool ack = false, bool stop = false, bool authorized = true) {
-    time_cycles += 100000;
+    time_cycles += test_timing::tick_cycles;
     dmotor_motion(false, authorized, valid, command, config, ack, stop, 1, time_cycles, position,
                   speed, feedback, reply);
 }
@@ -148,7 +149,7 @@ int main() {
     command[0] = 1;
     command[5] = 1000;
     tick(true);
-    time_cycles += 100000;
+    time_cycles += test_timing::tick_cycles;
     tick();
     CHECK(reply[7] & 2);
     reset();

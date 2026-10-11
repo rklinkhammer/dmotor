@@ -1,3 +1,4 @@
+#include "timing_fixture.hpp"
 #include "dmotor/motion.hpp"
 #include <cstdlib>
 #include <iostream>
@@ -40,7 +41,7 @@ int main() {
     dmotor::MotionResult r;
     bool ack = false;
     auto tick = [&]() {
-        now += 100000;
+        now += test_timing::tick_cycles;
         bool captured = false;
         if ((r.ready || ack) && !ring.busy()) {
             captured = ring.capture(now, 0, c.max_speed_mrpm);
@@ -93,7 +94,7 @@ int main() {
     CHECK(r.busy && ring.consumer() == (4 + dmotor::ring_depth));
     enqueue(1, 1000);
     // Live protection cancels the active and pending work; executor output is zero.
-    now += 100000;
+    now += test_timing::tick_cycles;
     ring.cancel(now, 8);
     r = motor.step(false, false, false, ring.active(), false, false, ring.epoch(), now, 0, 0, true,
                    c);

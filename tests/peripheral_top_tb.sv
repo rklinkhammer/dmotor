@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 module peripheral_top_tb;
-    reg clk=0;always #5 clk=~clk;
+    reg clk=0;always #(0.5e9 / dmotor_timing::FABRIC_HZ) clk=~clk;
     reg reset=1;
     reg [31:0] awaddr=0,wdata=0,araddr=0;reg [3:0] wstrb=15;
     reg awvalid=0,wvalid=0,arvalid=0,bready=0,rready=0;

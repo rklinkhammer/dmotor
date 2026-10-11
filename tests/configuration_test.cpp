@@ -1,3 +1,4 @@
+#include "timing_fixture.hpp"
 #include "dmotor/configuration.hpp"
 #include "dmotor/registers.hpp"
 #include <cstdlib>
@@ -33,7 +34,7 @@ int main() {
     CHECK(!write(CONFIG_COMMIT, 1, 0, 2));
     CHECK(!write(CONFIG_COMMIT, 1, 0, 0, 1, 0));
     CHECK(write(CONFIG_COMMIT, 1));
-    CHECK(c.generation() == 1 && c.timeout_cycles() == 100000);
+    CHECK(c.generation() == 1 && c.timeout_cycles() == test_timing::cycles_us(1000));
     CHECK(!write(ENABLE, 1, 0, 2, 0, 0, 8, 0));
     CHECK(write(ENABLE, 1, 0, 2));
     CHECK(action == 1);

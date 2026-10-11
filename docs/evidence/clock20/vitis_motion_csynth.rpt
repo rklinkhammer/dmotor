@@ -1,0 +1,293 @@
+
+
+================================================================
+== Vitis HLS Report for 'dmotor_motion'
+================================================================
+* Date:           Sun Oct 11 19:23:50 2026
+
+* Version:        2026.1 (Build 6493734 on Jun 16 2026)
+* Project:        vitis_motion
+* Solution:       hls
+* Product family: zynq
+* Target device:  xc7z020-clg400-1
+
+
+================================================================
+== Performance Estimates
+================================================================
++ Timing: 
+    * Summary: 
+    +--------+----------+-----------+------------+
+    |  Clock |  Target  | Estimated | Uncertainty|
+    +--------+----------+-----------+------------+
+    |ap_clk  |  50.00 ns|  32.316 ns|    13.50 ns|
+    +--------+----------+-----------+------------+
+
++ Latency: 
+    * Summary: 
+    +---------+---------+----------+-----------+-----+-----+---------+
+    |  Latency (cycles) |  Latency (absolute)  |  Interval | Pipeline|
+    |   min   |   max   |    min   |    max    | min | max |   Type  |
+    +---------+---------+----------+-----------+-----+-----+---------+
+    |       43|      752|  2.150 us|  37.600 us|   44|  753|       no|
+    +---------+---------+----------+-----------+-----+-----+---------+
+
+    + Detail: 
+        * Instance: 
+        +----------------------------------------------------+-----------------------------------------+---------+---------+-----------+-----------+-----+-----+-------------------+
+        |                                                    |                                         |  Latency (cycles) |   Latency (absolute)  |  Interval |      Pipeline     |
+        |                      Instance                      |                  Module                 |   min   |   max   |    min    |    max    | min | max |        Type       |
+        +----------------------------------------------------+-----------------------------------------+---------+---------+-----------+-----------+-----+-----+-------------------+
+        |grp_dmotor_motion_Pipeline_VITIS_LOOP_333_1_fu_651  |dmotor_motion_Pipeline_VITIS_LOOP_333_1  |       18|       18|   0.900 us|   0.900 us|    0|    0|  loop pipeline stp|
+        |grp_step_impl_fu_658                                |step_impl                                |        1|      710|  50.000 ns|  35.500 us|    1|  710|                 no|
+        |grp_dmotor_motion_Pipeline_VITIS_LOOP_370_2_fu_755  |dmotor_motion_Pipeline_VITIS_LOOP_370_2  |        6|        6|   0.300 us|   0.300 us|    0|    0|  loop pipeline stp|
+        +----------------------------------------------------+-----------------------------------------+---------+---------+-----------+-----------+-----+-----+-------------------+
+
+        * Loop: 
+        N/A
+
+
+
+================================================================
+== Utilization Estimates
+================================================================
+* Summary: 
++-----------------+---------+-----+--------+-------+-----+
+|       Name      | BRAM_18K| DSP |   FF   |  LUT  | URAM|
++-----------------+---------+-----+--------+-------+-----+
+|DSP              |        -|    -|       -|      -|    -|
+|Expression       |        -|    -|       0|   1064|    -|
+|FIFO             |        -|    -|       -|      -|    -|
+|Instance         |        -|   32|    6117|  15223|    -|
+|Memory           |        0|    -|      64|      8|    0|
+|Multiplexer      |        -|    -|       0|    540|    -|
+|Register         |        -|    -|    1146|      -|    -|
++-----------------+---------+-----+--------+-------+-----+
+|Total            |        0|   32|    7327|  16835|    0|
++-----------------+---------+-----+--------+-------+-----+
+|Available        |      280|  220|  106400|  53200|    0|
++-----------------+---------+-----+--------+-------+-----+
+|Utilization (%)  |        0|   14|       6|     31|    0|
++-----------------+---------+-----+--------+-------+-----+
+
++ Detail: 
+    * Instance: 
+    +----------------------------------------------------+-----------------------------------------+---------+----+------+-------+-----+
+    |                      Instance                      |                  Module                 | BRAM_18K| DSP|  FF  |  LUT  | URAM|
+    +----------------------------------------------------+-----------------------------------------+---------+----+------+-------+-----+
+    |grp_dmotor_motion_Pipeline_VITIS_LOOP_333_1_fu_651  |dmotor_motion_Pipeline_VITIS_LOOP_333_1  |        0|   0|    13|     65|    0|
+    |grp_dmotor_motion_Pipeline_VITIS_LOOP_370_2_fu_755  |dmotor_motion_Pipeline_VITIS_LOOP_370_2  |        0|   0|     7|     54|    0|
+    |mul_17ns_31ns_46_1_1_U57                            |mul_17ns_31ns_46_1_1                     |        0|   2|     0|     23|    0|
+    |mul_20ns_18ns_37_1_1_U62                            |mul_20ns_18ns_37_1_1                     |        0|   1|     0|     12|    0|
+    |mul_20ns_20ns_40_1_1_U58                            |mul_20ns_20ns_40_1_1                     |        0|   2|     0|     12|    0|
+    |mul_20ns_27ns_46_1_1_U59                            |mul_20ns_27ns_46_1_1                     |        0|   2|     0|     39|    0|
+    |mul_20ns_34ns_53_1_1_U60                            |mul_20ns_34ns_53_1_1                     |        0|   2|     0|     22|    0|
+    |mul_37ns_24ns_61_1_1_U61                            |mul_37ns_24ns_61_1_1                     |        0|   3|     0|     26|    0|
+    |grp_step_impl_fu_658                                |step_impl                                |        0|  20|  6097|  14970|    0|
+    +----------------------------------------------------+-----------------------------------------+---------+----+------+-------+-----+
+    |Total                                               |                                         |        0|  32|  6117|  15223|    0|
+    +----------------------------------------------------+-----------------------------------------+---------+----+------+-------+-----+
+
+    * DSP: 
+    N/A
+
+    * Memory: 
+    +--------------+--------------------------+---------+----+----+-----+------+-----+------+-------------+
+    |    Memory    |          Module          | BRAM_18K| FF | LUT| URAM| Words| Bits| Banks| W*Bits*Banks|
+    +--------------+--------------------------+---------+----+----+-----+------+-----+------+-------------+
+    |descriptor_U  |descriptor_RAM_AUTO_1R1W  |        0|  64|   8|    0|    16|   32|     1|          512|
+    +--------------+--------------------------+---------+----+----+-----+------+-----+------+-------------+
+    |Total         |                          |        0|  64|   8|    0|    16|   32|     1|          512|
+    +--------------+--------------------------+---------+----+----+-----+------+-----+------+-------------+
+
+    * FIFO: 
+    N/A
+
+    * Expression: 
+    +--------------------------------------+----------+----+---+----+------------+------------+
+    |             Variable Name            | Operation| DSP| FF| LUT| Bitwidth P0| Bitwidth P1|
+    +--------------------------------------+----------+----+---+----+------------+------------+
+    |and_ln47_10_fu_1044_p2                |       and|   0|  0|   2|           1|           1|
+    |and_ln47_11_fu_1050_p2                |       and|   0|  0|   2|           1|           1|
+    |and_ln47_12_fu_1056_p2                |       and|   0|  0|   2|           1|           1|
+    |and_ln47_13_fu_858_p2                 |       and|   0|  0|   2|           1|           1|
+    |and_ln47_14_fu_864_p2                 |       and|   0|  0|   2|           1|           1|
+    |and_ln47_15_fu_870_p2                 |       and|   0|  0|   2|           1|           1|
+    |and_ln47_16_fu_876_p2                 |       and|   0|  0|   2|           1|           1|
+    |and_ln47_17_fu_1062_p2                |       and|   0|  0|   2|           1|           1|
+    |and_ln47_1_fu_948_p2                  |       and|   0|  0|   2|           1|           1|
+    |and_ln47_2_fu_952_p2                  |       and|   0|  0|   2|           1|           1|
+    |and_ln47_3_fu_958_p2                  |       and|   0|  0|   2|           1|           1|
+    |and_ln47_4_fu_964_p2                  |       and|   0|  0|   2|           1|           1|
+    |and_ln47_5_fu_969_p2                  |       and|   0|  0|   2|           1|           1|
+    |and_ln47_6_fu_975_p2                  |       and|   0|  0|   2|           1|           1|
+    |and_ln47_7_fu_981_p2                  |       and|   0|  0|   2|           1|           1|
+    |and_ln47_8_fu_987_p2                  |       and|   0|  0|   2|           1|           1|
+    |and_ln47_9_fu_1038_p2                 |       and|   0|  0|   2|           1|           1|
+    |and_ln47_fu_942_p2                    |       and|   0|  0|   2|           1|           1|
+    |p_valid_fu_1067_p2                    |       and|   0|  0|   2|           1|           1|
+    |grp_fu_784_p2                         |      icmp|   0|  0|  39|          32|           1|
+    |icmp_ln33_1_fu_1018_p2                |      icmp|   0|  0|  39|          32|          10|
+    |icmp_ln33_2_fu_806_p2                 |      icmp|   0|  0|  39|          32|          20|
+    |icmp_ln33_fu_1012_p2                  |      icmp|   0|  0|  39|          32|           1|
+    |icmp_ln34_1_fu_1028_p2                |      icmp|   0|  0|  39|          32|          24|
+    |icmp_ln34_2_fu_811_p2                 |      icmp|   0|  0|  39|          32|           1|
+    |icmp_ln34_fu_1023_p2                  |      icmp|   0|  0|  39|          32|           1|
+    |icmp_ln351_fu_999_p2                  |      icmp|   0|  0|  39|          32|           1|
+    |icmp_ln35_1_fu_906_p2                 |      icmp|   0|  0|  39|          32|           1|
+    |icmp_ln35_2_fu_816_p2                 |      icmp|   0|  0|  39|          32|          20|
+    |icmp_ln35_fu_1033_p2                  |      icmp|   0|  0|  39|          32|          24|
+    |icmp_ln36_1_fu_822_p2                 |      icmp|   0|  0|  39|          32|          20|
+    |icmp_ln37_1_fu_921_p2                 |      icmp|   0|  0|  39|          32|           1|
+    |icmp_ln37_2_fu_886_p2                 |      icmp|   0|  0|  39|          32|          21|
+    |icmp_ln37_3_fu_896_p2                 |      icmp|   0|  0|  39|          32|          21|
+    |icmp_ln37_4_fu_931_p2                 |      icmp|   0|  0|  39|          32|          17|
+    |icmp_ln37_5_fu_936_p2                 |      icmp|   0|  0|  39|          32|          17|
+    |icmp_ln37_fu_911_p2                   |      icmp|   0|  0|  39|          32|          32|
+    |icmp_ln38_fu_926_p2                   |      icmp|   0|  0|  39|          32|          20|
+    |icmp_ln47_fu_846_p2                   |      icmp|   0|  0|  60|          53|          53|
+    |descriptor_we0                        |        or|   0|  0|   2|           1|           1|
+    |or_ln351_fu_993_p2                    |        or|   0|  0|  32|          32|          32|
+    |reply_we0                             |        or|   0|  0|   2|           1|           1|
+    |c_generation_1_fu_1005_p3             |    select|   0|  0|  32|           1|          32|
+    |p_braking_denominator_1_fu_1114_p3    |    select|   0|  0|  61|           1|          61|
+    |p_integral_limit_fu_1098_p3           |    select|   0|  0|  46|           1|          46|
+    |p_lookahead_denominator_1_fu_1106_p3  |    select|   0|  0|  46|           1|          46|
+    |xor_ln37_fu_915_p2                    |       xor|   0|  0|   2|           1|           2|
+    |xor_ln47_fu_852_p2                    |       xor|   0|  0|   2|           1|           2|
+    +--------------------------------------+----------+----+---+----+------------+------------+
+    |Total                                 |          |   0|  0|1064|         720|         548|
+    +--------------------------------------+----------+----+---+----+------------+------------+
+
+    * Multiplexer: 
+    +--------------------------------+-----+-----------+-----+-----------+
+    |              Name              | LUT | Input Size| Bits| Total Bits|
+    +--------------------------------+-----+-----------+-----+-----------+
+    |ap_NS_fsm                       |  100|         20|    1|         20|
+    |configuration_r_address0_local  |   48|          9|    4|         36|
+    |configuration_r_address1_local  |   48|          9|    4|         36|
+    |descriptor_address0             |   14|          3|    4|         12|
+    |descriptor_address0_local       |   48|          9|    4|         36|
+    |descriptor_address1             |    9|          2|    4|          8|
+    |descriptor_address1_local       |   48|          9|    4|         36|
+    |descriptor_ce0                  |   14|          3|    1|          3|
+    |descriptor_ce1                  |    9|          2|    1|          2|
+    |descriptor_d0                   |    9|          2|   32|         64|
+    |descriptor_we0                  |    9|          2|    1|          2|
+    |reply_address0                  |    9|          2|    4|          8|
+    |reply_address0_local            |   37|          7|    4|         28|
+    |reply_address1_local            |   37|          7|    4|         28|
+    |reply_ce0                       |    9|          2|    1|          2|
+    |reply_d0                        |    9|          2|   32|         64|
+    |reply_d0_local                  |   37|          7|   32|        224|
+    |reply_d1_local                  |   37|          7|   32|        224|
+    |reply_we0                       |    9|          2|    1|          2|
+    +--------------------------------+-----+-----------+-----+-----------+
+    |Total                           |  540|        106|  170|        835|
+    +--------------------------------+-----+-----------+-----+-----------+
+
+    * Register: 
+    +-----------------------------------------------------------------+----+----+-----+-----------+
+    |                               Name                              | FF | LUT| Bits| Const Bits|
+    +-----------------------------------------------------------------+----+----+-----+-----------+
+    |and_ln47_16_reg_1311                                             |   1|   0|    1|          0|
+    |and_ln47_8_reg_1410                                              |   1|   0|    1|          0|
+    |ap_CS_fsm                                                        |  19|   0|   19|          0|
+    |authorized_read_reg_1468                                         |   1|   0|    1|          0|
+    |c_acceleration_mrpm_s_reg_1255                                   |  32|   0|   32|          0|
+    |c_counts_num_reg_1284                                            |  32|   0|   32|          0|
+    |c_deceleration_mrpm_s_reg_1262                                   |  32|   0|   32|          0|
+    |c_duty_limit_q16_reg_1369                                        |  32|   0|   32|          0|
+    |c_generation_1_reg_1415                                          |  32|   0|   32|          0|
+    |c_generation_reg_1227                                            |  32|   0|   32|          0|
+    |c_max_speed_mrpm_reg_1232                                        |  32|   0|   32|          0|
+    |c_position_tolerance_reg_1316                                    |  32|   0|   32|          0|
+    |c_settle_ticks_reg_1337                                          |  32|   0|   32|          0|
+    |c_stop_timeout_us_reg_1395                                       |  32|   0|   32|          0|
+    |c_velocity_tolerance_mrpm_reg_1321                               |  32|   0|   32|          0|
+    |command_valid_read_reg_1463                                      |   1|   0|    1|          0|
+    |completion_ack_read_reg_1458                                     |   1|   0|    1|          0|
+    |denominator_reg_1290                                             |  20|   0|   20|          0|
+    |grp_dmotor_motion_Pipeline_VITIS_LOOP_333_1_fu_651_ap_start_reg  |   1|   0|    1|          0|
+    |grp_dmotor_motion_Pipeline_VITIS_LOOP_370_2_fu_755_ap_start_reg  |   1|   0|    1|          0|
+    |grp_step_impl_fu_658_ap_start_reg                                |   1|   0|    1|          0|
+    |icmp_ln36_1_reg_1306                                             |   1|   0|    1|          0|
+    |icmp_ln37_2_reg_1359                                             |   1|   0|    1|          0|
+    |icmp_ln37_3_reg_1385                                             |   1|   0|    1|          0|
+    |immediate_stop_read_reg_1453                                     |   1|   0|    1|          0|
+    |now_read_reg_1443                                                |  64|   0|   64|          0|
+    |p_braking_denominator_1_reg_1488                                 |  61|   0|   61|          0|
+    |p_integral_limit_reg_1478                                        |  46|   0|   46|          0|
+    |p_lookahead_denominator_1_reg_1483                               |  46|   0|   46|          0|
+    |p_valid_reg_1420                                                 |   1|   0|    1|          0|
+    |position_read_reg_1438                                           |  64|   0|   64|          0|
+    |r_accepted_reg_1508                                              |   1|   0|    1|          0|
+    |r_busy_reg_1498                                                  |   1|   0|    1|          0|
+    |r_completion_valid_reg_1503                                      |   1|   0|    1|          0|
+    |r_detail_reg_1528                                                |  32|   0|   32|          0|
+    |r_epoch_reg_1518                                                 |  32|   0|   32|          0|
+    |r_faults_reg_1533                                                |  32|   0|   32|          0|
+    |r_outcome_reg_1523                                               |  32|   0|   32|          0|
+    |r_ready_reg_1493                                                 |   1|   0|    1|          0|
+    |r_sequence_reg_1513                                              |  32|   0|   32|          0|
+    |reset_read_reg_1473                                              |   1|   0|    1|          0|
+    |session_read_reg_1448                                            |  32|   0|   32|          0|
+    |speed_reg_1240                                                   |  20|   0|   20|          0|
+    |trunc_ln336_1_reg_1269                                           |  24|   0|   24|          0|
+    |trunc_ln336_4_reg_1344                                           |  21|   0|   21|          0|
+    |trunc_ln336_5_reg_1364                                           |  21|   0|   21|          0|
+    |trunc_ln336_6_reg_1390                                           |  17|   0|   17|          0|
+    |trunc_ln366_reg_1538                                             |  32|   0|   32|          0|
+    |trunc_ln368_reg_1548                                             |  32|   0|   32|          0|
+    |trunc_ln7_reg_1543                                               |  32|   0|   32|          0|
+    |trunc_ln9_reg_1553                                               |  32|   0|   32|          0|
+    |velocity_mrpm_read_reg_1433                                      |  32|   0|   32|          0|
+    |velocity_valid_read_reg_1428                                     |   1|   0|    1|          0|
+    +-----------------------------------------------------------------+----+----+-----+-----------+
+    |Total                                                            |1146|   0| 1146|          0|
+    +-----------------------------------------------------------------+----+----+-----+-----------+
+
+
+
+================================================================
+== Interface
+================================================================
+* Summary: 
++--------------------------+-----+-----+------------+-----------------+--------------+
+|         RTL Ports        | Dir | Bits|  Protocol  |  Source Object  |    C Type    |
++--------------------------+-----+-----+------------+-----------------+--------------+
+|ap_clk                    |   in|    1|  ap_ctrl_hs|    dmotor_motion|  return value|
+|ap_rst                    |   in|    1|  ap_ctrl_hs|    dmotor_motion|  return value|
+|ap_start                  |   in|    1|  ap_ctrl_hs|    dmotor_motion|  return value|
+|ap_done                   |  out|    1|  ap_ctrl_hs|    dmotor_motion|  return value|
+|ap_idle                   |  out|    1|  ap_ctrl_hs|    dmotor_motion|  return value|
+|ap_ready                  |  out|    1|  ap_ctrl_hs|    dmotor_motion|  return value|
+|reset                     |   in|    1|     ap_none|            reset|        scalar|
+|authorized                |   in|    1|     ap_none|       authorized|        scalar|
+|command_valid             |   in|    1|     ap_none|    command_valid|        scalar|
+|command_address0          |  out|    4|   ap_memory|          command|         array|
+|command_ce0               |  out|    1|   ap_memory|          command|         array|
+|command_q0                |   in|   32|   ap_memory|          command|         array|
+|configuration_r_address0  |  out|    4|   ap_memory|  configuration_r|         array|
+|configuration_r_ce0       |  out|    1|   ap_memory|  configuration_r|         array|
+|configuration_r_q0        |   in|   32|   ap_memory|  configuration_r|         array|
+|configuration_r_address1  |  out|    4|   ap_memory|  configuration_r|         array|
+|configuration_r_ce1       |  out|    1|   ap_memory|  configuration_r|         array|
+|configuration_r_q1        |   in|   32|   ap_memory|  configuration_r|         array|
+|completion_ack            |   in|    1|     ap_none|   completion_ack|        scalar|
+|immediate_stop            |   in|    1|     ap_none|   immediate_stop|        scalar|
+|session                   |   in|   32|     ap_none|          session|        scalar|
+|now                       |   in|   64|     ap_none|              now|        scalar|
+|position                  |   in|   64|     ap_none|         position|        scalar|
+|velocity_mrpm             |   in|   32|     ap_none|    velocity_mrpm|        scalar|
+|velocity_valid            |   in|    1|     ap_none|   velocity_valid|        scalar|
+|reply_address0            |  out|    4|   ap_memory|            reply|         array|
+|reply_ce0                 |  out|    1|   ap_memory|            reply|         array|
+|reply_we0                 |  out|    1|   ap_memory|            reply|         array|
+|reply_d0                  |  out|   32|   ap_memory|            reply|         array|
+|reply_address1            |  out|    4|   ap_memory|            reply|         array|
+|reply_ce1                 |  out|    1|   ap_memory|            reply|         array|
+|reply_we1                 |  out|    1|   ap_memory|            reply|         array|
+|reply_d1                  |  out|   32|   ap_memory|            reply|         array|
++--------------------------+-----+-----+------------+-----------------+--------------+
+

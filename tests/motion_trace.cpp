@@ -1,3 +1,4 @@
+#include "timing_fixture.hpp"
 #include "dmotor/motion.hpp"
 #include <cstdint>
 #include <cstdio>
@@ -49,7 +50,7 @@ int main() {
                 }
             }
             int32_t measured = static_cast<int32_t>(random() % 2000001) - 1000000;
-            dmotor_motion(false, true, true, command, c, true, false, 1, uint64_t(tick) * 100000, 0,
+            dmotor_motion(false, true, true, command, c, true, false, 1, uint64_t(tick) * test_timing::tick_cycles, 0,
                           measured, true, reply);
             for (auto w : reply) {
                 std::printf("%08x", w);
@@ -70,7 +71,7 @@ int main() {
     dmotor_motion(true, false, false, command, c, false, false, 1, 0, 0, 0, false, reply);
     for (unsigned tick = 1; tick <= 1000000; ++tick) {
         dmotor_motion(false, true, tick == 1, command, c, false, false, 1,
-                      uint64_t(tick) * 100000, 0, 0, true, reply);
+                      uint64_t(tick) * test_timing::tick_cycles, 0, 0, true, reply);
         const bool busy = (reply[2] & 2) != 0;
         if (reply[7] || busy != (tick < 1000000) ||
             (tick == 1000000 && !(reply[2] & 4))) {

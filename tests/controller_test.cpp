@@ -1,3 +1,4 @@
+#include "timing_fixture.hpp"
 #include "dmotor/controller.hpp"
 #include <cstdlib>
 #include <iostream>
@@ -8,8 +9,9 @@
             std::exit(1);                                                                          \
         }                                                                                          \
     } while (false)
-static uint32_t config[20] = {1,     130000, 1000000, 1000000, 10296,    5,       1,   100, 2, 655,
-                              65536, 65536,  65536,   1000000, 10000000, 6000000, 128, 0,   0, 0};
+static uint32_t config[20] = {
+    1, 130000, 1000000, 1000000, 10296, 5, 1, 100, 2, 655, 65536, 65536, 65536, 1000000,
+    test_timing::cycles_us(100000), test_timing::cycles_us(60000), 128, 0, 0, 0};
 static uint32_t command[16], reply[24];
 static uint64_t now, count, edge;
 static uint32_t direction, invalid;
@@ -21,7 +23,7 @@ static void call(bool reset = false, bool valid = false, bool ack = false, bool 
 }
 static void tick(bool event = false, bool valid = false, bool ack = false, bool stop = false,
                  bool authorized = true, bool capture_fault = false) {
-    now += 100000;
+    now += test_timing::tick_cycles;
     if (event) {
         ++count;
         edge = now;
@@ -119,12 +121,12 @@ int main() {
     tick(false, false, false, false, true, true);
     CHECK((reply[16] & 2) && !reply[0]);
     reset();
-    config[15] = 10000000;
+    config[15] = test_timing::cycles_us(100000);
     tick();
     CHECK(reply[16] & 1);
-    config[15] = 6000000;
+    config[15] = test_timing::cycles_us(60000);
     reset();
-    now += 100000;
+    now += test_timing::tick_cycles;
     call();
     config[16] = 129;
     tick();

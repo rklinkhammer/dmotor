@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 module safety_tb;
-    reg clk=0; always #5 clk=~clk;
+    reg clk=0; always #(0.5e9 / dmotor_timing::FABRIC_HZ) clk=~clk;
     reg reset=1, ack=0;
     reg [3:0] enable_req=0, disable_req=0, ack_local=0, ack_external=0, refresh=0;
     reg [31:0] causes[0:3];

@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 module motion_top_tb;
     reg clk=0;
-    always #5 clk=~clk;
+    always #(0.5e9 / dmotor_timing::FABRIC_HZ) clk=~clk;
     reg reset=1, inhibit=1;
     reg [511:0] command_words=0, configuration_words=0;
     reg command_valid=0, completion_ack=0, immediate_stop=0;
@@ -19,7 +19,7 @@ module motion_top_tb;
     task result;
         begin
             n=0;
-            while (!result_valid && n<102000) begin @(negedge clk); n=n+1; end
+            while (!result_valid && n < dmotor_timing::CONTROL_TICK_CYCLES + dmotor_timing::CONTROL_DEADLINE_CYCLES) begin @(negedge clk); n=n+1; end
             if (!result_valid || deadline_fault) $fatal(1,"missing result or deadline fault");
         end
     endtask
@@ -49,10 +49,10 @@ module motion_top_tb;
             (result_words[2*32+:32]&12)!=12) $fatal(1,"open-loop result");
         $display("motion RTL: first result at %0d clocks",timestamp);
         command_valid=0; completion_ack=1;
-        repeat(6000) @(negedge clk);
+        repeat(2 * dmotor_timing::PWM_PERIOD_CYCLES) @(negedge clk);
         high_count=0;
-        repeat(5000) begin @(negedge clk); if(pwm) high_count=high_count+1; end
-        if (high_count!=2500 || !drive_enable || direction) $fatal(1,"PWM duty %0d",high_count);
+        repeat(dmotor_timing::PWM_PERIOD_CYCLES) begin @(negedge clk); if(pwm) high_count=high_count+1; end
+        if (high_count != dmotor_timing::PWM_PERIOD_CYCLES / 2 || !drive_enable || direction) $fatal(1,"PWM duty %0d",high_count);
         result();
         if (!(result_words[2*32+:32]&1)) $fatal(1,"completion acknowledgment");
         $display("motion RTL: acknowledgment at %0d clocks",timestamp);

@@ -1,3 +1,4 @@
+#include "timing_fixture.hpp"
 #include "dmotor/dispatcher.hpp"
 #include <cstdlib>
 #include <iostream>
@@ -8,8 +9,9 @@
             std::exit(1);                                                                          \
         }                                                                                          \
     } while (false)
-static uint32_t cfg[20] = {1,     130000, 1000000, 1000000, 10296,    5,       1,   100, 2, 655,
-                           65536, 65536,  65536,   1000000, 10000000, 6000000, 128, 0,   0, 0};
+static uint32_t cfg[20] = {
+    1, 130000, 1000000, 1000000, 10296, 5, 1, 100, 2, 655, 65536, 65536, 65536, 1000000,
+    test_timing::cycles_us(100000), test_timing::cycles_us(60000), 128, 0, 0, 0};
 static uint32_t reply[40];
 static uint64_t now = 0, count = 0, edge = 0;
 static bool authorized = false;
@@ -28,7 +30,7 @@ static void service(uint32_t op = 0, uint32_t a = 0, uint32_t b = 0, uint32_t c 
 #endif
 }
 static void tick(bool cancel = false, bool stop = false) {
-    now += 100000;
+    now += test_timing::tick_cycles;
     service(0, 0, 0, 0, true, cancel, stop);
 }
 static void enqueue(uint32_t opcode, uint32_t value, bool malformed = false) {
@@ -144,7 +146,7 @@ int main() {
     // Feedback invalidation on this boundary must not capture on yesterday's readiness.
     enqueue(1, 1000);
     ++count;
-    edge = now + 100000;
+    edge = now + test_timing::tick_cycles;
     tick();
     CHECK(reply[3] == 1 && !reply[6] && !reply[32]);
     now += 2800000; // service traffic does not substitute for 1 kHz hardware ticks: test fault next
@@ -166,10 +168,10 @@ int main() {
     reset();
     enqueue(1, 1000);
     ++count;
-    edge = now + 100000;
+    edge = now + test_timing::tick_cycles;
     tick();
     ++count;
-    edge = now + 100000;
+    edge = now + test_timing::tick_cycles;
     tick();
     CHECK(reply[32] && !reply[6] && !(reply[18] & 8) && reply[4] == 0);
     cfg[1] = 130000;

@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 module encoder_snapshot_tb;
     reg clk=0;
-    always #5 clk=~clk;
+    always #(0.5e9 / dmotor_timing::FABRIC_HZ) clk=~clk;
     reg reset=1,event_valid=0,event_negative=0,encoder_range_fault=0;
     reg [63:0] event_timestamp=0;
     reg [31:0] encoder_invalid_transitions=0;
