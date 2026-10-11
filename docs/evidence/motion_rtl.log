@@ -1,0 +1,8 @@
+Revision 0.13 generated-RTL integration, 2026-10-11
+Command: python3 tools/motion_rtl.py --iverilog /tmp/dmotor-tools/root/usr/bin/iverilog --vvp /tmp/dmotor-tools/root/usr/bin/vvp --base /tmp/dmotor-tools/root/usr/lib/x86_64-linux-gnu/ivl
+Exit status: 0
+Captured output:
+motion RTL: first result at 100115 clocks
+motion RTL: acknowledgment at 200098 clocks
+motion generated RTL: scheduled execution, completion, 50% PWM, mid-flight inhibit and feedback fault passed; maximum latency 110 cycles
+/home/rklinkhammer/workspace/dmotor/tests/motion_top_tb.sv:78: $finish called at 4012740000 (1ps)

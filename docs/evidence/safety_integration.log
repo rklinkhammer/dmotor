@@ -1,0 +1,20 @@
+Start testing: Oct 11 11:32 EDT
+----------------------------------------------------------
+12/13 Testing: rtl_peripheral_integrated
+12/13 Test: rtl_peripheral_integrated
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/integrated_rtl.py" "--iverilog" "/tmp/dmotor-tools/root/usr/bin/iverilog" "--vvp" "/tmp/dmotor-tools/root/usr/bin/vvp" "--base" "/tmp/dmotor-tools/root/usr/lib/x86_64-linux-gnu/ivl"
+Directory: /home/rklinkhammer/workspace/dmotor/build
+"rtl_peripheral_integrated" start time: Oct 11 11:32 EDT
+Output:
+----------------------------------------------------------
+integrated AXI/HLS: PASS; max observed write=199 read=199 cycles
+/home/rklinkhammer/workspace/dmotor/tests/peripheral_top_tb.sv:81: $finish called at 1054880000 (1ps)
+<end of output>
+Test time =  26.08 sec
+----------------------------------------------------------
+Test Passed.
+"rtl_peripheral_integrated" end time: Oct 11 11:33 EDT
+"rtl_peripheral_integrated" time elapsed: 00:00:26
+----------------------------------------------------------
+
+End testing: Oct 11 11:33 EDT

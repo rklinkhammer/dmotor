@@ -1,0 +1,252 @@
+{
+  "schema_version": 4,
+  "status": "development subset, not complete release map",
+  "regions": {
+    "submission": {
+      "offset": 4096,
+      "slots": "ring_depth",
+      "stride": 64
+    },
+    "completion": {
+      "offset": 8192,
+      "slots": "ring_depth",
+      "stride": 32
+    },
+    "active": {
+      "offset": 12288,
+      "slots": 1,
+      "stride": 64
+    },
+    "cancellation": {
+      "offset": 12544,
+      "slots": 1,
+      "stride": 32
+    }
+  },
+  "registers": [
+    {
+      "name": "IDENTITY",
+      "offset": 0,
+      "access": "RO",
+      "reset": 1145917268,
+      "meaning": "DMOT identity"
+    },
+    {
+      "name": "SCHEMA_VERSION",
+      "offset": 4,
+      "access": "RO",
+      "reset": 4,
+      "meaning": "Development version; not release ABI"
+    },
+    {
+      "name": "CAPABILITIES",
+      "offset": 8,
+      "access": "RO",
+      "reset": 3,
+      "meaning": "bit 0 ring, bit 1 safety/configuration; no motion executor yet"
+    },
+    {
+      "name": "CLOCK_HZ",
+      "offset": 12,
+      "access": "RO",
+      "reset": 100000000,
+      "meaning": "Fabric clock in Hz"
+    },
+    {
+      "name": "STATUS",
+      "offset": 16,
+      "access": "RO",
+      "reset": 0,
+      "meaning": "bit 0 busy, bit 1 admission open, bit 2 cancellation valid"
+    },
+    {
+      "name": "ENABLE",
+      "offset": 32,
+      "access": "WO",
+      "reset": 0,
+      "meaning": "Write one; validate configuration, session, and safety prerequisites"
+    },
+    {
+      "name": "DISABLE",
+      "offset": 36,
+      "access": "WO",
+      "reset": 0,
+      "meaning": "Write one; inhibit and cancel queue"
+    },
+    {
+      "name": "STOP",
+      "offset": 40,
+      "access": "WO",
+      "reset": 0,
+      "meaning": "Write one; controlled stop and queue cancellation"
+    },
+    {
+      "name": "FAULTS",
+      "offset": 48,
+      "access": "RO",
+      "reset": 0,
+      "meaning": "Sticky protective cause mask"
+    },
+    {
+      "name": "ACK_LOCAL",
+      "offset": 52,
+      "access": "WO",
+      "reset": 0,
+      "meaning": "Write-one cause mask; reject clearing live causes"
+    },
+    {
+      "name": "ACK_EXTERNAL",
+      "offset": 56,
+      "access": "WO",
+      "reset": 0,
+      "meaning": "Write one; only clear when HALT input inactive"
+    },
+    {
+      "name": "WATCHDOG_US",
+      "offset": 64,
+      "access": "RW",
+      "reset": 0,
+      "meaning": "Staging timeout; 0 invalid; commit only disabled"
+    },
+    {
+      "name": "REFRESH_SESSION",
+      "offset": 68,
+      "access": "RW",
+      "reset": 0,
+      "meaning": "Staged authorization session"
+    },
+    {
+      "name": "REFRESH_SEQUENCE",
+      "offset": 72,
+      "access": "WO",
+      "reset": 0,
+      "meaning": "Validated refresh strobe; expiration wins"
+    },
+    {
+      "name": "EXPECTED_REFRESH",
+      "offset": 76,
+      "access": "RO",
+      "reset": 1,
+      "meaning": "Next accepted sequence"
+    },
+    {
+      "name": "QUEUE_EPOCH",
+      "offset": 256,
+      "access": "RO",
+      "reset": 0,
+      "meaning": "Hardware session token"
+    },
+    {
+      "name": "QUEUE_PRODUCER",
+      "offset": 260,
+      "access": "RO",
+      "reset": 0,
+      "meaning": "Accepted publication counter"
+    },
+    {
+      "name": "QUEUE_CONSUMER",
+      "offset": 264,
+      "access": "RO",
+      "reset": 0,
+      "meaning": "Captured descriptor counter"
+    },
+    {
+      "name": "PUBLISH_SESSION",
+      "offset": 268,
+      "access": "RW",
+      "reset": 0,
+      "meaning": "Doorbell session staging"
+    },
+    {
+      "name": "PUBLISH",
+      "offset": 272,
+      "access": "WO",
+      "reset": 0,
+      "meaning": "Requested producer advance; validate capacity and session atomically"
+    },
+    {
+      "name": "COMPLETION_PRODUCER",
+      "offset": 276,
+      "access": "RO",
+      "reset": 0,
+      "meaning": "Published completion counter"
+    },
+    {
+      "name": "COMPLETION_ACK",
+      "offset": 280,
+      "access": "WO",
+      "reset": 0,
+      "meaning": "Validated completion consumer advance"
+    },
+    {
+      "name": "QUIESCE",
+      "offset": 284,
+      "access": "WO",
+      "reset": 0,
+      "meaning": "Close admission; adapter drain acknowledgment required"
+    },
+    {
+      "name": "REOPEN",
+      "offset": 288,
+      "access": "WO",
+      "reset": 0,
+      "meaning": "New session after proven drain and cancellation acknowledgment"
+    },
+    {
+      "name": "CANCEL_ACK",
+      "offset": 292,
+      "access": "WO",
+      "reset": 0,
+      "meaning": "Write 1 to acknowledge frozen cancellation"
+    },
+    {
+      "name": "COMPLETION_CONSUMER",
+      "offset": 296,
+      "access": "RO",
+      "reset": 0,
+      "meaning": "Acknowledged completion counter"
+    },
+    {
+      "name": "CONFIG_COMMIT",
+      "offset": 80,
+      "access": "WO",
+      "reset": 0,
+      "meaning": "Write 1: validate and atomically commit disabled, closed and empty queue"
+    },
+    {
+      "name": "MAX_SPEED_MRPM",
+      "offset": 84,
+      "access": "RW",
+      "reset": 130000,
+      "meaning": "Staged maximum output speed; 1000..1000000 milli-RPM"
+    },
+    {
+      "name": "CONFIG_GENERATION",
+      "offset": 88,
+      "access": "RO",
+      "reset": 0,
+      "meaning": "Committed configuration generation; 0 invalid"
+    },
+    {
+      "name": "ACTIVE_WATCHDOG_US",
+      "offset": 92,
+      "access": "RO",
+      "reset": 0,
+      "meaning": "Active timeout"
+    },
+    {
+      "name": "ACTIVE_MAX_SPEED_MRPM",
+      "offset": 96,
+      "access": "RO",
+      "reset": 0,
+      "meaning": "Active maximum speed"
+    },
+    {
+      "name": "SAFETY_STATUS",
+      "offset": 100,
+      "access": "RO",
+      "reset": 0,
+      "meaning": "bit 0 enabled, bit 1 external latch, bit 2 synchronized HALT"
+    }
+  ]
+}

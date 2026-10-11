@@ -1,0 +1,9 @@
+/build/
+*.log
+*.jou
+.Xil/
+__pycache__/
+
+# Retain curated verification evidence referenced by the documentation.
+!/docs/evidence/*.log
+.DS_Store
