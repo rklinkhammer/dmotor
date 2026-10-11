@@ -92,6 +92,8 @@ bool CommandRing::offer(Descriptor& descriptor) const {
     descriptor = slots_[consumer_ & ring_mask];
     return true;
 }
+// Standalone capture validates its active copy. Keep this path separate from
+// capture_checked to avoid an extra descriptor read/copy in standalone HLS builds.
 bool CommandRing::capture(uint64_t now, int64_t position, int32_t max_speed_mrpm) {
     if (!admission_ || busy_ || producer_ == consumer_ ||
         completion_producer_ - completion_consumer_ == ring_depth) {
@@ -99,6 +101,24 @@ bool CommandRing::capture(uint64_t now, int64_t position, int32_t max_speed_mrpm
     }
     active_ = slots_[consumer_ & ring_mask];
     const Error error = validate(active_, consumer_, epoch_, generation_, position, max_speed_mrpm);
+    // A rejection must correlate to the actual queue position, even if its wire
+    // sequence or epoch is corrupt. Copy only; software can never mutate active_.
+    active_[2] = consumer_;
+    active_[3] = epoch_;
+    busy_ = true;
+    activation_ = error == Error::none ? now : 0;
+    ++consumer_;
+    if (error != Error::none) {
+        finish(now, 1, static_cast<uint32_t>(error));
+    }
+    return true;
+}
+bool CommandRing::capture_checked(uint64_t now, Error error) {
+    if (!admission_ || busy_ || producer_ == consumer_ ||
+        completion_producer_ - completion_consumer_ == ring_depth) {
+        return false;
+    }
+    active_ = slots_[consumer_ & ring_mask];
     // A rejection must correlate to the actual queue position, even if its wire
     // sequence or epoch is corrupt. Copy only; software can never mutate active_.
     active_[2] = consumer_;

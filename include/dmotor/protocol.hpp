@@ -58,6 +58,9 @@ class CommandRing {
     const Cancellation& cancellation() const;
 
   private:
+    friend class Dispatcher;
+    // Only the serialized dispatcher may reuse its current-tick validation.
+    bool capture_checked(uint64_t now, Error error);
     std::array<Descriptor, ring_depth> slots_{};
     std::array<Completion, ring_depth> completions_{};
     Descriptor active_{};

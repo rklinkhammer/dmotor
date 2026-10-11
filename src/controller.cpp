@@ -6,6 +6,15 @@ ControllerResult Controller::step(bool reset, bool authorized, bool capture_faul
                                   bool command_valid, const Descriptor& command,
                                   bool completion_ack, bool immediate_stop,
                                   const ControllerConfig& c) {
+    return step_impl(reset, authorized, capture_fault, now, encoder, position, session,
+                     command_valid, command, completion_ack, immediate_stop, c, false);
+}
+ControllerResult Controller::step_impl(bool reset, bool authorized, bool capture_fault,
+                                       uint64_t now, const EncoderSample& encoder, int64_t position,
+                                       uint32_t session, bool command_valid,
+                                       const Descriptor& command, bool completion_ack,
+                                       bool immediate_stop, const ControllerConfig& c,
+                                       bool command_checked) {
     if (reset) {
         *this = Controller{};
         return {};
@@ -55,9 +64,10 @@ ControllerResult Controller::step(bool reset, bool authorized, bool capture_faul
     r.acquiring = authorized && acquiring_ && !faults_;
     r.warming_up = authorized && !qualified_ && !faults_;
     const bool pending = r.acquiring || r.warming_up;
-    r.motion = motion_.step(false, authorized && !faults_, command_valid, command, completion_ack,
-                            immediate_stop, session, now, position, r.velocity.mrpm,
-                            r.velocity.valid, c.motion, pending);
+    r.motion =
+        motion_.step_impl(false, authorized && !faults_, command_valid, command, completion_ack,
+                          immediate_stop, session, now, position, r.velocity.mrpm, r.velocity.valid,
+                          c.motion, pending, command_checked);
     if (r.motion.faults) {
         faults_ |= 32;
     }

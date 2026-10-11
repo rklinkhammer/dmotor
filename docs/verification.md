@@ -405,3 +405,36 @@ for motion, controller and dispatcher. The UBSan-enabled deterministic compariso
 matches every reply word across 16,384 motion updates against revision `d4abc0b`;
 see `evidence/arithmetic_equivalence.log`. This trace supplements rather than
 replaces the command, safety and timing testbenches.
+
+## Consolidated descriptor validation
+
+The integrated dispatcher now has one descriptor validator at the current-tick
+acceptance boundary. Private implementation paths reuse its result through
+controller/motion processing and ring capture. Public standalone entry points
+still perform full validation; no public bypass flag or MMIO change is introduced.
+
+| Dispatcher estimate at 100 MHz | Before | After |
+|---|---:|---:|
+| LUT | 36212 | 32223 |
+| FF | 24615 | 24132 |
+| DSP | 71 | 71 |
+| BRAM_18K | 2 | 2 |
+| Maximum latency, clocks | 692 | 674 |
+| Estimated path, ns | 7.193 | 7.193 |
+
+This saves 3989 LUT (11.0%). Four copies still exceed the xc7z020 LUT/DSP budget;
+no four-motor fit or routed timing closure is claimed.
+
+The dispatcher tests now cover every descriptor error, including relative-position
+overflow after publication, normalization of malformed sequence/session completion
+fields, and ring/configuration generation disagreement before the first controller
+tick. That disagreement is rejected before activation; the previous path could
+provisionally accept in motion and reject later at ring capture. Existing tests
+retain completion backpressure, current-boundary feedback readiness, protective
+priority and cancellation coverage.
+
+Validation passed: all 20 native/RTL tests, including generated peripheral and
+motion integration; Vitis C simulation, synthesis and Verilog co-simulation for
+command engine, peripheral, motion, controller and dispatcher. Standalone
+command/peripheral/motion/controller resource totals remain unchanged. The
+16,384-update native motion equivalence trace still matches revision `d4abc0b`.

@@ -30,6 +30,12 @@ class MotionExecutor {
                       const MotionConfig& config, bool feedback_pending = false);
 
   private:
+    friend class Controller;
+    MotionResult step_impl(bool reset, bool authorized, bool command_valid,
+                           const Descriptor& command, bool completion_ack, bool immediate_stop,
+                           uint32_t session, uint64_t now, int64_t position, int32_t velocity_mrpm,
+                           bool velocity_valid, const MotionConfig& config, bool feedback_pending,
+                           bool command_checked);
     MotionResult result_{};
     uint32_t opcode_ = 0, settling_ = 0, timeout_us_ = 0;
     uint32_t motion_mode_ = 0; // 0 coast, 1 velocity PI, 2 bounded open-loop

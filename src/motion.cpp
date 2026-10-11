@@ -67,6 +67,16 @@ MotionResult MotionExecutor::step(bool reset, bool authorized, bool command_vali
                                   bool immediate_stop, uint32_t session, uint64_t now,
                                   int64_t position, int32_t velocity_mrpm, bool velocity_valid,
                                   const MotionConfig& c, bool feedback_pending) {
+    return step_impl(reset, authorized, command_valid, command, completion_ack, immediate_stop,
+                     session, now, position, velocity_mrpm, velocity_valid, c, feedback_pending,
+                     false);
+}
+MotionResult MotionExecutor::step_impl(bool reset, bool authorized, bool command_valid,
+                                       const Descriptor& command, bool completion_ack,
+                                       bool immediate_stop, uint32_t session, uint64_t now,
+                                       int64_t position, int32_t velocity_mrpm, bool velocity_valid,
+                                       const MotionConfig& c, bool feedback_pending,
+                                       bool command_checked) {
     if (reset) {
         *this = MotionExecutor{};
         return result_;
@@ -131,8 +141,9 @@ MotionResult MotionExecutor::step(bool reset, bool authorized, bool command_vali
         result_.busy = true;
         started_ = now;
         settling_ = 0;
-        const Error error =
-            validate(command, command[2], session, c.generation, position, c.max_speed_mrpm);
+        const Error error = command_checked ? Error::none
+                                            : validate(command, command[2], session, c.generation,
+                                                       position, c.max_speed_mrpm);
         if (error != Error::none) {
             result_.activation = 0;
             finish(now, 1, static_cast<uint32_t>(error));

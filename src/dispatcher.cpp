@@ -74,14 +74,18 @@ void Dispatcher::service(bool reset, const uint32_t request[4], bool tick, bool 
             Descriptor offered{};
             const bool can_offer = authorized && !cancel_pending_ && !stop_pending_ && !faults_ &&
                                    ring_.offer(offered);
-            const Error error = can_offer ? validate(offered, ring_.consumer(), ring_.epoch(),
-                                                     config.motion.generation, position,
-                                                     config.motion.max_speed_mrpm)
-                                          : Error::none;
-            last_ = controller_.step(
+            Error error = can_offer ? validate(offered, ring_.consumer(), ring_.epoch(),
+                                               config.motion.generation, position,
+                                               config.motion.max_speed_mrpm)
+                                    : Error::none;
+            // Ring ownership and active configuration must agree before activation.
+            if (can_offer && error == Error::none && offered[4] != ring_.generation_) {
+                error = Error::generation;
+            }
+            last_ = controller_.step_impl(
                 false, authorized && !cancel_pending_ && !faults_, capture_fault, now, encoder,
                 position, ring_.epoch() ? ring_.epoch() : 1, can_offer && error == Error::none,
-                offered, ack_, stop_pending_, config);
+                offered, ack_, stop_pending_, config, true);
             ack_ = last_.motion.completion_valid;
             tick_authorized_ = authorized && !cancel_pending_ && !faults_;
             if (last_.faults) {
@@ -89,16 +93,13 @@ void Dispatcher::service(bool reset, const uint32_t request[4], bool tick, bool 
                 faults_ |= last_.faults;
             } else if (!cancel_pending_ && !stop_pending_) {
                 if (last_.motion.accepted) {
-                    if (!ring_.capture(now, position, config.motion.max_speed_mrpm) ||
-                        !ring_.busy()) {
+                    if (!ring_.capture_checked(now, error) || !ring_.busy()) {
                         faults_ |= 0x80000000U;
                     } else {
                         activated = true;
                     }
                 } else if (can_offer && error != Error::none && last_.motion.ready) {
-                    ring_.capture(
-                        now, position,
-                        config.motion.max_speed_mrpm); // rejected completion, zero activation
+                    ring_.capture_checked(now, error); // rejected completion, zero activation
                 }
                 if (last_.motion.completion_valid) {
                     if (ring_.busy() && ring_.active()[2] == last_.motion.sequence &&

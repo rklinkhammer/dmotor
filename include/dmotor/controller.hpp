@@ -24,6 +24,12 @@ class Controller {
                           bool immediate_stop, const ControllerConfig& config);
 
   private:
+    friend class Dispatcher;
+    ControllerResult step_impl(bool reset, bool authorized, bool capture_fault, uint64_t now,
+                               const EncoderSample& encoder, int64_t position, uint32_t session,
+                               bool command_valid, const Descriptor& command, bool completion_ack,
+                               bool immediate_stop, const ControllerConfig& config,
+                               bool command_checked);
     MotionExecutor motion_{};
     VelocityEstimator velocity_{};
     bool qualified_ = false, acquiring_ = false, primed_ = false;

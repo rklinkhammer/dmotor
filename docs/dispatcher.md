@@ -110,3 +110,27 @@ AXI-to-PWM hardware test or physical motor validation.
 Run `python3 tools/vitis_check.py --kernel dispatcher`. The synthesis result already
 contains ring, estimator, profiles and PI; do not add standalone component estimates
 to it. See [verification results](verification.md).
+
+## Single acceptance-boundary validation
+
+The dispatcher validates an offered descriptor once per tick, using the live
+position, ring consumer/session and active configuration. Descriptor generation
+must also match the ring's committed generation. Only a successful result is
+passed to the motion executor for possible acceptance; a rejected descriptor is
+retired when the current controller result is ready, with zero activation time.
+
+Private friend-only implementation paths let the controller/motion executor and
+ring capture reuse this result during the same serialized call. No software
+input or public HLS port can assert that a command is already validated. The
+immutable published slot cannot change between offer and capture. Capture still
+checks admission, busy state and completion capacity, and completion correlation
+still comes from ring counters/session rather than untrusted descriptor fields.
+Standalone controller/motion entry points and public ring capture retain full
+validation. HLS arithmetic-sharing directives target the private motion
+implementation, preserving the prior exact-divider optimization.
+
+Cancellation, live feedback faults and deadline/configuration faults still take
+precedence over activation. Validation is repeated on later ticks if the command
+was not accepted; it is never cached across changing position or configuration.
+A ring/configuration generation disagreement is now rejected before activation,
+rather than permitting provisional motion acceptance followed by capture rejection.
