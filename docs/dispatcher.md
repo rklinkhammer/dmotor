@@ -134,3 +134,29 @@ precedence over activation. Validation is repeated on later ticks if the command
 was not accepted; it is never cached across changing position or configuration.
 A ring/configuration generation disagreement is now rejected before activation,
 rather than permitting provisional motion acceptance followed by capture rejection.
+
+## State update and telemetry implementation
+
+Tick processing now uses a local controller result, applies retirement/fault
+handling, and commits `last_` once. Reply encoding reads that snapshot directly;
+only the duty, motion-status and controller-fault words receive the existing live
+inhibit/activation masks. This avoids a second full result-structure copy without
+changing any reply field or between-tick masking behavior.
+
+The dispatcher Vitis configuration preserves and shares `MotionExecutor::finish`
+and `MotionExecutor::fail` as HLS functions. This reuses their state-update logic
+across branches while retaining C++ call order and fault priority. It does not
+share hardware across motors or change the public interface. These directives
+are dispatcher-specific: standalone motion/controller builds retain their previous
+settings because the same sharing worsens their clock-uncertainty margin.
+
+Reproduce the complete native reply comparison with:
+
+```sh
+python3 tools/check_dispatcher_equivalence.py --reference a81357a
+```
+
+The script compiles the current and reference dispatcher source against the same
+current dependencies/testbench, enables test-only trace output, and compares all
+40 reply words for every service call. It checks dispatcher-source equivalence,
+not all possible inputs or hardware timing.

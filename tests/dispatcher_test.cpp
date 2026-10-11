@@ -20,6 +20,12 @@ static void service(uint32_t op = 0, uint32_t a = 0, uint32_t b = 0, uint32_t c 
     uint32_t request[4] = {op, a, b, c};
     dmotor_dispatcher(reset, request, tick, authorized, cancel, 8, stop, fault, true, now, count,
                       edge, 0, 0, false, position, cfg, reply);
+#ifdef DMOTOR_TRACE
+    for (auto word : reply) {
+        std::cout << word << ',';
+    }
+    std::cout << '\n';
+#endif
 }
 static void tick(bool cancel = false, bool stop = false) {
     now += 100000;

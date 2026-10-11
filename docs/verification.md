@@ -438,3 +438,39 @@ motion integration; Vitis C simulation, synthesis and Verilog co-simulation for
 command engine, peripheral, motion, controller and dispatcher. Standalone
 command/peripheral/motion/controller resource totals remain unchanged. The
 16,384-update native motion equivalence trace still matches revision `d4abc0b`.
+
+## Shared state updates and single result commit
+
+At 100 MHz on xc7z020clg400-1, the retained dispatcher changes yield:
+
+| Estimate | Before | After |
+|---|---:|---:|
+| LUT | 32223 | 27007 |
+| FF | 24132 | 21058 |
+| DSP | 71 | 71 |
+| BRAM_18K | 2 | 2 |
+| Maximum latency, clocks | 674 | 700 |
+| Estimated path, ns | 7.193 | 7.193 |
+
+This saves 5216 LUT (16.2%) and 3074 FF. Latency is 7.00 us at 100 MHz.
+Four copies still exceed the device resource budget; this is an HLS estimate,
+not mapped/routed fit or a four-controller integration result.
+
+Measured isolated experiments: a separate non-inlined tick function increased
+LUTs to 33938 and was discarded. Single result commit plus direct telemetry
+masking reduced LUTs to 32041. Sharing completion/fault state-update functions
+alone reduced LUTs to 27073; combining the two retained changes gives 27007.
+The same state-update directives on standalone motion/controller builds produced
+7.629 ns estimated paths, exceeding the 7.30 ns effective budget, so those
+configurations were restored. Only the dispatcher gets the new directives.
+
+The deterministic native comparison matches all 40 reply words across 1378
+service calls against revision `a81357a`, including cancellation, authorization
+loss, stop, backpressure, every descriptor rejection and live telemetry masking.
+See `evidence/state_equivalence.log`.
+
+Validation passed: all 20 native/RTL tests and dispatcher Vitis C simulation,
+synthesis and Verilog co-simulation. Standalone motion/controller RTL was
+regenerated with the restored, unchanged configuration; their prior resource
+and timing estimates are reproduced. The integrated motion RTL test uses that
+restored RTL. Existing safety, queue and timing behavior remains covered.

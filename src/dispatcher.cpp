@@ -82,30 +82,29 @@ void Dispatcher::service(bool reset, const uint32_t request[4], bool tick, bool 
             if (can_offer && error == Error::none && offered[4] != ring_.generation_) {
                 error = Error::generation;
             }
-            last_ = controller_.step_impl(
+            auto next = controller_.step_impl(
                 false, authorized && !cancel_pending_ && !faults_, capture_fault, now, encoder,
                 position, ring_.epoch() ? ring_.epoch() : 1, can_offer && error == Error::none,
                 offered, ack_, stop_pending_, config, true);
-            ack_ = last_.motion.completion_valid;
+            ack_ = next.motion.completion_valid;
             tick_authorized_ = authorized && !cancel_pending_ && !faults_;
-            if (last_.faults) {
-                ring_.cancel(now, 0x20000000U | last_.faults);
-                faults_ |= last_.faults;
+            if (next.faults) {
+                ring_.cancel(now, 0x20000000U | next.faults);
+                faults_ |= next.faults;
             } else if (!cancel_pending_ && !stop_pending_) {
-                if (last_.motion.accepted) {
+                if (next.motion.accepted) {
                     if (!ring_.capture_checked(now, error) || !ring_.busy()) {
                         faults_ |= 0x80000000U;
                     } else {
                         activated = true;
                     }
-                } else if (can_offer && error != Error::none && last_.motion.ready) {
+                } else if (can_offer && error != Error::none && next.motion.ready) {
                     ring_.capture_checked(now, error); // rejected completion, zero activation
                 }
-                if (last_.motion.completion_valid) {
-                    if (ring_.busy() && ring_.active()[2] == last_.motion.sequence &&
-                        ring_.epoch() == last_.motion.epoch) {
-                        ring_.finish(last_.motion.terminal, last_.motion.outcome,
-                                     last_.motion.detail);
+                if (next.motion.completion_valid) {
+                    if (ring_.busy() && ring_.active()[2] == next.motion.sequence &&
+                        ring_.epoch() == next.motion.epoch) {
+                        ring_.finish(next.motion.terminal, next.motion.outcome, next.motion.detail);
                     } else {
                         faults_ |= 0x80000000U;
                     }
@@ -116,9 +115,10 @@ void Dispatcher::service(bool reset, const uint32_t request[4], bool tick, bool 
             stop_pending_ = false;
             if (faults_) {
                 ring_.cancel(now, 0x20000000U | faults_);
-                last_.motion.duty_q16 = 0;
+                next.motion.duty_q16 = 0;
                 activated = false;
             }
+            last_ = next;
         }
     }
     const auto& c = ring_.cancellation();
@@ -138,16 +138,15 @@ void Dispatcher::service(bool reset, const uint32_t request[4], bool tick, bool 
     reply[13] = c.cause;
     reply[14] = static_cast<uint32_t>(c.timestamp);
     reply[15] = static_cast<uint32_t>(c.timestamp >> 32);
-    auto visible = last_;
-    visible.faults |= faults_;
+    encode_controller_result(last_, reply + 16);
+    reply[32] |= faults_;
+    uint32_t motion_flags = reply[18] & ~8U;
     if (cancel_pending_ || !authorized || faults_) {
-        visible.motion.duty_q16 = 0;
-        visible.motion.ready = false;
+        reply[16] = 0;
+        motion_flags &= ~1U;
     }
-    // Acceptance telemetry must reflect committed ring activation, including
-    // when the controller detects a fault after inspecting the offered command.
-    visible.motion.accepted = activated;
-    encode_controller_result(visible, reply + 16);
+    // Report committed activation, not provisional controller acceptance.
+    reply[18] = motion_flags | (activated ? 8U : 0U);
 }
 } // namespace dmotor
 extern "C" void dmotor_dispatcher(bool reset, const uint32_t request[4], bool tick, bool authorized,
