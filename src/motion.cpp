@@ -1,4 +1,5 @@
 #include "dmotor/motion.hpp"
+#include "dmotor/detail/bounded.hpp"
 #include "dmotor/registers.hpp"
 namespace dmotor {
 namespace detail {
@@ -152,7 +153,7 @@ MotionResult MotionExecutor::step_impl(bool reset, bool authorized, bool command
             // Reject unsafe activation before an immediate command can complete.
             fail(now, 8);
         } else {
-            opcode_ = command[0];
+            opcode_ = static_cast<uint8_t>(command[0] & 7U);
             if ((opcode_ == 1 || opcode_ == 2 || opcode_ == 3 || opcode_ == 6) &&
                 motion_mode_ != 1) {
                 result_.ramp_mrpm = velocity_mrpm;
@@ -160,11 +161,13 @@ MotionResult MotionExecutor::step_impl(bool reset, bool authorized, bool command
             }
             timeout_us_ = command[11];
             if (opcode_ == 1) {
-                target_mrpm_ = signed_word(command[5]);
+                target_mrpm_ =
+                    static_cast<int32_t>(detail::narrow_signed<21>(signed_word(command[5])));
                 motion_mode_ = 1;
                 finish(now, 0, 0);
             } else if (opcode_ == 4) {
-                open_duty_ = clamp(signed_word(command[8]), c.duty_limit_q16);
+                open_duty_ = static_cast<int32_t>(detail::narrow_signed<18>(
+                    clamp(signed_word(command[8]), c.duty_limit_q16)));
                 motion_mode_ = 2;
                 result_.ramp_mrpm = 0;
                 ramp_remainder_ = 0;
@@ -175,7 +178,8 @@ MotionResult MotionExecutor::step_impl(bool reset, bool authorized, bool command
                 if (opcode_ == 3) {
                     target_position_ += position; // validate proved no overflow.
                 }
-                speed_cap_ = signed_word(command[5]);
+                speed_cap_ =
+                    static_cast<int32_t>(detail::narrow_signed<21>(signed_word(command[5])));
                 motion_mode_ = 1;
             } else if (opcode_ == 5) {
                 duration_us_ = (static_cast<uint64_t>(command[10]) << 32) | command[9];
@@ -245,7 +249,7 @@ MotionResult MotionExecutor::step_impl(bool reset, bool authorized, bool command
             // The sum is <= 10000999, so a 32-bit datapath is sufficient.
             const uint32_t accumulated = ramp_remainder_ + rate;
             const int64_t advance = accumulated / ramp_ticks_per_second;
-            ramp_remainder_ = accumulated % ramp_ticks_per_second;
+            ramp_remainder_ = static_cast<uint16_t>(accumulated % ramp_ticks_per_second);
             const int64_t change = static_cast<int64_t>(goal) - result_.ramp_mrpm;
             if (magnitude(static_cast<int32_t>(change)) <= advance) {
                 result_.ramp_mrpm = goal;
@@ -254,17 +258,21 @@ MotionResult MotionExecutor::step_impl(bool reset, bool authorized, bool command
                 result_.ramp_mrpm +=
                     change > 0 ? static_cast<int32_t>(advance) : -static_cast<int32_t>(advance);
             }
-            const int64_t error = static_cast<int64_t>(result_.ramp_mrpm) - velocity_mrpm;
+            // Valid feedback/ramp: error +/-2000000; gains 0..1048576.
+            const int64_t error = detail::narrow_signed<22>(
+                static_cast<int64_t>(result_.ramp_mrpm) - velocity_mrpm);
+            const uint32_t ki = static_cast<uint32_t>(c.ki_q16) & 0x1fffffU;
+            const uint32_t kp = static_cast<uint32_t>(c.kp_q16) & 0x1fffffU;
             const int64_t limit = static_cast<int64_t>(c.integral_limit_q16) * integral_scale;
-            int64_t candidate = integral_nano_ + static_cast<int64_t>(c.ki_q16) * error * 1000;
+            int64_t candidate = integral_nano_ + static_cast<int64_t>(ki) * error * 1000;
             candidate = candidate > limit ? limit : candidate < -limit ? -limit : candidate;
             const int64_t proportional =
-                detail::rounded(static_cast<int64_t>(c.kp_q16) * error, 1000);
+                detail::rounded(static_cast<int64_t>(kp) * error, 1000);
             const int64_t effort = proportional + detail::rounded(candidate, integral_scale);
             if ((effort <= c.duty_limit_q16 && effort >= -c.duty_limit_q16) ||
                 (effort > c.duty_limit_q16 && error < 0) ||
                 (effort < -c.duty_limit_q16 && error > 0)) {
-                integral_nano_ = candidate;
+                integral_nano_ = detail::narrow_signed<47>(candidate);
             }
             result_.duty_q16 = clamp(proportional + detail::rounded(integral_nano_, integral_scale),
                                      c.duty_limit_q16);
@@ -277,7 +285,7 @@ MotionResult MotionExecutor::step_impl(bool reset, bool authorized, bool command
         const bool settled =
             velocity_valid && magnitude(velocity_mrpm) <= c.velocity_tolerance_mrpm &&
             result_.ramp_mrpm == 0 && ((opcode_ != 2 && opcode_ != 3) || in_position);
-        settling_ = settled ? settling_ + 1 : 0;
+        settling_ = settled ? (settling_ + 1) & 0xfffffU : 0;
         if (settling_ >= c.settle_ticks) {
             motion_mode_ = 0;
             target_mrpm_ = 0;

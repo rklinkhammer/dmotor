@@ -37,12 +37,17 @@ class MotionExecutor {
                            bool velocity_valid, const MotionConfig& config, bool feedback_pending,
                            bool command_checked);
     MotionResult result_{};
-    uint32_t opcode_ = 0, settling_ = 0, timeout_us_ = 0;
-    uint32_t motion_mode_ = 0; // 0 coast, 1 velocity PI, 2 bounded open-loop
-    int32_t target_mrpm_ = 0, open_duty_ = 0, speed_cap_ = 0;
-    int64_t target_position_ = 0, integral_nano_ = 0;
+    uint8_t opcode_ = 0; // Validated opcodes 1..6, or inactive 0.
+    uint32_t settling_ = 0; // Stops incrementing at settle_ticks <= 1000000.
+    uint32_t timeout_us_ = 0;
+    uint8_t motion_mode_ = 0; // 0 coast, 1 velocity PI, 2 bounded open-loop.
+    int32_t target_mrpm_ = 0; // Validated +/-1000000 milliRPM.
+    int32_t open_duty_ = 0; // Clamped to +/-65536, including both endpoints.
+    int32_t speed_cap_ = 0; // Validated positive speed <= 1000000.
+    int64_t target_position_ = 0;
+    int64_t integral_nano_ = 0; // Clamped to +/-65536 * 1000000000.
     uint64_t started_ = 0, duration_us_ = 0, previous_tick_ = 0;
-    uint32_t ramp_remainder_ = 0;
+    uint16_t ramp_remainder_ = 0; // Modulo 1000, always 0..999.
     bool tick_primed_ = false, stopping_ = false;
     uint32_t session_ = 0, generation_ = 0;
     void finish(uint64_t now, uint32_t outcome, uint32_t detail);

@@ -53,4 +53,30 @@ int main() {
             std::puts("");
         }
     }
+    // Long settling crosses the 19-bit boundary and completes at the maximum
+    // accepted 20-bit count. Run in native comparison, not million-step cosim.
+    uint32_t c[16] = {1, 1000000, 10000000, 10000000, 1, 1, 0, 0,
+                      1000000, 0, 0, 65536, 65536, 2000000000, 0, 0};
+    for (auto& word : command) {
+        word = 0;
+    }
+    command[0] = 6;
+    command[3] = command[4] = 1;
+    command[11] = 2000000000;
+    dmotor_motion(true, false, false, command, c, false, false, 1, 0, 0, 0, false, reply);
+    for (unsigned tick = 1; tick <= 1000000; ++tick) {
+        dmotor_motion(false, true, tick == 1, command, c, false, false, 1,
+                      uint64_t(tick) * 100000, 0, 0, true, reply);
+        const bool busy = (reply[2] & 2) != 0;
+        if (reply[7] || busy != (tick < 1000000) ||
+            (tick == 1000000 && !(reply[2] & 4))) {
+            return 1;
+        }
+        if (tick >= 999998) {
+            for (auto w : reply) {
+                std::printf("%08x", w);
+            }
+            std::puts("");
+        }
+    }
 }

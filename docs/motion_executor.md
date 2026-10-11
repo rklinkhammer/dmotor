@@ -193,3 +193,31 @@ This compares every reply word for 16,384 deterministic motion updates, includin
 PI gain extremes, signed targets/feedback, all six command types and timeouts.
 It uses the current protocol validator for both versions and checks motion-source
 equivalence only; it is not a proof for every input or a hardware timing test.
+
+## Bounded internal values
+
+Private state now exposes these proven widths to HLS. Configuration and command
+words are still validated at their original widths before any narrowing.
+
+| Value | Required bits | Existing bound |
+|---|---:|---|
+| Opcode | 3 unsigned | Inactive 0, validated commands 1–6 |
+| Motion mode | 2 unsigned | Coast 0, PI 1, open-loop 2 |
+| Settling count | 20 unsigned | Completes at configured count, at most 1,000,000 |
+| Ramp remainder | 10 unsigned | Modulo 1,000, always 0–999 |
+| Target and position-profile speed cap | 21 signed | Magnitude at most 1,000,000 milliRPM |
+| Retained open-loop duty | 18 signed | Inclusive ±65,536 |
+| Retained integral | 47 signed | Inclusive ±65,536,000,000,000 |
+| PI error | 22 signed | Inclusive ±2,000,000 milliRPM |
+| PI gains | 21 unsigned | Validated range 0–1,048,576 |
+
+Small fields use standard C++ integer types; masks and explicit sign extension
+expose tighter bounds where necessary. These are required value widths; HLS may
+retain an extra arithmetic bit (the position-profile target currently retains 22
+bits because of signed negation). `detail::narrow_signed` is a scalar
+representation operation, not a validator or saturator. Its callers must prove
+the value fits first. Intermediate PI products remain wide before clamping.
+Position, timestamps, dwell duration, session/generation identifiers and public
+MMIO layouts retain their existing widths and ranges. The native object layout
+is private and is not a serialization format. No architectural requirement changes
+are needed.

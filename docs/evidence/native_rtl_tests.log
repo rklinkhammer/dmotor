@@ -1,10 +1,10 @@
-Start testing: Oct 11 13:32 EDT
+Start testing: Oct 11 13:49 EDT
 ----------------------------------------------------------
 1/20 Testing: protocol
 1/20 Test: protocol
 Command: "/home/rklinkhammer/workspace/dmotor/build/protocol_test"
 Directory: /home/rklinkhammer/workspace/dmotor/build
-"protocol" start time: Oct 11 13:32 EDT
+"protocol" start time: Oct 11 13:49 EDT
 Output:
 ----------------------------------------------------------
 protocol: wrap, ownership, rejection, cancellation, backpressure passed
@@ -12,7 +12,7 @@ protocol: wrap, ownership, rejection, cancellation, backpressure passed
 Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"protocol" end time: Oct 11 13:32 EDT
+"protocol" end time: Oct 11 13:49 EDT
 "protocol" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -20,14 +20,14 @@ Test Passed.
 2/20 Test: generated_abi
 Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/generate_abi.py" "--check"
 Directory: /home/rklinkhammer/workspace/dmotor/build
-"generated_abi" start time: Oct 11 13:32 EDT
+"generated_abi" start time: Oct 11 13:49 EDT
 Output:
 ----------------------------------------------------------
 <end of output>
 Test time =   0.04 sec
 ----------------------------------------------------------
 Test Passed.
-"generated_abi" end time: Oct 11 13:32 EDT
+"generated_abi" end time: Oct 11 13:49 EDT
 "generated_abi" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -35,7 +35,7 @@ Test Passed.
 3/20 Test: rtl_safety
 Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/rtl_test.py" "--iverilog" "/tmp/dmotor-tools/root/usr/bin/iverilog" "--vvp" "/tmp/dmotor-tools/root/usr/bin/vvp" "--base" "/tmp/dmotor-tools/root/usr/lib/x86_64-linux-gnu/ivl" "--source" "/home/rklinkhammer/workspace/dmotor" "--build" "/home/rklinkhammer/workspace/dmotor/build" "--test" "safety"
 Directory: /home/rklinkhammer/workspace/dmotor/build
-"rtl_safety" start time: Oct 11 13:32 EDT
+"rtl_safety" start time: Oct 11 13:49 EDT
 Output:
 ----------------------------------------------------------
 warning: Some design elements have no explicit time unit and/or
@@ -49,7 +49,7 @@ safety: 36 fault/source cases, recovery, stale refresh, expiry boundary passed
 Test time =   0.07 sec
 ----------------------------------------------------------
 Test Passed.
-"rtl_safety" end time: Oct 11 13:32 EDT
+"rtl_safety" end time: Oct 11 13:49 EDT
 "rtl_safety" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -57,7 +57,7 @@ Test Passed.
 4/20 Test: rtl_scheduler
 Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/rtl_test.py" "--iverilog" "/tmp/dmotor-tools/root/usr/bin/iverilog" "--vvp" "/tmp/dmotor-tools/root/usr/bin/vvp" "--base" "/tmp/dmotor-tools/root/usr/lib/x86_64-linux-gnu/ivl" "--source" "/home/rklinkhammer/workspace/dmotor" "--build" "/home/rklinkhammer/workspace/dmotor/build" "--test" "scheduler"
 Directory: /home/rklinkhammer/workspace/dmotor/build
-"rtl_scheduler" start time: Oct 11 13:32 EDT
+"rtl_scheduler" start time: Oct 11 13:49 EDT
 Output:
 ----------------------------------------------------------
 warning: Some design elements have no explicit time unit and/or
@@ -70,7 +70,7 @@ scheduler: handshake, result, deadline priority, inhibit passed
 Test time =   0.05 sec
 ----------------------------------------------------------
 Test Passed.
-"rtl_scheduler" end time: Oct 11 13:32 EDT
+"rtl_scheduler" end time: Oct 11 13:49 EDT
 "rtl_scheduler" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -78,7 +78,7 @@ Test Passed.
 5/20 Test: rtl_qcencoder
 Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/rtl_test.py" "--iverilog" "/tmp/dmotor-tools/root/usr/bin/iverilog" "--vvp" "/tmp/dmotor-tools/root/usr/bin/vvp" "--base" "/tmp/dmotor-tools/root/usr/lib/x86_64-linux-gnu/ivl" "--source" "/home/rklinkhammer/workspace/dmotor" "--build" "/home/rklinkhammer/workspace/dmotor/build" "--test" "qcencoder"
 Directory: /home/rklinkhammer/workspace/dmotor/build
-"rtl_qcencoder" start time: Oct 11 13:32 EDT
+"rtl_qcencoder" start time: Oct 11 13:49 EDT
 Output:
 ----------------------------------------------------------
 warning: Some design elements have no explicit time unit and/or
@@ -88,10 +88,10 @@ warning: Some design elements have no explicit time unit and/or
 qcencoder: X1/X2/X4, reverse, invalid, saturation at capture envelope passed
 /home/rklinkhammer/workspace/dmotor/tests/qcencoder_tb.sv:31: $finish called at 260570000 (1ps)
 <end of output>
-Test time =   0.11 sec
+Test time =   0.09 sec
 ----------------------------------------------------------
 Test Passed.
-"rtl_qcencoder" end time: Oct 11 13:32 EDT
+"rtl_qcencoder" end time: Oct 11 13:49 EDT
 "rtl_qcencoder" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -99,7 +99,7 @@ Test Passed.
 6/20 Test: rtl_pwm
 Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/rtl_test.py" "--iverilog" "/tmp/dmotor-tools/root/usr/bin/iverilog" "--vvp" "/tmp/dmotor-tools/root/usr/bin/vvp" "--base" "/tmp/dmotor-tools/root/usr/lib/x86_64-linux-gnu/ivl" "--source" "/home/rklinkhammer/workspace/dmotor" "--build" "/home/rklinkhammer/workspace/dmotor/build" "--test" "pwm"
 Directory: /home/rklinkhammer/workspace/dmotor/build
-"rtl_pwm" start time: Oct 11 13:32 EDT
+"rtl_pwm" start time: Oct 11 13:49 EDT
 Output:
 ----------------------------------------------------------
 warning: Some design elements have no explicit time unit and/or
@@ -112,7 +112,7 @@ PWM: duty, reversal blanking, immediate inhibit passed
 Test time =   0.06 sec
 ----------------------------------------------------------
 Test Passed.
-"rtl_pwm" end time: Oct 11 13:32 EDT
+"rtl_pwm" end time: Oct 11 13:49 EDT
 "rtl_pwm" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -120,7 +120,7 @@ Test Passed.
 7/20 Test: rtl_latency
 Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/rtl_test.py" "--iverilog" "/tmp/dmotor-tools/root/usr/bin/iverilog" "--vvp" "/tmp/dmotor-tools/root/usr/bin/vvp" "--base" "/tmp/dmotor-tools/root/usr/lib/x86_64-linux-gnu/ivl" "--source" "/home/rklinkhammer/workspace/dmotor" "--build" "/home/rklinkhammer/workspace/dmotor/build" "--test" "latency"
 Directory: /home/rklinkhammer/workspace/dmotor/build
-"rtl_latency" start time: Oct 11 13:32 EDT
+"rtl_latency" start time: Oct 11 13:49 EDT
 Output:
 ----------------------------------------------------------
 warning: Some design elements have no explicit time unit and/or
@@ -134,7 +134,7 @@ latency: 10 asynchronous phases <=50ns digital HALT bound passed
 Test time =   0.06 sec
 ----------------------------------------------------------
 Test Passed.
-"rtl_latency" end time: Oct 11 13:32 EDT
+"rtl_latency" end time: Oct 11 13:49 EDT
 "rtl_latency" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -142,7 +142,7 @@ Test Passed.
 8/20 Test: rtl_axi_bridge
 Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/rtl_test.py" "--iverilog" "/tmp/dmotor-tools/root/usr/bin/iverilog" "--vvp" "/tmp/dmotor-tools/root/usr/bin/vvp" "--base" "/tmp/dmotor-tools/root/usr/lib/x86_64-linux-gnu/ivl" "--source" "/home/rklinkhammer/workspace/dmotor" "--build" "/home/rklinkhammer/workspace/dmotor/build" "--test" "axi_bridge"
 Directory: /home/rklinkhammer/workspace/dmotor/build
-"rtl_axi_bridge" start time: Oct 11 13:32 EDT
+"rtl_axi_bridge" start time: Oct 11 13:49 EDT
 Output:
 ----------------------------------------------------------
 warning: Some design elements have no explicit time unit and/or
@@ -155,7 +155,7 @@ AXI bridge: split channels, stalled responses, idle polling, errors, timeout pas
 Test time =   0.05 sec
 ----------------------------------------------------------
 Test Passed.
-"rtl_axi_bridge" end time: Oct 11 13:32 EDT
+"rtl_axi_bridge" end time: Oct 11 13:49 EDT
 "rtl_axi_bridge" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -163,7 +163,7 @@ Test Passed.
 9/20 Test: rtl_encoder_snapshot
 Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/rtl_test.py" "--iverilog" "/tmp/dmotor-tools/root/usr/bin/iverilog" "--vvp" "/tmp/dmotor-tools/root/usr/bin/vvp" "--base" "/tmp/dmotor-tools/root/usr/lib/x86_64-linux-gnu/ivl" "--source" "/home/rklinkhammer/workspace/dmotor" "--build" "/home/rklinkhammer/workspace/dmotor/build" "--test" "encoder_snapshot"
 Directory: /home/rklinkhammer/workspace/dmotor/build
-"rtl_encoder_snapshot" start time: Oct 11 13:32 EDT
+"rtl_encoder_snapshot" start time: Oct 11 13:49 EDT
 Output:
 ----------------------------------------------------------
 warning: Some design elements have no explicit time unit and/or
@@ -176,7 +176,7 @@ encoder snapshot: count, direction epochs, invalid exclusion and fault latching 
 Test time =   0.05 sec
 ----------------------------------------------------------
 Test Passed.
-"rtl_encoder_snapshot" end time: Oct 11 13:32 EDT
+"rtl_encoder_snapshot" end time: Oct 11 13:49 EDT
 "rtl_encoder_snapshot" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -184,7 +184,7 @@ Test Passed.
 10/20 Test: control
 Command: "/home/rklinkhammer/workspace/dmotor/build/control_test"
 Directory: /home/rklinkhammer/workspace/dmotor/build
-"control" start time: Oct 11 13:32 EDT
+"control" start time: Oct 11 13:49 EDT
 Output:
 ----------------------------------------------------------
 PI: signed rounding, limits, anti-windup, range checks passed
@@ -192,7 +192,7 @@ PI: signed rounding, limits, anti-windup, range checks passed
 Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"control" end time: Oct 11 13:32 EDT
+"control" end time: Oct 11 13:49 EDT
 "control" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -200,7 +200,7 @@ Test Passed.
 11/20 Test: command_engine
 Command: "/home/rklinkhammer/workspace/dmotor/build/command_engine_test"
 Directory: /home/rklinkhammer/workspace/dmotor/build
-"command_engine" start time: Oct 11 13:32 EDT
+"command_engine" start time: Oct 11 13:49 EDT
 Output:
 ----------------------------------------------------------
 command engine: publication, activation, stale completion, cancellation, full ring passed
@@ -208,7 +208,7 @@ command engine: publication, activation, stale completion, cancellation, full ri
 Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"command_engine" end time: Oct 11 13:32 EDT
+"command_engine" end time: Oct 11 13:49 EDT
 "command_engine" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -216,7 +216,7 @@ Test Passed.
 12/20 Test: peripheral
 Command: "/home/rklinkhammer/workspace/dmotor/build/peripheral_test"
 Directory: /home/rklinkhammer/workspace/dmotor/build
-"peripheral" start time: Oct 11 13:32 EDT
+"peripheral" start time: Oct 11 13:49 EDT
 Output:
 ----------------------------------------------------------
 peripheral: decode, strobe/alignment errors, queue, cancellation, actions passed
@@ -224,7 +224,7 @@ peripheral: decode, strobe/alignment errors, queue, cancellation, actions passed
 Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"peripheral" end time: Oct 11 13:32 EDT
+"peripheral" end time: Oct 11 13:49 EDT
 "peripheral" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -232,16 +232,16 @@ Test Passed.
 13/20 Test: rtl_peripheral_integrated
 Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/integrated_rtl.py" "--iverilog" "/tmp/dmotor-tools/root/usr/bin/iverilog" "--vvp" "/tmp/dmotor-tools/root/usr/bin/vvp" "--base" "/tmp/dmotor-tools/root/usr/lib/x86_64-linux-gnu/ivl"
 Directory: /home/rklinkhammer/workspace/dmotor/build
-"rtl_peripheral_integrated" start time: Oct 11 13:32 EDT
+"rtl_peripheral_integrated" start time: Oct 11 13:49 EDT
 Output:
 ----------------------------------------------------------
 integrated AXI/HLS: PASS; max observed write=101 read=104 cycles
 /home/rklinkhammer/workspace/dmotor/tests/peripheral_top_tb.sv:81: $finish called at 1050830000 (1ps)
 <end of output>
-Test time =  25.50 sec
+Test time =  25.71 sec
 ----------------------------------------------------------
 Test Passed.
-"rtl_peripheral_integrated" end time: Oct 11 13:33 EDT
+"rtl_peripheral_integrated" end time: Oct 11 13:49 EDT
 "rtl_peripheral_integrated" time elapsed: 00:00:25
 ----------------------------------------------------------
 
@@ -249,7 +249,7 @@ Test Passed.
 14/20 Test: configuration
 Command: "/home/rklinkhammer/workspace/dmotor/build/configuration_test"
 Directory: /home/rklinkhammer/workspace/dmotor/build
-"configuration" start time: Oct 11 13:33 EDT
+"configuration" start time: Oct 11 13:49 EDT
 Output:
 ----------------------------------------------------------
 configuration: bounds, atomic commit, authorization and acknowledgment guards passed
@@ -257,7 +257,7 @@ configuration: bounds, atomic commit, authorization and acknowledgment guards pa
 Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"configuration" end time: Oct 11 13:33 EDT
+"configuration" end time: Oct 11 13:49 EDT
 "configuration" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -265,7 +265,7 @@ Test Passed.
 15/20 Test: motion
 Command: "/home/rklinkhammer/workspace/dmotor/build/motion_test"
 Directory: /home/rklinkhammer/workspace/dmotor/build
-"motion" start time: Oct 11 13:33 EDT
+"motion" start time: Oct 11 13:49 EDT
 Output:
 ----------------------------------------------------------
 motion: six commands, ramps, residuals, settling, timeouts, inhibit and timing passed
@@ -273,7 +273,7 @@ motion: six commands, ramps, residuals, settling, timeouts, inhibit and timing p
 Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"motion" end time: Oct 11 13:33 EDT
+"motion" end time: Oct 11 13:49 EDT
 "motion" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -281,7 +281,7 @@ Test Passed.
 16/20 Test: motion_queue
 Command: "/home/rklinkhammer/workspace/dmotor/build/motion_queue_test"
 Directory: /home/rklinkhammer/workspace/dmotor/build
-"motion_queue" start time: Oct 11 13:33 EDT
+"motion_queue" start time: Oct 11 13:49 EDT
 Output:
 ----------------------------------------------------------
 motion queue: ordered execution, dwell, stop, backpressure and cancellation passed
@@ -289,7 +289,7 @@ motion queue: ordered execution, dwell, stop, backpressure and cancellation pass
 Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"motion_queue" end time: Oct 11 13:33 EDT
+"motion_queue" end time: Oct 11 13:49 EDT
 "motion_queue" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -297,7 +297,7 @@ Test Passed.
 17/20 Test: rtl_motion_integrated
 Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/motion_rtl.py" "--iverilog" "/tmp/dmotor-tools/root/usr/bin/iverilog" "--vvp" "/tmp/dmotor-tools/root/usr/bin/vvp" "--base" "/tmp/dmotor-tools/root/usr/lib/x86_64-linux-gnu/ivl"
 Directory: /home/rklinkhammer/workspace/dmotor/build
-"rtl_motion_integrated" start time: Oct 11 13:33 EDT
+"rtl_motion_integrated" start time: Oct 11 13:49 EDT
 Output:
 ----------------------------------------------------------
 motion RTL: first result at 100179 clocks
@@ -305,18 +305,18 @@ motion RTL: acknowledgment at 200162 clocks
 motion generated RTL: scheduled execution, completion, 50% PWM, mid-flight inhibit and feedback fault passed; maximum latency 174 cycles
 /home/rklinkhammer/workspace/dmotor/tests/motion_top_tb.sv:78: $finish called at 4013380000 (1ps)
 <end of output>
-Test time =  98.72 sec
+Test time =  96.12 sec
 ----------------------------------------------------------
 Test Passed.
-"rtl_motion_integrated" end time: Oct 11 13:34 EDT
-"rtl_motion_integrated" time elapsed: 00:01:38
+"rtl_motion_integrated" end time: Oct 11 13:51 EDT
+"rtl_motion_integrated" time elapsed: 00:01:36
 ----------------------------------------------------------
 
 18/20 Testing: velocity
 18/20 Test: velocity
 Command: "/home/rklinkhammer/workspace/dmotor/build/velocity_test"
 Directory: /home/rklinkhammer/workspace/dmotor/build
-"velocity" start time: Oct 11 13:34 EDT
+"velocity" start time: Oct 11 13:51 EDT
 Output:
 ----------------------------------------------------------
 velocity: both-direction 1/5/30/130 RPM sweep, zero timeout, restart, reversal, invalid edges and snapshot faults passed
@@ -324,7 +324,7 @@ velocity: both-direction 1/5/30/130 RPM sweep, zero timeout, restart, reversal, 
 Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"velocity" end time: Oct 11 13:34 EDT
+"velocity" end time: Oct 11 13:51 EDT
 "velocity" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -332,7 +332,7 @@ Test Passed.
 19/20 Test: controller
 Command: "/home/rklinkhammer/workspace/dmotor/build/controller_test"
 Directory: /home/rklinkhammer/workspace/dmotor/build
-"controller" start time: Oct 11 13:34 EDT
+"controller" start time: Oct 11 13:51 EDT
 Output:
 ----------------------------------------------------------
 controller: warmup, bounded acquisition, startup/reversal, stop, deadline priority and protective faults passed
@@ -340,7 +340,7 @@ controller: warmup, bounded acquisition, startup/reversal, stop, deadline priori
 Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"controller" end time: Oct 11 13:34 EDT
+"controller" end time: Oct 11 13:51 EDT
 "controller" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -348,7 +348,7 @@ Test Passed.
 20/20 Test: dispatcher
 Command: "/home/rklinkhammer/workspace/dmotor/build/dispatcher_test"
 Directory: /home/rklinkhammer/workspace/dmotor/build
-"dispatcher" start time: Oct 11 13:34 EDT
+"dispatcher" start time: Oct 11 13:51 EDT
 Output:
 ----------------------------------------------------------
 dispatcher: exact activation, ordered completion, backpressure, stop, rejection and cancellation priority passed
@@ -356,8 +356,8 @@ dispatcher: exact activation, ordered completion, backpressure, stop, rejection 
 Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"dispatcher" end time: Oct 11 13:34 EDT
+"dispatcher" end time: Oct 11 13:51 EDT
 "dispatcher" time elapsed: 00:00:00
 ----------------------------------------------------------
 
-End testing: Oct 11 13:34 EDT
+End testing: Oct 11 13:51 EDT

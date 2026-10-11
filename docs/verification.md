@@ -474,3 +474,50 @@ synthesis and Verilog co-simulation. Standalone motion/controller RTL was
 regenerated with the restored, unchanged configuration; their prior resource
 and timing estimates are reproduced. The integrated motion RTL test uses that
 restored RTL. Existing safety, queue and timing behavior remains covered.
+
+## Priority 3: narrow internal values
+
+The retained implementation uses scalar width constraints after validation or
+clamping. It narrows motion state and explicitly bounds PI error/gain operands;
+full-width intermediate products, rounding, saturation, positions and timestamps
+are preserved. No MMIO or architectural range changes are required. The exact
+bounds are listed in `motion_executor.md`.
+
+An initial C++ bit-field wrapper experiment was discarded: Vitis inferred extra
+memories and greatly increased dispatcher area. The retained scalar form avoids
+that representation. State narrowing alone measured 26,909 LUT, 20,795 FF and
+71 DSP in the dispatcher; bounding the PI operands additionally removes five DSPs.
+
+The native equivalence tools now compile the baseline revision's own headers and
+source dependencies. This prevents a changed private representation from silently
+being applied to both sides of a comparison. Against `beeed8a`, all 16,387 recorded
+motion snapshots and 1,378 complete dispatcher replies match under UBSan. The
+motion run includes a million-tick settling case, checking every tick for early
+completion and the exact terminal tick. Boundary tests additionally exercise both
+maximum speed signs, maximum opposite-sign PI error, retained integral saturation,
+full-scale duty, and invalid full-width commands that would alias legal commands
+if narrowed before validation. See `evidence/narrow_equivalence.log`.
+
+Final Vitis 2026.1 synthesis estimates at 100 MHz, xc7z020clg400-1:
+
+| Kernel | LUT before → after | FF before → after | DSP before → after | Max clocks before → after | Path ns before → after |
+|---|---:|---:|---:|---:|---:|
+| Motion | 18226 → 17193 | 12677 → 11950 | 47 → 42 | 532 → 534 | 7.080 → 7.040 |
+| Controller | 26471 → 25406 | 19418 → 18743 | 71 → 66 | 634 → 633 | 7.193 → 7.193 |
+| Dispatcher | 27007 → 26694 | 21058 → 20574 | 71 → 66 | 700 → 701 | 7.193 → 7.193 |
+
+BRAM remains zero for motion/controller and two BRAM_18K for the dispatcher.
+The dispatcher saves 313 LUT (1.16%), 484 FF and five DSP (7.04%). Its 701-cycle
+worst estimate is 7.01 us, within the existing 80,000-clock compute deadline.
+Estimated paths remain below the 7.30 ns effective HLS budget. These are synthesis
+estimates, not routed timing closure. Four dispatcher copies still exceed both
+the device LUT and DSP budgets; this step does not establish a four-motor fit.
+
+Generated motion RTL confirms 47-bit integral, 20-bit settling, 3-bit opcode,
+2-bit mode, 10-bit ramp remainder, 18-bit duty and 21-bit speed-cap storage.
+The target retains 22 bits after signed profile-speed negation.
+
+Validation passed: all 20 native/RTL tests, including regenerated motion RTL
+integration, plus Vitis C simulation, synthesis and Verilog co-simulation for
+motion, controller and dispatcher. Checked-in synthesis/co-simulation reports and
+`evidence/native_rtl_tests.log` reflect this implementation.

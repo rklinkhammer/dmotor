@@ -10,18 +10,20 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--reference', required=True)
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
-reference = subprocess.check_output(['git', 'show', f'{args.reference}:src/dispatcher.cpp'], cwd=root)
-with tempfile.TemporaryDirectory(prefix='dmotor-dispatch-equivalence-') as directory:
+with tempfile.TemporaryDirectory(prefix='dmotor-equivalence-') as directory:
     work = Path(directory)
-    source = work / 'reference.cpp'
-    source.write_bytes(reference)
-    common = [str(p) for p in sorted((root / 'src').glob('*.cpp')) if p.name != 'dispatcher.cpp']
+    baseline = work / 'baseline'
+    baseline.mkdir()
+    archive = subprocess.check_output(
+        ['git', 'archive', args.reference, 'include', 'src'], cwd=root)
+    subprocess.run(['tar', '-x', '-C', str(baseline)], input=archive, check=True)
     traces = []
-    for label, implementation in [('reference', source), ('current', root / 'src/dispatcher.cpp')]:
+    for label, tree in [('reference', baseline), ('current', root)]:
         binary = work / label
+        sources = sorted((tree / 'src').glob('*.cpp'))
         subprocess.run(['g++', '-std=c++14', '-O2', '-fsanitize=undefined',
-                        '-fno-sanitize-recover=all', '-DDMOTOR_TRACE', '-I' + str(root / 'include'),
-                        str(root / 'tests/dispatcher_test.cpp'), str(implementation), *common,
+                        '-fno-sanitize-recover=all', '-DDMOTOR_TRACE', '-I' + str(tree / 'include'),
+                        str(root / 'tests/dispatcher_test.cpp'), *map(str, sources),
                         '-o', str(binary)], check=True)
         traces.append(subprocess.check_output([str(binary)]))
     if traces[0] != traces[1]:

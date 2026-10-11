@@ -195,6 +195,39 @@ int main() {
             CHECK(!reply[7] && dmotor::signed_word(reply[1]) == reference);
         }
     }
+    // Width boundaries: both signed endpoints must survive retained state.
+    config[1] = 1000000;
+    config[9] = 0;
+    config[10] = 1048576;
+    for (int sign : {-1, 1}) {
+        reset();
+        command[0] = 1;
+        command[5] = static_cast<uint32_t>(sign * 1000000);
+        tick(true, 0, sign * 1000000);
+        CHECK(!reply[7] && dmotor::signed_word(reply[1]) == sign * 1000000);
+        tick(false, 0, -sign * 1000000);
+        CHECK(!reply[7] && dmotor::signed_word(reply[0]) == sign * 65536);
+        // Zero error retains the saturated integral across the next call.
+        tick(false, 0, sign * 1000000);
+        CHECK(dmotor::signed_word(reply[0]) == sign * 65536);
+        reset();
+        command[0] = 4;
+        command[8] = static_cast<uint32_t>(sign * 65536);
+        tick(true, 0, 0, false);
+        tick(false, 0, 0, false);
+        CHECK(!reply[7] && dmotor::signed_word(reply[0]) == sign * 65536);
+    }
+    // Full-width invalid input must be rejected before any narrowing.
+    reset();
+    command[0] = 9; // Would alias velocity opcode 1 if narrowed prematurely.
+    command[5] = 1000;
+    tick(true);
+    CHECK(reply[5] == 1 && reply[0] == 0);
+    reset();
+    command[0] = 1;
+    command[5] = 2098152; // Would alias 1000 in signed 21-bit storage.
+    tick(true);
+    CHECK(reply[5] == 1 && reply[0] == 0);
     config[2] = config[3] = 1000000;
     std::cout << "motion: six commands, ramps, residuals, settling, timeouts, inhibit and timing "
                  "passed\n";
