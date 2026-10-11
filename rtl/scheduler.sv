@@ -1,8 +1,8 @@
 // ap_ctrl_hs adapter: start remains asserted until ready. Inputs must be held
 // from launch through completion. inhibit resets/drains the arithmetic adapter.
 module dmotor_scheduler #(
-    parameter integer TICK_CYCLES = 100000,
-    parameter integer DEADLINE_CYCLES = 80000
+    parameter integer TICK_CYCLES = dmotor_timing::CONTROL_TICK_CYCLES,
+    parameter integer DEADLINE_CYCLES = dmotor_timing::CONTROL_DEADLINE_CYCLES
 ) (
     input wire clk, reset, inhibit,
     input wire ready, done,

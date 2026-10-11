@@ -666,3 +666,119 @@ Remaining candidates from the review:
 Full-width MMIO, ring counters, positions and timestamps are retained. No numeric
 range, fractional precision, control algorithm, safety priority or clock-rate
 requirement needs to change for the retained optimizations.
+
+## Standalone PI narrowing experiment
+
+The standalone `dmotor_pi` in `src/control.cpp` now exposes validated operand
+bounds to HLS: 22 signed error bits, 21 unsigned gain bits, 17 unsigned period
+bits, 42 signed proportional-product bits and 59 signed integral-product bits.
+The rounded-division helper uses bounded unsigned magnitudes, then restores the
+sign, retaining ties-away-from-zero rounding. The magnitude masks are applied
+only after full-width validation; no valid product reaches the signed minimum
+of its chosen width. Public Q16 configuration, accepted ranges, saturation,
+anti-windup and invalid-input results are unchanged.
+
+Vitis 2026.1 estimates against revision `4e8c79a`, xc7z020clg400-1 at 100 MHz:
+
+| Metric | Before | After |
+|---|---:|---:|
+| LUT | 3370 | 2642 |
+| FF | 3420 | 1737 |
+| DSP | 56 | 24 |
+| BRAM_18K | 0 | 0 |
+| Latency, clocks | 18 | 13 |
+| Initiation interval, clocks | 19 | 14 |
+| Estimated path, ns | 7.014 | 7.017 |
+
+This saves 728 LUT (21.60%), 1683 FF (49.21%) and 32 DSP (57.14%). The
+constant-division multiplier instances now have 84- and 118-bit results rather
+than the previous pair of 129-bit results. No fixed-point scale change or serial
+divider replacement was needed. These are HLS estimates, not routed results.
+
+The testbench compares against the original wide implementation, including both
+outputs and the range fault. It exercises signed rounding around half units,
+maximum products, period extrema, integral saturation, anti-windup, 2048 seeded
+random valid configurations and invalid values that would alias valid inputs if
+masked before validation. Native testing passes under undefined-behavior
+sanitization (`evidence/pi_narrowing_native.log`). Vitis C simulation, synthesis
+and Verilog co-simulation pass all 2240 transactions; the updated reports are
+`evidence/vitis_pi_csynth.rpt` and `evidence/vitis_pi_cosim.rpt`.
+This is a standalone-kernel change: it does not reduce integrated
+controller or dispatcher utilization because they use `MotionExecutor`'s PI.
+
+### Interpreting the controller's step_impl hierarchy
+
+The retained integrated controller report totals 24,415 LUT. The child-report
+excerpts are retained in `evidence/controller_hierarchy.rpt`. Its
+`step_impl_1` instance (the controller method) totals 23,511 LUT **including its
+children**; those numbers must not be added together. Within that instance:
+
+| Child module | LUT |
+|---|---:|
+| Motion executor `step_impl` | 14646 |
+| Velocity estimator `step` | 3345 |
+| Configuration `prepare` | 1663 |
+| Divider | 523 |
+| Two loop pipeline modules | 160 |
+| Parent-local expression, mux and memory logic | 3174 |
+
+The motion executor itself contains 6659 expression LUT, 3740 multiplexer LUT
+and 4247 child-instance LUT, including 2202 for descriptor validation. Thus the
+largest integrated opportunity is motion arithmetic and selection/control logic,
+not merely the short C++ wrapper or the standalone PI primitive. Selective
+operator sharing and simplification of wide state/result selections should be
+measured there; hierarchy totals alone do not prove which individual source
+statement offers a saving. Synthesis may specialize these modules differently
+inside the dispatcher, so retain top-level comparisons for each experiment.
+
+## Named timing profile and protective budget
+
+The approved external-HALT-to-FPGA-logical-inhibit budget is now **10 us**.
+The previous 50 ns number described five clocks at the initial 100 MHz clock,
+not a motor stopping time. The safety RTL still reacts immediately; no delay,
+filter or relaxed fault priority has been introduced. The latency test checks
+both the 10 us physical-time ceiling and the existing five-clock implementation
+bound across ten input phases. Driver turn-off, shared-HALT propagation and
+mechanical stopping remain separate integration measurements.
+
+`abi/timing.json` defines the named control/PWM frequencies, control deadline,
+HALT budget/pipeline bounds, MMIO cycle budget, encoder envelope, timeout limits,
+standalone PI period limits and settling limit. `tools/generate_abi.py` generates
+`include/dmotor/timing.hpp` and `rtl/timing.sv` together and checks Vitis clock
+constraints against CLOCK_HZ in `abi/registers.json`. Compile `rtl/timing.sv`
+before scheduler/PWM modules; the repository RTL test scripts do this.
+
+The clock remains 100 MHz; numerical constants and behavior remain unchanged
+except for the approved external-HALT acceptance budget. This is preparation for
+clock experiments, not evidence of an operating lower-frequency implementation.
+Changing CLOCK_HZ regenerates conversions, scheduler/PWM defaults and HLS clock
+constraints. Rebuild all HLS RTL, update clock-dependent test fixtures and platform
+clock constraints, then re-run integration/timing/CDC verification. The generator
+requires integer MHz, exact control/PWM/event-rate divisors, representable interval
+counters and enough clocks for the HALT pipeline. Arithmetic-envelope changes
+are rejected where existing width proofs depend on them.
+
+| Named quantity | Current value | Meaning |
+|---|---:|---|
+| control_hz / control_period_us | 1000 / 1000 us | Autonomous control cadence |
+| control_deadline_us | 800 us | Computation deadline, before the next tick |
+| pwm_hz / pwm_period_cycles | 20000 / 5000 | PWM frequency and frame length |
+| external_halt_budget_us | 10 us | External HALT to logical inhibition |
+| external_halt_pipeline_max_cycles | 5 | Separate implementation regression bound |
+| synchronized_inhibit_max_cycles | 2 | Qualified input to logical inhibition target |
+| mmio_response_max_cycles | 2048 | Local register transaction cycle budget |
+| encoder_max_events_hz | 100000 | Supported event-rate envelope |
+| encoder_max_interval_us | 10000000 us | Largest accepted measurement interval |
+| watchdog_min_us / watchdog_max_us | 1000 / 10000000 us | Configurable authorization timeout bounds |
+
+Scenario-specific test stimuli and numeric RPM/Q16/CPR scales are not hardware
+timing-profile controls. Runtime command timeouts and dwell durations remain
+programmed values in microseconds, with the existing public formats unchanged.
+
+Validation: all 21 native/RTL tests pass at 100 MHz
+(`evidence/timing_native_rtl_tests.log`). The RTL integrations use the previously
+synthesized motion/peripheral kernels with unchanged arithmetic timing constants;
+this refactoring does not claim a new HLS utilization measurement. Isolated
+profile generation and safety RTL phase sweeps also pass at 100, 20, 10 and 1 MHz
+(`evidence/timing_profile_checks.log`). These lower-clock checks cover only the
+HALT synchronizer/inhibit path, not a complete lower-frequency controller.

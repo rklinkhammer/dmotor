@@ -26,7 +26,7 @@ module peripheral_top_tb;
         start_cycle=timestamp;@(negedge clk);awvalid=0;
         wait(bvalid);#1;
         if(timestamp-start_cycle>max_write) max_write=timestamp-start_cycle;
-        if(timestamp-start_cycle>2048) $fatal(1,"write latency budget");
+        if(timestamp-start_cycle>dmotor_timing::MMIO_RESPONSE_MAX_CYCLES) $fatal(1,"write latency budget");
         if(bresp!=response) $fatal(1,"write %h response %d expected %d",address,bresp,response);
         @(negedge clk);bready=1;@(negedge clk);bready=0;
     end endtask
@@ -35,7 +35,7 @@ module peripheral_top_tb;
         do begin @(posedge clk);end while(!arready);
         start_cycle=timestamp;@(negedge clk);arvalid=0;wait(rvalid);#1;
         if(timestamp-start_cycle>max_read) max_read=timestamp-start_cycle;
-        if(timestamp-start_cycle>2048) $fatal(1,"read latency budget");
+        if(timestamp-start_cycle>dmotor_timing::MMIO_RESPONSE_MAX_CYCLES) $fatal(1,"read latency budget");
         if(rresp!=0 || rdata!=value) $fatal(1,"read %h got %h expected %h",address,rdata,value);
         repeat(3) @(negedge clk);if(rdata!=value || !rvalid) $fatal(1,"response hold");
         rready=1;@(negedge clk);rready=0;
@@ -43,7 +43,7 @@ module peripheral_top_tb;
     integer i;
     initial begin
         repeat(5) @(negedge clk);reset=0;
-        rd(0,32'h444d4f54);rd(12,100000000);
+        rd(0,32'h444d4f54);rd(12,dmotor_timing::FABRIC_HZ);
         wr('h40,1000,15,0);wr('h50,1,15,0);
         wr('h120,1,3,2);wr('h120,1,15,0);
         rd('h100,1);

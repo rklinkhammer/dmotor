@@ -96,3 +96,13 @@ is now tested against generated RTL; safety/watchdog configuration is now connec
 The estimator and motion executor now have a combined C++ HLS coordinator with
 bounded feedback acquisition and a shared HLS queue/controller dispatcher.
 AXI adaptation, complete RTL/safety wiring and motor tuning configuration remain work.
+
+### Timing profile
+
+Timing budgets are named in `abi/timing.json`; fabric frequency is CLOCK_HZ in
+`abi/registers.json`. Run `python3 tools/generate_abi.py` after edits to regenerate
+C++/RTL timing constants and synchronize Vitis clock constraints. The approved
+external HALT digital-inhibit budget is 10 us, with immediate hardware reaction;
+it excludes motor-driver and mechanical stopping delays. The active clock is
+still 100 MHz. See `docs/verification.md` for profile-change validation.
+RTL projects must compile `rtl/timing.sv` before `scheduler.sv` and `pwm.sv`.

@@ -1,0 +1,19 @@
+{
+  "control_hz": 1000,
+  "pwm_hz": 20000,
+  "control_deadline_us": 800,
+  "external_halt_budget_us": 10,
+  "synchronized_inhibit_max_cycles": 2,
+  "external_halt_pipeline_max_cycles": 5,
+  "mmio_response_max_cycles": 2048,
+  "encoder_max_events_hz": 100000,
+  "encoder_max_interval_us": 10000000,
+  "zero_timeout_min_us": 1000,
+  "zero_timeout_max_us": 10000000,
+  "acquisition_timeout_min_us": 1000,
+  "watchdog_min_us": 1000,
+  "watchdog_max_us": 10000000,
+  "pi_period_min_us": 1,
+  "pi_period_max_us": 100000,
+  "settle_max_ticks": 1000000
+}

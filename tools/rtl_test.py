@@ -12,6 +12,7 @@ output = pathlib.Path(a.build) / (a.test + '.vvp')
 command = [a.iverilog, '-g2012', '-Wall', '-s', a.test + '_tb', '-o', str(output)]
 if a.base:
     command += ['-B', a.base]
+command += [str(root / 'rtl/timing.sv')]
 command += [str(root / 'rtl' / (('safety' if a.test == 'latency' else a.test) + '.sv')), str(root / 'tests' / (a.test + '_tb.sv'))]
 subprocess.run(command, check=True)
 subprocess.run([a.vvp, str(output)], check=True, timeout=30)

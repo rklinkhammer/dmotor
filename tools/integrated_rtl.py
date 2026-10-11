@@ -15,6 +15,6 @@ if not (g/'dmotor_peripheral.v').exists():
 cmd=[a.iverilog,'-g2012','-s','peripheral_top_tb','-o',str(r/'build/peripheral_top.vvp')]
 if a.base:cmd+=['-B',a.base]
 cmd += [str(x) for x in sorted(g.glob('*.v'))]
-cmd += [str(r/x) for x in ['rtl/axi_bridge.sv','rtl/safety.sv','rtl/peripheral_top.sv','tests/peripheral_top_tb.sv']]
+cmd += [str(r/x) for x in ['rtl/timing.sv','rtl/axi_bridge.sv','rtl/safety.sv','rtl/peripheral_top.sv','tests/peripheral_top_tb.sv']]
 subprocess.run(cmd,check=True,cwd=g)
 subprocess.run([a.vvp,str(r/'build/peripheral_top.vvp')],check=True,cwd=g,timeout=60)

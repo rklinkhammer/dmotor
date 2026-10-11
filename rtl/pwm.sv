@@ -1,7 +1,7 @@
 // Logical motor output only, not the unvalidated DRV8263H electrical adapter.
 // duty magnitude Q16; config stable while enabled. Reversal waits one full
 // PWM frame with drive disabled, then latches direction on a later boundary.
-module dmotor_pwm # (parameter integer PERIOD_CYCLES=5000) (
+module dmotor_pwm # (parameter integer PERIOD_CYCLES=dmotor_timing::PWM_PERIOD_CYCLES) (
     input wire clk, reset, inhibit,
     input wire signed [31:0] requested_duty_q16,
     output wire pwm, drive_enable,

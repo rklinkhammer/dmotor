@@ -43,7 +43,7 @@ VelocityResult VelocityEstimator::step(bool reset, uint64_t now, const EncoderSa
     const bool changed = s.direction_epoch != previous_.direction_epoch ||
                          s.invalid_transitions != previous_.invalid_transitions ||
                          s.negative != previous_.negative;
-    if (s.invalid_transitions == UINT32_MAX || edges > 100 ||
+    if (s.invalid_transitions == UINT32_MAX || edges > timing::encoder_max_events_per_tick ||
         (edges && now - s.last_edge > timing::control_tick_cycles) ||
         (!edges && s.last_edge != previous_.last_edge)) {
         result_.fault |= 4;

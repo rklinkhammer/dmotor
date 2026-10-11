@@ -1,4 +1,5 @@
 #include "dmotor/motion.hpp"
+#include "dmotor/timing.hpp"
 #include "dmotor/detail/arithmetic.hpp"
 #include "dmotor/detail/bounded.hpp"
 #include "dmotor/registers.hpp"
@@ -18,9 +19,9 @@ int64_t rounded(int64_t value, int64_t denominator) {
 } // namespace detail
 
 namespace {
-constexpr uint32_t ramp_ticks_per_second = 1000;
-constexpr uint64_t clocks_per_tick = reg::FABRIC_HZ / 1000;
-constexpr uint64_t clocks_per_us = reg::FABRIC_HZ / 1000000;
+constexpr uint32_t ramp_ticks_per_second = timing::control_hz;
+constexpr uint64_t clocks_per_tick = timing::control_tick_cycles;
+constexpr uint64_t clocks_per_us = timing::clocks_per_us;
 constexpr int64_t integral_scale = 1000000000LL;
 int64_t magnitude(int32_t value) {
     return value < 0 ? -static_cast<int64_t>(value) : value;
@@ -34,7 +35,8 @@ bool valid_config(const MotionConfig& c) {
            c.deceleration_mrpm_s <= 10000000 && c.counts_num && c.counts_num <= 1000000 &&
            c.counts_den && c.counts_den <= 1000000 &&
            c.velocity_tolerance_mrpm <= static_cast<uint32_t>(c.max_speed_mrpm) && c.settle_ticks &&
-           c.settle_ticks <= 1000000 && c.kp_q16 >= 0 && c.kp_q16 <= 1048576 && c.ki_q16 >= 0 &&
+           c.settle_ticks <= timing::settle_max_ticks && c.kp_q16 >= 0 &&
+           c.kp_q16 <= 1048576 && c.ki_q16 >= 0 &&
            c.ki_q16 <= 1048576 && c.duty_limit_q16 >= 0 && c.duty_limit_q16 <= 65536 &&
            c.integral_limit_q16 >= 0 && c.integral_limit_q16 <= 65536 && c.stop_timeout_us;
     if (!valid) {
@@ -282,7 +284,8 @@ MotionResult MotionExecutor::step_impl(bool reset, bool authorized, bool command
             const uint32_t ki = static_cast<uint32_t>(c.ki_q16) & 0x1fffffU;
             const uint32_t kp = static_cast<uint32_t>(c.kp_q16) & 0x1fffffU;
             const int64_t limit = prepared.integral_limit;
-            int64_t candidate = integral_nano_ + static_cast<int64_t>(ki) * error * 1000;
+            int64_t candidate =
+                integral_nano_ + static_cast<int64_t>(ki) * error * timing::control_period_us;
             candidate = candidate > limit ? limit : candidate < -limit ? -limit : candidate;
             const int64_t proportional =
                 detail::rounded(static_cast<int64_t>(kp) * error, 1000);

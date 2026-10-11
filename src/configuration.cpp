@@ -1,4 +1,5 @@
 #include "dmotor/configuration.hpp"
+#include "dmotor/timing.hpp"
 #include "dmotor/registers.hpp"
 namespace dmotor {
 bool Configuration::access(bool write, uint32_t address, uint32_t data, uint32_t safety_state,
@@ -60,7 +61,8 @@ bool Configuration::access(bool write, uint32_t address, uint32_t data, uint32_t
             return true;
         case CONFIG_COMMIT:
             if (data != 1 || enabled || (ring_status & 3) || producer != consumer ||
-                staged_timeout_ < 1000 || staged_timeout_ > 10000000 || staged_speed_ < 1000 ||
+                staged_timeout_ < timing::watchdog_min_us ||
+                staged_timeout_ > timing::watchdog_max_us || staged_speed_ < 1000 ||
                 staged_speed_ > 1000000 || generation_ == UINT32_MAX) {
                 return false;
             }
@@ -104,6 +106,7 @@ bool Configuration::access(bool write, uint32_t address, uint32_t data, uint32_t
     }
 }
 uint64_t Configuration::timeout_cycles() const {
-    return (static_cast<uint64_t>(active_timeout_) * reg::FABRIC_HZ + 999999) / 1000000;
+    return (static_cast<uint64_t>(active_timeout_) * reg::FABRIC_HZ +
+            timing::microseconds_per_second - 1) / timing::microseconds_per_second;
 }
 } // namespace dmotor

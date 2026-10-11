@@ -1,0 +1,13 @@
+Isolated 100000000 Hz profile: generator consistency and safety RTL only
+latency: 10 phases, HALT <=10000 ns budget and <=50 ns pipeline bound passed
+/tmp/dmotor-timing-8qk_68z1/tests/latency_tb.sv:35: $finish called at 940000 (1ps)
+Isolated 20000000 Hz profile: generator consistency and safety RTL only
+latency: 10 phases, HALT <=10000 ns budget and <=250 ns pipeline bound passed
+/tmp/dmotor-timing-8qk_68z1/tests/latency_tb.sv:35: $finish called at 4700000 (1ps)
+Isolated 10000000 Hz profile: generator consistency and safety RTL only
+latency: 10 phases, HALT <=10000 ns budget and <=500 ns pipeline bound passed
+/tmp/dmotor-timing-8qk_68z1/tests/latency_tb.sv:35: $finish called at 9400000 (1ps)
+Isolated 1000000 Hz profile: generator consistency and safety RTL only
+latency: 10 phases, HALT <=10000 ns budget and <=5000 ns pipeline bound passed
+/tmp/dmotor-timing-8qk_68z1/tests/latency_tb.sv:35: $finish called at 94000000 (1ps)
+These checks do not establish controller/PWM/CDC operation at a lower clock.

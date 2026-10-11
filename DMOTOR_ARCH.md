@@ -755,7 +755,7 @@ These are proposed engineering targets for the initial 100 MHz/1 kHz/20 kHz prof
 |---|---|
 | Synchronized HALT detection -> logical output inhibit | At most 2 fabric clocks; independent of HLS, bus stalls, and PWM phase |
 | External HALT -> detection | Two synchronizer stages, no configurable debounce on HALT; require assertion held until acknowledged |
-| External HALT -> logical inhibit | At most 5 clocks (50 ns at 100 MHz) in digital RTL tests, including arbitrary input phase; metastability reliability requires separate CDC analysis and is not a deterministic analog bound |
+| External HALT -> logical inhibit | At most 10 us, approved digital inhibit budget; react immediately, with no intentional delay. The current implementation separately checks a five-clock pipeline bound (50 ns at 100 MHz). Include arbitrary input phase in digital RTL tests; metastability reliability requires separate CDC analysis and is not a deterministic analog bound |
 | Fault qualification | Board-specific for each physical input; add its documented synchronization/filter delay to the 2-clock internal inhibit target |
 | HLS control computation | Start within 1 clock of scheduled tick when idle; complete before 80,000 clocks from tick, leaving 20,000 clocks of margin |
 | Missed deadline | Fault and inhibit on deadline expiration; completion arriving on that boundary loses; never apply late/stale duty |
@@ -765,6 +765,8 @@ These are proposed engineering targets for the initial 100 MHz/1 kHz/20 kHz prof
 | Timing counters | 64-bit modulo fabric timestamps; compare intervals only within half the wrap range; sticky event counters saturate |
 
 Continuous HALT input must stay asserted until the protective latch is observed/acknowledged. Pulse inputs need a separately verified asynchronous event latch or external pulse stretching; a two-flop synchronizer is not a guarantee of capturing arbitrary narrow pulses. The shared-HALT test measures the complete source-controller -> aggregator -> destination path separately; the local 5-clock target must not be reported as the shared-network bound.
+
+The 10 us budget ends at FPGA logical inhibition; it is neither an electrical driver turn-off guarantee nor a mechanical stopping-time requirement. Timing budgets and conversions are named in `abi/timing.json`, generating C++/RTL constants through `tools/generate_abi.py`; the fabric clock remains defined by CLOCK_HZ in `abi/registers.json`. A lower clock requires a regenerated and verified profile, not just a changed oscillator.
 
 The FPGA pin-to-driver response budget remains blocked by D03b; disable/coast is now the approved initial stop mode. Measure disabled/brake pin levels, external driver delay, and mechanical stopping separately. No 50 ns mechanical-stop claim is implied.
 
