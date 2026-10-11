@@ -328,3 +328,44 @@ and motion RTL integration. Command engine, peripheral and dispatcher each pass
 Vitis C simulation, synthesis and Verilog co-simulation at depth 4. Updated
 reports are in `docs/evidence/`; the alternate-depth native results are recorded
 in `docs/evidence/ring_depth_tests.log`.
+
+## Named timeout limits
+
+The velocity/controller timing limits now use constants from
+`include/dmotor/timing.hpp`, derived from the fabric clock. Timeout configuration
+and expiry behavior are unchanged. All 11 native tests pass; velocity, controller
+and dispatcher pass Vitis C simulation, synthesis and Verilog co-simulation.
+Their aggregate LUT, FF, DSP and BRAM estimates are unchanged.
+
+## Ramp arithmetic experiment
+
+Compared at 100 MHz on xc7z020clg400-1 using Vitis 2026.1:
+
+| Motion kernel | LUT | FF | DSP | BRAM_18K |
+|---|---:|---:|---:|---:|
+| Original 64-bit ramp accumulator | 18817 | 13824 | 95 | 0 |
+| Cached whole/fractional rates (discarded) | 19689 | 14718 | 95 | 0 |
+| Bounded 32-bit accumulator | 18788 | 13806 | 95 | 0 |
+
+Caching the two rate decompositions added more hardware than it removed
+([discarded experiment report](evidence/ramp_cached_motion_csynth.rpt)). The
+retained change instead bounds the accumulation to 32 bits and preserves exact
+division/modulo behavior. The motion kernel saves 29 LUT (0.15%) and 18 FF
+(0.13%); this is a small improvement, not a solution to overall controller area.
+These are HLS estimates, not placed-and-routed resource or timing measurements.
+
+The extended motion test compares actual top-level results against the original
+64-bit ramp calculation for 600 ticks covering fractional rates, maximum rates,
+rate changes, reversals, clamping and reset, in addition to the existing tests.
+
+The final motion estimate is 43–188 clocks (previously 43–189), with unchanged
+95 DSP and 0 BRAM. The combined controller is 28243 LUT / 21880 FF (down 35 / 29),
+and the dispatcher is 37991 LUT / 27114 FF (down 28 / 27), with unchanged DSP/BRAM
+counts. Dispatcher maximum estimated latency is 345 clocks, previously 346.
+
+Final validation: motion, controller and dispatcher pass Vitis C simulation,
+synthesis and Verilog co-simulation. All 20 native/RTL tests pass across the full
+run and retry: the unchanged peripheral RTL test first exceeded its 60-second
+wall-clock limit during concurrent vendor runs, then passed alone in 25.90 seconds.
+Motion RTL integration passed in 95.40 seconds. The saved native/RTL log includes
+both the initial timeout and successful retry.

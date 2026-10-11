@@ -149,3 +149,22 @@ The newer [combined controller](controller.md) uses an internal bounded-acquisit
 mode while speed is being qualified. The standalone `dmotor_motion` top remains
 strict: invalid closed-loop feedback faults. Only the combined coordinator owns
 the hold deadline, duty cap and protective fault arbitration.
+
+
+## Bounded fractional ramp arithmetic
+
+The retained ramp fraction is below 1000. With the validated acceleration or
+deceleration rate at most 10000000 milli-RPM/s, their sum is at most 10000999,
+which fits in 24 bits. The implementation uses portable `uint32_t` storage and
+addition instead of the former 64-bit accumulator. Division and modulo by 1000
+retain exactly the original fractional behavior, with no approximation or new
+state. Reversal, clamping, takeover, reset and authorization loss keep the same
+fraction/reset rules.
+
+The motion testbench compares the HLS top against the original wide-arithmetic
+ramp over rates 1, 999, 1000, 1001, 9999999 and 10000000 milli-RPM/s, including
+rate changes, reversal, target clamping and reset. Position-profile divisions,
+PI arithmetic and per-tick full configuration validation remain unchanged.
+
+An experimental cache of whole/remainder components for both rates increased
+area and was discarded. See `verification.md` for the measured comparison.

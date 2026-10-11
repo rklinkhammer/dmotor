@@ -1,4 +1,5 @@
 #include "dmotor/controller.hpp"
+#include "dmotor/timing.hpp"
 namespace dmotor {
 ControllerResult Controller::step(bool reset, bool authorized, bool capture_fault, uint64_t now,
                                   const EncoderSample& encoder, int64_t position, uint32_t session,
@@ -10,7 +11,7 @@ ControllerResult Controller::step(bool reset, bool authorized, bool capture_faul
         return {};
     }
     ControllerResult r;
-    if (c.acquisition_timeout_cycles < 100000 ||
+    if (c.acquisition_timeout_cycles < timing::acquisition_timeout_min_cycles ||
         c.acquisition_timeout_cycles >= c.zero_timeout_cycles || c.acquisition_duty_limit_q16 < 0 ||
         c.acquisition_duty_limit_q16 > c.motion.duty_limit_q16) {
         faults_ |= 1;

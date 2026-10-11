@@ -159,6 +159,43 @@ int main() {
     tick(true, INT64_MAX);
     CHECK(reply[5] == 1 && reply[6] == static_cast<uint32_t>(dmotor::Error::overflow));
     CHECK(!reply[7]);
+    // Compare the HLS top against the original wide quotient/remainder ramp.
+    // Exercise fractional carries, rate changes, reversal, clamping and reset.
+    const uint32_t rates[] = {1, 999, 1000, 1001, 9999999, 10000000};
+    for (unsigned run = 0; run < 2; ++run) {
+        reset();
+        int32_t reference = 0;
+        uint64_t remainder = 0;
+        int32_t target = 1000;
+        for (unsigned i = 0; i < 300; ++i) {
+            config[2] = rates[(i / 25 + run) % 6];
+            config[3] = rates[(i / 25 + run + 2) % 6];
+            const bool publish = i % 50 == 0;
+            if (publish) {
+                target = (i / 50) % 2 ? -1000 : 1000;
+                command[0] = 1;
+                command[5] = static_cast<uint32_t>(target);
+            }
+            int32_t goal = target;
+            if ((goal < 0 && reference > 0) || (goal > 0 && reference < 0)) {
+                goal = 0;
+            }
+            const uint32_t rate = std::abs(goal) < std::abs(reference) ? config[3] : config[2];
+            remainder += rate;
+            const int64_t advance = remainder / 1000;
+            remainder %= 1000;
+            const int32_t change = goal - reference;
+            if (std::abs(change) <= advance) {
+                reference = goal;
+                remainder = 0;
+            } else {
+                reference += change > 0 ? advance : -advance;
+            }
+            tick(publish, 0, 0, true, true);
+            CHECK(!reply[7] && dmotor::signed_word(reply[1]) == reference);
+        }
+    }
+    config[2] = config[3] = 1000000;
     std::cout << "motion: six commands, ramps, residuals, settling, timeouts, inhibit and timing "
                  "passed\n";
 }

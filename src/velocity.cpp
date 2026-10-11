@@ -1,5 +1,5 @@
 #include "dmotor/velocity.hpp"
-#include "dmotor/registers.hpp"
+#include "dmotor/timing.hpp"
 namespace dmotor {
 VelocityResult VelocityEstimator::step(bool reset, uint64_t now, const EncoderSample& s,
                                        uint32_t generation, uint32_t num, uint32_t den,
@@ -10,12 +10,13 @@ VelocityResult VelocityEstimator::step(bool reset, uint64_t now, const EncoderSa
     }
     // Bounds keep all conversion products in uint64_t. A call represents a
     // coherent 1 kHz snapshot; at most 100 accepted events can occur per tick.
-    if (!generation || !num || num > 1000000 || !den || den > 10000 || timeout < 100000 ||
-        timeout > 1000000000) {
+    if (!generation || !num || num > 1000000 || !den || den > 10000 ||
+        timeout < timing::zero_timeout_min_cycles || timeout > timing::zero_timeout_max_cycles) {
         result_.fault |= 1;
     }
-    if (initialized_ && (generation != generation_ || num != num_ || den != den_ ||
-                         timeout != timeout_ || now - previous_now_ != reg::FABRIC_HZ / 1000)) {
+    if (initialized_ &&
+        (generation != generation_ || num != num_ || den != den_ || timeout != timeout_ ||
+         now - previous_now_ != timing::control_tick_cycles)) {
         result_.fault |= 2;
     }
     if (result_.fault) {
@@ -42,7 +43,7 @@ VelocityResult VelocityEstimator::step(bool reset, uint64_t now, const EncoderSa
                          s.invalid_transitions != previous_.invalid_transitions ||
                          s.negative != previous_.negative;
     if (s.invalid_transitions == UINT32_MAX || edges > 100 ||
-        (edges && now - s.last_edge > reg::FABRIC_HZ / 1000) ||
+        (edges && now - s.last_edge > timing::control_tick_cycles) ||
         (!edges && s.last_edge != previous_.last_edge)) {
         result_.fault |= 4;
     }
@@ -55,7 +56,8 @@ VelocityResult VelocityEstimator::step(bool reset, uint64_t now, const EncoderSa
     if (edges && !result_.fault) {
         const uint64_t interval = s.last_edge - previous_.last_edge;
         if (have_edge_ && !changed) {
-            if (interval < edges * 1000 || interval > 1000000000) {
+            if (interval < edges * timing::encoder_min_edge_cycles ||
+                interval > timing::encoder_max_interval_cycles) {
                 result_.fault |= 4;
             } else {
                 // Edge-anchored count/time: one edge is reciprocal period;

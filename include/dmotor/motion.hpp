@@ -35,7 +35,8 @@ class MotionExecutor {
     uint32_t motion_mode_ = 0; // 0 coast, 1 velocity PI, 2 bounded open-loop
     int32_t target_mrpm_ = 0, open_duty_ = 0, speed_cap_ = 0;
     int64_t target_position_ = 0, integral_nano_ = 0;
-    uint64_t started_ = 0, duration_us_ = 0, ramp_remainder_ = 0, previous_tick_ = 0;
+    uint64_t started_ = 0, duration_us_ = 0, previous_tick_ = 0;
+    uint32_t ramp_remainder_ = 0;
     bool tick_primed_ = false, stopping_ = false;
     uint32_t session_ = 0, generation_ = 0;
     void finish(uint64_t now, uint32_t outcome, uint32_t detail);

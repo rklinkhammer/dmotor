@@ -4,6 +4,7 @@
 namespace dmotor {
 struct ControllerConfig {
     MotionConfig motion{};
+    // Bounds: dmotor/timing.hpp; acquisition must be shorter than zero timeout.
     uint32_t zero_timeout_cycles = 0, acquisition_timeout_cycles = 0;
     int32_t acquisition_duty_limit_q16 = 0;
 };

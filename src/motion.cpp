@@ -2,6 +2,7 @@
 #include "dmotor/registers.hpp"
 namespace dmotor {
 namespace {
+constexpr uint32_t ramp_ticks_per_second = 1000;
 constexpr uint64_t clocks_per_tick = reg::FABRIC_HZ / 1000;
 constexpr uint64_t clocks_per_us = reg::FABRIC_HZ / 1000000;
 constexpr int64_t integral_scale = 1000000000LL;
@@ -214,9 +215,11 @@ MotionResult MotionExecutor::step(bool reset, bool authorized, bool command_vali
             }
             const bool decelerating = magnitude(goal) < magnitude(result_.ramp_mrpm);
             const uint32_t rate = decelerating ? c.deceleration_mrpm_s : c.acceleration_mrpm_s;
-            ramp_remainder_ += rate;
-            const int64_t advance = static_cast<int64_t>(ramp_remainder_ / 1000);
-            ramp_remainder_ %= 1000;
+            // Validated rate <= 10000000; retained remainder < 1000.
+            // The sum is <= 10000999, so a 32-bit datapath is sufficient.
+            const uint32_t accumulated = ramp_remainder_ + rate;
+            const int64_t advance = accumulated / ramp_ticks_per_second;
+            ramp_remainder_ = accumulated % ramp_ticks_per_second;
             const int64_t change = static_cast<int64_t>(goal) - result_.ramp_mrpm;
             if (magnitude(static_cast<int32_t>(change)) <= advance) {
                 result_.ramp_mrpm = goal;

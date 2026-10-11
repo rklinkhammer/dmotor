@@ -58,6 +58,17 @@ python3 tools/check_ring_depths.py  # native regression at depths 2, 4, and 16
 The depth-4 default uses provisional ABI schema version 4. Register offsets and
 slot strides are unchanged; software must use the generated capacity constants.
 
+## Timeout and encoder timing limits
+
+[include/dmotor/timing.hpp](include/dmotor/timing.hpp) defines the named cycle
+limits used by the velocity estimator and controller `step()` functions. Values
+are derived from the fabric clock: minimum zero/acquisition timeout is 1 ms,
+maximum zero timeout and encoder interval are 10 seconds, and minimum encoder
+edge spacing is 10 microseconds. Actual zero/acquisition timeouts remain runtime
+configuration values; acquisition must be shorter than the zero timeout.
+Changing these limits requires rebuilding the affected HLS kernels and reviewing
+the timing/numeric contract. The current limits preserve the 100 MHz behavior.
+
 ## Review material
 
 - [Target Vivado project reference](docs/vivado_reference.md)

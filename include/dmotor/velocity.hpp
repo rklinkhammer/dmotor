@@ -15,6 +15,7 @@ struct VelocityResult {
 };
 class VelocityEstimator {
   public:
+    // Timeout bounds are defined in dmotor/timing.hpp.
     VelocityResult step(bool reset, uint64_t now, const EncoderSample& sample, uint32_t generation,
                         uint32_t counts_num, uint32_t counts_den, uint32_t zero_timeout_cycles);
 
