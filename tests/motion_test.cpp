@@ -229,6 +229,35 @@ int main() {
     tick(true);
     CHECK(reply[5] == 1 && reply[0] == 0);
     config[2] = config[3] = 1000000;
+    // Preparation must reject full-width values before masking any operand.
+    const unsigned fields[] = {1, 3, 4, 5, 12};
+    const uint32_t invalid_values[] = {1049576, 16777217, 1048577, 1048577, 131073};
+    for (unsigned i = 0; i < 5; ++i) {
+        const auto saved = config[fields[i]];
+        config[fields[i]] = invalid_values[i];
+        reset();
+        command[0] = 1;
+        command[5] = 1000;
+        tick(true);
+        CHECK((reply[7] & 1) && reply[0] == 0 && !(reply[2] & 8));
+        config[fields[i]] = saved;
+    }
+    // Exact CPR/speed cross-product boundary, and maximum denominator/rate.
+    config[4] = 1000000;
+    for (uint32_t den : {166U, 167U, 1000000U}) {
+        config[5] = den;
+        config[3] = 10000000;
+        reset();
+        command[0] = 2;
+        command[5] = 1000;
+        command[6] = 10000;
+        command[11] = 1000000;
+        tick(true);
+        CHECK(bool(reply[7] & 1) == (den == 166));
+        if (den != 166) {
+            CHECK(!reply[7] && (reply[2] & 2));
+        }
+    }
     std::cout << "motion: six commands, ramps, residuals, settling, timeouts, inhibit and timing "
                  "passed\n";
 }

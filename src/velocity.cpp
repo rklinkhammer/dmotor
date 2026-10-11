@@ -63,8 +63,15 @@ VelocityResult VelocityEstimator::step(bool reset, uint64_t now, const EncoderSa
             } else {
                 // Edge-anchored count/time: one edge is reciprocal period;
                 // several edges average their periods without a tick-window bias.
-                const uint64_t numerator = edges * (60ULL * reg::FABRIC_HZ * 1000) * den;
-                const uint64_t denominator = interval * num;
+                // These casts follow all range checks: edges <= 100, den <=
+                // 10000, num <= 1000000, interval <= UINT32_MAX. Multiply
+                // the small factors first; the exact rational value is unchanged.
+                const uint32_t scaled_edges = (static_cast<uint32_t>(edges) & 0x7fU) *
+                                              (den & 0x3fffU);
+                const uint64_t numerator =
+                    static_cast<uint64_t>(scaled_edges) * (60ULL * reg::FABRIC_HZ * 1000);
+                const uint64_t denominator =
+                    static_cast<uint64_t>(static_cast<uint32_t>(interval)) * (num & 0xfffffU);
                 const uint64_t speed = detail::divide(numerator + denominator / 2, denominator);
                 if (speed > 1000000) {
                     result_.fault |= 8;

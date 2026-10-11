@@ -42,9 +42,12 @@ Error validate(const Descriptor& d, uint32_t sequence, uint32_t epoch, uint32_t 
     if ((d[0] == 5 && !d[9] && !d[10]) || ((position_mode || d[0] == 6) && !d[11])) {
         return Error::range;
     }
-    const int64_t displacement = signed_pair(d[6], d[7]);
-    if (d[0] == 3 && ((displacement > 0 && position > INT64_MAX - displacement) ||
-                      (displacement < 0 && position < INT64_MIN - displacement))) {
+    // Signed addition overflows exactly when equal-sign operands produce an
+    // opposite-sign result. Unsigned arithmetic defines wrap for all bit patterns.
+    const uint64_t displacement = (static_cast<uint64_t>(d[7]) << 32) | d[6];
+    const uint64_t position_bits = static_cast<uint64_t>(position);
+    const uint64_t sum = position_bits + displacement;
+    if (d[0] == 3 && (((position_bits ^ sum) & (displacement ^ sum)) >> 63)) {
         return Error::overflow;
     }
     return Error::none;
@@ -135,14 +138,18 @@ bool CommandRing::finish(uint64_t now, uint32_t outcome, uint32_t detail) {
     if (!busy_ || outcome > 2) {
         return false;
     }
-    completions_[completion_producer_ & ring_mask] = {active_[2],
-                                                      active_[3],
-                                                      outcome,
-                                                      detail,
-                                                      static_cast<uint32_t>(activation_),
-                                                      static_cast<uint32_t>(activation_ >> 32),
-                                                      static_cast<uint32_t>(now),
-                                                      static_cast<uint32_t>(now >> 32)};
+    const Completion completion = {active_[2],
+                                   active_[3],
+                                   outcome,
+                                   detail,
+                                   static_cast<uint32_t>(activation_),
+                                   static_cast<uint32_t>(activation_ >> 32),
+                                   static_cast<uint32_t>(now),
+                                   static_cast<uint32_t>(now >> 32)};
+    for (unsigned word = 0; word < completion.size(); ++word) {
+        completions_[(completion_producer_ & ring_mask) * completion.size() + word] =
+            completion[word];
+    }
     ++completion_producer_;
     busy_ = false;
     return true;
@@ -172,7 +179,17 @@ bool CommandRing::read_completion(uint32_t counter, Completion& result) const {
     if (counter - completion_consumer_ >= completion_producer_ - completion_consumer_) {
         return false;
     }
-    result = completions_[counter & ring_mask];
+    for (unsigned word = 0; word < result.size(); ++word) {
+        result[word] = completions_[(counter & ring_mask) * result.size() + word];
+    }
+    return true;
+}
+bool CommandRing::read_completion_word(uint32_t counter, uint32_t word, uint32_t& result) const {
+    if (word >= completion_words ||
+        counter - completion_consumer_ >= completion_producer_ - completion_consumer_) {
+        return false;
+    }
+    result = completions_[(counter & ring_mask) * completion_words + word];
     return true;
 }
 const Descriptor& CommandRing::active() const {

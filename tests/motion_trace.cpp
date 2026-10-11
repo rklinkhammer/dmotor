@@ -9,11 +9,15 @@ int main() {
     };
     uint32_t command[16] = {}, reply[16] = {};
     const uint32_t gains[] = {0, 1, 499, 500, 999, 1000, 65536, 1048576};
+    const uint32_t numerators[] = {1, 10296, 1000000, 1000000};
+    const uint32_t denominators[] = {1, 5, 167, 1000000};
     for (unsigned profile = 0; profile < 128; ++profile) {
         uint32_t c[16] = {
             1,   1000000, 1 + random() % 10000000, 1 + random() % 10000000,  10296, 5,     10,
             100, 2,       gains[profile % 8],      gains[(profile / 8) % 8], 65536, 65536, 1000000,
             0,   0};
+        c[4] = numerators[profile % 4];
+        c[5] = denominators[profile % 4];
         dmotor_motion(true, false, false, command, c, false, false, 1, 0, 0, 0, false, reply);
         for (unsigned tick = 1; tick <= 128; ++tick) {
             for (auto& w : command) {

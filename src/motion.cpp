@@ -29,24 +29,35 @@ int32_t clamp(int64_t value, int32_t limit) {
     return value > limit ? limit : value < -limit ? -limit : static_cast<int32_t>(value);
 }
 bool valid_config(const MotionConfig& c) {
-    return c.generation && c.max_speed_mrpm >= 1000 && c.max_speed_mrpm <= 1000000 &&
+    const bool valid = c.generation && c.max_speed_mrpm >= 1000 && c.max_speed_mrpm <= 1000000 &&
            c.acceleration_mrpm_s && c.acceleration_mrpm_s <= 10000000 && c.deceleration_mrpm_s &&
            c.deceleration_mrpm_s <= 10000000 && c.counts_num && c.counts_num <= 1000000 &&
            c.counts_den && c.counts_den <= 1000000 &&
-           static_cast<uint64_t>(c.max_speed_mrpm) * c.counts_num <= 6000000000ULL * c.counts_den &&
            c.velocity_tolerance_mrpm <= static_cast<uint32_t>(c.max_speed_mrpm) && c.settle_ticks &&
            c.settle_ticks <= 1000000 && c.kp_q16 >= 0 && c.kp_q16 <= 1048576 && c.ki_q16 >= 0 &&
            c.ki_q16 <= 1048576 && c.duty_limit_q16 >= 0 && c.duty_limit_q16 <= 65536 &&
            c.integral_limit_q16 >= 0 && c.integral_limit_q16 <= 65536 && c.stop_timeout_us;
+    if (!valid) {
+        return false;
+    }
+    // Bounds are established before narrowing the cross-product operands.
+    const uint32_t speed = static_cast<uint32_t>(c.max_speed_mrpm) & 0xfffffU;
+    return static_cast<uint64_t>(speed) * (c.counts_num & 0xfffffU) <=
+           6000000000ULL * (c.counts_den & 0xfffffU);
 }
+
 } // namespace
 PreparedMotionConfig prepare_motion_config(const MotionConfig& c) {
     PreparedMotionConfig p;
     p.valid = valid_config(c);
     if (p.valid) {
-        p.braking_denominator = 120000ULL * c.deceleration_mrpm_s * c.counts_den;
-        p.lookahead_denominator = 60000000ULL * c.counts_den;
-        p.integral_limit = static_cast<int64_t>(c.integral_limit_q16) * integral_scale;
+        // Valid configuration: deceleration needs 24 bits, CPR denominator
+        // 20 bits, and the nonnegative integral limit 17 bits.
+        const uint32_t denominator = c.counts_den & 0xfffffU;
+        p.braking_denominator = 120000ULL * (c.deceleration_mrpm_s & 0xffffffU) * denominator;
+        p.lookahead_denominator = 60000000ULL * denominator;
+        p.integral_limit = static_cast<int64_t>(static_cast<uint32_t>(c.integral_limit_q16) &
+                                                0x1ffffU) * integral_scale;
     }
     return p;
 }

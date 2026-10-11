@@ -52,14 +52,9 @@ void Dispatcher::service(bool reset, const uint32_t request[4], bool tick, bool 
                     ring_.acknowledge_cancellation();
                     accepted = true;
                     break;
-                case EngineOperation::read_completion: {
-                    Completion c{};
-                    if (request[2] < 8 && ring_.read_completion(request[1], c)) {
-                        read_data = c[request[2]];
-                        accepted = true;
-                    }
+                case EngineOperation::read_completion:
+                    accepted = ring_.read_completion_word(request[1], request[2], read_data);
                     break;
-                }
                 case EngineOperation::read_active:
                     if (ring_.busy() && request[1] < 16) {
                         read_data = ring_.active()[request[1]];

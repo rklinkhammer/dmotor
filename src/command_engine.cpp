@@ -46,14 +46,9 @@ extern "C" void dmotor_command_engine(bool reset, const uint32_t request[4], uin
                 ring.acknowledge_cancellation();
                 accepted = true;
                 break;
-            case dmotor::EngineOperation::read_completion: {
-                dmotor::Completion completion{};
-                if (request[2] < 8 && ring.read_completion(request[1], completion)) {
-                    read_data = completion[request[2]];
-                    accepted = true;
-                }
+            case dmotor::EngineOperation::read_completion:
+                accepted = ring.read_completion_word(request[1], request[2], read_data);
                 break;
-            }
             case dmotor::EngineOperation::read_active:
                 if (ring.busy() && request[1] < 16) {
                     read_data = ring.active()[request[1]];

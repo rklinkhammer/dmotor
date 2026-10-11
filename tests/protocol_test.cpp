@@ -43,6 +43,20 @@ int main() {
         CHECK(ring.capture(i * 2, 0, 130000));
         CHECK(ring.finish(i * 2 + 1));
     }
+    // Word reads must preserve every published field across counter wrap.
+    for (uint32_t i = 0; i < dmotor::ring_depth; ++i) {
+        Completion full{};
+        CHECK(ring.read_completion(base + i, full));
+        for (uint32_t word = 0; word < full.size(); ++word) {
+            uint32_t value = 0xdeadbeefU;
+            CHECK(ring.read_completion_word(base + i, word, value));
+            CHECK(value == full[word]);
+        }
+    }
+    uint32_t unchanged = 0xdeadbeefU;
+    CHECK(!ring.read_completion_word(base, UINT32_MAX, unchanged));
+    CHECK(!ring.read_completion_word(base + dmotor::ring_depth, 0, unchanged));
+    CHECK(unchanged == 0xdeadbeefU);
     write(ring, ring.producer(), velocity);
     CHECK(ring.publish(ring.producer() + 1, ring.epoch()));
     CHECK(!ring.capture(50, 0, 130000)); // Completion reservation backpressure.
@@ -54,6 +68,8 @@ int main() {
     CHECK(!ring.reopen(true, 7));
     CHECK(!ring.acknowledge_completions(ring.completion_producer() + 1));
     CHECK(ring.acknowledge_completions(ring.completion_producer()));
+    CHECK(!ring.read_completion_word(base, 0, unchanged));
+    CHECK(unchanged == 0xdeadbeefU);
     ring.acknowledge_cancellation();
     CHECK(ring.reopen(true, 7));
     CHECK(!ring.publish(1, saved.epoch));
@@ -90,6 +106,31 @@ int main() {
             d[11] = 100;
         }
         CHECK(validate(d, 0, 0, 0, 0, 130000) == Error::none);
+    }
+    // Independent signed-bound comparison oracle for the sign-bit overflow test.
+    const int64_t bounds[] = {INT64_MIN, INT64_MIN + 1, -1, 0, 1, INT64_MAX - 1, INT64_MAX};
+    auto overflow_case = [&](int64_t position, int64_t displacement) {
+        relative[6] = static_cast<uint32_t>(displacement);
+        relative[7] = static_cast<uint32_t>(static_cast<uint64_t>(displacement) >> 32);
+        const bool overflow =
+            (displacement > 0 && position > INT64_MAX - displacement) ||
+            (displacement < 0 && position < INT64_MIN - displacement);
+        CHECK(validate(relative, 0, 0, 0, position, 130000) ==
+              (overflow ? Error::overflow : Error::none));
+    };
+    for (auto position : bounds) {
+        for (auto displacement : bounds) {
+            overflow_case(position, displacement);
+        }
+    }
+    uint64_t random = 0x78615bf18a32c975ULL;
+    for (unsigned i = 0; i < 10000; ++i) {
+        random = random * 6364136223846793005ULL + 1;
+        const int64_t position = signed_pair(static_cast<uint32_t>(random),
+                                             static_cast<uint32_t>(random >> 32));
+        random = random * 6364136223846793005ULL + 1;
+        overflow_case(position, signed_pair(static_cast<uint32_t>(random),
+                                            static_cast<uint32_t>(random >> 32)));
     }
     std::cout << "protocol: wrap, ownership, rejection, cancellation, backpressure passed\n";
 }

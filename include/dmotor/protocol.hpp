@@ -5,7 +5,8 @@
 
 namespace dmotor {
 using Descriptor = std::array<uint32_t, 16>;
-using Completion = std::array<uint32_t, 8>;
+constexpr uint32_t completion_words = 8;
+using Completion = std::array<uint32_t, completion_words>;
 enum class Error : uint32_t {
     none,
     opcode,
@@ -48,6 +49,7 @@ class CommandRing {
     bool acknowledge_completions(uint32_t requested_consumer);
     void acknowledge_cancellation();
     bool read_completion(uint32_t counter, Completion& result) const;
+    bool read_completion_word(uint32_t counter, uint32_t word, uint32_t& result) const;
     const Descriptor& active() const;
     bool busy() const;
     bool admission_open() const;
@@ -62,7 +64,9 @@ class CommandRing {
     // Only the serialized dispatcher may reuse its current-tick validation.
     bool capture_checked(uint64_t now, Error error);
     std::array<Descriptor, ring_depth> slots_{};
-    std::array<Completion, ring_depth> completions_{};
+    // Flat word storage lets HLS infer one compact BRAM instead of a bank
+    // per completion field. Publication still occurs after all words are stored.
+    std::array<uint32_t, ring_depth * completion_words> completions_{};
     Descriptor active_{};
     Cancellation cancellation_{};
     uint32_t producer_ = 0, consumer_ = 0;

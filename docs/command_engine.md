@@ -62,3 +62,23 @@ results in axi_peripheral.md. The original eight-clock proposal is superseded.
 No control algorithm, controlled-stop deceleration, watchdog refresh handler, or
 physical output is implemented by this command engine. Those remain separate
 components, with integration still pending.
+
+## Completion storage and word reads
+
+Completion records use a flat `ring_depth * completion_words` array. At depth 4,
+Vitis infers a compact 32-word BRAM-backed memory instead of eight independent
+four-word distributed-memory banks. The submission ring already inferred BRAM.
+Scalar lifecycle, protection, counters and active-command state remain separate.
+
+Completion publication still follows all eight word writes. Serialized engine
+transactions prevent readers from observing a partially written record. The new
+`read_completion_word` checks both the completion window and word index before
+reading one word; command-engine/dispatcher MMIO paths use it instead of copying
+an entire completion to select a single field. Bulk `read_completion` remains
+available for native callers. Reopen/reset, wraparound, completion backpressure,
+cancellation ordering, timestamps and the public memory map are unchanged.
+
+Storage placement is inferred from this portable word-array access pattern;
+there are no vendor pragmas in policy code. Confirm the generated memory report
+when changing HLS versions, ring depth or access patterns. Current Vitis reports
+show separate BRAM-backed submission and completion arrays.

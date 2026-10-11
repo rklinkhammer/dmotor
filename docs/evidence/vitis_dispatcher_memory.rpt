@@ -1,0 +1,17 @@
+Vitis 2026.1 dispatcher service memory report excerpt
+Source: build/vitis_dispatcher/hls/syn/report/service_csynth.rpt
+Target: xc7z020clg400-1, 100 MHz, ring depth 4
+
+    * Memory: 
+    +------------------------------------------+--------------------------------------------------------------+---------+----+----+-----+------+-----+------+-------------+
+    |                  Memory                  |                            Module                            | BRAM_18K| FF | LUT| URAM| Words| Bits| Banks| W*Bits*Banks|
+    +------------------------------------------+--------------------------------------------------------------+---------+----+----+-----+------+-----+------+-------------+
+    |completion_U                              |cancel_completion_RAM_AUTO_1R1W                               |        0|  64|   4|    0|     8|   32|     1|          256|
+    |dispatcher_controller_prepared_words_s_U  |service_dispatcher_controller_prepared_words_s_RAM_AUTO_1R1W  |        0|  81|  17|    0|    17|   32|     1|          544|
+    |dispatcher_ring_active_s_U                |service_dispatcher_ring_active_s_RAM_AUTO_1R1W                |        0|  80|  16|    0|    16|   32|     1|          512|
+    |dispatcher_ring_completions_s_U           |service_dispatcher_ring_completions_s_RAM_AUTO_1R1W           |        2|  32|  16|    0|    32|   32|     1|         1024|
+    |dispatcher_ring_slots_s_U                 |service_dispatcher_ring_slots_s_RAM_AUTO_1R1W                 |        2|  64|  24|    0|    64|   32|     1|         2048|
+    +------------------------------------------+--------------------------------------------------------------+---------+----+----+-----+------+-----+------+-------------+
+    |Total                                     |                                                              |        4| 321|  77|    0|   137|  160|     5|         4384|
+    +------------------------------------------+--------------------------------------------------------------+---------+----+----+-----+------+-----+------+-------------+
+

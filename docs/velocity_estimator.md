@@ -131,3 +131,17 @@ Run `python3 tools/vitis_check.py --kernel velocity` for the 100 MHz
 `xc7z020clg400-1` flow. See [verification evidence](verification.md). Combined
 encoder-to-estimator generated-RTL wiring, complete hardware sequencing, motor
 model dynamics, tuning MMIO and hardware measurements remain integration work.
+
+## Bounded conversion operands
+
+After the full-width snapshot and configuration checks, accepted event delta is
+at most 100, CPR denominator at most 10,000, and numerator at most 1,000,000.
+The exact numerator now multiplies event delta by the CPR denominator first
+(product at most 1,000,000), then widens before multiplying by the clock/RPM scale.
+The measured interval is narrowed to 32 bits only after the maximum-interval check;
+`timing.hpp` already asserts that this interval bound fits in `uint32_t`.
+The CPR numerator uses its proven 20-bit width for the denominator product.
+
+These operations preserve the original integer rational expression, rounding,
+signed speed and invalid-input rejection. They expose existing bounds to synthesis
+rather than changing encoder precision or configured limits.

@@ -131,6 +131,42 @@ int main() {
     edge = now + 1;
     call();
     CHECK((status >> 8) & 4);
+    // Full configured scaling bounds, maximum accepted events per snapshot,
+    // both signs, and the original wide rational expression as an oracle.
+    for (uint32_t num : {1U, 10296U, 999999U, 1000000U}) {
+        for (uint32_t den : {1U, 5U, 9999U, 10000U}) {
+            for (uint32_t events : {1U, 99U, 100U}) {
+                for (bool reverse : {false, true}) {
+                    dmotor_velocity(true, 0, 0, 0, 0, 0, reverse, 1, num, den,
+                                    1000000000, speed, age, status);
+                    dmotor_velocity(false, 0, 0, 0, 0, 0, reverse, 1, num, den,
+                                    1000000000, speed, age, status);
+                    dmotor_velocity(false, 100000, 1, 100000, 0, 0, reverse, 1, num, den,
+                                    1000000000, speed, age, status);
+                    dmotor_velocity(false, 200000, 1 + events, 200000, 0, 0, reverse,
+                                    1, num, den, 1000000000, speed, age, status);
+                    const uint64_t numerator = uint64_t{events} * 6000000000000ULL * den;
+                    const uint64_t denominator = uint64_t{100000} * num;
+                    const uint64_t expected = (numerator + denominator / 2) / denominator;
+                    if (expected > 1000000) {
+                        CHECK((status >> 8) == 8 && speed == 0 && !(status & 1));
+                    } else {
+                        const int32_t signed_speed = static_cast<int32_t>(expected);
+                        CHECK((status >> 8) == 0 && (status & 1) && age == 0);
+                        CHECK(speed == (reverse ? -signed_speed : signed_speed));
+                        CHECK(bool(status & 4) == (events > 1));
+                    }
+                }
+            }
+        }
+    }
+    for (bool bad_num : {false, true}) {
+        const uint32_t num = bad_num ? 1048577U : 1U;
+        const uint32_t den = bad_num ? 1U : 16385U;
+        dmotor_velocity(true, 0, 0, 0, 0, 0, false, 1, num, den, 10000000, speed, age, status);
+        dmotor_velocity(false, 0, 0, 0, 0, 0, false, 1, num, den, 10000000, speed, age, status);
+        CHECK((status >> 8) == 1 && speed == 0 && !(status & 1));
+    }
     std::cout << "velocity: both-direction 1/5/30/130 RPM sweep, zero timeout, restart, reversal, "
                  "invalid edges and snapshot faults passed\n";
 }

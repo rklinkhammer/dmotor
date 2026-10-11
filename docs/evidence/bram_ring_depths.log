@@ -1,0 +1,4 @@
+depth 2: native tests and generated ABI passed
+depth 4: native tests and generated ABI passed
+depth 16: native tests and generated ABI passed
+depth 64: native tests and generated ABI passed

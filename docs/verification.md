@@ -574,3 +574,95 @@ the autonomous scheduler/PWM wrapper, plus Vitis C simulation, synthesis and
 Verilog co-simulation for motion, velocity, controller and dispatcher. Updated
 reports are in `evidence/`; `preparation_serial_equivalence.log` records the
 16,387 matching motion snapshots and 1,379 matching dispatcher replies.
+
+## Selective BRAM and code-wide LUT review
+
+Reviewed the portable protocol/ring, command engine, AXI peripheral, configuration,
+controller, motion, velocity, arithmetic and standalone PI code, their Vitis adapters,
+and the RTL safety, timing, encoder, PWM and bus boundaries. The review uses current
+HLS hierarchy/memory reports for resource attribution; it is not a placed/routed
+whole-system utilization audit. The standalone PI primitive is not instantiated by
+the motion controller.
+
+Retained completion changes flatten cold records into one word-addressed memory
+and avoid full-record copies for single-word MMIO reads. The submission ring already
+uses BRAM. Preserve ordinary scalar state for hot control/protection data rather
+than forcing every field into a memory. No HALT/watchdog state moved into BRAM.
+
+Further retained arithmetic changes replace relative-position overflow detection
+with one unsigned sum and sign-bit checks, and bound/reorder velocity products only
+after their full-width validation. Preparation also bounds validated speed, CPR,
+deceleration and integral-limit operands before multiplying. These changes are exact,
+including extreme signed positions
+and fractional CPR. Protocol tests compare overflow against the original signed-bound
+oracle for boundary pairs and 10,000 randomized pairs. Completion tests compare every
+word against bulk records across counter wrap, and reject invalid word indices and
+retired counters without changing the output value. Velocity tests cover configured
+scaling extrema, one/99/100 events, both signs, excessive speed and inputs that would
+alias valid values if narrowed before validation. Motion tests check the corresponding
+configuration aliases and cross-product limits; equivalence traces now vary rational
+CPR across small, fractional and maximum supported values.
+
+Measured experiments, each against the initial 26,337-LUT dispatcher unless noted:
+
+| Experiment | Result | Decision |
+|---|---|---|
+| Flat completion storage and direct word reads | 26,076 LUT; 4 rather than 2 BRAM_18K | Retain |
+| Sign-bit relative-position overflow check | 26,236 LUT | Retain |
+| Bounded/reordered velocity products | 25,855 LUT; 49 rather than 66 DSP | Retain |
+| Bounded preparation products, after completion/overflow/velocity changes | 25,493 → 25,215 LUT; 49 → 39 DSP | Retain |
+| Sequential reserved-field descriptor checks | 26,632 LUT; 7.247 ns path | Discard |
+| Force temporary configuration words into BRAM | 26,333 LUT; one extra BRAM_18K | Discard: four-LUT saving is too small |
+| Simplify watchdog clock conversion explicitly | Peripheral remains 9,875 LUT | Discard: no measured benefit |
+
+Direct storage bindings to private class members were rejected or ignored by Vitis;
+none of those directives are retained. The completion-array result above uses
+successful natural BRAM inference confirmed in the memory report.
+
+Final Vitis 2026.1 estimates against revision `4c7b935`, at 100 MHz on
+xc7z020clg400-1, with ring depth four:
+
+| Kernel | LUT before → after | FF before → after | DSP before → after | BRAM_18K before → after | Max clocks before → after | Path ns before → after |
+|---|---:|---:|---:|---:|---:|---:|
+| Command | 6493 → 6239 | 1918 → 1743 | 0 → 0 | 2 → 4 | 64 → 94 | 7.074 → 7.074 |
+| Peripheral | 9875 → 9816 | 3401 → 3268 | 0 → 0 | 2 → 4 | 96 → 125 | 7.074 → 7.074 |
+| Motion | 16697 → 16300 | 10455 → 9942 | 42 → 32 | 0 → 0 | 914 → 913 | 7.054 → 7.181 |
+| Velocity | 4340 → 3858 | 3844 → 3011 | 24 → 7 | 0 → 0 | 149 → 145 | 7.040 → 7.040 |
+| Controller | 25264 → 24415 | 16771 → 15469 | 66 → 39 | 0 → 0 | 1003 → 999 | 7.212 → 7.212 |
+| Dispatcher | 26337 → 25215 | 18060 → 16461 | 66 → 39 | 2 → 4 | 1197 → 1251 | 7.138 → 7.181 |
+
+The dispatcher saves 1122 LUT (4.26%), 1599 FF (8.85%) and 27 DSP (40.91%),
+trading two additional BRAM_18K for cold completion storage. Its maximum HLS
+estimate is 12.51 us against the 800 us compute deadline. All estimated paths
+remain below the 7.30 ns effective budget. The service memory report confirms a
+32-word × 32-bit completion memory and a 64-word × 32-bit submission memory,
+each using two BRAM_18K. See `evidence/vitis_dispatcher_memory.rpt`.
+These estimates do not establish routed timing or an integrated MMIO arbitration
+bound. Four dispatcher copies would still require 100,860 LUT, exceeding the
+53,200 available on xc7z020; their 156 DSP alone would fit its 220 DSP budget.
+
+All 21 native/RTL tests pass, including the regenerated peripheral and autonomous
+motion RTL integrations (`evidence/native_rtl_tests.log`). Vitis C simulation,
+synthesis and Verilog co-simulation pass for command engine,
+peripheral, motion, velocity, controller and dispatcher. Equivalence against
+`4c7b935` matches 16,387 motion snapshots and 1,379 complete dispatcher replies
+(`evidence/bram_equivalence.log`). Ring depths 2, 4, 16 and 64 pass native/ABI
+checks (`evidence/bram_ring_depths.log`).
+
+Remaining candidates from the review:
+
+- Measure narrower parameter-derived RTL scheduler/PWM counters in Vivado. This
+  may yield modest savings, but HLS reports cannot establish the benefit in these
+  separately integrated RTL modules. Keep watchdog and HALT response independent.
+- Profile remaining motion arithmetic and mux/control logic after synthesis and
+  placement before choosing another serialization boundary. More serialization
+  can add multiplexers and state; the discarded reserved-field experiment shows
+  that fewer simultaneous comparisons need not mean fewer LUTs.
+- If four motors must fit this device, evaluate one scheduled arithmetic engine
+  with per-motor context and independent safety/PWM/encoder logic. This changes
+  arbitration, latency verification and the integration architecture; it is not
+  implemented by this optimization pass.
+
+Full-width MMIO, ring counters, positions and timestamps are retained. No numeric
+range, fractional precision, control algorithm, safety priority or clock-rate
+requirement needs to change for the retained optimizations.
