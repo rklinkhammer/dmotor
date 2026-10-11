@@ -111,3 +111,28 @@ now owns the ring/controller acceptance and completion sequence in C++ HLS.
 Next adapt AXI and wire collector/scheduler/PWM and shared safety, then implement
 tuning MMIO and motor-model tests. Integrated resource fit and routed timing remain
 requirements.
+
+## Disabled configuration preparation
+
+The integrated controller prepares motion range validation, the braking and
+lookahead denominators, the integral clamp limit, and acquisition-policy validity
+on an explicit reset call or when configuration changes while unauthorized.
+Enabled ticks reuse those values. Standalone `dmotor_motion` retains per-call
+preparation and validation for compatibility; the integrated private path uses
+only controller-owned prepared data.
+
+All 17 decoded configuration words are retained in canonical word form and
+compared sequentially with the next snapshot. A change while authorized, even
+with the same generation, latches controller configuration fault bit 0, inhibits
+drive and refuses activation. Reserved wire words still invalidate generation.
+A newly constructed controller requires reset or a disabled preparation call
+before enabling. For the dispatcher, issue a disabled tick after reset/configuration
+commit and wait for the HLS transaction to finish before enabling. The configuration
+snapshot must remain coherent and stable throughout each HLS transaction.
+
+Disabled reconfiguration restarts estimator qualification with a fresh measurement
+epoch. It does not clear sticky faults or suppress simultaneous capture/encoder
+diagnostics. Reset remains the internal recovery mechanism. Software must still
+obey the architectural commit rules: disabled state, no active command, and an
+empty or explicitly invalidated queue. This internal preparation is not a new
+public MMIO commit protocol or permission to change queued commands' meaning.

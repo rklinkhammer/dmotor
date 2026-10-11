@@ -11,6 +11,12 @@ struct MotionConfig {
     int32_t kp_q16 = 0, ki_q16 = 0, duty_limit_q16 = 0, integral_limit_q16 = 0;
     uint32_t stop_timeout_us = 0;
 };
+struct PreparedMotionConfig {
+    bool valid = false;
+    uint64_t braking_denominator = 0, lookahead_denominator = 0;
+    int64_t integral_limit = 0;
+};
+PreparedMotionConfig prepare_motion_config(const MotionConfig& config);
 struct MotionResult {
     int32_t duty_q16 = 0, ramp_mrpm = 0;
     bool ready = false, busy = false, completion_valid = false, accepted = false;
@@ -35,7 +41,7 @@ class MotionExecutor {
                            const Descriptor& command, bool completion_ack, bool immediate_stop,
                            uint32_t session, uint64_t now, int64_t position, int32_t velocity_mrpm,
                            bool velocity_valid, const MotionConfig& config, bool feedback_pending,
-                           bool command_checked);
+                           bool command_checked, const PreparedMotionConfig& prepared);
     MotionResult result_{};
     uint8_t opcode_ = 0; // Validated opcodes 1..6, or inactive 0.
     uint32_t settling_ = 0; // Stops incrementing at settle_ticks <= 1000000.

@@ -3,7 +3,7 @@
 ================================================================
 == Vitis HLS Report for 'dmotor_controller'
 ================================================================
-* Date:           Sun Oct 11 13:47:44 2026
+* Date:           Sun Oct 11 14:01:47 2026
 
 * Version:        2026.1 (Build 6493734 on Jun 16 2026)
 * Project:        vitis_controller
@@ -20,28 +20,28 @@
     +--------+----------+----------+------------+
     |  Clock |  Target  | Estimated| Uncertainty|
     +--------+----------+----------+------------+
-    |ap_clk  |  10.00 ns|  7.193 ns|     2.70 ns|
+    |ap_clk  |  10.00 ns|  7.212 ns|     2.70 ns|
     +--------+----------+----------+------------+
 
 + Latency: 
     * Summary: 
-    +---------+---------+----------+----------+-----+-----+---------+
-    |  Latency (cycles) |  Latency (absolute) |  Interval | Pipeline|
-    |   min   |   max   |    min   |    max   | min | max |   Type  |
-    +---------+---------+----------+----------+-----+-----+---------+
-    |       49|      633|  0.490 us|  6.330 us|   50|  634|       no|
-    +---------+---------+----------+----------+-----+-----+---------+
+    +---------+---------+----------+-----------+-----+------+---------+
+    |  Latency (cycles) |  Latency (absolute)  |  Interval  | Pipeline|
+    |   min   |   max   |    min   |    max    | min |  max |   Type  |
+    +---------+---------+----------+-----------+-----+------+---------+
+    |       60|     1003|  0.600 us|  10.030 us|   61|  1004|       no|
+    +---------+---------+----------+-----------+-----+------+---------+
 
     + Detail: 
         * Instance: 
-        +--------------------------------------------------------+---------------------------------------------+---------+---------+-----------+-----------+-----+-----+-------------------+
-        |                                                        |                                             |  Latency (cycles) |   Latency (absolute)  |  Interval |      Pipeline     |
-        |                        Instance                        |                    Module                   |   min   |   max   |    min    |    max    | min | max |        Type       |
-        +--------------------------------------------------------+---------------------------------------------+---------+---------+-----------+-----------+-----+-----+-------------------+
-        |grp_dmotor_controller_Pipeline_VITIS_LOOP_104_1_fu_817  |dmotor_controller_Pipeline_VITIS_LOOP_104_1  |       18|       18|   0.180 us|   0.180 us|    0|    0|  loop pipeline stp|
-        |grp_step_impl_1_fu_824                                  |step_impl_1                                  |        1|      585|  10.000 ns|   5.850 us|    1|  585|                 no|
-        |grp_dmotor_controller_Pipeline_VITIS_LOOP_159_1_fu_984  |dmotor_controller_Pipeline_VITIS_LOOP_159_1  |        8|        8|  80.000 ns|  80.000 ns|    0|    0|  loop pipeline stp|
-        +--------------------------------------------------------+---------------------------------------------+---------+---------+-----------+-----------+-----+-----+-------------------+
+        +---------------------------------------------------------+---------------------------------------------+---------+---------+-----------+-----------+-----+-----+-------------------+
+        |                                                         |                                             |  Latency (cycles) |   Latency (absolute)  |  Interval |      Pipeline     |
+        |                         Instance                        |                    Module                   |   min   |   max   |    min    |    max    | min | max |        Type       |
+        +---------------------------------------------------------+---------------------------------------------+---------+---------+-----------+-----------+-----+-----+-------------------+
+        |grp_dmotor_controller_Pipeline_VITIS_LOOP_154_1_fu_827   |dmotor_controller_Pipeline_VITIS_LOOP_154_1  |       18|       18|   0.180 us|   0.180 us|    0|    0|  loop pipeline stp|
+        |grp_step_impl_1_fu_834                                   |step_impl_1                                  |       13|      956|   0.130 us|   9.560 us|   13|  956|                 no|
+        |grp_dmotor_controller_Pipeline_VITIS_LOOP_209_1_fu_1004  |dmotor_controller_Pipeline_VITIS_LOOP_209_1  |        8|        8|  80.000 ns|  80.000 ns|    0|    0|  loop pipeline stp|
+        +---------------------------------------------------------+---------------------------------------------+---------+---------+-----------+-----------+-----+-----+-------------------+
 
         * Loop: 
         N/A
@@ -58,29 +58,29 @@
 |DSP              |        -|    -|       -|      -|    -|
 |Expression       |        -|    -|       0|    139|    -|
 |FIFO             |        -|    -|       -|      -|    -|
-|Instance         |        -|   66|   17237|  24620|    -|
+|Instance         |        0|   66|   15266|  24478|    0|
 |Memory           |        0|    -|      64|      8|    0|
 |Multiplexer      |        -|    -|       0|    639|    -|
-|Register         |        -|    -|    1442|      -|    -|
+|Register         |        -|    -|    1441|      -|    -|
 +-----------------+---------+-----+--------+-------+-----+
-|Total            |        0|   66|   18743|  25406|    0|
+|Total            |        0|   66|   16771|  25264|    0|
 +-----------------+---------+-----+--------+-------+-----+
 |Available        |      280|  220|  106400|  53200|    0|
 +-----------------+---------+-----+--------+-------+-----+
-|Utilization (%)  |        0|   30|      17|     47|    0|
+|Utilization (%)  |        0|   30|      15|     47|    0|
 +-----------------+---------+-----+--------+-------+-----+
 
 + Detail: 
     * Instance: 
-    +--------------------------------------------------------+---------------------------------------------+---------+----+-------+-------+-----+
-    |                        Instance                        |                    Module                   | BRAM_18K| DSP|   FF  |  LUT  | URAM|
-    +--------------------------------------------------------+---------------------------------------------+---------+----+-------+-------+-----+
-    |grp_dmotor_controller_Pipeline_VITIS_LOOP_104_1_fu_817  |dmotor_controller_Pipeline_VITIS_LOOP_104_1  |        0|   0|     13|     65|    0|
-    |grp_dmotor_controller_Pipeline_VITIS_LOOP_159_1_fu_984  |dmotor_controller_Pipeline_VITIS_LOOP_159_1  |        0|   0|      7|     53|    0|
-    |grp_step_impl_1_fu_824                                  |step_impl_1                                  |        0|  66|  17217|  24502|    0|
-    +--------------------------------------------------------+---------------------------------------------+---------+----+-------+-------+-----+
-    |Total                                                   |                                             |        0|  66|  17237|  24620|    0|
-    +--------------------------------------------------------+---------------------------------------------+---------+----+-------+-------+-----+
+    +---------------------------------------------------------+---------------------------------------------+---------+----+-------+-------+-----+
+    |                         Instance                        |                    Module                   | BRAM_18K| DSP|   FF  |  LUT  | URAM|
+    +---------------------------------------------------------+---------------------------------------------+---------+----+-------+-------+-----+
+    |grp_dmotor_controller_Pipeline_VITIS_LOOP_154_1_fu_827   |dmotor_controller_Pipeline_VITIS_LOOP_154_1  |        0|   0|     13|     65|    0|
+    |grp_dmotor_controller_Pipeline_VITIS_LOOP_209_1_fu_1004  |dmotor_controller_Pipeline_VITIS_LOOP_209_1  |        0|   0|      7|     53|    0|
+    |grp_step_impl_1_fu_834                                   |step_impl_1                                  |        0|  66|  15246|  24360|    0|
+    +---------------------------------------------------------+---------------------------------------------+---------+----+-------+-------+-----+
+    |Total                                                    |                                             |        0|  66|  15266|  24478|    0|
+    +---------------------------------------------------------+---------------------------------------------+---------+----+-------+-------+-----+
 
     * DSP: 
     N/A
@@ -101,12 +101,12 @@
     +----------------------------------+----------+----+---+----+------------+------------+
     |           Variable Name          | Operation| DSP| FF| LUT| Bitwidth P0| Bitwidth P1|
     +----------------------------------+----------+----+---+----+------------+------------+
-    |icmp_ln133_fu_1001_p2             |      icmp|   0|  0|  39|          32|           1|
+    |icmp_ln183_fu_1021_p2             |      icmp|   0|  0|  39|          32|           1|
     |d_we0                             |        or|   0|  0|   2|           1|           1|
-    |or_ln133_1_fu_996_p2              |        or|   0|  0|  32|          32|          32|
-    |or_ln133_fu_990_p2                |        or|   0|  0|  32|          32|          32|
+    |or_ln183_1_fu_1016_p2             |        or|   0|  0|  32|          32|          32|
+    |or_ln183_fu_1010_p2               |        or|   0|  0|  32|          32|          32|
     |reply_we0                         |        or|   0|  0|   2|           1|           1|
-    |c_motion_generation_1_fu_1007_p3  |    select|   0|  0|  32|           1|          32|
+    |c_motion_generation_1_fu_1027_p3  |    select|   0|  0|  32|           1|          32|
     +----------------------------------+----------+----+---+----+------------+------------+
     |Total                             |          |   0|  0| 139|          99|          99|
     +----------------------------------+----------+----+---+----+------------+------------+
@@ -115,7 +115,7 @@
     +--------------------------------+-----+-----------+-----+-----------+
     |              Name              | LUT | Input Size| Bits| Total Bits|
     +--------------------------------+-----+-----------+-----+-----------+
-    |ap_NS_fsm                       |  113|         24|    1|         24|
+    |ap_NS_fsm                       |  113|         23|    1|         23|
     |configuration_r_address0_local  |   59|         11|    5|         55|
     |configuration_r_address1_local  |   59|         11|    5|         55|
     |d_address0                      |   14|          3|    4|         12|
@@ -135,76 +135,76 @@
     |reply_d1_local                  |   53|         10|   32|        320|
     |reply_we0                       |    9|          2|    1|          2|
     +--------------------------------+-----+-----------+-----+-----------+
-    |Total                           |  639|        126|  175|       1115|
+    |Total                           |  639|        125|  175|       1114|
     +--------------------------------+-----+-----------+-----+-----------+
 
     * Register: 
-    +---------------------------------------------------------------------+----+----+-----+-----------+
-    |                                 Name                                | FF | LUT| Bits| Const Bits|
-    +---------------------------------------------------------------------+----+----+-----+-----------+
-    |ap_CS_fsm                                                            |  23|   0|   23|          0|
-    |authorized_read_reg_1440                                             |   1|   0|    1|          0|
-    |c_acquisition_duty_limit_q16_reg_1355                                |  32|   0|   32|          0|
-    |c_acquisition_timeout_cycles_reg_1340                                |  32|   0|   32|          0|
-    |c_motion_acceleration_mrpm_s_reg_1215                                |  32|   0|   32|          0|
-    |c_motion_counts_den_reg_1240                                         |  32|   0|   32|          0|
-    |c_motion_counts_num_reg_1235                                         |  32|   0|   32|          0|
-    |c_motion_deceleration_mrpm_s_reg_1220                                |  32|   0|   32|          0|
-    |c_motion_duty_limit_q16_reg_1300                                     |  32|   0|   32|          0|
-    |c_motion_generation_1_reg_1375                                       |  32|   0|   32|          0|
-    |c_motion_generation_reg_1195                                         |  32|   0|   32|          0|
-    |c_motion_integral_limit_q16_reg_1315                                 |  32|   0|   32|          0|
-    |c_motion_ki_q16_reg_1295                                             |  32|   0|   32|          0|
-    |c_motion_kp_q16_reg_1280                                             |  32|   0|   32|          0|
-    |c_motion_max_speed_mrpm_reg_1200                                     |  32|   0|   32|          0|
-    |c_motion_position_tolerance_reg_1255                                 |  32|   0|   32|          0|
-    |c_motion_settle_ticks_reg_1275                                       |  32|   0|   32|          0|
-    |c_motion_stop_timeout_us_reg_1320                                    |  32|   0|   32|          0|
-    |c_motion_velocity_tolerance_mrpm_reg_1260                            |  32|   0|   32|          0|
-    |c_zero_timeout_cycles_reg_1335                                       |  32|   0|   32|          0|
-    |capture_fault_read_reg_1435                                          |   1|   0|    1|          0|
-    |command_valid_read_reg_1390                                          |   1|   0|    1|          0|
-    |completion_ack_read_reg_1385                                         |   1|   0|    1|          0|
-    |configuration_r_load_reg_1360                                        |  32|   0|   32|          0|
-    |count_read_reg_1425                                                  |  64|   0|   64|          0|
-    |direction_epoch_read_reg_1415                                        |  32|   0|   32|          0|
-    |grp_dmotor_controller_Pipeline_VITIS_LOOP_104_1_fu_817_ap_start_reg  |   1|   0|    1|          0|
-    |grp_dmotor_controller_Pipeline_VITIS_LOOP_159_1_fu_984_ap_start_reg  |   1|   0|    1|          0|
-    |grp_step_impl_1_fu_824_ap_start_reg                                  |   1|   0|    1|          0|
-    |immediate_stop_read_reg_1380                                         |   1|   0|    1|          0|
-    |invalid_transitions_read_reg_1410                                    |  32|   0|   32|          0|
-    |last_edge_read_reg_1420                                              |  64|   0|   64|          0|
-    |negative_read_reg_1405                                               |   1|   0|    1|          0|
-    |now_read_reg_1430                                                    |  64|   0|   64|          0|
-    |position_read_reg_1400                                               |  64|   0|   64|          0|
-    |r_acquiring_reg_1520                                                 |   1|   0|    1|          0|
-    |r_faults_reg_1515                                                    |  32|   0|   32|          0|
-    |r_motion_accepted_reg_1465                                           |   1|   0|    1|          0|
-    |r_motion_busy_reg_1455                                               |   1|   0|    1|          0|
-    |r_motion_completion_valid_reg_1460                                   |   1|   0|    1|          0|
-    |r_motion_detail_reg_1485                                             |  32|   0|   32|          0|
-    |r_motion_epoch_reg_1475                                              |  32|   0|   32|          0|
-    |r_motion_faults_reg_1490                                             |  32|   0|   32|          0|
-    |r_motion_outcome_reg_1480                                            |  32|   0|   32|          0|
-    |r_motion_ready_reg_1450                                              |   1|   0|    1|          0|
-    |r_motion_sequence_reg_1470                                           |  32|   0|   32|          0|
-    |r_velocity_averaged_reg_1510                                         |   1|   0|    1|          0|
-    |r_velocity_mrpm_reg_1495                                             |  32|   0|   32|          0|
-    |r_velocity_timed_out_reg_1505                                        |   1|   0|    1|          0|
-    |r_velocity_valid_reg_1500                                            |   1|   0|    1|          0|
-    |r_warming_up_reg_1525                                                |   1|   0|    1|          0|
-    |reset_read_reg_1445                                                  |   1|   0|    1|          0|
-    |session_read_reg_1395                                                |  32|   0|   32|          0|
-    |trunc_ln148_reg_1530                                                 |  32|   0|   32|          0|
-    |trunc_ln150_reg_1540                                                 |  32|   0|   32|          0|
-    |trunc_ln154_reg_1550                                                 |  24|   0|   24|          0|
-    |trunc_ln155_reg_1555                                                 |  32|   0|   32|          0|
-    |trunc_ln7_reg_1535                                                   |  32|   0|   32|          0|
-    |trunc_ln9_reg_1545                                                   |  32|   0|   32|          0|
-    |trunc_ln_reg_1560                                                    |  32|   0|   32|          0|
-    +---------------------------------------------------------------------+----+----+-----+-----------+
-    |Total                                                                |1442|   0| 1442|          0|
-    +---------------------------------------------------------------------+----+----+-----+-----------+
+    +----------------------------------------------------------------------+----+----+-----+-----------+
+    |                                 Name                                 | FF | LUT| Bits| Const Bits|
+    +----------------------------------------------------------------------+----+----+-----+-----------+
+    |ap_CS_fsm                                                             |  22|   0|   22|          0|
+    |authorized_read_reg_1456                                              |   1|   0|    1|          0|
+    |c_acquisition_duty_limit_q16_reg_1376                                 |  32|   0|   32|          0|
+    |c_acquisition_timeout_cycles_reg_1361                                 |  32|   0|   32|          0|
+    |c_motion_acceleration_mrpm_s_reg_1236                                 |  32|   0|   32|          0|
+    |c_motion_counts_den_reg_1261                                          |  32|   0|   32|          0|
+    |c_motion_counts_num_reg_1256                                          |  32|   0|   32|          0|
+    |c_motion_deceleration_mrpm_s_reg_1241                                 |  32|   0|   32|          0|
+    |c_motion_duty_limit_q16_reg_1321                                      |  32|   0|   32|          0|
+    |c_motion_generation_1_reg_1466                                        |  32|   0|   32|          0|
+    |c_motion_generation_reg_1216                                          |  32|   0|   32|          0|
+    |c_motion_integral_limit_q16_reg_1336                                  |  32|   0|   32|          0|
+    |c_motion_ki_q16_reg_1316                                              |  32|   0|   32|          0|
+    |c_motion_kp_q16_reg_1301                                              |  32|   0|   32|          0|
+    |c_motion_max_speed_mrpm_reg_1221                                      |  32|   0|   32|          0|
+    |c_motion_position_tolerance_reg_1276                                  |  32|   0|   32|          0|
+    |c_motion_settle_ticks_reg_1296                                        |  32|   0|   32|          0|
+    |c_motion_stop_timeout_us_reg_1341                                     |  32|   0|   32|          0|
+    |c_motion_velocity_tolerance_mrpm_reg_1281                             |  32|   0|   32|          0|
+    |c_zero_timeout_cycles_reg_1356                                        |  32|   0|   32|          0|
+    |capture_fault_read_reg_1451                                           |   1|   0|    1|          0|
+    |command_valid_read_reg_1406                                           |   1|   0|    1|          0|
+    |completion_ack_read_reg_1401                                          |   1|   0|    1|          0|
+    |configuration_r_load_reg_1381                                         |  32|   0|   32|          0|
+    |count_read_reg_1441                                                   |  64|   0|   64|          0|
+    |direction_epoch_read_reg_1431                                         |  32|   0|   32|          0|
+    |grp_dmotor_controller_Pipeline_VITIS_LOOP_154_1_fu_827_ap_start_reg   |   1|   0|    1|          0|
+    |grp_dmotor_controller_Pipeline_VITIS_LOOP_209_1_fu_1004_ap_start_reg  |   1|   0|    1|          0|
+    |grp_step_impl_1_fu_834_ap_start_reg                                   |   1|   0|    1|          0|
+    |immediate_stop_read_reg_1396                                          |   1|   0|    1|          0|
+    |invalid_transitions_read_reg_1426                                     |  32|   0|   32|          0|
+    |last_edge_read_reg_1436                                               |  64|   0|   64|          0|
+    |negative_read_reg_1421                                                |   1|   0|    1|          0|
+    |now_read_reg_1446                                                     |  64|   0|   64|          0|
+    |position_read_reg_1416                                                |  64|   0|   64|          0|
+    |r_acquiring_reg_1541                                                  |   1|   0|    1|          0|
+    |r_faults_reg_1536                                                     |  32|   0|   32|          0|
+    |r_motion_accepted_reg_1486                                            |   1|   0|    1|          0|
+    |r_motion_busy_reg_1476                                                |   1|   0|    1|          0|
+    |r_motion_completion_valid_reg_1481                                    |   1|   0|    1|          0|
+    |r_motion_detail_reg_1506                                              |  32|   0|   32|          0|
+    |r_motion_epoch_reg_1496                                               |  32|   0|   32|          0|
+    |r_motion_faults_reg_1511                                              |  32|   0|   32|          0|
+    |r_motion_outcome_reg_1501                                             |  32|   0|   32|          0|
+    |r_motion_ready_reg_1471                                               |   1|   0|    1|          0|
+    |r_motion_sequence_reg_1491                                            |  32|   0|   32|          0|
+    |r_velocity_averaged_reg_1531                                          |   1|   0|    1|          0|
+    |r_velocity_mrpm_reg_1516                                              |  32|   0|   32|          0|
+    |r_velocity_timed_out_reg_1526                                         |   1|   0|    1|          0|
+    |r_velocity_valid_reg_1521                                             |   1|   0|    1|          0|
+    |r_warming_up_reg_1546                                                 |   1|   0|    1|          0|
+    |reset_read_reg_1461                                                   |   1|   0|    1|          0|
+    |session_read_reg_1411                                                 |  32|   0|   32|          0|
+    |trunc_ln198_reg_1551                                                  |  32|   0|   32|          0|
+    |trunc_ln1_reg_1581                                                    |  32|   0|   32|          0|
+    |trunc_ln200_reg_1561                                                  |  32|   0|   32|          0|
+    |trunc_ln204_reg_1571                                                  |  24|   0|   24|          0|
+    |trunc_ln205_reg_1576                                                  |  32|   0|   32|          0|
+    |trunc_ln9_reg_1556                                                    |  32|   0|   32|          0|
+    |trunc_ln_reg_1566                                                     |  32|   0|   32|          0|
+    +----------------------------------------------------------------------+----+----+-----+-----------+
+    |Total                                                                 |1441|   0| 1441|          0|
+    +----------------------------------------------------------------------+----+----+-----+-----------+
 
 
 

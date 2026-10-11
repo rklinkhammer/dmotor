@@ -221,3 +221,20 @@ Position, timestamps, dwell duration, session/generation identifiers and public
 MMIO layouts retain their existing widths and ranges. The native object layout
 is private and is not a serialization format. No architectural requirement changes
 are needed.
+
+## Exact serial arithmetic
+
+`detail::divide` in `src/arithmetic.cpp` implements unsigned division with 64
+compare/subtract iterations. Each iteration has two phases, separating comparison
+from conditional subtraction to meet the clock budget. Numerator bits enter from
+the most significant end; retained remainder and quotient build the exact floor
+quotient. Callers prove the denominator is nonzero. The high remainder bit is
+retained separately before shifting so unsigned wrap cannot lose carry information.
+The loop uses fixed bounds and no approximation, reciprocal table or floating point.
+
+Motion rounding/braking calculations and the velocity estimator use this helper.
+Existing rounding modes and rational encoder accuracy are unchanged. Vitis function
+boundaries and allocation directives live in the platform configurations. Sharing
+is local to each scheduled hierarchy; this is not a shared engine across motors.
+Prepared denominators are computed by the controller while disabled; the standalone
+motion top continues to prepare its own constants per call.

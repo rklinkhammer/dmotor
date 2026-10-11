@@ -521,3 +521,56 @@ Validation passed: all 20 native/RTL tests, including regenerated motion RTL
 integration, plus Vitis C simulation, synthesis and Verilog co-simulation for
 motion, controller and dispatcher. Checked-in synthesis/co-simulation reports and
 `evidence/native_rtl_tests.log` reflect this implementation.
+
+## Priorities 4 and 5: preparation and selected serialization
+
+Priority 4 prepares motion validation, braking/lookahead denominators, the integral
+limit and acquisition-policy validity during reset or disabled configuration
+changes in the integrated controller. Priority 5 uses a sequential canonical-word
+configuration comparison and an exact two-phase serial divider for motion and
+velocity. See `controller.md` for preparation ordering and fault behavior, and
+`motion_executor.md` for the arithmetic contract. Public MMIO formats, numeric
+ranges, fractional accuracy, independent HALT protection and clock rate are unchanged.
+
+All decoded configuration words are now checked for changes while enabled, including
+same-generation changes. A mismatch faults before activation. Disabled configuration
+changes restart estimator qualification; they neither clear protective latches nor
+hide simultaneous encoder diagnostics. Standalone motion keeps per-call validation.
+
+The arithmetic regression checks all unsigned 8-bit dividend/nonzero-divisor pairs,
+full-width boundaries, powers of two, and 100,000 deterministic random pairs against
+native division under UBSan. Motion snapshots and dispatcher replies match revision
+`de69d54` for legal preparation sequences. The dispatcher generation-mismatch test
+now supplies its changed configuration on a disabled tick before enabling, so it
+continues to test ring ownership independently of the new configuration guard.
+Controller tests cover mutation of each of the 17 decoded words, disabled scaling
+changes, requalification, sticky fault retention and concurrent decoder diagnostics.
+
+Experiments: configuration preparation initially increased dispatcher area to
+28,275 LUT. The first single-phase serial divider missed the effective timing budget
+(7.674 ns); the retained two-phase version separates compare and subtract. A serial
+PI gain multiplier reduced DSP use by five but added 595 LUT relative to the serial
+divider version, so it was discarded. Native PI multiplications remain in place.
+
+Final Vitis 2026.1 estimates at 100 MHz on xc7z020clg400-1:
+
+| Kernel | LUT before → after | FF before → after | DSP | Max clocks before → after | Path ns before → after |
+|---|---:|---:|---:|---:|---:|
+| Motion | 17193 → 16697 | 11950 → 10455 | 42 | 534 → 914 | 7.040 → 7.054 |
+| Velocity | 5065 → 4340 | 4599 → 3844 | 24 | 85 → 149 | 7.040 → 7.040 |
+| Controller | 25406 → 25264 | 18743 → 16771 | 66 | 633 → 1003 | 7.193 → 7.212 |
+| Dispatcher | 26694 → 26337 | 20574 → 18060 | 66 | 701 → 1197 | 7.193 → 7.138 |
+
+DSP and BRAM totals are unchanged. The dispatcher saves 357 LUT (1.34%) and
+2514 FF (12.22%). Its worst synthesis latency is 11.97 us against the 800 us
+compute deadline. All estimated paths remain below the 7.30 ns effective budget.
+Preparation/storage and comprehensive configuration checks offset part of the
+arithmetic savings. These are HLS estimates, not placed/routed closure or a proven
+integrated MMIO arbitration bound. Four independent dispatchers still exceed the
+xc7z020 LUT/DSP budget.
+
+Validation passed: all 21 native/RTL tests, including regenerated motion RTL with
+the autonomous scheduler/PWM wrapper, plus Vitis C simulation, synthesis and
+Verilog co-simulation for motion, velocity, controller and dispatcher. Updated
+reports are in `evidence/`; `preparation_serial_equivalence.log` records the
+16,387 matching motion snapshots and 1,379 matching dispatcher replies.

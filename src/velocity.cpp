@@ -1,4 +1,5 @@
 #include "dmotor/velocity.hpp"
+#include "dmotor/detail/arithmetic.hpp"
 #include "dmotor/timing.hpp"
 namespace dmotor {
 VelocityResult VelocityEstimator::step(bool reset, uint64_t now, const EncoderSample& s,
@@ -64,7 +65,7 @@ VelocityResult VelocityEstimator::step(bool reset, uint64_t now, const EncoderSa
                 // several edges average their periods without a tick-window bias.
                 const uint64_t numerator = edges * (60ULL * reg::FABRIC_HZ * 1000) * den;
                 const uint64_t denominator = interval * num;
-                const uint64_t speed = (numerator + denominator / 2) / denominator;
+                const uint64_t speed = detail::divide(numerator + denominator / 2, denominator);
                 if (speed > 1000000) {
                     result_.fault |= 8;
                 } else {

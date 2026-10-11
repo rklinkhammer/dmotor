@@ -21,6 +21,8 @@ with tempfile.TemporaryDirectory(prefix='dmotor-equivalence-') as directory:
     for label, tree in [('reference', baseline), ('current', root)]:
         binary = work / label
         sources = [tree / 'src/motion.cpp', tree / 'src/protocol.cpp']
+        if (tree / 'src/arithmetic.cpp').exists():
+            sources.append(tree / 'src/arithmetic.cpp')
         subprocess.run(['g++', '-std=c++14', '-O2', '-fsanitize=undefined',
                         '-fno-sanitize-recover=all', '-I' + str(tree / 'include'),
                         str(root / 'tests/motion_trace.cpp'), *map(str, sources),

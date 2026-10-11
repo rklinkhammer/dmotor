@@ -130,6 +130,40 @@ int main() {
     tick();
     CHECK(reply[16] & 1);
     config[16] = 128;
+    // Every decoded word must remain frozen while enabled, even when the
+    // generation is unchanged and the replacement value is otherwise legal.
+    for (unsigned word = 0; word < 17; ++word) {
+        reset();
+        const uint32_t saved = config[word];
+        config[word] ^= 1U;
+        tick();
+        CHECK((reply[16] & 1) && !reply[0] && !(reply[2] & 8));
+        config[word] = saved;
+        tick(false, false, false, false, false);
+        CHECK(reply[16] & 1); // Repreparation cannot clear a protective latch.
+    }
+    // Disabled scaling changes restart measurement qualification, not a
+    // configuration-mismatch fault; enabling waits for the new zero epoch.
+    reset();
+    config[0] = 2;
+    config[5] = 6;
+    tick(false, false, false, false, false);
+    CHECK(!reply[16] && !reply[0]);
+    command[4] = 2;
+    for (unsigned i = 0; i < 99; ++i) {
+        tick(false, true);
+        CHECK(!reply[16] && !(reply[2] & 8) && reply[0] == 0);
+    }
+    tick(false, true);
+    CHECK(!reply[16] && (reply[2] & 8));
+    config[0] = 1;
+    config[5] = 5;
+    reset();
+    ++invalid;
+    config[2] += 1;
+    tick(false, false, false, false, false);
+    CHECK((reply[16] & 4) && !reply[0]); // Preparation must not hide new diagnostics.
+    config[2] -= 1;
     std::cout << "controller: warmup, bounded acquisition, startup/reversal, stop, deadline "
                  "priority and protective faults passed\n";
 }

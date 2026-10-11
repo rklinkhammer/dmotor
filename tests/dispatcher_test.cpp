@@ -184,6 +184,7 @@ int main() {
             service(0, 0, 0, 0, false, false, false, false, true);
             service(3);
             cfg[0] = 2;
+            tick(); // Prepare generation 2 while disabled before enabling.
             authorized = true;
         }
         dmotor::Descriptor d{};

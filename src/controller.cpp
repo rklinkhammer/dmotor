@@ -1,6 +1,50 @@
 #include "dmotor/controller.hpp"
 #include "dmotor/timing.hpp"
 namespace dmotor {
+namespace {
+// Canonical words, never native object bytes or padding. Reserved input words
+// already invalidate generation in decode_controller_config.
+void config_words(const ControllerConfig& c, uint32_t words[17]) {
+    const auto& m = c.motion;
+    words[0] = m.generation;
+    words[1] = static_cast<uint32_t>(m.max_speed_mrpm);
+    words[2] = m.acceleration_mrpm_s;
+    words[3] = m.deceleration_mrpm_s;
+    words[4] = m.counts_num;
+    words[5] = m.counts_den;
+    words[6] = m.position_tolerance;
+    words[7] = m.velocity_tolerance_mrpm;
+    words[8] = m.settle_ticks;
+    words[9] = static_cast<uint32_t>(m.kp_q16);
+    words[10] = static_cast<uint32_t>(m.ki_q16);
+    words[11] = static_cast<uint32_t>(m.duty_limit_q16);
+    words[12] = static_cast<uint32_t>(m.integral_limit_q16);
+    words[13] = m.stop_timeout_us;
+    words[14] = c.zero_timeout_cycles;
+    words[15] = c.acquisition_timeout_cycles;
+    words[16] = static_cast<uint32_t>(c.acquisition_duty_limit_q16);
+}
+} // namespace
+void Controller::prepare(const ControllerConfig& c) {
+    dmotor::config_words(c, prepared_words_);
+    prepared_motion_ = prepare_motion_config(c.motion);
+    prepared_acquisition_valid_ =
+        c.acquisition_timeout_cycles >= timing::acquisition_timeout_min_cycles &&
+        c.acquisition_timeout_cycles < c.zero_timeout_cycles &&
+        c.acquisition_duty_limit_q16 >= 0 &&
+        c.acquisition_duty_limit_q16 <= c.motion.duty_limit_q16;
+    prepared_ = true;
+}
+bool Controller::matches(const ControllerConfig& c) const {
+    uint32_t words[config_words] = {};
+    dmotor::config_words(c, words);
+    bool equal = true;
+    for (unsigned i = 0; i < config_words; ++i) {
+        equal = equal && words[i] == prepared_words_[i];
+    }
+    return equal;
+}
+
 ControllerResult Controller::step(bool reset, bool authorized, bool capture_fault, uint64_t now,
                                   const EncoderSample& encoder, int64_t position, uint32_t session,
                                   bool command_valid, const Descriptor& command,
@@ -17,27 +61,33 @@ ControllerResult Controller::step_impl(bool reset, bool authorized, bool capture
                                        bool command_checked) {
     if (reset) {
         *this = Controller{};
+        prepare(c);
         return {};
     }
     ControllerResult r;
-    if (c.acquisition_timeout_cycles < timing::acquisition_timeout_min_cycles ||
-        c.acquisition_timeout_cycles >= c.zero_timeout_cycles || c.acquisition_duty_limit_q16 < 0 ||
-        c.acquisition_duty_limit_q16 > c.motion.duty_limit_q16) {
-        faults_ |= 1;
+    const bool diagnostic_changed = primed_ && encoder.invalid_transitions != invalid_;
+    const bool config_changed = !prepared_ || !matches(c);
+    if (!authorized) {
+        if (config_changed) {
+            // Scaling/timeouts establish a fresh measurement epoch while disabled.
+            velocity_ = VelocityEstimator{};
+            primed_ = false;
+            qualified_ = acquiring_ = false;
+            prepare(c);
+        }
+    } else if (config_changed) {
+        faults_ |= 1; // Configuration changed without disabled preparation.
     }
-    if (primed_ && (c.acquisition_timeout_cycles != acquisition_timeout_ ||
-                    c.acquisition_duty_limit_q16 != acquisition_limit_)) {
+    if (!prepared_acquisition_valid_) {
         faults_ |= 1;
     }
     if (capture_fault) {
         faults_ |= 2;
     }
-    if (primed_ && encoder.invalid_transitions != invalid_) {
+    if (diagnostic_changed) {
         faults_ |= 4;
     }
     invalid_ = encoder.invalid_transitions;
-    acquisition_timeout_ = c.acquisition_timeout_cycles;
-    acquisition_limit_ = c.acquisition_duty_limit_q16;
     primed_ = true;
     r.velocity = velocity_.step(false, now, encoder, c.motion.generation, c.motion.counts_num,
                                 c.motion.counts_den, c.zero_timeout_cycles);
@@ -67,7 +117,7 @@ ControllerResult Controller::step_impl(bool reset, bool authorized, bool capture
     r.motion =
         motion_.step_impl(false, authorized && !faults_, command_valid, command, completion_ack,
                           immediate_stop, session, now, position, r.velocity.mrpm, r.velocity.valid,
-                          c.motion, pending, command_checked);
+                          c.motion, pending, command_checked, prepared_motion_);
     if (r.motion.faults) {
         faults_ |= 32;
     }

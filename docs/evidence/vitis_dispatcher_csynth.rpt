@@ -3,7 +3,7 @@
 ================================================================
 == Vitis HLS Report for 'dmotor_dispatcher'
 ================================================================
-* Date:           Sun Oct 11 13:47:46 2026
+* Date:           Sun Oct 11 14:01:59 2026
 
 * Version:        2026.1 (Build 6493734 on Jun 16 2026)
 * Project:        vitis_dispatcher
@@ -20,26 +20,26 @@
     +--------+----------+----------+------------+
     |  Clock |  Target  | Estimated| Uncertainty|
     +--------+----------+----------+------------+
-    |ap_clk  |  10.00 ns|  7.193 ns|     2.70 ns|
+    |ap_clk  |  10.00 ns|  7.138 ns|     2.70 ns|
     +--------+----------+----------+------------+
 
 + Latency: 
     * Summary: 
-    +---------+---------+----------+----------+-----+-----+---------+
-    |  Latency (cycles) |  Latency (absolute) |  Interval | Pipeline|
-    |   min   |   max   |    min   |    max   | min | max |   Type  |
-    +---------+---------+----------+----------+-----+-----+---------+
-    |       42|      701|  0.420 us|  7.010 us|   43|  702|       no|
-    +---------+---------+----------+----------+-----+-----+---------+
+    +---------+---------+----------+-----------+-----+------+---------+
+    |  Latency (cycles) |  Latency (absolute)  |  Interval  | Pipeline|
+    |   min   |   max   |    min   |    max    | min |  max |   Type  |
+    +---------+---------+----------+-----------+-----+------+---------+
+    |       42|     1197|  0.420 us|  11.970 us|   43|  1198|       no|
+    +---------+---------+----------+-----------+-----+------+---------+
 
     + Detail: 
         * Instance: 
-        +--------------------+---------+---------+---------+----------+----------+-----+-----+---------+
-        |                    |         |  Latency (cycles) |  Latency (absolute) |  Interval | Pipeline|
-        |      Instance      |  Module |   min   |   max   |    min   |    max   | min | max |   Type  |
-        +--------------------+---------+---------+---------+----------+----------+-----+-----+---------+
-        |grp_service_fu_597  |service  |       30|      689|  0.300 us|  6.890 us|   30|  689|       no|
-        +--------------------+---------+---------+---------+----------+----------+-----+-----+---------+
+        +--------------------+---------+---------+---------+----------+-----------+-----+------+---------+
+        |                    |         |  Latency (cycles) |  Latency (absolute)  |  Interval  | Pipeline|
+        |      Instance      |  Module |   min   |   max   |    min   |    max    | min |  max |   Type  |
+        +--------------------+---------+---------+---------+----------+-----------+-----+------+---------+
+        |grp_service_fu_607  |service  |       30|     1185|  0.300 us|  11.850 us|   30|  1185|       no|
+        +--------------------+---------+---------+---------+----------+-----------+-----+------+---------+
 
         * Loop: 
         N/A
@@ -56,16 +56,16 @@
 |DSP              |        -|    -|       -|      -|    -|
 |Expression       |        -|    -|       0|    135|    -|
 |FIFO             |        -|    -|       -|      -|    -|
-|Instance         |        2|   66|   19592|  26376|    0|
+|Instance         |        2|   66|   17078|  26019|    0|
 |Memory           |        -|    -|       -|      -|    -|
 |Multiplexer      |        -|    -|       0|    183|    -|
 |Register         |        -|    -|     982|      -|    -|
 +-----------------+---------+-----+--------+-------+-----+
-|Total            |        2|   66|   20574|  26694|    0|
+|Total            |        2|   66|   18060|  26337|    0|
 +-----------------+---------+-----+--------+-------+-----+
 |Available        |      280|  220|  106400|  53200|    0|
 +-----------------+---------+-----+--------+-------+-----+
-|Utilization (%)  |       ~0|   30|      19|     50|    0|
+|Utilization (%)  |       ~0|   30|      16|     49|    0|
 +-----------------+---------+-----+--------+-------+-----+
 
 + Detail: 
@@ -73,9 +73,9 @@
     +--------------------+---------+---------+----+-------+-------+-----+
     |      Instance      |  Module | BRAM_18K| DSP|   FF  |  LUT  | URAM|
     +--------------------+---------+---------+----+-------+-------+-----+
-    |grp_service_fu_597  |service  |        2|  66|  19592|  26376|    0|
+    |grp_service_fu_607  |service  |        2|  66|  17078|  26019|    0|
     +--------------------+---------+---------+----+-------+-------+-----+
-    |Total               |         |        2|  66|  19592|  26376|    0|
+    |Total               |         |        2|  66|  17078|  26019|    0|
     +--------------------+---------+---------+----+-------+-------+-----+
 
     * DSP: 
@@ -91,10 +91,10 @@
     +---------------------------------+----------+----+---+----+------------+------------+
     |          Variable Name          | Operation| DSP| FF| LUT| Bitwidth P0| Bitwidth P1|
     +---------------------------------+----------+----+---+----+------------+------------+
-    |icmp_ln133_fu_879_p2             |      icmp|   0|  0|  39|          32|           1|
-    |or_ln133_1_fu_874_p2             |        or|   0|  0|  32|          32|          32|
-    |or_ln133_fu_868_p2               |        or|   0|  0|  32|          32|          32|
-    |c_motion_generation_1_fu_885_p3  |    select|   0|  0|  32|           1|          32|
+    |icmp_ln183_fu_899_p2             |      icmp|   0|  0|  39|          32|           1|
+    |or_ln183_1_fu_894_p2             |        or|   0|  0|  32|          32|          32|
+    |or_ln183_fu_888_p2               |        or|   0|  0|  32|          32|          32|
+    |c_motion_generation_1_fu_905_p3  |    select|   0|  0|  32|           1|          32|
     +---------------------------------+----------+----+---+----+------------+------------+
     |Total                            |          |   0|  0| 135|          97|          97|
     +---------------------------------+----------+----+---+----+------------+------------+
@@ -115,41 +115,41 @@
     |                   Name                   | FF | LUT| Bits| Const Bits|
     +------------------------------------------+----+----+-----+-----------+
     |ap_CS_fsm                                 |  13|   0|   13|          0|
-    |authorized_read_reg_1147                  |   1|   0|    1|          0|
-    |c_acquisition_duty_limit_q16_reg_1062     |  32|   0|   32|          0|
-    |c_acquisition_timeout_cycles_reg_1047     |  32|   0|   32|          0|
-    |c_motion_acceleration_mrpm_s_reg_922      |  32|   0|   32|          0|
-    |c_motion_counts_den_reg_947               |  32|   0|   32|          0|
-    |c_motion_counts_num_reg_942               |  32|   0|   32|          0|
-    |c_motion_deceleration_mrpm_s_reg_927      |  32|   0|   32|          0|
-    |c_motion_duty_limit_q16_reg_1007          |  32|   0|   32|          0|
-    |c_motion_generation_1_reg_1082            |  32|   0|   32|          0|
-    |c_motion_generation_reg_902               |  32|   0|   32|          0|
-    |c_motion_integral_limit_q16_reg_1022      |  32|   0|   32|          0|
-    |c_motion_ki_q16_reg_1002                  |  32|   0|   32|          0|
-    |c_motion_kp_q16_reg_987                   |  32|   0|   32|          0|
-    |c_motion_max_speed_mrpm_reg_907           |  32|   0|   32|          0|
-    |c_motion_position_tolerance_reg_962       |  32|   0|   32|          0|
-    |c_motion_settle_ticks_reg_982             |  32|   0|   32|          0|
-    |c_motion_stop_timeout_us_reg_1027         |  32|   0|   32|          0|
-    |c_motion_velocity_tolerance_mrpm_reg_967  |  32|   0|   32|          0|
-    |c_zero_timeout_cycles_reg_1042            |  32|   0|   32|          0|
-    |cancel_read_reg_1142                      |   1|   0|    1|          0|
-    |capture_fault_read_reg_1127               |   1|   0|    1|          0|
-    |cause_read_reg_1137                       |  32|   0|   32|          0|
-    |configuration_r_load_reg_1067             |  32|   0|   32|          0|
-    |count_read_reg_1112                       |  64|   0|   64|          0|
-    |direction_epoch_read_reg_1102             |  32|   0|   32|          0|
-    |drained_read_reg_1122                     |   1|   0|    1|          0|
-    |grp_service_fu_597_ap_start_reg           |   1|   0|    1|          0|
-    |invalid_transitions_read_reg_1097         |  32|   0|   32|          0|
-    |last_edge_read_reg_1107                   |  64|   0|   64|          0|
-    |negative_read_reg_1092                    |   1|   0|    1|          0|
-    |now_read_reg_1117                         |  64|   0|   64|          0|
-    |position_read_reg_1087                    |  64|   0|   64|          0|
-    |reset_read_reg_1157                       |   1|   0|    1|          0|
-    |stop_read_reg_1132                        |   1|   0|    1|          0|
-    |tick_read_reg_1152                        |   1|   0|    1|          0|
+    |authorized_read_reg_1167                  |   1|   0|    1|          0|
+    |c_acquisition_duty_limit_q16_reg_1082     |  32|   0|   32|          0|
+    |c_acquisition_timeout_cycles_reg_1067     |  32|   0|   32|          0|
+    |c_motion_acceleration_mrpm_s_reg_942      |  32|   0|   32|          0|
+    |c_motion_counts_den_reg_967               |  32|   0|   32|          0|
+    |c_motion_counts_num_reg_962               |  32|   0|   32|          0|
+    |c_motion_deceleration_mrpm_s_reg_947      |  32|   0|   32|          0|
+    |c_motion_duty_limit_q16_reg_1027          |  32|   0|   32|          0|
+    |c_motion_generation_1_reg_1102            |  32|   0|   32|          0|
+    |c_motion_generation_reg_922               |  32|   0|   32|          0|
+    |c_motion_integral_limit_q16_reg_1042      |  32|   0|   32|          0|
+    |c_motion_ki_q16_reg_1022                  |  32|   0|   32|          0|
+    |c_motion_kp_q16_reg_1007                  |  32|   0|   32|          0|
+    |c_motion_max_speed_mrpm_reg_927           |  32|   0|   32|          0|
+    |c_motion_position_tolerance_reg_982       |  32|   0|   32|          0|
+    |c_motion_settle_ticks_reg_1002            |  32|   0|   32|          0|
+    |c_motion_stop_timeout_us_reg_1047         |  32|   0|   32|          0|
+    |c_motion_velocity_tolerance_mrpm_reg_987  |  32|   0|   32|          0|
+    |c_zero_timeout_cycles_reg_1062            |  32|   0|   32|          0|
+    |cancel_read_reg_1162                      |   1|   0|    1|          0|
+    |capture_fault_read_reg_1147               |   1|   0|    1|          0|
+    |cause_read_reg_1157                       |  32|   0|   32|          0|
+    |configuration_r_load_reg_1087             |  32|   0|   32|          0|
+    |count_read_reg_1132                       |  64|   0|   64|          0|
+    |direction_epoch_read_reg_1122             |  32|   0|   32|          0|
+    |drained_read_reg_1142                     |   1|   0|    1|          0|
+    |grp_service_fu_607_ap_start_reg           |   1|   0|    1|          0|
+    |invalid_transitions_read_reg_1117         |  32|   0|   32|          0|
+    |last_edge_read_reg_1127                   |  64|   0|   64|          0|
+    |negative_read_reg_1112                    |   1|   0|    1|          0|
+    |now_read_reg_1137                         |  64|   0|   64|          0|
+    |position_read_reg_1107                    |  64|   0|   64|          0|
+    |reset_read_reg_1177                       |   1|   0|    1|          0|
+    |stop_read_reg_1152                        |   1|   0|    1|          0|
+    |tick_read_reg_1172                        |   1|   0|    1|          0|
     +------------------------------------------+----+----+-----+-----------+
     |Total                                     | 982|   0|  982|          0|
     +------------------------------------------+----+----+-----+-----------+

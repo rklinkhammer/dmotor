@@ -30,12 +30,17 @@ class Controller {
                                bool command_valid, const Descriptor& command, bool completion_ack,
                                bool immediate_stop, const ControllerConfig& config,
                                bool command_checked);
+    void prepare(const ControllerConfig& config);
+    bool matches(const ControllerConfig& config) const;
+    static constexpr unsigned config_words = 17;
+    uint32_t prepared_words_[config_words] = {};
+    PreparedMotionConfig prepared_motion_{};
+    bool prepared_ = false, prepared_acquisition_valid_ = false;
     MotionExecutor motion_{};
     VelocityEstimator velocity_{};
     bool qualified_ = false, acquiring_ = false, primed_ = false;
     uint64_t acquisition_start_ = 0;
-    uint32_t faults_ = 0, invalid_ = 0, acquisition_timeout_ = 0;
-    int32_t acquisition_limit_ = 0;
+    uint32_t faults_ = 0, invalid_ = 0;
 };
 } // namespace dmotor
 // Internal hardware-scheduled interface, not software-visible MMIO.

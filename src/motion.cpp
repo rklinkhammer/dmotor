@@ -1,14 +1,11 @@
 #include "dmotor/motion.hpp"
+#include "dmotor/detail/arithmetic.hpp"
 #include "dmotor/detail/bounded.hpp"
 #include "dmotor/registers.hpp"
 namespace dmotor {
 namespace detail {
 // Explicit function boundaries allow the Vitis adapter to share exact dividers.
 // Callers validate nonzero divisors and bound rounding additions before entry.
-
-uint64_t divide(uint64_t numerator, uint64_t denominator) {
-    return numerator / denominator;
-}
 
 int64_t rounded(int64_t value, int64_t denominator) {
     const bool negative = value < 0;
@@ -43,6 +40,16 @@ bool valid_config(const MotionConfig& c) {
            c.integral_limit_q16 >= 0 && c.integral_limit_q16 <= 65536 && c.stop_timeout_us;
 }
 } // namespace
+PreparedMotionConfig prepare_motion_config(const MotionConfig& c) {
+    PreparedMotionConfig p;
+    p.valid = valid_config(c);
+    if (p.valid) {
+        p.braking_denominator = 120000ULL * c.deceleration_mrpm_s * c.counts_den;
+        p.lookahead_denominator = 60000000ULL * c.counts_den;
+        p.integral_limit = static_cast<int64_t>(c.integral_limit_q16) * integral_scale;
+    }
+    return p;
+}
 void MotionExecutor::finish(uint64_t now, uint32_t outcome, uint32_t detail) {
     result_.busy = false;
     result_.completion_valid = true;
@@ -70,14 +77,14 @@ MotionResult MotionExecutor::step(bool reset, bool authorized, bool command_vali
                                   const MotionConfig& c, bool feedback_pending) {
     return step_impl(reset, authorized, command_valid, command, completion_ack, immediate_stop,
                      session, now, position, velocity_mrpm, velocity_valid, c, feedback_pending,
-                     false);
+                     false, prepare_motion_config(c));
 }
 MotionResult MotionExecutor::step_impl(bool reset, bool authorized, bool command_valid,
                                        const Descriptor& command, bool completion_ack,
                                        bool immediate_stop, uint32_t session, uint64_t now,
                                        int64_t position, int32_t velocity_mrpm, bool velocity_valid,
                                        const MotionConfig& c, bool feedback_pending,
-                                       bool command_checked) {
+                                       bool command_checked, const PreparedMotionConfig& prepared) {
     if (reset) {
         *this = MotionExecutor{};
         return result_;
@@ -101,7 +108,7 @@ MotionResult MotionExecutor::step_impl(bool reset, bool authorized, bool command
         tick_primed_ = false;
         return result_;
     }
-    if (!valid_config(c) || session == 0) {
+    if (!prepared.valid || session == 0) {
         fail(now, 1);
     }
     if (tick_primed_ && (now - previous_tick_ != clocks_per_tick || session != session_ ||
@@ -223,10 +230,10 @@ MotionResult MotionExecutor::step_impl(bool reset, bool authorized, bool command
                     : static_cast<uint64_t>(position) - static_cast<uint64_t>(target_position_);
         in_position = distance <= c.position_tolerance;
         const uint64_t speed = static_cast<uint64_t>(magnitude(result_.ramp_mrpm));
-        const uint64_t denominator = 120000ULL * c.deceleration_mrpm_s * c.counts_den;
+        const uint64_t denominator = prepared.braking_denominator;
         const uint64_t stop_distance =
             detail::divide(speed * speed * c.counts_num + denominator - 1, denominator);
-        const uint64_t step_denominator = 60000000ULL * c.counts_den;
+        const uint64_t step_denominator = prepared.lookahead_denominator;
         const uint64_t lookahead =
             detail::divide(speed * c.counts_num + step_denominator - 1, step_denominator);
         const bool moving_toward = (result_.ramp_mrpm >= 0) == forward;
@@ -263,7 +270,7 @@ MotionResult MotionExecutor::step_impl(bool reset, bool authorized, bool command
                 static_cast<int64_t>(result_.ramp_mrpm) - velocity_mrpm);
             const uint32_t ki = static_cast<uint32_t>(c.ki_q16) & 0x1fffffU;
             const uint32_t kp = static_cast<uint32_t>(c.kp_q16) & 0x1fffffU;
-            const int64_t limit = static_cast<int64_t>(c.integral_limit_q16) * integral_scale;
+            const int64_t limit = prepared.integral_limit;
             int64_t candidate = integral_nano_ + static_cast<int64_t>(ki) * error * 1000;
             candidate = candidate > limit ? limit : candidate < -limit ? -limit : candidate;
             const int64_t proportional =
