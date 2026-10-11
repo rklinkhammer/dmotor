@@ -189,7 +189,7 @@ The current, torque, and no-load speed ratings above were supplied by the user o
 
 The motor parameters shall not be hardcoded into the controller algorithms.
 
-The controller shall support different motor profiles, including motors used on a separate four-motor vehicle platform.
+The controller shall support different motor profiles, including motors used on a separate four-motor vehicle platform. The system shall support at most four motors. Optimize computation cost within the existing independent-controller architecture before considering architectural changes; no shared multi-motor arithmetic engine is approved by this requirement.
 
 Motor profiles shall be maintained in processor software and translated into hardware configuration registers.
 

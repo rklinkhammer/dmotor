@@ -369,3 +369,39 @@ run and retry: the unchanged peripheral RTL test first exceeded its 60-second
 wall-clock limit during concurrent vendor runs, then passed alone in 25.90 seconds.
 Motion RTL integration passed in 95.40 seconds. The saved native/RTL log includes
 both the initial timeout and successful retry.
+
+## Exact arithmetic reuse for the four-motor target
+
+The approved system target is at most four motors. Controller independence and
+all timing, command, safety and numerical requirements remain unchanged.
+
+| Kernel | Previous LUT / FF / DSP | Current LUT / FF / DSP | Max clocks, before → after |
+|---|---|---|---|
+| Motion | 18788 / 13806 / 95 | 18226 / 12677 / 47 | 188 → 532 |
+| Controller | 28243 / 21880 / 151 | 26471 / 19418 / 71 | 287 → 634 |
+| Dispatcher | 37991 / 27114 / 151 | 36212 / 24615 / 71 | 345 → 692 |
+
+BRAM remains 0/0/2 respectively. Vitis 2026.1 estimates 7.080 ns for motion
+and 7.193 ns for controller/dispatcher, against a 10 ns clock with 2.70 ns
+uncertainty. These are synthesis estimates, not routed timing closure.
+The dispatcher estimate is 6.92 us, below the 800 us control budget. This alone
+does not establish an integrated MMIO response bound under arbitration.
+
+The retained implementation shares exact division/rounding helpers through
+platform-specific directives. Broad operation-allocation experiments reduced
+DSP count further (as low as 26), but degraded timing and were discarded.
+Per-tick configuration validation, full numeric ranges, rational encoder scaling,
+1 kHz updates and independent protective logic remain unchanged.
+
+Four copies still require an estimated 144848 LUT and 284 DSP, exceeding the
+xc7z020's 53200 LUT and 220 DSP before wrappers. This is a computation-cost
+improvement, not four-motor fit or an architectural change. LUT reduction remains
+the larger outstanding resource task. Configuration preparation and further
+proven numeric-width reductions remain follow-up opportunities.
+
+Validation passed: all 20 native/RTL tests, including generated motion and
+peripheral integration; Vitis C simulation, synthesis and Verilog co-simulation
+for motion, controller and dispatcher. The UBSan-enabled deterministic comparison
+matches every reply word across 16,384 motion updates against revision `d4abc0b`;
+see `evidence/arithmetic_equivalence.log`. This trace supplements rather than
+replaces the command, safety and timing testbenches.

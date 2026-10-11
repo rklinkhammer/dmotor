@@ -168,3 +168,28 @@ PI arithmetic and per-tick full configuration validation remain unchanged.
 
 An experimental cache of whole/remainder components for both rates increased
 area and was discarded. See `verification.md` for the measured comparison.
+
+## Exact arithmetic reuse
+
+The implementation now isolates unsigned division and signed nearest rounding in
+`dmotor::detail` functions. Vitis configurations preserve these function boundaries
+and share their call sites within the motion step. Signed rounding computes the
+magnitude once, divides once, then restores the sign; ties still round away from
+zero. Position braking/lookahead retain ceiling division. Elapsed time retains
+floor division. No reciprocal approximation or reduced numeric range is introduced.
+
+All denominators are positive after existing configuration/command validation;
+existing numeric bounds also prevent overflow in rounding/ceiling additions.
+Full configuration validation remains in the authorized tick path. This does not
+introduce a configuration cache or trust software-derived coefficients.
+
+Reproduce the native baseline comparison with:
+
+```sh
+python3 tools/check_motion_equivalence.py --reference d4abc0b
+```
+
+This compares every reply word for 16,384 deterministic motion updates, including
+PI gain extremes, signed targets/feedback, all six command types and timeouts.
+It uses the current protocol validator for both versions and checks motion-source
+equivalence only; it is not a proof for every input or a hardware timing test.

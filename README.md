@@ -7,6 +7,10 @@ estimator components, plus RTL protection, scheduling, encoder and PWM component
 wherever practical. It is **not
 an integrated motor controller or a board-ready bitstream**.
 
+The system target is at most four motors with independent controllers. Current
+resource estimates do not yet fit four instances on xc7z020clg400-1; see
+[verification results](docs/verification.md) for measured optimization progress.
+
 ## Build and test
 
 Requires CMake, a C++14 compiler, Python 3, and Icarus Verilog (`iverilog`/`vvp`)

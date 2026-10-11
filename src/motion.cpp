@@ -1,6 +1,24 @@
 #include "dmotor/motion.hpp"
 #include "dmotor/registers.hpp"
 namespace dmotor {
+namespace detail {
+// Explicit function boundaries allow the Vitis adapter to share exact dividers.
+// Callers validate nonzero divisors and bound rounding additions before entry.
+
+uint64_t divide(uint64_t numerator, uint64_t denominator) {
+    return numerator / denominator;
+}
+
+int64_t rounded(int64_t value, int64_t denominator) {
+    const bool negative = value < 0;
+    const uint64_t absolute =
+        negative ? uint64_t{0} - static_cast<uint64_t>(value) : static_cast<uint64_t>(value);
+    const uint64_t divisor = static_cast<uint64_t>(denominator);
+    const int64_t quotient = static_cast<int64_t>(divide(absolute + divisor / 2, divisor));
+    return negative ? -quotient : quotient;
+}
+} // namespace detail
+
 namespace {
 constexpr uint32_t ramp_ticks_per_second = 1000;
 constexpr uint64_t clocks_per_tick = reg::FABRIC_HZ / 1000;
@@ -8,10 +26,6 @@ constexpr uint64_t clocks_per_us = reg::FABRIC_HZ / 1000000;
 constexpr int64_t integral_scale = 1000000000LL;
 int64_t magnitude(int32_t value) {
     return value < 0 ? -static_cast<int64_t>(value) : value;
-}
-int64_t rounded(int64_t value, int64_t denominator) {
-    return value < 0 ? -((-value + denominator / 2) / denominator)
-                     : (value + denominator / 2) / denominator;
 }
 int32_t clamp(int64_t value, int32_t limit) {
     return value > limit ? limit : value < -limit ? -limit : static_cast<int32_t>(value);
@@ -165,7 +179,7 @@ MotionResult MotionExecutor::step(bool reset, bool authorized, bool command_vali
     }
     // Expiration wins settling on the boundary. Divide elapsed ticks to avoid
     // overflowing a 64-bit dwell duration when converting it to fabric cycles.
-    const uint64_t elapsed_us = (now - started_) / clocks_per_us;
+    const uint64_t elapsed_us = detail::divide(now - started_, clocks_per_us);
     if ((stopping_ || opcode_ == 2 || opcode_ == 3 || opcode_ == 6) && elapsed_us >= timeout_us_) {
         fail(now, 4);
     }
@@ -196,9 +210,10 @@ MotionResult MotionExecutor::step(bool reset, bool authorized, bool command_vali
         const uint64_t speed = static_cast<uint64_t>(magnitude(result_.ramp_mrpm));
         const uint64_t denominator = 120000ULL * c.deceleration_mrpm_s * c.counts_den;
         const uint64_t stop_distance =
-            (speed * speed * c.counts_num + denominator - 1) / denominator;
+            detail::divide(speed * speed * c.counts_num + denominator - 1, denominator);
         const uint64_t step_denominator = 60000000ULL * c.counts_den;
-        const uint64_t lookahead = (speed * c.counts_num + step_denominator - 1) / step_denominator;
+        const uint64_t lookahead =
+            detail::divide(speed * c.counts_num + step_denominator - 1, step_denominator);
         const bool moving_toward = (result_.ramp_mrpm >= 0) == forward;
         target_mrpm_ = (in_position || (moving_toward && distance <= stop_distance + lookahead)) ? 0
                        : forward ? speed_cap_
@@ -232,15 +247,16 @@ MotionResult MotionExecutor::step(bool reset, bool authorized, bool command_vali
             const int64_t limit = static_cast<int64_t>(c.integral_limit_q16) * integral_scale;
             int64_t candidate = integral_nano_ + static_cast<int64_t>(c.ki_q16) * error * 1000;
             candidate = candidate > limit ? limit : candidate < -limit ? -limit : candidate;
-            const int64_t proportional = rounded(static_cast<int64_t>(c.kp_q16) * error, 1000);
-            const int64_t effort = proportional + rounded(candidate, integral_scale);
+            const int64_t proportional =
+                detail::rounded(static_cast<int64_t>(c.kp_q16) * error, 1000);
+            const int64_t effort = proportional + detail::rounded(candidate, integral_scale);
             if ((effort <= c.duty_limit_q16 && effort >= -c.duty_limit_q16) ||
                 (effort > c.duty_limit_q16 && error < 0) ||
                 (effort < -c.duty_limit_q16 && error > 0)) {
                 integral_nano_ = candidate;
             }
-            result_.duty_q16 =
-                clamp(proportional + rounded(integral_nano_, integral_scale), c.duty_limit_q16);
+            result_.duty_q16 = clamp(proportional + detail::rounded(integral_nano_, integral_scale),
+                                     c.duty_limit_q16);
         }
     } else {
         result_.duty_q16 = motion_mode_ == 2 ? open_duty_ : 0;
