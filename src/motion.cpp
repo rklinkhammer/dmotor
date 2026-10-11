@@ -72,7 +72,9 @@ void MotionExecutor::finish(uint64_t now, uint32_t outcome, uint32_t detail) {
     opcode_ = 0;
 }
 void MotionExecutor::fail(uint64_t now, uint32_t cause) {
-    result_.faults |= cause;
+    // Only configuration, tick/session, timeout and feedback faults originate here.
+    constexpr uint32_t supported_faults = 1U | 2U | 4U | 8U;
+    result_.faults = (result_.faults | cause) & supported_faults;
     result_.duty_q16 = 0;
     result_.ramp_mrpm = 0;
     motion_mode_ = 0;

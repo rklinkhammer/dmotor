@@ -1,0 +1,24 @@
+--- a/src/motion.cpp
++++ b/src/motion.cpp
+@@ -214,8 +214,10 @@
+     }
+     // Expiration wins settling on the boundary. Divide elapsed ticks to avoid
+     // overflowing a 64-bit dwell duration when converting it to fabric cycles.
+-    const uint64_t elapsed_us = detail::divide(now - started_, clocks_per_us);
+-    if ((stopping_ || opcode_ == 2 || opcode_ == 3 || opcode_ == 6) && elapsed_us >= timeout_us_) {
++    const uint64_t elapsed_cycles = now - started_;
++    // A uint32 microsecond timeout times the validated clock scale fits uint64.
++    if ((stopping_ || opcode_ == 2 || opcode_ == 3 || opcode_ == 6) &&
++        elapsed_cycles >= static_cast<uint64_t>(timeout_us_) * clocks_per_us) {
+         fail(now, 4);
+     }
+     if (result_.faults) {
+@@ -232,7 +234,7 @@
+         }
+         return result_;
+     }
+-    if (opcode_ == 5 && elapsed_us >= duration_us_) {
++    if (opcode_ == 5 && detail::divide(elapsed_cycles, clocks_per_us) >= duration_us_) {
+         finish(now, 0, 0);
+     }
+     bool in_position = false;

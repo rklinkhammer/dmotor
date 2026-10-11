@@ -1,0 +1,50 @@
+--- a/src/motion.cpp
++++ b/src/motion.cpp
+@@ -242,13 +242,15 @@
+             forward ? static_cast<uint64_t>(target_position_) - static_cast<uint64_t>(position)
+                     : static_cast<uint64_t>(position) - static_cast<uint64_t>(target_position_);
+         in_position = distance <= c.position_tolerance;
+-        const uint64_t speed = static_cast<uint64_t>(magnitude(result_.ramp_mrpm));
++        // Authorized position mode has a validated ramp magnitude <= 1000000.
++        const uint64_t speed = static_cast<uint32_t>(magnitude(result_.ramp_mrpm)) & 0xfffffU;
++        const uint32_t counts_num = c.counts_num & 0xfffffU;
+         const uint64_t denominator = prepared.braking_denominator;
+         const uint64_t stop_distance =
+-            detail::divide(speed * speed * c.counts_num + denominator - 1, denominator);
++            detail::divide(speed * speed * counts_num + denominator - 1, denominator);
+         const uint64_t step_denominator = prepared.lookahead_denominator;
+         const uint64_t lookahead =
+-            detail::divide(speed * c.counts_num + step_denominator - 1, step_denominator);
++            detail::divide(speed * counts_num + step_denominator - 1, step_denominator);
+         const bool moving_toward = (result_.ramp_mrpm >= 0) == forward;
+         target_mrpm_ = (in_position || (moving_toward && distance <= stop_distance + lookahead)) ? 0
+                        : forward ? speed_cap_
+@@ -285,17 +287,22 @@
+             const uint32_t kp = static_cast<uint32_t>(c.kp_q16) & 0x1fffffU;
+             const int64_t limit = prepared.integral_limit;
+             int64_t candidate =
+-                integral_nano_ + static_cast<int64_t>(ki) * error * timing::control_period_us;
+-            candidate = candidate > limit ? limit : candidate < -limit ? -limit : candidate;
+-            const int64_t proportional =
+-                detail::rounded(static_cast<int64_t>(kp) * error, 1000);
+-            const int64_t effort = proportional + detail::rounded(candidate, integral_scale);
++                detail::narrow_signed<52>(integral_nano_ +
++                    static_cast<int64_t>(ki) * error * timing::control_period_us);
++            candidate = detail::narrow_signed<47>(
++                candidate > limit ? limit : candidate < -limit ? -limit : candidate);
++            // Products fit signed 42 bits; rounded effort including +/-65536
++            // integral fits signed 32 bits under the existing gain/speed bounds.
++            const int32_t proportional = static_cast<int32_t>(detail::rounded(
++                detail::narrow_signed<42>(static_cast<int64_t>(kp) * error), 1000));
++            const int32_t effort = proportional +
++                static_cast<int32_t>(detail::rounded(candidate, integral_scale));
+             if ((effort <= c.duty_limit_q16 && effort >= -c.duty_limit_q16) ||
+                 (effort > c.duty_limit_q16 && error < 0) ||
+                 (effort < -c.duty_limit_q16 && error > 0)) {
+                 integral_nano_ = detail::narrow_signed<47>(candidate);
+             }
+-            result_.duty_q16 = clamp(proportional + detail::rounded(integral_nano_, integral_scale),
++            result_.duty_q16 = clamp(proportional + static_cast<int32_t>(detail::rounded(integral_nano_, integral_scale)),
+                                      c.duty_limit_q16);
+         }
+     } else {

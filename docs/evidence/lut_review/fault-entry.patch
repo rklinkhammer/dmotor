@@ -1,0 +1,42 @@
+--- a/src/motion.cpp
++++ b/src/motion.cpp
+@@ -72,7 +72,9 @@
+     opcode_ = 0;
+ }
+ void MotionExecutor::fail(uint64_t now, uint32_t cause) {
+-    result_.faults |= cause;
++    // Only configuration, tick/session, timeout and feedback faults originate here.
++    constexpr uint32_t supported_faults = 1U | 2U | 4U | 8U;
++    result_.faults = (result_.faults | cause) & supported_faults;
+     result_.duty_q16 = 0;
+     result_.ramp_mrpm = 0;
+     motion_mode_ = 0;
+--- a/src/controller.cpp
++++ b/src/controller.cpp
+@@ -2,6 +2,8 @@
+ #include "dmotor/timing.hpp"
+ namespace dmotor {
+ namespace {
++// Configuration, capture, decoder, estimator, acquisition and motion faults.
++constexpr uint32_t controller_fault_mask = 1U | 2U | 4U | 8U | 16U | 32U;
+ // Canonical words, never native object bytes or padding. Reserved input words
+ // already invalidate generation in decode_controller_config.
+ void config_words(const ControllerConfig& c, uint32_t words[17]) {
+@@ -64,6 +66,7 @@
+         prepare(c);
+         return {};
+     }
++    faults_ &= controller_fault_mask;
+     ControllerResult r;
+     const bool diagnostic_changed = primed_ && encoder.invalid_transitions != invalid_;
+     const bool config_changed = !prepared_ || !matches(c);
+@@ -76,7 +79,8 @@
+             prepare(c);
+         }
+     } else if (config_changed) {
+-        faults_ |= 1; // Configuration changed without disabled preparation.
++        // Configuration changed without disabled preparation.
++        faults_ |= 1;
+     }
+     if (!prepared_acquisition_valid_) {
+         faults_ |= 1;

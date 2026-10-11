@@ -1,0 +1,86 @@
+{
+  "reference": "8494e86",
+  "clock_hz": 100000000,
+  "candidates": [
+    {
+      "candidate": "arithmetic",
+      "BRAM_18K": 4,
+      "DSP": 33,
+      "FF": 16216,
+      "LUT": 25481,
+      "URAM": 0,
+      "max_cycles": 1119,
+      "path_ns": 7.296
+    },
+    {
+      "candidate": "control",
+      "BRAM_18K": 4,
+      "DSP": 39,
+      "FF": 16535,
+      "LUT": 25332,
+      "URAM": 0,
+      "max_cycles": 1250,
+      "path_ns": 7.181
+    },
+    {
+      "candidate": "braking",
+      "BRAM_18K": 4,
+      "DSP": 33,
+      "FF": 16325,
+      "LUT": 25468,
+      "URAM": 0,
+      "max_cycles": 1118,
+      "path_ns": 7.181
+    },
+    {
+      "candidate": "duty",
+      "BRAM_18K": 4,
+      "DSP": 39,
+      "FF": 16470,
+      "LUT": 25332,
+      "URAM": 0,
+      "max_cycles": 1250,
+      "path_ns": 7.181
+    },
+    {
+      "candidate": "timeout",
+      "BRAM_18K": 4,
+      "DSP": 39,
+      "FF": 16784,
+      "LUT": 25804,
+      "URAM": 0,
+      "max_cycles": 1122,
+      "path_ns": 7.181
+    },
+    {
+      "candidate": "divider",
+      "BRAM_18K": 4,
+      "DSP": 39,
+      "FF": 16077,
+      "LUT": 25161,
+      "URAM": 0,
+      "max_cycles": 1247,
+      "path_ns": 8.134
+    },
+    {
+      "candidate": "faults",
+      "BRAM_18K": 4,
+      "DSP": 39,
+      "FF": 16258,
+      "LUT": 25178,
+      "URAM": 0,
+      "max_cycles": 1251,
+      "path_ns": 7.181
+    },
+    {
+      "candidate": "fault-entry",
+      "BRAM_18K": 4,
+      "DSP": 39,
+      "FF": 16097,
+      "LUT": 24915,
+      "URAM": 0,
+      "max_cycles": 1250,
+      "path_ns": 7.181
+    }
+  ]
+}

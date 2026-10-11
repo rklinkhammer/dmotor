@@ -878,3 +878,71 @@ FF use but negligible integrated LUT savings. Keep the production profile at
 100 MHz pending an explicit adoption decision and platform validation. Further
 LUT work should target motion arithmetic widths and mux/control structure,
 rather than expecting a lower fabric clock alone to solve capacity.
+
+## Arithmetic and control-logic LUT experiments
+
+Eight isolated experiments evaluated the active 100 MHz profile against
+`8494e86` (25,215 dispatcher LUT, 16,461 FF, 39 DSP, four BRAM_18K,
+1,251 worst-case clocks, 7.181 ns estimated path). All use the same Vitis 2026.1
+xc7z020clg400-1 target. Candidate patches, dispatcher synthesis reports and a
+machine-readable table are retained in `evidence/lut_review/`; patches apply to
+that reference revision. No result here changes the clock, accepted motor ranges,
+MMIO layout, rounding or safety priorities.
+
+| Experiment | Dispatcher LUT | Delta | DSP | Max clocks | Path ns | Decision |
+|---|---:|---:|---:|---:|---:|---|
+| Braking operands plus PI intermediate/result narrowing | 25481 | +266 | 33 | 1119 | 7.296 | Reject for LUT objective |
+| Shared position subtraction plus reuse accepted PI effort | 25332 | +117 | 39 | 1250 | 7.181 | Reject |
+| Braking operands alone | 25468 | +253 | 33 | 1118 | 7.181 | Reject for LUT objective |
+| Reuse accepted PI effort alone | 25332 | +117 | 39 | 1250 | 7.181 | Reject |
+| Compare timeout in cycles; divide only for dwell | 25804 | +589 | 39 | 1122 | 7.181 | Reject |
+| Inline rounded helper to share profile/PI divider | 25161 | -54 | 39 | 1247 | 8.134 | Reject: exceeds 7.30 ns effective timing budget |
+| Mask each internal fault update | 25178 | -37 | 39 | 1251 | 7.181 | Superseded by entry normalization |
+| Bound motion faults and normalize controller faults once at entry | 24915 | -300 | 39 | 1250 | 7.181 | Retain |
+
+The retained change exposes the only internally generated motion fault bits
+(configuration, tick/session, timeout, feedback) and controller bits
+(configuration, capture, decoder, estimator, acquisition, motion) as named masks.
+Motion applies its mask when latching a cause; the controller normalizes its
+state once at entry, before applying fault causes. This exposes the state bound
+even on calls with no new fault; masking only updates left a wide feedback path.
+Every supported sticky bit is retained until the existing reset/recovery logic
+clears it. Public fault words remain 32 bits. External physical-fault buses
+are not masked by this change. Adding an internal fault cause must extend its
+corresponding supported mask as well as the fault definition and tests.
+
+The retained saving is 300 LUT (1.19%) and 364 FF (2.21%); DSP and BRAM are
+unchanged. Worst estimated latency falls by one clock to 1,250 clocks (12.50 us). The remaining design is still far above a four-copy LUT
+fit. Narrowed arithmetic reduced DSP demand but increased LUT demand through the
+resulting synthesis schedule/binding; it is an alternative for DSP pressure,
+not a LUT improvement. Source width and expression count alone are insufficient
+predictors of integrated area.
+
+Native boundary tests passed for both initial candidates. Full motion and
+dispatcher traces for isolated braking, duty and timeout candidates matched the
+baseline under UBSan (`candidate_traces.log`; dispatcher output includes one
+non-record success line). The retained masks separately match all 16,387 motion
+snapshots and 1,379 dispatcher replies against `8494e86`. Rejected experiments
+were not all taken through RTL co-simulation; their rejection follows area or
+synthesis timing results, not a claim of fully qualified RTL behavior.
+
+Final synthesis of the retained code confirms four-bit motion fault state and
+six-bit controller fault state in the generated dispatcher hierarchy:
+
+| Kernel | LUT before → after | FF before → after | Max clocks before → after | Path ns before → after |
+|---|---:|---:|---:|---:|
+| Motion | 16300 → 16300 | 9942 → 9942 | 913 → 913 | 7.181 → 7.181 |
+| Controller | 24415 → 24073 | 15469 → 15143 | 999 → 999 | 7.212 → 7.241 |
+| Dispatcher | 25215 → 24915 | 16461 → 16097 | 1251 → 1250 | 7.181 → 7.181 |
+
+The main resource reports reflect this retained code; experimental reports
+remain separate. These are pre-route HLS estimates. The controller's 7.241 ns
+path is within, but close to, the effective 7.30 ns budget. Four dispatcher
+copies still require 99,660 LUT before surrounding integration logic.
+
+Final verification passed: all 21 native/RTL tests, including regenerated motion
+RTL with the scheduler/PWM adapter, and Vitis C simulation, synthesis and Verilog
+co-simulation for motion, controller and dispatcher. The final controller/dispatcher
+flows verify entry normalization; motion RTL is unchanged by that follow-up.
+See `evidence/native_rtl_tests.log`, the updated top-level synthesis/co-simulation
+reports and `evidence/lut_review/retained_equivalence.log`.

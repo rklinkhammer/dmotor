@@ -3,7 +3,7 @@
 ================================================================
 == Vitis HLS Report for 'dmotor_controller'
 ================================================================
-* Date:           Sun Oct 11 14:22:09 2026
+* Date:           Sun Oct 11 19:39:54 2026
 
 * Version:        2026.1 (Build 6493734 on Jun 16 2026)
 * Project:        vitis_controller
@@ -20,7 +20,7 @@
     +--------+----------+----------+------------+
     |  Clock |  Target  | Estimated| Uncertainty|
     +--------+----------+----------+------------+
-    |ap_clk  |  10.00 ns|  7.212 ns|     2.70 ns|
+    |ap_clk  |  10.00 ns|  7.241 ns|     2.70 ns|
     +--------+----------+----------+------------+
 
 + Latency: 
@@ -38,9 +38,9 @@
         |                                                         |                                             |  Latency (cycles) |   Latency (absolute)  |  Interval |      Pipeline     |
         |                         Instance                        |                    Module                   |   min   |   max   |    min    |    max    | min | max |        Type       |
         +---------------------------------------------------------+---------------------------------------------+---------+---------+-----------+-----------+-----+-----+-------------------+
-        |grp_dmotor_controller_Pipeline_VITIS_LOOP_154_1_fu_827   |dmotor_controller_Pipeline_VITIS_LOOP_154_1  |       18|       18|   0.180 us|   0.180 us|    0|    0|  loop pipeline stp|
+        |grp_dmotor_controller_Pipeline_VITIS_LOOP_158_1_fu_827   |dmotor_controller_Pipeline_VITIS_LOOP_158_1  |       18|       18|   0.180 us|   0.180 us|    0|    0|  loop pipeline stp|
         |grp_step_impl_1_fu_834                                   |step_impl_1                                  |       13|      952|   0.130 us|   9.520 us|   13|  952|                 no|
-        |grp_dmotor_controller_Pipeline_VITIS_LOOP_209_1_fu_1004  |dmotor_controller_Pipeline_VITIS_LOOP_209_1  |        8|        8|  80.000 ns|  80.000 ns|    0|    0|  loop pipeline stp|
+        |grp_dmotor_controller_Pipeline_VITIS_LOOP_213_1_fu_1004  |dmotor_controller_Pipeline_VITIS_LOOP_213_1  |        8|        8|  80.000 ns|  80.000 ns|    0|    0|  loop pipeline stp|
         +---------------------------------------------------------+---------------------------------------------+---------+---------+-----------+-----------+-----+-----+-------------------+
 
         * Loop: 
@@ -58,12 +58,12 @@
 |DSP              |        -|    -|       -|      -|    -|
 |Expression       |        -|    -|       0|    139|    -|
 |FIFO             |        -|    -|       -|      -|    -|
-|Instance         |        0|   39|   13964|  23629|    0|
+|Instance         |        0|   39|   13638|  23287|    0|
 |Memory           |        0|    -|      64|      8|    0|
 |Multiplexer      |        -|    -|       0|    639|    -|
 |Register         |        -|    -|    1441|      -|    -|
 +-----------------+---------+-----+--------+-------+-----+
-|Total            |        0|   39|   15469|  24415|    0|
+|Total            |        0|   39|   15143|  24073|    0|
 +-----------------+---------+-----+--------+-------+-----+
 |Available        |      280|  220|  106400|  53200|    0|
 +-----------------+---------+-----+--------+-------+-----+
@@ -75,11 +75,11 @@
     +---------------------------------------------------------+---------------------------------------------+---------+----+-------+-------+-----+
     |                         Instance                        |                    Module                   | BRAM_18K| DSP|   FF  |  LUT  | URAM|
     +---------------------------------------------------------+---------------------------------------------+---------+----+-------+-------+-----+
-    |grp_dmotor_controller_Pipeline_VITIS_LOOP_154_1_fu_827   |dmotor_controller_Pipeline_VITIS_LOOP_154_1  |        0|   0|     13|     65|    0|
-    |grp_dmotor_controller_Pipeline_VITIS_LOOP_209_1_fu_1004  |dmotor_controller_Pipeline_VITIS_LOOP_209_1  |        0|   0|      7|     53|    0|
-    |grp_step_impl_1_fu_834                                   |step_impl_1                                  |        0|  39|  13944|  23511|    0|
+    |grp_dmotor_controller_Pipeline_VITIS_LOOP_158_1_fu_827   |dmotor_controller_Pipeline_VITIS_LOOP_158_1  |        0|   0|     13|     65|    0|
+    |grp_dmotor_controller_Pipeline_VITIS_LOOP_213_1_fu_1004  |dmotor_controller_Pipeline_VITIS_LOOP_213_1  |        0|   0|      7|     53|    0|
+    |grp_step_impl_1_fu_834                                   |step_impl_1                                  |        0|  39|  13618|  23169|    0|
     +---------------------------------------------------------+---------------------------------------------+---------+----+-------+-------+-----+
-    |Total                                                    |                                             |        0|  39|  13964|  23629|    0|
+    |Total                                                    |                                             |        0|  39|  13638|  23287|    0|
     +---------------------------------------------------------+---------------------------------------------+---------+----+-------+-------+-----+
 
     * DSP: 
@@ -101,10 +101,10 @@
     +----------------------------------+----------+----+---+----+------------+------------+
     |           Variable Name          | Operation| DSP| FF| LUT| Bitwidth P0| Bitwidth P1|
     +----------------------------------+----------+----+---+----+------------+------------+
-    |icmp_ln183_fu_1021_p2             |      icmp|   0|  0|  39|          32|           1|
+    |icmp_ln187_fu_1021_p2             |      icmp|   0|  0|  39|          32|           1|
     |d_we0                             |        or|   0|  0|   2|           1|           1|
-    |or_ln183_1_fu_1016_p2             |        or|   0|  0|  32|          32|          32|
-    |or_ln183_fu_1010_p2               |        or|   0|  0|  32|          32|          32|
+    |or_ln187_1_fu_1016_p2             |        or|   0|  0|  32|          32|          32|
+    |or_ln187_fu_1010_p2               |        or|   0|  0|  32|          32|          32|
     |reply_we0                         |        or|   0|  0|   2|           1|           1|
     |c_motion_generation_1_fu_1027_p3  |    select|   0|  0|  32|           1|          32|
     +----------------------------------+----------+----+---+----+------------+------------+
@@ -168,8 +168,8 @@
     |configuration_r_load_reg_1381                                         |  32|   0|   32|          0|
     |count_read_reg_1441                                                   |  64|   0|   64|          0|
     |direction_epoch_read_reg_1431                                         |  32|   0|   32|          0|
-    |grp_dmotor_controller_Pipeline_VITIS_LOOP_154_1_fu_827_ap_start_reg   |   1|   0|    1|          0|
-    |grp_dmotor_controller_Pipeline_VITIS_LOOP_209_1_fu_1004_ap_start_reg  |   1|   0|    1|          0|
+    |grp_dmotor_controller_Pipeline_VITIS_LOOP_158_1_fu_827_ap_start_reg   |   1|   0|    1|          0|
+    |grp_dmotor_controller_Pipeline_VITIS_LOOP_213_1_fu_1004_ap_start_reg  |   1|   0|    1|          0|
     |grp_step_impl_1_fu_834_ap_start_reg                                   |   1|   0|    1|          0|
     |immediate_stop_read_reg_1396                                          |   1|   0|    1|          0|
     |invalid_transitions_read_reg_1426                                     |  32|   0|   32|          0|
@@ -195,11 +195,11 @@
     |r_warming_up_reg_1546                                                 |   1|   0|    1|          0|
     |reset_read_reg_1461                                                   |   1|   0|    1|          0|
     |session_read_reg_1411                                                 |  32|   0|   32|          0|
-    |trunc_ln198_reg_1551                                                  |  32|   0|   32|          0|
     |trunc_ln1_reg_1581                                                    |  32|   0|   32|          0|
-    |trunc_ln200_reg_1561                                                  |  32|   0|   32|          0|
-    |trunc_ln204_reg_1571                                                  |  24|   0|   24|          0|
-    |trunc_ln205_reg_1576                                                  |  32|   0|   32|          0|
+    |trunc_ln202_reg_1551                                                  |  32|   0|   32|          0|
+    |trunc_ln204_reg_1561                                                  |  32|   0|   32|          0|
+    |trunc_ln208_reg_1571                                                  |  24|   0|   24|          0|
+    |trunc_ln209_reg_1576                                                  |  32|   0|   32|          0|
     |trunc_ln8_reg_1556                                                    |  32|   0|   32|          0|
     |trunc_ln_reg_1566                                                     |  32|   0|   32|          0|
     +----------------------------------------------------------------------+----+----+-----+-----------+

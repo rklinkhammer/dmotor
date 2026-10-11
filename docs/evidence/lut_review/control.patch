@@ -1,0 +1,31 @@
+--- a/src/motion.cpp
++++ b/src/motion.cpp
+@@ -238,9 +238,9 @@
+     bool in_position = false;
+     if (opcode_ == 2 || opcode_ == 3) {
+         const bool forward = target_position_ >= position;
+-        const uint64_t distance =
+-            forward ? static_cast<uint64_t>(target_position_) - static_cast<uint64_t>(position)
+-                    : static_cast<uint64_t>(position) - static_cast<uint64_t>(target_position_);
++        const uint64_t difference =
++            static_cast<uint64_t>(target_position_) - static_cast<uint64_t>(position);
++        const uint64_t distance = forward ? difference : uint64_t{0} - difference;
+         in_position = distance <= c.position_tolerance;
+         const uint64_t speed = static_cast<uint64_t>(magnitude(result_.ramp_mrpm));
+         const uint64_t denominator = prepared.braking_denominator;
+@@ -294,9 +294,12 @@
+                 (effort > c.duty_limit_q16 && error < 0) ||
+                 (effort < -c.duty_limit_q16 && error > 0)) {
+                 integral_nano_ = detail::narrow_signed<47>(candidate);
+-            }
+-            result_.duty_q16 = clamp(proportional + detail::rounded(integral_nano_, integral_scale),
+-                                     c.duty_limit_q16);
++                result_.duty_q16 = clamp(effort, c.duty_limit_q16);
++            } else {
++                result_.duty_q16 = clamp(
++                    proportional + detail::rounded(integral_nano_, integral_scale),
++                    c.duty_limit_q16);
++            }
+         }
+     } else {
+         result_.duty_q16 = motion_mode_ == 2 ? open_duty_ : 0;

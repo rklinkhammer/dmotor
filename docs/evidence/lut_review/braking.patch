@@ -1,0 +1,21 @@
+--- a/src/motion.cpp
++++ b/src/motion.cpp
+@@ -242,13 +242,15 @@
+             forward ? static_cast<uint64_t>(target_position_) - static_cast<uint64_t>(position)
+                     : static_cast<uint64_t>(position) - static_cast<uint64_t>(target_position_);
+         in_position = distance <= c.position_tolerance;
+-        const uint64_t speed = static_cast<uint64_t>(magnitude(result_.ramp_mrpm));
++        // Authorized position mode has a validated ramp magnitude <= 1000000.
++        const uint64_t speed = static_cast<uint32_t>(magnitude(result_.ramp_mrpm)) & 0xfffffU;
++        const uint32_t counts_num = c.counts_num & 0xfffffU;
+         const uint64_t denominator = prepared.braking_denominator;
+         const uint64_t stop_distance =
+-            detail::divide(speed * speed * c.counts_num + denominator - 1, denominator);
++            detail::divide(speed * speed * counts_num + denominator - 1, denominator);
+         const uint64_t step_denominator = prepared.lookahead_denominator;
+         const uint64_t lookahead =
+-            detail::divide(speed * c.counts_num + step_denominator - 1, step_denominator);
++            detail::divide(speed * counts_num + step_denominator - 1, step_denominator);
+         const bool moving_toward = (result_.ramp_mrpm >= 0) == forward;
+         target_mrpm_ = (in_position || (moving_toward && distance <= stop_distance + lookahead)) ? 0
+                        : forward ? speed_cap_

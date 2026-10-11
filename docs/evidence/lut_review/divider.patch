@@ -1,0 +1,34 @@
+--- a/platforms/vitis/motion.cfg
++++ b/platforms/vitis/motion.cfg
+@@ -11,7 +11,6 @@
+ tb.cflags=-I../../include
+ package.output.format=ip_catalog
+ # Keep exact arithmetic units reusable; no changes to the public interface.
+-syn.directive.inline=location=dmotor::detail::rounded off=1
+-syn.directive.allocation=location=dmotor::MotionExecutor::step_impl instances=dmotor::detail::rounded limit=1 type=function
++syn.directive.inline=location=dmotor::detail::rounded
+ syn.directive.inline=location=dmotor::detail::divide off=1
+ syn.directive.allocation=location=dmotor::MotionExecutor::step_impl instances=dmotor::detail::divide limit=1 type=function
+--- a/platforms/vitis/controller.cfg
++++ b/platforms/vitis/controller.cfg
+@@ -13,7 +13,6 @@
+ tb.cflags=-I../../include
+ package.output.format=ip_catalog
+ # Keep exact arithmetic units reusable; no changes to the public interface.
+-syn.directive.inline=location=dmotor::detail::rounded off=1
+-syn.directive.allocation=location=dmotor::MotionExecutor::step_impl instances=dmotor::detail::rounded limit=1 type=function
++syn.directive.inline=location=dmotor::detail::rounded
+ syn.directive.inline=location=dmotor::detail::divide off=1
+ syn.directive.allocation=location=dmotor::MotionExecutor::step_impl instances=dmotor::detail::divide limit=1 type=function
+--- a/platforms/vitis/dispatcher.cfg
++++ b/platforms/vitis/dispatcher.cfg
+@@ -14,8 +14,7 @@
+ tb.cflags=-I../../include
+ package.output.format=ip_catalog
+ # Keep exact arithmetic units reusable; no changes to the public interface.
+-syn.directive.inline=location=dmotor::detail::rounded off=1
+-syn.directive.allocation=location=dmotor::MotionExecutor::step_impl instances=dmotor::detail::rounded limit=1 type=function
++syn.directive.inline=location=dmotor::detail::rounded
+ syn.directive.inline=location=dmotor::detail::divide off=1
+ syn.directive.allocation=location=dmotor::MotionExecutor::step_impl instances=dmotor::detail::divide limit=1 type=function
+ syn.directive.inline=location=dmotor::MotionExecutor::finish off=1
