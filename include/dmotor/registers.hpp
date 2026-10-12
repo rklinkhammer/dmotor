@@ -48,5 +48,5 @@ constexpr uint32_t CANCELLATION_OFFSET = 12544;
 constexpr uint32_t CANCELLATION_SLOTS = 1;
 constexpr uint32_t CANCELLATION_STRIDE = 32;
 constexpr uint32_t ABI_SCHEMA = 4;
-constexpr uint32_t FABRIC_HZ = 100000000;
+constexpr uint32_t FABRIC_HZ = 20000000;
 } } // namespace dmotor::reg

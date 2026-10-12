@@ -56,7 +56,7 @@ platform input, not a value software can assert without its platform contract.
 ## Revised proposed response budget
 
 The old eight-clock complete-request-to-response target is superseded for this
-HLS-first profile by **2,048 clocks (20.48 us at 100 MHz)**. Measure from acceptance
+HLS-first profile by **2,048 clocks (102.4 us at 20 MHz)**. Measure from acceptance
 of AR, or both AW and W, to response VALID; exclude processor response backpressure
 and reset. The engine synthesis reports at most 306 cycles, plus adapter launch
 and retirement overhead. At most the current transaction, a competing direction,

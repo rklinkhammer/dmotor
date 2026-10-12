@@ -183,7 +183,7 @@ The default reference motor is the JGA25-370 brushed DC gearmotor.
 | Reference maximum encoder count rate | 4,461.6 counts/s |
 | Initial PWM frequency | 20 kHz |
 | Initial control frequency | 1 kHz |
-| Initial fabric clock | 100 MHz |
+| Initial fabric clock | 20 MHz |
 
 The current, torque, and no-load speed ratings above were supplied by the user on 2026-10-11 for the reference 6 V motor. Interpret the stated kg.cm torque units as kgf·cm. The exact supplier datasheet is not available, and speed at rated load was not specified. These are supplied design inputs, not independently measured model parameters. Stall ratings are not continuous operating ratings.
 
@@ -338,7 +338,7 @@ Distinguish these timing domains within the primary clock:
 
 The timebase, encoder capture, PWM generation, HALT path, and watchdog shall continue independently of HLS completion and MMIO bus activity. Never derive elapsed time by counting completed HLS calls. Establish a worst-case computation deadline and a defined tick-overrun policy; do not silently drop or accumulate control ticks.
 
-For the initial 100 MHz clock and 1 kHz loop, the nominal control interval is 100,000 fabric clocks. At 20 kHz, the nominal PWM period is 5,000 clocks. Supported frequencies, divider rounding, and update boundaries must be specified. Stage duty changes and apply them at a defined PWM boundary to avoid malformed pulses; HALT output inhibition overrides that boundary.
+For the initial 20 MHz clock and 1 kHz loop, the nominal control interval is 20,000 fabric clocks. At 20 kHz, the nominal PWM period is 1,000 clocks. Supported frequencies, divider rounding, and update boundaries must be specified. Stage duty changes and apply them at a defined PWM boundary to avoid malformed pulses; HALT output inhibition overrides that boundary.
 
 Required measurement hooks:
 
@@ -749,26 +749,26 @@ The machine-readable ABI must enumerate the regions in Section 12, every registe
 
 ### 24. Timing, estimator, and numeric acceptance profile
 
-These are proposed engineering targets for the initial 100 MHz/1 kHz/20 kHz profile, not measured capabilities or physical stopping guarantees. Validate or revise them through synthesis and RTL tests before freezing the profile. The approved minimum nonzero steady-state output-shaft speed is 1 RPM magnitude in both directions. This is an operating requirement, not measured performance; transitions through lower speeds during startup, stopping, or reversal are permitted. Board-specific electrical response remains subject to validation.
+These are proposed engineering targets for the initial 20 MHz/1 kHz/20 kHz profile, not measured capabilities or physical stopping guarantees. Validate or revise them through synthesis and RTL tests before freezing the profile. The approved minimum nonzero steady-state output-shaft speed is 1 RPM magnitude in both directions. This is an operating requirement, not measured performance; transitions through lower speeds during startup, stopping, or reversal are permitted. Board-specific electrical response remains subject to validation.
 
 | Requirement | Initial proposed target / method |
 |---|---|
 | Synchronized HALT detection -> logical output inhibit | At most 2 fabric clocks; independent of HLS, bus stalls, and PWM phase |
 | External HALT -> detection | Two synchronizer stages, no configurable debounce on HALT; require assertion held until acknowledged |
-| External HALT -> logical inhibit | At most 10 us, approved digital inhibit budget; react immediately, with no intentional delay. The current implementation separately checks a five-clock pipeline bound (50 ns at 100 MHz). Include arbitrary input phase in digital RTL tests; metastability reliability requires separate CDC analysis and is not a deterministic analog bound |
+| External HALT -> logical inhibit | At most 10 us, approved digital inhibit budget; react immediately, with no intentional delay. The current implementation separately checks a five-clock pipeline bound (250 ns at 20 MHz). Include arbitrary input phase in digital RTL tests; metastability reliability requires separate CDC analysis and is not a deterministic analog bound |
 | Fault qualification | Board-specific for each physical input; add its documented synchronization/filter delay to the 2-clock internal inhibit target |
-| HLS control computation | Start within 1 clock of scheduled tick when idle; complete before 80,000 clocks from tick, leaving 20,000 clocks of margin |
+| HLS control computation | Start within 1 clock of scheduled tick when idle; complete before 16,000 clocks from tick, leaving 4,000 clocks of margin |
 | Missed deadline | Fault and inhibit on deadline expiration; completion arriving on that boundary loses; never apply late/stale duty |
 | New duty application | First PWM boundary after valid result, within one configured PWM period; inhibition bypasses this rule |
-| Local MMIO response | HLS-first proposed budget: at most 2,048 clocks (20.48 us at 100 MHz) from acceptance of a complete request to response VALID, excluding reset and master response backpressure. The register engine and transport are bounded independently of motor arithmetic; see docs/axi_peripheral.md for measured evidence and arbitration assumptions |
-| Encoder capture envelope | Demonstrate at least 100,000 valid X4 transitions/s with each state stable for at least 1,000 fabric clocks at 100 MHz; filtering must fit the declared envelope |
+| Local MMIO response | HLS-first proposed budget: at most 2,048 clocks (102.4 us at 20 MHz) from acceptance of a complete request to response VALID, excluding reset and master response backpressure. The register engine and transport are bounded independently of motor arithmetic; see docs/axi_peripheral.md for measured evidence and arbitration assumptions |
+| Encoder capture envelope | Demonstrate at least 100,000 valid X4 transitions/s with each state stable for at least 200 fabric clocks at 20 MHz; filtering must fit the declared envelope |
 | Timing counters | 64-bit modulo fabric timestamps; compare intervals only within half the wrap range; sticky event counters saturate |
 
 Continuous HALT input must stay asserted until the protective latch is observed/acknowledged. Pulse inputs need a separately verified asynchronous event latch or external pulse stretching; a two-flop synchronizer is not a guarantee of capturing arbitrary narrow pulses. The shared-HALT test measures the complete source-controller -> aggregator -> destination path separately; the local 5-clock target must not be reported as the shared-network bound.
 
 The 10 us budget ends at FPGA logical inhibition; it is neither an electrical driver turn-off guarantee nor a mechanical stopping-time requirement. Timing budgets and conversions are named in `abi/timing.json`, generating C++/RTL constants through `tools/generate_abi.py`; the fabric clock remains defined by CLOCK_HZ in `abi/registers.json`. A lower clock requires a regenerated and verified profile, not just a changed oscillator.
 
-The FPGA pin-to-driver response budget remains blocked by D03b; disable/coast is now the approved initial stop mode. Measure disabled/brake pin levels, external driver delay, and mechanical stopping separately. No 50 ns mechanical-stop claim is implied.
+The FPGA pin-to-driver response budget remains blocked by D03b; disable/coast is now the approved initial stop mode. Measure disabled/brake pin levels, external driver delay, and mechanical stopping separately. No sub-microsecond mechanical-stop claim is implied.
 
 #### 24.1 Measurement and estimator acceptance
 
@@ -877,11 +877,11 @@ Proceed against Section 24 proposed requirements. Changes based on synthesis or 
 | V06 | Encoder and numeric reference tests | Declared capture envelope met; invalid transitions excluded; rational scaling preserved; overflow/rounding rules met; reversals and zero timeout correctly qualified |
 | V07 | Ideal estimator and loaded motor model | Both directions at 1/5/30/130 RPM; proposed estimator error <=2% under a documented finite assessment window; algorithm contract supplies settling/window/filter definitions before acceptance; tracking assessed separately |
 | V08 | Provisional MMIO schema and bus regression | Generated RTL/software agree on every field and reset value; invalid accesses have specified response/no side effect; snapshots coherent; drain/reset races and version mismatch handled |
-| V09 | Both vendor synthesis, static timing, and CDC review | Selected FPGA/profile meets 100 MHz and computation budgets; tool/part/constraints/resource reports retained; CDC assumptions reviewed; host tests alone insufficient |
+| V09 | Both vendor synthesis, static timing, and CDC review | Selected FPGA/profile meets 20 MHz and computation budgets; tool/part/constraints/resource reports retained; CDC assumptions reviewed; host tests alone insufficient |
 | V10 | DRV8263H integration and final vehicle trials | Verify current limiting, reset/clock/power-loss behavior, fault/coast response, 1 RPM loaded operation, and measured completion/drift criteria; numerical electrical and vehicle limits documented before acceptance |
 
 Initial evidence review (2026-10-11) preceded implementation and checked requirements consistency and nominal arithmetic only. Subsequent component implementation now has native and RTL tests plus scoped Vitis arithmetic-kernel evidence; see [the verification record](docs/verification.md). V01–V10 are not complete end to end. Integrated timing, CDC, closed-loop behavior, SmartHLS portability, and electrical performance remain unverified.
 
-Nominal arithmetic checks at 100 MHz: one clock is 10 ns; 5 clocks is 50 ns; the 1 kHz tick spans 100,000 clocks; the 80,000-clock HLS deadline is 800 us with 200 us remaining; 20 kHz PWM spans 5,000 clocks (50 us); 2,048-clock proposed MMIO response budget is 20.48 us. The 1,000-clock encoder-state dwell is 10 us, consistent with 100,000 transitions/s. At 10296/5 counts/revolution, 1 RPM gives approximately 29.14 ms between edges and 130 RPM gives 4,461.6 transitions/s. These checks establish arithmetic consistency only, not achieved hardware timing.
+Nominal arithmetic checks at 20 MHz: one clock is 50 ns; 5 clocks is 250 ns; the 1 kHz tick spans 20,000 clocks; the 16,000-clock HLS deadline is 800 us with 200 us remaining; 20 kHz PWM spans 1,000 clocks (50 us); 2,048-clock proposed MMIO response budget is 102.4 us. The 200-clock encoder-state dwell is 10 us, consistent with 100,000 transitions/s. At 10296/5 counts/revolution, 1 RPM gives approximately 29.14 ms between edges and 130 RPM gives 4,461.6 transitions/s. These checks establish arithmetic consistency only, not achieved hardware timing.
 
 

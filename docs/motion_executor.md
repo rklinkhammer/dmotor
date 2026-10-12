@@ -2,7 +2,7 @@
 
 `src/motion.cpp` implements the portable `MotionExecutor` and Vitis top
 `dmotor_motion`. It executes one control boundary per call at **1 kHz**, with
-**100 MHz** fabric timestamps. Calls come from hardware, not processor software.
+**20 MHz** fabric timestamps. Calls come from hardware, not processor software.
 This is an independently verified component, not the complete motor controller.
 
 ## Commands and completion
@@ -119,7 +119,7 @@ Mailbox inputs must remain stable until `inputs_sampled`. Keep commands pending
 until a retired result reports acceptance; acknowledge completions only after
 successful ring retirement. Stop and completion acknowledgment are single sampled
 events. Results become visible together on `result_valid`. The timestamp must
-advance once per 100 MHz clock, even during inhibition. The scheduler enforces
+advance once per 20 MHz clock, even during inhibition. The scheduler enforces
 its independent 800 us deadline and maintains last/maximum latency measurements.
 
 The adapter's `inhibit` must include reset/recovery authorization, watchdog, HALT,
@@ -140,7 +140,7 @@ execution, dwell, queued stop, completion backpressure and cancellation; it is
 not a synthesized AXI-to-motion dispatcher.
 
 `tools/motion_rtl.py` checks the actual generated HLS core with the scheduler/PWM:
-autonomous launches, completion acknowledgment, 50% PWM over a full 5,000-clock
+autonomous launches, completion acknowledgment, 50% PWM over a full 1,000-clock
 frame, inhibition during an HLS transaction, and a latched feedback fault.
 Regenerate with `python3 tools/vitis_check.py --kernel motion` before running it;
 CTest does not regenerate HLS RTL. See [verification results](verification.md).

@@ -8,7 +8,7 @@ Staging may contain invalid values, but they cannot become active.
 `CONFIG_COMMIT=1` requires disabled state, closed admission, no active command,
 and an empty submission ring. It atomically installs both settings and increments
 CONFIG_GENERATION without wrapping. Reset generation zero is invalid. The active
-timeout is converted with ceiling division using the generated 100 MHz constant.
+timeout is converted with ceiling division using the generated 20 MHz constant.
 Descriptors must use the active configuration generation. Legacy trusted maximum
 speed/generation inputs on the peripheral top are retained temporarily for wiring
 compatibility but ignored; C++ configuration now owns those values.
@@ -64,7 +64,7 @@ fault encoding remains a future ABI freeze deliverable.
 Tests cover invalid timeout/speed bounds, commit preconditions, staging protection,
 refresh session/sequence errors, acknowledgment masks, and current-state guards.
 The actual AXI/generated-HLS/RTL-safety integration test runs a 1 ms watchdog at
-100 MHz, checks valid and stale refreshes, waits for expiry, checks shared HALT and
+20 MHz, checks valid and stale refreshes, waits for expiry, checks shared HALT and
 inhibition, rejects late refresh, and verifies acknowledgment does not restart.
 The independent safety RTL suite retains same-cycle expiration precedence tests.
 

@@ -49,7 +49,7 @@
       "name": "CLOCK_HZ",
       "offset": 12,
       "access": "RO",
-      "reset": 100000000,
+      "reset": 20000000,
       "meaning": "Fabric clock in Hz"
     },
     {

@@ -1,5 +1,8 @@
 # Verification record — 2026-10-11
 
+The active profile is now 20 MHz. Earlier sections below are historical records
+of their stated clock profiles; see the final section for current adoption results.
+
 Architecture: 0.12. Implementation: AXI/HLS command path plus independent control components, not release
 ABI 1.0. The full controller is not integrated. Evidence is deliberately scoped.
 
@@ -989,3 +992,121 @@ dispatcher. Native divider boundary/random tests and all 16,387 motion snapshots
 and 1,379 dispatcher replies match the reference under UBSan. See
 `evidence/divider_register/native_rtl_tests.log`, `equivalence.log` in that same
 directory, and the updated top-level synthesis/co-simulation reports.
+
+
+## Active 20 MHz profile adoption
+
+The user-selected active fabric frequency is now 20 MHz, retaining the combined
+dividend/quotient divider and all previous functional optimizations. This adopts
+a new profile in the main project, rather than the earlier isolated experiment.
+`abi/registers.json` owns CLOCK_HZ; generated register/timing headers, RTL packages,
+register documentation and all seven Vitis configurations were regenerated.
+`abi/timing.json` retains the time-based requirements.
+
+| Property | Active value |
+|---|---:|
+| Fabric clock period | 50 ns |
+| Control interval | 20,000 clocks / 1 ms |
+| Computation deadline | 16,000 clocks / 800 us |
+| PWM period | 1,000 clocks / 50 us |
+| PWM duty resolution | 0.1% |
+| External HALT logical inhibit budget | 200 clocks / 10 us |
+| Local HALT pipeline bound | 5 clocks / 250 ns |
+| Synchronized inhibit bound | 2 clocks / 100 ns |
+| MMIO response budget | 2,048 clocks / 102.4 us |
+| Minimum qualified encoder event spacing | 200 clocks / 10 us |
+
+The local HALT bound is not a shared-network, driver turn-off or mechanical stop
+bound. MMIO retains its cycle-based budget and consequently has a longer elapsed
+time allowance. Timestamp clients must read CLOCK_HZ rather than assuming
+100 MHz. These changes preserve the 1 kHz loop, 20 kHz PWM, 800 us deadline,
+10 us external HALT budget and configured watchdog durations.
+
+The reference `~/workspace/dvrmc` Vivado design was not modified. Its inspected
+100 MHz fabric requires a real 20 MHz DMOTOR clock and synchronized reset, plus
+AXI clock conversion when retaining the 100 MHz bus. See `vivado_reference.md`.
+Physical implementation, CDC review and hardware measurements remain necessary;
+HLS estimates and simulations do not establish those integration results.
+
+Vitis 2026.1 HLS synthesis at 20 MHz on xc7z020clg400-1:
+
+| Kernel | LUT | FF | DSP | BRAM_18K | Maximum clocks | Maximum time us | Estimated path ns |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| PI | 1964 | 122 | 24 | 0 | 1 | 0.05 | 34.293 |
+| Command | 6215 | 1694 | 0 | 4 | 92 | 4.60 | 10.997 |
+| Peripheral | 9490 | 2699 | 0 | 4 | 119 | 5.95 | 14.220 |
+| Motion | 16616 | 7135 | 32 | 0 | 752 | 37.60 | 32.316 |
+| Velocity | 3673 | 1878 | 7 | 0 | 132 | 6.60 | 23.369 |
+| Controller | 23793 | 10526 | 39 | 0 | 951 | 47.55 | 36.205 |
+| Dispatcher | 24578 | 12107 | 39 | 4 | 1064 | 53.20 | 34.617 |
+
+The effective HLS timing budget is 36.50 ns (50 ns minus 13.50 ns uncertainty).
+All seven kernel estimates meet it. Dispatcher time remains below the 800 us
+computation deadline. Against the preceding combined-divider 100 MHz profile,
+dispatcher LUT drops from 24,774 to 24,578 (196 LUT, 0.79%), and FF drops from
+15,946 to 12,107 (3,839 FF, 24.07%). DSP and BRAM are unchanged. This is not a
+four-copy fit or a routed timing result. Standalone motion LUT increases from
+16,166 to 16,616, illustrating that slower clocks do not uniformly reduce LUT.
+
+Validation passed: all 21 native/RTL tests at the active 20 MHz profile, including
+regenerated peripheral/safety and motion/scheduler/PWM integration; generated ABI
+consistency; and Vitis C simulation, synthesis and Verilog co-simulation for all
+seven kernels. Updated `evidence/vitis_*_{csynth,cosim}.rpt` files now describe
+this profile; historical measurements above remain labelled by their original
+clock. Native/RTL results are in `evidence/native_rtl_tests.log`.
+
+
+## Bounded position-error experiment at 20 MHz
+
+Two implementations were measured against the active 20 MHz profile (24,578 LUT,
+12,107 FF). The current architecture admits unsigned 32-bit position tolerances,
+full signed 64-bit positions/targets, and braking thresholds above UINT32_MAX.
+Simply saturating position error to INT32_MAX or UINT32_MAX would change some
+completion/braking decisions. Both candidates therefore preserve full-range
+behavior while exposing 32-bit local comparisons:
+
+1. Low 32-bit distance plus a fits flag, with a wide braking fallback.
+2. Low/high 32-bit parts, comparing upper parts before lower parts for braking.
+
+| Dispatcher variant | LUT | Delta | FF | Maximum clocks | Path ns |
+|---|---:|---:|---:|---:|---:|
+| Existing wide comparisons | 24578 | 0 | 12107 | 1064 | 34.617 |
+| Narrow common path / wide fallback | 24675 | +97 | 12041 | 1064 | 34.617 |
+| Split upper/lower comparisons | 24639 | +61 | 12107 | 1064 | 34.617 |
+
+Both alternatives retain 39 DSP and four BRAM_18K. Neither reduces LUT usage,
+so neither is retained in production source. Patches and synthesis reports are
+in `evidence/position_error/`. They apply to the current motion implementation
+(the source at `c92dee35653bba5fed1d32e6c59a19171827ee77`) with the separately
+adopted 20 MHz profile. No prior clock/profile edits were reverted.
+
+Both variants match all 16,387 motion snapshots and 1,379 dispatcher reply
+records against the pre-experiment sources at the same 20 MHz clock under UBSan;
+trace logs include an additional dispatcher success line. The retained
+`position_error_test` covers full signed-position endpoints, both directions,
+zero and UINT32_MAX tolerances, distances across the 32-bit boundary, and
+braking thresholds above 32 bits in both directions. These cases also guard the
+planned rebase implementation. They test digital semantics, not motor dynamics.
+
+### Next implementation: rebased local moves
+
+The user selected rebasing with smaller locally executed moves as the next
+step; it is not implemented by this experiment. Retain 64-bit externally visible
+position and command targets, but establish a bounded local execution window
+before replacing the wide subtraction itself. Define a local segment limit
+with headroom for braking/lookahead, tolerance, feedback increments and reversal;
+large braking thresholds must be handled explicitly rather than silently clipped.
+Rebase the local position and target by the same amount and accumulate that
+amount into the 64-bit offset at a coherent tick boundary. Encoder edges on the
+boundary must be counted once, including reverse motion. Internal segment
+boundaries must not publish completion or lose queued-command/session identity.
+Preserve timeout, watchdog, HALT and overflow behavior. Validate continuity of
+reported absolute position and position error through repeated positive/negative
+rebases and segment transitions before measuring resource savings.
+
+Both experimental dispatcher versions passed Vitis C simulation and Verilog
+co-simulation. After restoring the original comparison source, all 22 native/RTL
+tests pass, including the new position-error test and the generated motion and
+peripheral integration tests. Restored dispatcher synthesis reproduces 24,578
+LUT, 12,107 FF, 1,064 clocks and a 34.617 ns path. Experimental evidence remains
+separate from the active top-level reports.

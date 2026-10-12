@@ -1,0 +1,31 @@
+--- a/src/motion.cpp
++++ b/src/motion.cpp
+@@ -243,7 +243,11 @@
+         const uint64_t distance =
+             forward ? static_cast<uint64_t>(target_position_) - static_cast<uint64_t>(position)
+                     : static_cast<uint64_t>(position) - static_cast<uint64_t>(target_position_);
+-        in_position = distance <= c.position_tolerance;
++        // Keep ordinary encoder-distance comparisons in 32 bits. The range
++        // flag prevents a truncated distant target from appearing in tolerance.
++        const bool distance_fits = (distance >> 32) == 0;
++        const uint32_t local_distance = static_cast<uint32_t>(distance);
++        in_position = distance_fits && local_distance <= c.position_tolerance;
+         const uint64_t speed = static_cast<uint64_t>(magnitude(result_.ramp_mrpm));
+         const uint64_t denominator = prepared.braking_denominator;
+         const uint64_t stop_distance =
+@@ -252,7 +256,14 @@
+         const uint64_t lookahead =
+             detail::divide(speed * c.counts_num + step_denominator - 1, step_denominator);
+         const bool moving_toward = (result_.ramp_mrpm >= 0) == forward;
+-        target_mrpm_ = (in_position || (moving_toward && distance <= stop_distance + lookahead)) ? 0
++        const uint64_t braking_distance = stop_distance + lookahead;
++        // Very low configured deceleration can exceed the local range. Keep
++        // exact behavior for these configurations until bounded moves/rebasing
++        // provide an explicit architectural limit.
++        const bool within_braking_distance = (braking_distance >> 32) == 0
++            ? distance_fits && local_distance <= static_cast<uint32_t>(braking_distance)
++            : distance <= braking_distance;
++        target_mrpm_ = (in_position || (moving_toward && within_braking_distance)) ? 0
+                        : forward ? speed_cap_
+                                  : -speed_cap_;
+     }

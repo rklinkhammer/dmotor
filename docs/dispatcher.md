@@ -85,7 +85,7 @@ record's cause is distinct from the controller fault register.
 Between ticks, control telemetry is the cached last result, with accepted cleared
 and duty masked for inhibition/pending protection. Completion telemetry is not an
 instruction for a second ring owner to retire it: this dispatcher already owns
-retirement. Keep tick timestamps exactly 100,000 fabric clocks apart. Queue-only
+retirement. Keep tick timestamps exactly 20,000 fabric clocks apart. Queue-only
 services may occur between them and do not advance estimator/control history.
 
 ## Integration boundary and evidence

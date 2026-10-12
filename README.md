@@ -38,7 +38,7 @@ python3 tools/vitis_check.py --kernel controller # combined estimator/motion tic
 python3 tools/vitis_check.py --kernel dispatcher # shared queue/controller owner
 ```
 
-Vitis checks the selected kernel for `xc7z020clg400-1` at 100 MHz using C
+Vitis checks the selected kernel for `xc7z020clg400-1` at 20 MHz using C
 simulation, synthesis, and RTL co-simulation. Outputs live in `build/`.
 Override the installation with `--vitis /path/to/Vitis`. No physical programming,
 IP deployment, or board power-up is performed by these commands.
@@ -71,7 +71,7 @@ maximum zero timeout and encoder interval are 10 seconds, and minimum encoder
 edge spacing is 10 microseconds. Actual zero/acquisition timeouts remain runtime
 configuration values; acquisition must be shorter than the zero timeout.
 Changing these limits requires rebuilding the affected HLS kernels and reviewing
-the timing/numeric contract. The current limits preserve the 100 MHz behavior.
+the timing/numeric contract. Time-based limits are converted using the active fabric clock.
 
 ## Review material
 
@@ -104,5 +104,9 @@ Timing budgets are named in `abi/timing.json`; fabric frequency is CLOCK_HZ in
 C++/RTL timing constants and synchronize Vitis clock constraints. The approved
 external HALT digital-inhibit budget is 10 us, with immediate hardware reaction;
 it excludes motor-driver and mechanical stopping delays. The active clock is
-still 100 MHz. See `docs/verification.md` for profile-change validation.
+20 MHz: 20,000 clocks per control tick, 1,000 clocks per PWM frame, and a
+16,000-clock computation deadline. PWM resolution is 0.1% per clock. The local
+five-clock HALT pipeline bound is 250 ns, within the 10 us budget.
+See `docs/verification.md` for profile-change validation. The reference Vivado
+design requires clock/reset integration changes; see `docs/vivado_reference.md`.
 RTL projects must compile `rtl/timing.sv` before `scheduler.sv` and `pwm.sv`.

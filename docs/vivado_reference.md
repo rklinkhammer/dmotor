@@ -25,12 +25,18 @@ pin, or board assumptions. The project exposes GPIO shield interfaces and IIC;
 DMOTOR motor/encoder/HALT pin assignments and electrical constraints remain
 integration work.
 
-DMOTOR now targets 100 MHz, matching the connected reference peripheral fabric.
-The controller defaults retain a 1 kHz control tick (100,000 clocks), 20 kHz PWM
-(5,000 clocks), and 800 us computation deadline (80,000 clocks). Connect the
-integrated controller and AXI interface to the verified 100 MHz domain with the
-appropriate synchronized reset; clock and reset closure still require integration
-validation. Other PS clock configuration fields do not imply connected clock nets.
+DMOTOR now targets 20 MHz. The inspected reference fabric remains 100 MHz;
+changing this repository does not reconfigure that Vivado project. Supply a real
+20 MHz clock to DMOTOR, constrain it accordingly, and synchronize reset in that
+domain. If the AXI interconnect remains at 100 MHz, use a supported AXI clock
+converter or correctly configured SmartConnect clock crossing. Do not connect
+the 20 MHz design directly to the existing 100 MHz domain. Review encoder,
+shared-HALT and other crossings during integration.
+
+The controller retains a 1 kHz control tick (20,000 clocks), 20 kHz PWM
+(1,000 clocks), and 800 us computation deadline (16,000 clocks). Clock/reset,
+CDC and physical timing closure still require integration validation. Other PS
+clock configuration fields do not imply connected clock nets.
 
 Add the completed DMOTOR peripheral to SmartConnect with a non-overlapping address
 segment, expand interrupts if needed, and define the bus drain/reset contract and

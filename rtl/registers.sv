@@ -45,5 +45,5 @@ localparam integer CANCELLATION_OFFSET = 12544;
 localparam integer CANCELLATION_SLOTS = 1;
 localparam integer CANCELLATION_STRIDE = 32;
 localparam integer ABI_SCHEMA = 4;
-localparam integer FABRIC_HZ = 100000000;
+localparam integer FABRIC_HZ = 20000000;
 endpackage

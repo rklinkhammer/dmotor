@@ -7,7 +7,7 @@ Development schema; ring registers implemented, motion/safety configuration pend
 | IDENTITY | 0x0000 | RO | 1145917268 | DMOT identity |
 | SCHEMA_VERSION | 0x0004 | RO | 4 | Development version; not release ABI |
 | CAPABILITIES | 0x0008 | RO | 3 | bit 0 ring, bit 1 safety/configuration; no motion executor yet |
-| CLOCK_HZ | 0x000c | RO | 100000000 | Fabric clock in Hz |
+| CLOCK_HZ | 0x000c | RO | 20000000 | Fabric clock in Hz |
 | STATUS | 0x0010 | RO | 0 | bit 0 busy, bit 1 admission open, bit 2 cancellation valid |
 | ENABLE | 0x0020 | WO | 0 | Write one; validate configuration, session, and safety prerequisites |
 | DISABLE | 0x0024 | WO | 0 | Write one; inhibit and cancel queue |

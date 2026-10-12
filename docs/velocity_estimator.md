@@ -1,7 +1,7 @@
 # C++ HLS encoder velocity estimator
 
 `dmotor_velocity` in `src/velocity.cpp` estimates signed milli-RPM from a coherent
-encoder-event snapshot once per 1 kHz control tick. The fabric rate is 100 MHz.
+encoder-event snapshot once per 1 kHz control tick. The fabric rate is 20 MHz.
 The computation is portable C++14; no vendor integer types or floating point are
 used. This component is not yet wired into the complete AXI/motion controller.
 
@@ -86,11 +86,11 @@ kernel still requires integration with the hardware queue and safety wrappers.
 Configuration is fixed until an explicit estimator reset. Accepted bounds:
 
 - Nonzero configuration generation; numerator 1..1,000,000, denominator 1..10,000.
-- Zero timeout 100,000..1,000,000,000 clocks (1 ms..10 s).
-- Exactly 100,000 fabric clocks between snapshots, at most 100 new accepted events.
+- Zero timeout 20,000..200,000,000 clocks (1 ms..10 s).
+- Exactly 20,000 fabric clocks between snapshots, at most 100 new accepted events.
 - Newest accepted edge is at most one control tick old; latest timestamp cannot
   change without a changed accepted-event count.
-- Qualified interval at least 1,000 clocks per event on average and at most 10 s;
+- Qualified interval at least 200 clocks per event on average and at most 10 s;
   output magnitude at most 1,000,000 milli-RPM.
 
 The collector/decoder must enforce the architecture's per-transition capture
@@ -127,7 +127,7 @@ invalid-transition recovery, changed configuration, missed ticks, excessive even
 counts and a future edge timestamp. The separate RTL collector test covers
 counting, hidden reversals, invalid exclusion and sticky capture faults.
 
-Run `python3 tools/vitis_check.py --kernel velocity` for the 100 MHz
+Run `python3 tools/vitis_check.py --kernel velocity` for the 20 MHz
 `xc7z020clg400-1` flow. See [verification evidence](verification.md). Combined
 encoder-to-estimator generated-RTL wiring, complete hardware sequencing, motor
 model dynamics, tuning MMIO and hardware measurements remain integration work.
