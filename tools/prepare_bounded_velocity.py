@@ -7,7 +7,7 @@ import sys
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--output', type=Path, required=True)
-parser.add_argument('--variant', choices=['q7', 'exact', 'tenths', 'exact-shared'], default='exact')
+parser.add_argument('--variant', choices=['q7', 'exact', 'tenths', 'exact-shared', 'exact-onephase'], default='exact')
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 output = args.output.resolve()
@@ -18,7 +18,10 @@ patch_path = (root / 'docs/evidence/velocity_tenths/profile.patch' if args.varia
               ('profile.patch' if args.variant == 'q7' else 'exact.patch'))
 subprocess.run(['patch', '--batch', '-p1', '--directory', str(output), '--input',
                 str(patch_path)], check=True)
-if args.variant == 'exact-shared':
+if args.variant in ('exact-shared', 'exact-onephase'):
     subprocess.run(['patch', '--batch', '-p1', '--directory', str(output), '--input',
                     str(root / 'docs/evidence/velocity_exact_shared/integration.patch')], check=True)
+if args.variant == 'exact-onephase':
+    subprocess.run(['patch', '--batch', '-p1', '--directory', str(output), '--input',
+                    str(root / 'docs/evidence/velocity_exact_onephase/integration.patch')], check=True)
 print(f'Prepared bounded velocity evaluation at {output}; validation still required')

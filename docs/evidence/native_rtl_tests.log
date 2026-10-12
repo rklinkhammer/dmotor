@@ -1,24 +1,24 @@
 Test project /home/rklinkhammer/workspace/dmotor/build
       Start  1: arithmetic
- 1/22 Test  #1: arithmetic .......................   Passed    0.03 sec
+ 1/22 Test  #1: arithmetic .......................   Passed    0.02 sec
       Start  2: protocol
  2/22 Test  #2: protocol .........................   Passed    0.00 sec
       Start  3: generated_abi
  3/22 Test  #3: generated_abi ....................   Passed    0.06 sec
       Start  4: rtl_safety
- 4/22 Test  #4: rtl_safety .......................   Passed    0.07 sec
+ 4/22 Test  #4: rtl_safety .......................   Passed    0.08 sec
       Start  5: rtl_scheduler
- 5/22 Test  #5: rtl_scheduler ....................   Passed    0.07 sec
+ 5/22 Test  #5: rtl_scheduler ....................   Passed    0.08 sec
       Start  6: rtl_qcencoder
- 6/22 Test  #6: rtl_qcencoder ....................   Passed    0.07 sec
+ 6/22 Test  #6: rtl_qcencoder ....................   Passed    0.09 sec
       Start  7: rtl_pwm
  7/22 Test  #7: rtl_pwm ..........................   Passed    0.06 sec
       Start  8: rtl_latency
- 8/22 Test  #8: rtl_latency ......................   Passed    0.06 sec
+ 8/22 Test  #8: rtl_latency ......................   Passed    0.07 sec
       Start  9: rtl_axi_bridge
  9/22 Test  #9: rtl_axi_bridge ...................   Passed    0.07 sec
       Start 10: rtl_encoder_snapshot
-10/22 Test #10: rtl_encoder_snapshot .............   Passed    0.07 sec
+10/22 Test #10: rtl_encoder_snapshot .............   Passed    0.06 sec
       Start 11: control
 11/22 Test #11: control ..........................   Passed    0.00 sec
       Start 12: command_engine
@@ -26,7 +26,7 @@ Test project /home/rklinkhammer/workspace/dmotor/build
       Start 13: peripheral
 13/22 Test #13: peripheral .......................   Passed    0.00 sec
       Start 14: rtl_peripheral_integrated
-14/22 Test #14: rtl_peripheral_integrated ........   Passed    9.94 sec
+14/22 Test #14: rtl_peripheral_integrated ........   Passed    9.58 sec
       Start 15: configuration
 15/22 Test #15: configuration ....................   Passed    0.00 sec
       Start 16: motion
@@ -34,16 +34,16 @@ Test project /home/rklinkhammer/workspace/dmotor/build
       Start 17: motion_queue
 17/22 Test #17: motion_queue .....................   Passed    0.00 sec
       Start 18: rtl_motion_integrated
-18/22 Test #18: rtl_motion_integrated ............   Passed   29.48 sec
+18/22 Test #18: rtl_motion_integrated ............   Passed   43.98 sec
       Start 19: velocity
 19/22 Test #19: velocity .........................   Passed    0.00 sec
       Start 20: controller
 20/22 Test #20: controller .......................   Passed    0.00 sec
       Start 21: dispatcher
-21/22 Test #21: dispatcher .......................   Passed    0.01 sec
+21/22 Test #21: dispatcher .......................   Passed    0.00 sec
       Start 22: position_error
-22/22 Test #22: position_error ...................   Passed    0.03 sec
+22/22 Test #22: position_error ...................   Passed    0.02 sec
 
 100% tests passed, 0 tests failed out of 22
 
-Total Test time (real) =  40.08 sec
+Total Test time (real) =  54.21 sec

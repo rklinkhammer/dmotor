@@ -1,0 +1,31 @@
+--- a/src/arithmetic.cpp
++++ b/src/arithmetic.cpp
+@@ -40,18 +40,16 @@
+     quotient_type quotient = numerator & numerator_mask;
+     remainder_type remainder = 0;
+     const remainder_type divisor = denominator & denominator_mask;
+-    bool subtract = false;
+-    for (unsigned phase = 0; phase < 2 * numerator_bits; ++phase) {
+-        if ((phase & 1U) == 0) {
+-            const bool carry = (remainder >> (denominator_bits - 1)) != 0;
+-            remainder = ((remainder << 1) |
+-                         static_cast<remainder_type>(quotient >> (numerator_bits - 1))) &
+-                        denominator_mask;
+-            subtract = carry || remainder >= divisor;
+-        } else {
+-            if (subtract) remainder = (remainder - divisor) & denominator_mask;
+-            quotient = ((quotient << 1) | static_cast<quotient_type>(subtract)) & numerator_mask;
+-        }
++    // One restoring step per dividend bit. Carry preserves the extra bit
++    // while the stored remainder stays denominator-sized.
++    for (unsigned bit = 0; bit < numerator_bits; ++bit) {
++        const bool carry = (remainder >> (denominator_bits - 1)) != 0;
++        remainder = ((remainder << 1) |
++                     static_cast<remainder_type>(quotient >> (numerator_bits - 1))) &
++                    denominator_mask;
++        const bool subtract = carry || remainder >= divisor;
++        if (subtract) remainder = (remainder - divisor) & denominator_mask;
++        quotient = ((quotient << 1) | static_cast<quotient_type>(subtract)) & numerator_mask;
+     }
+     return static_cast<uint64_t>(quotient);
+ }

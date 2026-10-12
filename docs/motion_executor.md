@@ -225,8 +225,8 @@ are needed.
 ## Exact serial arithmetic
 
 `detail::divide` in `src/arithmetic.cpp` implements unsigned division with 64
-compare/subtract iterations. Each iteration has two phases, separating comparison
-from conditional subtraction to meet the clock budget. Numerator bits enter from
+compare/subtract iterations. Each iteration now combines comparison and conditional
+subtraction in one phase, measured at the active 20 MHz clock. Numerator bits enter from
 the most significant end; retained remainder and quotient build the exact floor
 quotient. Callers prove the denominator is nonzero. The high remainder bit is
 retained separately before shifting so unsigned wrap cannot lose carry information.

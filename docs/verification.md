@@ -1279,3 +1279,43 @@ Verilog co-simulation. Evidence: `docs/evidence/velocity_exact_shared/`.
 Reproduce with `prepare_bounded_velocity.py --variant exact-shared` and a fresh
 output path. Main full-profile sources are unchanged; this is complete candidate
 integration, not yet full-profile adoption or two-motor remeasurement.
+
+## One-phase-per-bit shared exact PI divider
+
+[Evaluation](velocity_exact_onephase.md): the bounded exact velocity candidate's
+PI divider now has a measured one-phase alternative. Integrated divider cost
+falls from 225 to 153 LUT and latency from 80 to 41 cycles. Complete dispatcher
+falls from 21007 to 20935 LUT and maximum latency from 651 to 534 cycles
+(32.55 to 26.70 us at 20 MHz), with unchanged 20 DSP, 4 BRAM18K and 34.617 ns
+estimated critical path. Numerical behavior and wide estimator division remain
+unchanged. Main full-profile sources are untouched.
+
+All 14 applicable native/RTL tests, bounded native and arbitrary-width division
+tests, retained-profile equivalence traces, and motion/dispatcher HLS C simulation
+and Verilog co-simulation pass. Evidence and reproducible patch are in
+`docs/evidence/velocity_exact_onephase/`; helper variant is `exact-onephase`.
+A serialized DSP reciprocal was assessed as a future experiment, not synthesized.
+For the two fixed PI divisors, precomputed reciprocal plus exact correction would
+be a more focused test than generic Newton-Raphson; no LUT/DSP savings are assumed.
+
+## One-phase divider adopted in the active full profile
+
+`src/arithmetic.cpp` now uses one exact restoring phase per bit. The main project
+retains the full unsigned 64-bit API and existing motion/configuration ranges;
+this does not adopt the experimental velocity-only profile. The high remainder
+carry is retained before shifting. All existing rounding semantics are unchanged.
+
+Against revision `4d547eb58b48c5aec98cda173c1a5adc40562358`, the main dispatcher
+falls from 24578 to 24155 LUT (-423, 1.72%) and from 1064 to 680 maximum cycles
+(53.20 to 34.00 us). FF decreases from 12107 to 12101; DSP/BRAM remain 39/4.
+All four affected kernels meet the 20 MHz HLS timing budget. Updated main HLS
+reports supersede the earlier active-baseline tables, which remain historical.
+
+The full 22-test suite passes. Motion's 16387 snapshots and dispatcher's 1379
+complete reply records match the pre-change revision exactly. Before/after
+reports, equivalence logs, and full test output are preserved in
+[evidence/onephase_main](evidence/onephase_main/README.md).
+
+Motion, velocity, controller and dispatcher also passed HLS C simulation and
+Verilog co-simulation with the adopted divider. Their current evidence reports
+are refreshed; no hardware or place-and-route qualification is implied.

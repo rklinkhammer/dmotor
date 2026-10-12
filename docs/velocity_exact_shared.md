@@ -86,3 +86,6 @@ shared two-motor remeasurement remain separate from this candidate integration.
 Motion and complete dispatcher passed Vitis C simulation, synthesis and Verilog
 co-simulation with the explicitly sized arithmetic enabled. `hierarchy.txt`
 records the generated instance checks establishing sharing.
+
+A subsequent [one-phase-per-bit evaluation](velocity_exact_onephase.md) reduces
+complete-dispatcher usage further to 20935 LUT and 534 cycles, with exact behavior.

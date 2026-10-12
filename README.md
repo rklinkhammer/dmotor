@@ -11,6 +11,9 @@ The system target is at most four motors with independent controllers. Current
 resource estimates do not yet fit four instances on xc7z020clg400-1; see
 [verification results](docs/verification.md) for measured optimization progress.
 
+The active full profile uses exact 64-bit division with one restoring phase per
+bit; see the [measured before/after results](docs/evidence/onephase_main/README.md).
+
 ## Build and test
 
 Requires CMake, a C++14 compiler, Python 3, and Icarus Verilog (`iverilog`/`vvp`)
