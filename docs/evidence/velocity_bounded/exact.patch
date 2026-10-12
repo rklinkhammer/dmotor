@@ -1,0 +1,205 @@
+--- /dev/null
++++ b/include/dmotor/operating_limits.hpp
+@@ -0,0 +1,27 @@
++#pragma once
++#include <cstdint>
++#include "dmotor/timing.hpp"
++#include "dmotor/detail/bounded.hpp"
++namespace dmotor {
++namespace operating {
++constexpr unsigned max_wheel_diameter_mm = 100; // Host geometry; no FPGA conversion.
++constexpr int32_t max_shaft_speed_rpm = 200;
++constexpr int32_t millirpm_per_rpm = 1000;
++constexpr int32_t max_speed_mrpm = max_shaft_speed_rpm * millirpm_per_rpm;
++constexpr unsigned velocity_fractional_bits = 0;
++constexpr unsigned velocity_bits = 19;
++constexpr unsigned velocity_error_bits = velocity_bits + 1;
++constexpr int32_t velocity_scale = millirpm_per_rpm;
++constexpr int64_t integral_scale = int64_t{velocity_scale} * timing::control_hz;
++constexpr unsigned integral_bits = 37; // +/-65536 * 1000000 at 1 kHz.
++static_assert(timing::control_hz == 1000, "Re-derive integral width for changed control rate");
++// Precondition: caller has checked +/-max_speed_mrpm BEFORE conversion.
++// Round nearest, ties away from zero. Public units remain milliRPM.
++inline int32_t velocity_q(int32_t mrpm) {
++    const int32_t magnitude = mrpm < 0 ? -mrpm : mrpm;
++    const int32_t q = (magnitude * velocity_scale + millirpm_per_rpm / 2) /
++                      millirpm_per_rpm;
++    return static_cast<int32_t>(detail::narrow_signed<velocity_bits>(mrpm < 0 ? -q : q));
++}
++} // namespace operating
++} // namespace dmotor
+--- a/include/dmotor/motion.hpp
++++ b/include/dmotor/motion.hpp
+@@ -46,8 +46,8 @@
+     uint32_t settling_ = 0; // Stops incrementing at settle_ticks <= 1000000.
+     uint32_t timeout_us_ = 0;
+     uint8_t motion_mode_ = 0; // 0 coast, 1 velocity PI.
+-    int32_t target_mrpm_ = 0; // Validated +/-1000000 milliRPM.
+-    int64_t integral_nano_ = 0; // Clamped to +/-65536 * 1000000000.
++    int32_t target_mrpm_ = 0; // Validated +/-200000 milliRPM.
++    int64_t integral_nano_ = 0; // Clamped to +/-65536 * 1000000.
+     uint64_t started_ = 0, previous_tick_ = 0;
+     uint16_t ramp_remainder_ = 0; // Modulo 1000, always 0..999.
+     bool tick_primed_ = false, stopping_ = false;
+--- a/src/motion.cpp
++++ b/src/motion.cpp
+@@ -1,4 +1,5 @@
+ #include "dmotor/motion.hpp"
++#include "dmotor/operating_limits.hpp"
+ #include "dmotor/timing.hpp"
+ #include "dmotor/detail/arithmetic.hpp"
+ #include "dmotor/detail/bounded.hpp"
+@@ -22,7 +23,7 @@
+ constexpr uint32_t ramp_ticks_per_second = timing::control_hz;
+ constexpr uint64_t clocks_per_tick = timing::control_tick_cycles;
+ constexpr uint64_t clocks_per_us = timing::clocks_per_us;
+-constexpr int64_t integral_scale = 1000000000LL;
++constexpr int64_t integral_scale = operating::integral_scale;
+ int64_t magnitude(int32_t value) {
+     return value < 0 ? -static_cast<int64_t>(value) : value;
+ }
+@@ -30,7 +31,7 @@
+     return value > limit ? limit : value < -limit ? -limit : static_cast<int32_t>(value);
+ }
+ bool valid_config(const MotionConfig& c) {
+-    const bool valid = c.generation && c.max_speed_mrpm >= 1000 && c.max_speed_mrpm <= 1000000 &&
++    const bool valid = c.generation && c.max_speed_mrpm >= 1000 && c.max_speed_mrpm <= operating::max_speed_mrpm &&
+            c.acceleration_mrpm_s && c.acceleration_mrpm_s <= 10000000 && c.deceleration_mrpm_s &&
+            c.deceleration_mrpm_s <= 10000000 && c.counts_num && c.counts_num <= 1000000 &&
+            c.counts_den && c.counts_den <= 1000000 &&
+@@ -179,7 +180,7 @@
+             timeout_us_ = command[11];
+             if (opcode_ == 1) {
+                 target_mrpm_ =
+-                    static_cast<int32_t>(detail::narrow_signed<21>(signed_word(command[5])));
++                    static_cast<int32_t>(detail::narrow_signed<19>(signed_word(command[5])));
+                 motion_mode_ = 1;
+                 finish(now, 0, 0);
+             } else if (opcode_ == 6) {
+@@ -231,22 +232,23 @@
+                 result_.ramp_mrpm +=
+                     change > 0 ? static_cast<int32_t>(advance) : -static_cast<int32_t>(advance);
+             }
+-            // Valid feedback/ramp: error +/-2000000; gains 0..1048576.
+-            const int64_t error = detail::narrow_signed<22>(
++            // Validate in public milliRPM before narrowing. Keep the fractional
++            // milliRPM ramp for very slow acceleration; quantize only PI inputs.
++            const int64_t error = detail::narrow_signed<operating::velocity_error_bits>(
+                 static_cast<int64_t>(result_.ramp_mrpm) - velocity_mrpm);
+             const uint32_t ki = static_cast<uint32_t>(c.ki_q16) & 0x1fffffU;
+             const uint32_t kp = static_cast<uint32_t>(c.kp_q16) & 0x1fffffU;
+             const int64_t limit = prepared.integral_limit;
+             int64_t candidate =
+-                integral_nano_ + static_cast<int64_t>(ki) * error * timing::control_period_us;
++                integral_nano_ + static_cast<int64_t>(ki) * error;
+             candidate = candidate > limit ? limit : candidate < -limit ? -limit : candidate;
+             const int64_t proportional =
+-                detail::rounded(static_cast<int64_t>(kp) * error, 1000);
++                detail::rounded(static_cast<int64_t>(kp) * error, operating::velocity_scale);
+             const int64_t effort = proportional + detail::rounded(candidate, integral_scale);
+             if ((effort <= c.duty_limit_q16 && effort >= -c.duty_limit_q16) ||
+                 (effort > c.duty_limit_q16 && error < 0) ||
+                 (effort < -c.duty_limit_q16 && error > 0)) {
+-                integral_nano_ = detail::narrow_signed<47>(candidate);
++                integral_nano_ = detail::narrow_signed<operating::integral_bits>(candidate);
+             }
+             result_.duty_q16 = clamp(proportional + detail::rounded(integral_nano_, integral_scale),
+                                      c.duty_limit_q16);
+--- a/src/velocity.cpp
++++ b/src/velocity.cpp
+@@ -1,4 +1,5 @@
+ #include "dmotor/velocity.hpp"
++#include "dmotor/operating_limits.hpp"
+ #include "dmotor/detail/arithmetic.hpp"
+ #include "dmotor/timing.hpp"
+ namespace dmotor {
+@@ -73,7 +74,7 @@
+                 const uint64_t denominator =
+                     static_cast<uint64_t>(static_cast<uint32_t>(interval)) * (num & 0xfffffU);
+                 const uint64_t speed = detail::divide(numerator + denominator / 2, denominator);
+-                if (speed > 1000000) {
++                if (speed > static_cast<uint64_t>(operating::max_speed_mrpm)) {
+                     result_.fault |= 8;
+                 } else {
+                     result_.mrpm =
+--- a/tests/motion_test.cpp
++++ b/tests/motion_test.cpp
+@@ -1,6 +1,8 @@
+ #include "timing_fixture.hpp"
+ #include "dmotor/motion.hpp"
+ #include <cstdlib>
++#include <cmath>
++#include "dmotor/operating_limits.hpp"
+ #include <iostream>
+ #define CHECK(x)                                                                                   \
+     do {                                                                                           \
+@@ -33,6 +35,58 @@
+     command[4] = 1;
+ }
+ int main() {
++    // Exhaust every accepted milliRPM value against an independent FP oracle.
++    for (int32_t v = -200000; v <= 200000; ++v) {
++        const auto q = dmotor::operating::velocity_q(v);
++        CHECK(q == static_cast<int32_t>(std::round(double(v) * 1000.0 / 1000.0)));
++        CHECK(std::abs(double(q) / 1000.0 - double(v) / 1000.0) <= 0.0);
++    }
++    // Compare unsaturated PI output to independent fixed-point arithmetic,
++    // including fractional inputs, both directions and integral accumulation.
++    for (int sign : {-1, 1}) {
++        reset();
++        config[1] = 200000;
++        config[9] = 123;
++        config[10] = 456;
++        command[0] = 1;
++        command[5] = static_cast<uint32_t>(sign * 1000);
++        int64_t integral = 0;
++        for (unsigned i = 0; i < 300; ++i) {
++            const int32_t feedback = sign * (17 + static_cast<int32_t>(i % 19));
++            tick(i == 0, 0, feedback);
++            const auto reference_q = [](int32_t value) {
++                return static_cast<int64_t>(std::round(double(value) * 1000.0 / 1000.0));
++            };
++            const int64_t error = reference_q(dmotor::signed_word(reply[1])) - reference_q(feedback);
++            integral += 456 * error;
++            const int64_t expected = static_cast<int64_t>(std::round(double(123 * error) / 1000.0)) +
++                                     static_cast<int64_t>(std::round(double(integral) / 1000000.0));
++            CHECK(!reply[7] && dmotor::signed_word(reply[0]) == expected);
++        }
++    }
++    // Boundary configurations and out-of-range feedback must fault before casts.
++    for (int32_t bad : {200001, -200001, INT32_MAX, INT32_MIN}) {
++        reset();
++        command[0] = 1;
++        command[5] = 1000;
++        tick(true, 0, bad);
++        CHECK((reply[7] & 8) && reply[0] == 0);
++    }
++    for (int sign : {-1, 1}) {
++        reset();
++        command[0] = 1;
++        command[5] = static_cast<uint32_t>(sign * 200000);
++        tick(true, 0, sign * 200000);
++        CHECK(!reply[7] && dmotor::signed_word(reply[1]) == sign * 200000);
++    }
++    reset();
++    config[1] = 200001;
++    tick();
++    CHECK((reply[7] & 1) && reply[0] == 0);
++    config[1] = 130000;
++    config[9] = 655;
++    config[10] = 65536;
++
+     reset();
+     command[0] = 1;
+     command[5] = 10000;
+--- a/tests/velocity_test.cpp
++++ b/tests/velocity_test.cpp
+@@ -152,7 +152,7 @@
+                         uint64_t{events} * (60ULL * dmotor::timing::fabric_hz * 1000) * den;
+                     const uint64_t denominator = uint64_t{test_timing::tick_cycles} * num;
+                     const uint64_t expected = (numerator + denominator / 2) / denominator;
+-                    if (expected > 1000000) {
++                    if (expected > 200000) {
+                         CHECK((status >> 8) == 8 && speed == 0 && !(status & 1));
+                     } else {
+                         const int32_t signed_speed = static_cast<int32_t>(expected);

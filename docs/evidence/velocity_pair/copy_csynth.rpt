@@ -1,0 +1,1093 @@
+
+
+================================================================
+== Vitis HLS Report for 'dmotor_dispatcher_pair'
+================================================================
+* Date:           Sun Oct 11 20:55:05 2026
+
+* Version:        2026.1 (Build 6493734 on Jun 16 2026)
+* Project:        vitis_dispatcher
+* Solution:       hls
+* Product family: zynq
+* Target device:  xc7z020-clg400-1
+
+
+================================================================
+== Performance Estimates
+================================================================
++ Timing: 
+    * Summary: 
+    +--------+----------+-----------+------------+
+    |  Clock |  Target  | Estimated | Uncertainty|
+    +--------+----------+-----------+------------+
+    |ap_clk  |  50.00 ns|  35.206 ns|    13.50 ns|
+    +--------+----------+-----------+------------+
+
++ Latency: 
+    * Summary: 
+    +---------+---------+----------+-----------+-----+-----+---------+
+    |  Latency (cycles) |  Latency (absolute)  |  Interval | Pipeline|
+    |   min   |   max   |    min   |    max    | min | max |   Type  |
+    +---------+---------+----------+-----------+-----+-----+---------+
+    |       98|      845|  4.900 us|  42.250 us|   99|  846|       no|
+    +---------+---------+----------+-----------+-----+-----+---------+
+
+    + Detail: 
+        * Instance: 
+        +---------------------+---------+---------+---------+----------+-----------+-----+-----+---------+
+        |                     |         |  Latency (cycles) |  Latency (absolute)  |  Interval | Pipeline|
+        |       Instance      |  Module |   min   |   max   |    min   |    max    | min | max |   Type  |
+        +---------------------+---------+---------+---------+----------+-----------+-----+-----+---------+
+        |grp_service_fu_4080  |service  |       31|      778|  1.550 us|  38.900 us|   31|  778|       no|
+        +---------------------+---------+---------+---------+----------+-----------+-----+-----+---------+
+
+        * Loop: 
+        N/A
+
+
+
+================================================================
+== Utilization Estimates
+================================================================
+* Summary: 
++-----------------+---------+-----+--------+-------+-----+
+|       Name      | BRAM_18K| DSP |   FF   |  LUT  | URAM|
++-----------------+---------+-----+--------+-------+-----+
+|DSP              |        -|    -|       -|      -|    -|
+|Expression       |        -|    -|       0|   2749|    -|
+|FIFO             |        -|    -|       -|      -|    -|
+|Instance         |        0|   22|   19042|  25340|    0|
+|Memory           |        4|    -|    4514|    662|    0|
+|Multiplexer      |        -|    -|       0|   3474|    -|
+|Register         |        -|    -|   11356|      -|    -|
++-----------------+---------+-----+--------+-------+-----+
+|Total            |        4|   22|   34912|  32225|    0|
++-----------------+---------+-----+--------+-------+-----+
+|Available        |      280|  220|  106400|  53200|    0|
++-----------------+---------+-----+--------+-------+-----+
+|Utilization (%)  |        1|   10|      32|     60|    0|
++-----------------+---------+-----+--------+-------+-----+
+
++ Detail: 
+    * Instance: 
+    +---------------------+---------+---------+----+-------+-------+-----+
+    |       Instance      |  Module | BRAM_18K| DSP|   FF  |  LUT  | URAM|
+    +---------------------+---------+---------+----+-------+-------+-----+
+    |grp_service_fu_4080  |service  |        0|  22|  19042|  25340|    0|
+    +---------------------+---------+---------+----+-------+-------+-----+
+    |Total                |         |        0|  22|  19042|  25340|    0|
+    +---------------------+---------+---------+----+-------+-------+-----+
+
+    * DSP: 
+    N/A
+
+    * Memory: 
+    +------------------------------------------+------------------------------------------------------+---------+----+----+-----+------+-----+------+-------------+
+    |                  Memory                  |                        Module                        | BRAM_18K| FF | LUT| URAM| Words| Bits| Banks| W*Bits*Banks|
+    +------------------------------------------+------------------------------------------------------+---------+----+----+-----+------+-----+------+-------------+
+    |contexts_ring_slots_0_0_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_0_1_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_0_2_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_0_3_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_0_4_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_0_5_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_0_6_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_0_7_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_0_8_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_0_9_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_0_10_U                |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_0_11_U                |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_0_12_U                |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_0_13_U                |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_0_14_U                |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_0_15_U                |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_1_0_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_1_1_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_1_2_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_1_3_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_1_4_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_1_5_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_1_6_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_1_7_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_1_8_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_1_9_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_1_10_U                |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_1_11_U                |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_1_12_U                |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_1_13_U                |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_1_14_U                |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_1_15_U                |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_2_0_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_2_1_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_2_2_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_2_3_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_2_4_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_2_5_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_2_6_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_2_7_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_2_8_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_2_9_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_2_10_U                |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_2_11_U                |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_2_12_U                |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_2_13_U                |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_2_14_U                |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_2_15_U                |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_3_0_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_3_1_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_3_2_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_3_3_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_3_4_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_3_5_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_3_6_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_3_7_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_3_8_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_3_9_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_3_10_U                |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_3_11_U                |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_3_12_U                |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_3_13_U                |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_3_14_U                |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_slots_3_15_U                |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_completions_0_U             |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_completions_1_U             |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_completions_2_U             |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_completions_3_U             |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_completions_4_U             |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_completions_5_U             |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_completions_6_U             |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_completions_7_U             |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_completions_8_U             |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_completions_9_U             |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_completions_10_U            |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_completions_11_U            |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_completions_12_U            |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_completions_13_U            |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_completions_14_U            |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_completions_15_U            |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_completions_16_U            |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_completions_17_U            |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_completions_18_U            |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_completions_19_U            |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_completions_20_U            |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_completions_21_U            |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_completions_22_U            |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_completions_23_U            |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_completions_24_U            |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_completions_25_U            |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_completions_26_U            |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_completions_27_U            |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_completions_28_U            |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_completions_29_U            |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_completions_30_U            |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_completions_31_U            |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_active_0_U                  |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_active_1_U                  |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_active_2_U                  |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_active_3_U                  |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_active_4_U                  |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_active_5_U                  |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_active_6_U                  |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_active_7_U                  |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_active_8_U                  |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_active_9_U                  |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_active_10_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_active_11_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_active_12_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_active_13_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_active_14_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_ring_active_15_U                 |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_controller_prepared_words_0_U    |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_controller_prepared_words_1_U    |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_controller_prepared_words_2_U    |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_controller_prepared_words_3_U    |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_controller_prepared_words_4_U    |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_controller_prepared_words_5_U    |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_controller_prepared_words_6_U    |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_controller_prepared_words_7_U    |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_controller_prepared_words_8_U    |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_controller_prepared_words_9_U    |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_controller_prepared_words_10_U   |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_controller_prepared_words_11_U   |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_controller_prepared_words_12_U   |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_controller_prepared_words_13_U   |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_controller_prepared_words_14_U   |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_controller_prepared_words_15_U   |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |contexts_controller_prepared_words_16_U   |contexts_ring_slots_0_0_RAM_AUTO_1R1W                 |        0|  34|   5|    0|     2|   32|     1|           64|
+    |dispatcher_controller_prepared_words_s_U  |dispatcher_controller_prepared_words_s_RAM_AUTO_1R1W  |        0|  64|   9|    0|    17|   32|     1|          544|
+    |dispatcher_ring_active_s_U                |dispatcher_ring_active_s_RAM_AUTO_1R1W                |        0|  64|   8|    0|    16|   32|     1|          512|
+    |dispatcher_ring_completions_s_U           |dispatcher_ring_completions_s_RAM_AUTO_1R1W           |        2|   0|   0|    0|    32|   32|     1|         1024|
+    |dispatcher_ring_slots_s_U                 |dispatcher_ring_slots_s_RAM_AUTO_1R1W                 |        2|   0|   0|    0|    64|   32|     1|         2048|
+    +------------------------------------------+------------------------------------------------------+---------+----+----+-----+------+-----+------+-------------+
+    |Total                                     |                                                      |        4|4514| 662|    0|   387| 4256|   133|        12384|
+    +------------------------------------------+------------------------------------------------------+---------+----+----+-----+------+-----+------+-------------+
+
+    * FIFO: 
+    N/A
+
+    * Expression: 
+    +------------------------------------------------------------------------+----------+----+---+----+------------+------------+
+    |                              Variable Name                             | Operation| DSP| FF| LUT| Bitwidth P0| Bitwidth P1|
+    +------------------------------------------------------------------------+----------+----+---+----+------------+------------+
+    |icmp_ln187_fu_5837_p2                                                   |      icmp|   0|  0|  39|          32|           1|
+    |dispatcher_controller_prepared_words_s_we0                              |        or|   0|  0|   2|           1|           1|
+    |dispatcher_controller_prepared_words_s_we1                              |        or|   0|  0|   2|           1|           1|
+    |dispatcher_ring_active_s_we0                                            |        or|   0|  0|   2|           1|           1|
+    |dispatcher_ring_active_s_we1                                            |        or|   0|  0|   2|           1|           1|
+    |dispatcher_ring_completions_s_we0                                       |        or|   0|  0|   2|           1|           1|
+    |dispatcher_ring_completions_s_we1                                       |        or|   0|  0|   2|           1|           1|
+    |dispatcher_ring_slots_s_we0                                             |        or|   0|  0|   2|           1|           1|
+    |dispatcher_ring_slots_s_we1                                             |        or|   0|  0|   2|           1|           1|
+    |or_ln187_1_fu_5832_p2                                                   |        or|   0|  0|  32|          32|          32|
+    |or_ln187_fu_5826_p2                                                     |        or|   0|  0|  32|          32|          32|
+    |c_motion_generation_1_fu_5843_p3                                        |    select|   0|  0|  32|           1|          32|
+    |dispatcher_ack_s_fu_5754_p3                                             |    select|   0|  0|   2|           1|           1|
+    |dispatcher_cancel_pending_s_fu_5770_p3                                  |    select|   0|  0|   2|           1|           1|
+    |dispatcher_controller_acquiring_s_fu_5322_p3                            |    select|   0|  0|   2|           1|           1|
+    |dispatcher_controller_acquisition_start_s_fu_5354_p3                    |    select|   0|  0|  64|           1|          64|
+    |dispatcher_controller_faults_s_fu_5370_p3                               |    select|   0|  0|  32|           1|          32|
+    |dispatcher_controller_invalid_s_fu_5386_p3                              |    select|   0|  0|  32|           1|          32|
+    |dispatcher_controller_motion_generation_s_fu_4986_p3                    |    select|   0|  0|  32|           1|          32|
+    |dispatcher_controller_motion_integral_nano_s_fu_4874_p3                 |    select|   0|  0|  64|           1|          64|
+    |dispatcher_controller_motion_motion_mode_s_fu_4842_p3                   |    select|   0|  0|   8|           1|           8|
+    |dispatcher_controller_motion_opcode_s_fu_4794_p3                        |    select|   0|  0|   8|           1|           8|
+    |dispatcher_controller_motion_previous_tick_s_fu_4906_p3                 |    select|   0|  0|  64|           1|          64|
+    |dispatcher_controller_motion_ramp_remainder_s_fu_4922_p3                |    select|   0|  0|  16|           1|          16|
+    |dispatcher_controller_motion_result_accepted_fu_4666_p3                 |    select|   0|  0|   2|           1|           1|
+    |dispatcher_controller_motion_result_activation_fu_4762_p3               |    select|   0|  0|  64|           1|          64|
+    |dispatcher_controller_motion_result_busy_fu_4634_p3                     |    select|   0|  0|   2|           1|           1|
+    |dispatcher_controller_motion_result_completion_valid_fu_4650_p3         |    select|   0|  0|   2|           1|           1|
+    |dispatcher_controller_motion_result_detail_fu_4730_p3                   |    select|   0|  0|  32|           1|          32|
+    |dispatcher_controller_motion_result_duty_q16_fu_4586_p3                 |    select|   0|  0|  32|           1|          32|
+    |dispatcher_controller_motion_result_epoch_fu_4698_p3                    |    select|   0|  0|  32|           1|          32|
+    |dispatcher_controller_motion_result_faults_fu_4746_p3                   |    select|   0|  0|  32|           1|          32|
+    |dispatcher_controller_motion_result_outcome_fu_4714_p3                  |    select|   0|  0|  32|           1|          32|
+    |dispatcher_controller_motion_result_ramp_mrpm_fu_4602_p3                |    select|   0|  0|  32|           1|          32|
+    |dispatcher_controller_motion_result_ready_fu_4618_p3                    |    select|   0|  0|   2|           1|           1|
+    |dispatcher_controller_motion_result_sequence_fu_4682_p3                 |    select|   0|  0|  32|           1|          32|
+    |dispatcher_controller_motion_result_terminal_fu_4778_p3                 |    select|   0|  0|  64|           1|          64|
+    |dispatcher_controller_motion_session_s_fu_4970_p3                       |    select|   0|  0|  32|           1|          32|
+    |dispatcher_controller_motion_settling_s_fu_4810_p3                      |    select|   0|  0|  32|           1|          32|
+    |dispatcher_controller_motion_started_s_fu_4890_p3                       |    select|   0|  0|  64|           1|          64|
+    |dispatcher_controller_motion_stopping_s_fu_4954_p3                      |    select|   0|  0|   2|           1|           1|
+    |dispatcher_controller_motion_target_mrpm_s_fu_4858_p3                   |    select|   0|  0|  32|           1|          32|
+    |dispatcher_controller_motion_tick_primed_s_fu_4938_p3                   |    select|   0|  0|   2|           1|           1|
+    |dispatcher_controller_motion_timeout_us_s_fu_4826_p3                    |    select|   0|  0|  32|           1|          32|
+    |dispatcher_controller_prepared_acquisition_valid_s_fu_4570_p3           |    select|   0|  0|   2|           1|           1|
+    |dispatcher_controller_prepared_motion_integral_limit_fu_4538_p3         |    select|   0|  0|  64|           1|          64|
+    |dispatcher_controller_prepared_motion_valid_fu_4522_p3                  |    select|   0|  0|   2|           1|           1|
+    |dispatcher_controller_prepared_s_fu_4554_p3                             |    select|   0|  0|   2|           1|           1|
+    |dispatcher_controller_primed_s_fu_5338_p3                               |    select|   0|  0|   2|           1|           1|
+    |dispatcher_controller_qualified_s_fu_5306_p3                            |    select|   0|  0|   2|           1|           1|
+    |dispatcher_controller_velocity_den_s_fu_5274_p3                         |    select|   0|  0|  32|           1|          32|
+    |dispatcher_controller_velocity_generation_s_fu_5242_p3                  |    select|   0|  0|  32|           1|          32|
+    |dispatcher_controller_velocity_have_edge_s_fu_5194_p3                   |    select|   0|  0|   2|           1|           1|
+    |dispatcher_controller_velocity_initialized_s_fu_5178_p3                 |    select|   0|  0|   2|           1|           1|
+    |dispatcher_controller_velocity_num_s_fu_5258_p3                         |    select|   0|  0|  32|           1|          32|
+    |dispatcher_controller_velocity_previous_count_fu_5002_p3                |    select|   0|  0|  64|           1|          64|
+    |dispatcher_controller_velocity_previous_direction_epoch_fu_5034_p3      |    select|   0|  0|  32|           1|          32|
+    |dispatcher_controller_velocity_previous_invalid_transitions_fu_5050_p3  |    select|   0|  0|  32|           1|          32|
+    |dispatcher_controller_velocity_previous_last_edge_fu_5018_p3            |    select|   0|  0|  64|           1|          64|
+    |dispatcher_controller_velocity_previous_negative_fu_5066_p3             |    select|   0|  0|   2|           1|           1|
+    |dispatcher_controller_velocity_previous_now_s_fu_5226_p3                |    select|   0|  0|  64|           1|          64|
+    |dispatcher_controller_velocity_result_age_fu_5098_p3                    |    select|   0|  0|  64|           1|          64|
+    |dispatcher_controller_velocity_result_averaged_fu_5146_p3               |    select|   0|  0|   2|           1|           1|
+    |dispatcher_controller_velocity_result_fault_fu_5162_p3                  |    select|   0|  0|  32|           1|          32|
+    |dispatcher_controller_velocity_result_mrpm_fu_5082_p3                   |    select|   0|  0|  32|           1|          32|
+    |dispatcher_controller_velocity_result_timed_out_fu_5130_p3              |    select|   0|  0|   2|           1|           1|
+    |dispatcher_controller_velocity_result_valid_fu_5114_p3                  |    select|   0|  0|   2|           1|           1|
+    |dispatcher_controller_velocity_started_s_fu_5210_p3                     |    select|   0|  0|  64|           1|          64|
+    |dispatcher_controller_velocity_timeout_s_fu_5290_p3                     |    select|   0|  0|  32|           1|          32|
+    |dispatcher_faults_s_fu_5818_p3                                          |    select|   0|  0|  32|           1|          32|
+    |dispatcher_last_acquiring_fu_5722_p3                                    |    select|   0|  0|   2|           1|           1|
+    |dispatcher_last_faults_fu_5706_p3                                       |    select|   0|  0|  32|           1|          32|
+    |dispatcher_last_motion_accepted_fu_5482_p3                              |    select|   0|  0|   2|           1|           1|
+    |dispatcher_last_motion_activation_fu_5578_p3                            |    select|   0|  0|  64|           1|          64|
+    |dispatcher_last_motion_busy_fu_5450_p3                                  |    select|   0|  0|   2|           1|           1|
+    |dispatcher_last_motion_completion_valid_fu_5466_p3                      |    select|   0|  0|   2|           1|           1|
+    |dispatcher_last_motion_detail_fu_5546_p3                                |    select|   0|  0|  32|           1|          32|
+    |dispatcher_last_motion_duty_q16_fu_5402_p3                              |    select|   0|  0|  32|           1|          32|
+    |dispatcher_last_motion_epoch_fu_5514_p3                                 |    select|   0|  0|  32|           1|          32|
+    |dispatcher_last_motion_faults_fu_5562_p3                                |    select|   0|  0|  32|           1|          32|
+    |dispatcher_last_motion_outcome_fu_5530_p3                               |    select|   0|  0|  32|           1|          32|
+    |dispatcher_last_motion_ramp_mrpm_fu_5418_p3                             |    select|   0|  0|  32|           1|          32|
+    |dispatcher_last_motion_ready_fu_5434_p3                                 |    select|   0|  0|   2|           1|           1|
+    |dispatcher_last_motion_sequence_fu_5498_p3                              |    select|   0|  0|  32|           1|          32|
+    |dispatcher_last_motion_terminal_fu_5594_p3                              |    select|   0|  0|  64|           1|          64|
+    |dispatcher_last_velocity_age_fu_5626_p3                                 |    select|   0|  0|  64|           1|          64|
+    |dispatcher_last_velocity_averaged_fu_5674_p3                            |    select|   0|  0|   2|           1|           1|
+    |dispatcher_last_velocity_fault_fu_5690_p3                               |    select|   0|  0|  32|           1|          32|
+    |dispatcher_last_velocity_mrpm_fu_5610_p3                                |    select|   0|  0|  32|           1|          32|
+    |dispatcher_last_velocity_timed_out_fu_5658_p3                           |    select|   0|  0|   2|           1|           1|
+    |dispatcher_last_velocity_valid_fu_5642_p3                               |    select|   0|  0|   2|           1|           1|
+    |dispatcher_last_warming_up_fu_5738_p3                                   |    select|   0|  0|   2|           1|           1|
+    |dispatcher_ring_activation_s_fu_4474_p3                                 |    select|   0|  0|  64|           1|          64|
+    |dispatcher_ring_admission_s_fu_4490_p3                                  |    select|   0|  0|   2|           1|           1|
+    |dispatcher_ring_busy_s_fu_4506_p3                                       |    select|   0|  0|   2|           1|           1|
+    |dispatcher_ring_cancellation_active_sequence_fu_4298_p3                 |    select|   0|  0|  32|           1|          32|
+    |dispatcher_ring_cancellation_active_valid_fu_4266_p3                    |    select|   0|  0|   2|           1|           1|
+    |dispatcher_ring_cancellation_cause_fu_4346_p3                           |    select|   0|  0|  32|           1|          32|
+    |dispatcher_ring_cancellation_epoch_fu_4282_p3                           |    select|   0|  0|  32|           1|          32|
+    |dispatcher_ring_cancellation_pending_begin_fu_4314_p3                   |    select|   0|  0|  32|           1|          32|
+    |dispatcher_ring_cancellation_pending_end_fu_4330_p3                     |    select|   0|  0|  32|           1|          32|
+    |dispatcher_ring_cancellation_timestamp_fu_4362_p3                       |    select|   0|  0|  64|           1|          64|
+    |dispatcher_ring_cancellation_valid_fu_4250_p3                           |    select|   0|  0|   2|           1|           1|
+    |dispatcher_ring_completion_consumer_s_fu_4426_p3                        |    select|   0|  0|  32|           1|          32|
+    |dispatcher_ring_completion_producer_s_fu_4410_p3                        |    select|   0|  0|  32|           1|          32|
+    |dispatcher_ring_consumer_s_fu_4394_p3                                   |    select|   0|  0|  32|           1|          32|
+    |dispatcher_ring_epoch_s_fu_4442_p3                                      |    select|   0|  0|  32|           1|          32|
+    |dispatcher_ring_generation_s_fu_4458_p3                                 |    select|   0|  0|  32|           1|          32|
+    |dispatcher_ring_producer_s_fu_4378_p3                                   |    select|   0|  0|  32|           1|          32|
+    |dispatcher_stop_pending_s_fu_5786_p3                                    |    select|   0|  0|   2|           1|           1|
+    |dispatcher_tick_authorized_s_fu_5802_p3                                 |    select|   0|  0|   2|           1|           1|
+    +------------------------------------------------------------------------+----------+----+---+----+------------+------------+
+    |Total                                                                   |          |   0|  0|2749|         204|        2668|
+    +------------------------------------------------------------------------+----------+----+---+----+------------+------------+
+
+    * Multiplexer: 
+    +-------------------------------------------------------+-----+-----------+-----+-----------+
+    |                          Name                         | LUT | Input Size| Bits| Total Bits|
+    +-------------------------------------------------------+-----+-----------+-----+-----------+
+    |ap_NS_fsm                                              |  313|         69|    1|         69|
+    |configuration_r_address0_local                         |   59|         11|    5|         55|
+    |configuration_r_address1_local                         |   59|         11|    5|         55|
+    |contexts_controller_prepared_words_0_address0_local    |   14|          3|    1|          3|
+    |contexts_ring_completions_0_address0_local             |   14|          3|    1|          3|
+    |contexts_ring_completions_10_address0_local            |   14|          3|    1|          3|
+    |contexts_ring_completions_11_address0_local            |   14|          3|    1|          3|
+    |contexts_ring_completions_12_address0_local            |   14|          3|    1|          3|
+    |contexts_ring_completions_13_address0_local            |   14|          3|    1|          3|
+    |contexts_ring_completions_14_address0_local            |   14|          3|    1|          3|
+    |contexts_ring_completions_15_address0_local            |   14|          3|    1|          3|
+    |contexts_ring_completions_1_address0_local             |   14|          3|    1|          3|
+    |contexts_ring_completions_2_address0_local             |   14|          3|    1|          3|
+    |contexts_ring_completions_3_address0_local             |   14|          3|    1|          3|
+    |contexts_ring_completions_4_address0_local             |   14|          3|    1|          3|
+    |contexts_ring_completions_5_address0_local             |   14|          3|    1|          3|
+    |contexts_ring_completions_6_address0_local             |   14|          3|    1|          3|
+    |contexts_ring_completions_7_address0_local             |   14|          3|    1|          3|
+    |contexts_ring_completions_8_address0_local             |   14|          3|    1|          3|
+    |contexts_ring_completions_9_address0_local             |   14|          3|    1|          3|
+    |contexts_ring_slots_0_0_address0_local                 |   14|          3|    1|          3|
+    |contexts_ring_slots_0_10_address0_local                |   14|          3|    1|          3|
+    |contexts_ring_slots_0_11_address0_local                |   14|          3|    1|          3|
+    |contexts_ring_slots_0_12_address0_local                |   14|          3|    1|          3|
+    |contexts_ring_slots_0_13_address0_local                |   14|          3|    1|          3|
+    |contexts_ring_slots_0_14_address0_local                |   14|          3|    1|          3|
+    |contexts_ring_slots_0_15_address0_local                |   14|          3|    1|          3|
+    |contexts_ring_slots_0_1_address0_local                 |   14|          3|    1|          3|
+    |contexts_ring_slots_0_2_address0_local                 |   14|          3|    1|          3|
+    |contexts_ring_slots_0_3_address0_local                 |   14|          3|    1|          3|
+    |contexts_ring_slots_0_4_address0_local                 |   14|          3|    1|          3|
+    |contexts_ring_slots_0_5_address0_local                 |   14|          3|    1|          3|
+    |contexts_ring_slots_0_6_address0_local                 |   14|          3|    1|          3|
+    |contexts_ring_slots_0_7_address0_local                 |   14|          3|    1|          3|
+    |contexts_ring_slots_0_8_address0_local                 |   14|          3|    1|          3|
+    |contexts_ring_slots_0_9_address0_local                 |   14|          3|    1|          3|
+    |contexts_ring_slots_1_0_address0_local                 |   14|          3|    1|          3|
+    |contexts_ring_slots_1_10_address0_local                |   14|          3|    1|          3|
+    |contexts_ring_slots_1_11_address0_local                |   14|          3|    1|          3|
+    |contexts_ring_slots_1_12_address0_local                |   14|          3|    1|          3|
+    |contexts_ring_slots_1_13_address0_local                |   14|          3|    1|          3|
+    |contexts_ring_slots_1_14_address0_local                |   14|          3|    1|          3|
+    |contexts_ring_slots_1_15_address0_local                |   14|          3|    1|          3|
+    |contexts_ring_slots_1_1_address0_local                 |   14|          3|    1|          3|
+    |contexts_ring_slots_1_2_address0_local                 |   14|          3|    1|          3|
+    |contexts_ring_slots_1_3_address0_local                 |   14|          3|    1|          3|
+    |contexts_ring_slots_1_4_address0_local                 |   14|          3|    1|          3|
+    |contexts_ring_slots_1_5_address0_local                 |   14|          3|    1|          3|
+    |contexts_ring_slots_1_6_address0_local                 |   14|          3|    1|          3|
+    |contexts_ring_slots_1_7_address0_local                 |   14|          3|    1|          3|
+    |contexts_ring_slots_1_8_address0_local                 |   14|          3|    1|          3|
+    |contexts_ring_slots_1_9_address0_local                 |   14|          3|    1|          3|
+    |contexts_ring_slots_2_0_address0_local                 |   14|          3|    1|          3|
+    |contexts_ring_slots_2_10_address0_local                |   14|          3|    1|          3|
+    |contexts_ring_slots_2_11_address0_local                |   14|          3|    1|          3|
+    |contexts_ring_slots_2_12_address0_local                |   14|          3|    1|          3|
+    |contexts_ring_slots_2_13_address0_local                |   14|          3|    1|          3|
+    |contexts_ring_slots_2_14_address0_local                |   14|          3|    1|          3|
+    |contexts_ring_slots_2_15_address0_local                |   14|          3|    1|          3|
+    |contexts_ring_slots_2_1_address0_local                 |   14|          3|    1|          3|
+    |contexts_ring_slots_2_2_address0_local                 |   14|          3|    1|          3|
+    |contexts_ring_slots_2_3_address0_local                 |   14|          3|    1|          3|
+    |contexts_ring_slots_2_4_address0_local                 |   14|          3|    1|          3|
+    |contexts_ring_slots_2_5_address0_local                 |   14|          3|    1|          3|
+    |contexts_ring_slots_2_6_address0_local                 |   14|          3|    1|          3|
+    |contexts_ring_slots_2_7_address0_local                 |   14|          3|    1|          3|
+    |contexts_ring_slots_2_8_address0_local                 |   14|          3|    1|          3|
+    |contexts_ring_slots_2_9_address0_local                 |   14|          3|    1|          3|
+    |dispatcher_controller_prepared_words_s_address0        |    9|          2|    5|         10|
+    |dispatcher_controller_prepared_words_s_address0_local  |   87|         18|    5|         90|
+    |dispatcher_controller_prepared_words_s_address1        |    9|          2|    5|         10|
+    |dispatcher_controller_prepared_words_s_address1_local  |   87|         18|    5|         90|
+    |dispatcher_controller_prepared_words_s_ce0             |    9|          2|    1|          2|
+    |dispatcher_controller_prepared_words_s_ce1             |    9|          2|    1|          2|
+    |dispatcher_controller_prepared_words_s_d0              |    9|          2|   32|         64|
+    |dispatcher_controller_prepared_words_s_d0_local        |   53|         10|   32|        320|
+    |dispatcher_controller_prepared_words_s_d1              |    9|          2|   32|         64|
+    |dispatcher_controller_prepared_words_s_d1_local        |   48|          9|   32|        288|
+    |dispatcher_controller_prepared_words_s_we0             |    9|          2|    1|          2|
+    |dispatcher_controller_prepared_words_s_we1             |    9|          2|    1|          2|
+    |dispatcher_ring_active_s_address0                      |    9|          2|    4|          8|
+    |dispatcher_ring_active_s_address0_local                |   81|         17|    4|         68|
+    |dispatcher_ring_active_s_address1                      |    9|          2|    4|          8|
+    |dispatcher_ring_active_s_address1_local                |   81|         17|    4|         68|
+    |dispatcher_ring_active_s_ce0                           |    9|          2|    1|          2|
+    |dispatcher_ring_active_s_ce1                           |    9|          2|    1|          2|
+    |dispatcher_ring_active_s_d0                            |    9|          2|   32|         64|
+    |dispatcher_ring_active_s_d0_local                      |   48|          9|   32|        288|
+    |dispatcher_ring_active_s_d1                            |    9|          2|   32|         64|
+    |dispatcher_ring_active_s_d1_local                      |   48|          9|   32|        288|
+    |dispatcher_ring_active_s_we0                           |    9|          2|    1|          2|
+    |dispatcher_ring_active_s_we1                           |    9|          2|    1|          2|
+    |dispatcher_ring_completions_s_address0                 |    9|          2|    5|         10|
+    |dispatcher_ring_completions_s_address0_local           |  147|         33|    5|        165|
+    |dispatcher_ring_completions_s_address1                 |    9|          2|    5|         10|
+    |dispatcher_ring_completions_s_address1_local           |  147|         33|    5|        165|
+    |dispatcher_ring_completions_s_ce0                      |    9|          2|    1|          2|
+    |dispatcher_ring_completions_s_ce1                      |    9|          2|    1|          2|
+    |dispatcher_ring_completions_s_d0                       |    9|          2|   32|         64|
+    |dispatcher_ring_completions_s_d0_local                 |   81|         17|   32|        544|
+    |dispatcher_ring_completions_s_d1                       |    9|          2|   32|         64|
+    |dispatcher_ring_completions_s_d1_local                 |   81|         17|   32|        544|
+    |dispatcher_ring_completions_s_we0                      |    9|          2|    1|          2|
+    |dispatcher_ring_completions_s_we1                      |    9|          2|    1|          2|
+    |dispatcher_ring_slots_s_address0                       |    9|          2|    6|         12|
+    |dispatcher_ring_slots_s_address0_local                 |  281|         65|    6|        390|
+    |dispatcher_ring_slots_s_address1                       |    9|          2|    6|         12|
+    |dispatcher_ring_slots_s_address1_local                 |  281|         65|    6|        390|
+    |dispatcher_ring_slots_s_ce0                            |    9|          2|    1|          2|
+    |dispatcher_ring_slots_s_ce1                            |    9|          2|    1|          2|
+    |dispatcher_ring_slots_s_d0                             |    9|          2|   32|         64|
+    |dispatcher_ring_slots_s_d0_local                       |  147|         33|   32|       1056|
+    |dispatcher_ring_slots_s_d1                             |    9|          2|   32|         64|
+    |dispatcher_ring_slots_s_d1_local                       |  147|         33|   32|       1056|
+    |dispatcher_ring_slots_s_we0                            |    9|          2|    1|          2|
+    |dispatcher_ring_slots_s_we1                            |    9|          2|    1|          2|
+    +-------------------------------------------------------+-----+-----------+-----+-----------+
+    |Total                                                  | 3474|        753|  684|       6808|
+    +-------------------------------------------------------+-----+-----------+-----+-----------+
+
+    * Register: 
+    +-------------------------------------------------------------------------+-----+----+-----+-----------+
+    |                                   Name                                  |  FF | LUT| Bits| Const Bits|
+    +-------------------------------------------------------------------------+-----+----+-----+-----------+
+    |ap_CS_fsm                                                                |   68|   0|   68|          0|
+    |authorized_read_reg_9006                                                 |    1|   0|    1|          0|
+    |c_acquisition_duty_limit_q16_reg_8931                                    |   32|   0|   32|          0|
+    |c_acquisition_timeout_cycles_reg_8876                                    |   32|   0|   32|          0|
+    |c_motion_acceleration_mrpm_s_reg_8511                                    |   32|   0|   32|          0|
+    |c_motion_counts_den_reg_8576                                             |   32|   0|   32|          0|
+    |c_motion_counts_num_reg_8571                                             |   32|   0|   32|          0|
+    |c_motion_deceleration_mrpm_s_reg_8516                                    |   32|   0|   32|          0|
+    |c_motion_duty_limit_q16_reg_8756                                         |   32|   0|   32|          0|
+    |c_motion_generation_1_reg_9516                                           |   32|   0|   32|          0|
+    |c_motion_generation_reg_8451                                             |   32|   0|   32|          0|
+    |c_motion_integral_limit_q16_reg_8811                                     |   32|   0|   32|          0|
+    |c_motion_ki_q16_reg_8751                                                 |   32|   0|   32|          0|
+    |c_motion_kp_q16_reg_8696                                                 |   32|   0|   32|          0|
+    |c_motion_max_speed_mrpm_reg_8456                                         |   32|   0|   32|          0|
+    |c_motion_position_tolerance_reg_8631                                     |   32|   0|   32|          0|
+    |c_motion_settle_ticks_reg_8691                                           |   32|   0|   32|          0|
+    |c_motion_stop_timeout_us_reg_8816                                        |   32|   0|   32|          0|
+    |c_motion_velocity_tolerance_mrpm_reg_8636                                |   32|   0|   32|          0|
+    |c_zero_timeout_cycles_reg_8871                                           |   32|   0|   32|          0|
+    |cancel_read_reg_9001                                                     |    1|   0|    1|          0|
+    |capture_fault_read_reg_8986                                              |    1|   0|    1|          0|
+    |cause_read_reg_8996                                                      |   32|   0|   32|          0|
+    |configuration_r_load_reg_8936                                            |   32|   0|   32|          0|
+    |contexts_ack_0                                                           |    1|   0|    1|          0|
+    |contexts_ack_1                                                           |    1|   0|    1|          0|
+    |contexts_cancel_pending_0                                                |    1|   0|    1|          0|
+    |contexts_cancel_pending_1                                                |    1|   0|    1|          0|
+    |contexts_controller_acquiring_0                                          |    1|   0|    1|          0|
+    |contexts_controller_acquiring_1                                          |    1|   0|    1|          0|
+    |contexts_controller_acquisition_start_0                                  |   64|   0|   64|          0|
+    |contexts_controller_acquisition_start_1                                  |   64|   0|   64|          0|
+    |contexts_controller_faults_0                                             |   32|   0|   32|          0|
+    |contexts_controller_faults_1                                             |   32|   0|   32|          0|
+    |contexts_controller_invalid_0                                            |   32|   0|   32|          0|
+    |contexts_controller_invalid_1                                            |   32|   0|   32|          0|
+    |contexts_controller_motion_generation_0                                  |   32|   0|   32|          0|
+    |contexts_controller_motion_generation_1                                  |   32|   0|   32|          0|
+    |contexts_controller_motion_integral_nano_0                               |   64|   0|   64|          0|
+    |contexts_controller_motion_integral_nano_1                               |   64|   0|   64|          0|
+    |contexts_controller_motion_motion_mode_0                                 |    8|   0|    8|          0|
+    |contexts_controller_motion_motion_mode_1                                 |    8|   0|    8|          0|
+    |contexts_controller_motion_opcode_0                                      |    8|   0|    8|          0|
+    |contexts_controller_motion_opcode_1                                      |    8|   0|    8|          0|
+    |contexts_controller_motion_previous_tick_0                               |   64|   0|   64|          0|
+    |contexts_controller_motion_previous_tick_1                               |   64|   0|   64|          0|
+    |contexts_controller_motion_ramp_remainder_0                              |   16|   0|   16|          0|
+    |contexts_controller_motion_ramp_remainder_1                              |   16|   0|   16|          0|
+    |contexts_controller_motion_result_accepted_0                             |    1|   0|    1|          0|
+    |contexts_controller_motion_result_accepted_1                             |    1|   0|    1|          0|
+    |contexts_controller_motion_result_activation_0                           |   64|   0|   64|          0|
+    |contexts_controller_motion_result_activation_1                           |   64|   0|   64|          0|
+    |contexts_controller_motion_result_busy_0                                 |    1|   0|    1|          0|
+    |contexts_controller_motion_result_busy_1                                 |    1|   0|    1|          0|
+    |contexts_controller_motion_result_completion_valid_0                     |    1|   0|    1|          0|
+    |contexts_controller_motion_result_completion_valid_1                     |    1|   0|    1|          0|
+    |contexts_controller_motion_result_detail_0                               |   32|   0|   32|          0|
+    |contexts_controller_motion_result_detail_1                               |   32|   0|   32|          0|
+    |contexts_controller_motion_result_duty_q16_0                             |   32|   0|   32|          0|
+    |contexts_controller_motion_result_duty_q16_1                             |   32|   0|   32|          0|
+    |contexts_controller_motion_result_epoch_0                                |   32|   0|   32|          0|
+    |contexts_controller_motion_result_epoch_1                                |   32|   0|   32|          0|
+    |contexts_controller_motion_result_faults_0                               |   32|   0|   32|          0|
+    |contexts_controller_motion_result_faults_1                               |   32|   0|   32|          0|
+    |contexts_controller_motion_result_outcome_0                              |   32|   0|   32|          0|
+    |contexts_controller_motion_result_outcome_1                              |   32|   0|   32|          0|
+    |contexts_controller_motion_result_ramp_mrpm_0                            |   32|   0|   32|          0|
+    |contexts_controller_motion_result_ramp_mrpm_1                            |   32|   0|   32|          0|
+    |contexts_controller_motion_result_ready_0                                |    1|   0|    1|          0|
+    |contexts_controller_motion_result_ready_1                                |    1|   0|    1|          0|
+    |contexts_controller_motion_result_sequence_0                             |   32|   0|   32|          0|
+    |contexts_controller_motion_result_sequence_1                             |   32|   0|   32|          0|
+    |contexts_controller_motion_result_terminal_0                             |   64|   0|   64|          0|
+    |contexts_controller_motion_result_terminal_1                             |   64|   0|   64|          0|
+    |contexts_controller_motion_session_0                                     |   32|   0|   32|          0|
+    |contexts_controller_motion_session_1                                     |   32|   0|   32|          0|
+    |contexts_controller_motion_settling_0                                    |   32|   0|   32|          0|
+    |contexts_controller_motion_settling_1                                    |   32|   0|   32|          0|
+    |contexts_controller_motion_started_0                                     |   64|   0|   64|          0|
+    |contexts_controller_motion_started_1                                     |   64|   0|   64|          0|
+    |contexts_controller_motion_stopping_0                                    |    1|   0|    1|          0|
+    |contexts_controller_motion_stopping_1                                    |    1|   0|    1|          0|
+    |contexts_controller_motion_target_mrpm_0                                 |   32|   0|   32|          0|
+    |contexts_controller_motion_target_mrpm_1                                 |   32|   0|   32|          0|
+    |contexts_controller_motion_tick_primed_0                                 |    1|   0|    1|          0|
+    |contexts_controller_motion_tick_primed_1                                 |    1|   0|    1|          0|
+    |contexts_controller_motion_timeout_us_0                                  |   32|   0|   32|          0|
+    |contexts_controller_motion_timeout_us_1                                  |   32|   0|   32|          0|
+    |contexts_controller_prepared_0                                           |    1|   0|    1|          0|
+    |contexts_controller_prepared_1                                           |    1|   0|    1|          0|
+    |contexts_controller_prepared_acquisition_valid_0                         |    1|   0|    1|          0|
+    |contexts_controller_prepared_acquisition_valid_1                         |    1|   0|    1|          0|
+    |contexts_controller_prepared_motion_integral_limit_0                     |   64|   0|   64|          0|
+    |contexts_controller_prepared_motion_integral_limit_1                     |   64|   0|   64|          0|
+    |contexts_controller_prepared_motion_valid_0                              |    1|   0|    1|          0|
+    |contexts_controller_prepared_motion_valid_1                              |    1|   0|    1|          0|
+    |contexts_controller_prepared_words_0_addr_reg_8321                       |    1|   0|    1|          0|
+    |contexts_controller_prepared_words_10_addr_reg_8371                      |    1|   0|    1|          0|
+    |contexts_controller_prepared_words_11_addr_reg_8376                      |    1|   0|    1|          0|
+    |contexts_controller_prepared_words_12_addr_reg_8381                      |    1|   0|    1|          0|
+    |contexts_controller_prepared_words_13_addr_reg_8386                      |    1|   0|    1|          0|
+    |contexts_controller_prepared_words_14_addr_reg_8391                      |    1|   0|    1|          0|
+    |contexts_controller_prepared_words_15_addr_reg_8396                      |    1|   0|    1|          0|
+    |contexts_controller_prepared_words_16_addr_reg_8401                      |    1|   0|    1|          0|
+    |contexts_controller_prepared_words_1_addr_reg_8326                       |    1|   0|    1|          0|
+    |contexts_controller_prepared_words_2_addr_reg_8331                       |    1|   0|    1|          0|
+    |contexts_controller_prepared_words_3_addr_reg_8336                       |    1|   0|    1|          0|
+    |contexts_controller_prepared_words_4_addr_reg_8341                       |    1|   0|    1|          0|
+    |contexts_controller_prepared_words_5_addr_reg_8346                       |    1|   0|    1|          0|
+    |contexts_controller_prepared_words_6_addr_reg_8351                       |    1|   0|    1|          0|
+    |contexts_controller_prepared_words_7_addr_reg_8356                       |    1|   0|    1|          0|
+    |contexts_controller_prepared_words_8_addr_reg_8361                       |    1|   0|    1|          0|
+    |contexts_controller_prepared_words_9_addr_reg_8366                       |    1|   0|    1|          0|
+    |contexts_controller_primed_0                                             |    1|   0|    1|          0|
+    |contexts_controller_primed_1                                             |    1|   0|    1|          0|
+    |contexts_controller_qualified_0                                          |    1|   0|    1|          0|
+    |contexts_controller_qualified_1                                          |    1|   0|    1|          0|
+    |contexts_controller_velocity_den_0                                       |   32|   0|   32|          0|
+    |contexts_controller_velocity_den_1                                       |   32|   0|   32|          0|
+    |contexts_controller_velocity_generation_0                                |   32|   0|   32|          0|
+    |contexts_controller_velocity_generation_1                                |   32|   0|   32|          0|
+    |contexts_controller_velocity_have_edge_0                                 |    1|   0|    1|          0|
+    |contexts_controller_velocity_have_edge_1                                 |    1|   0|    1|          0|
+    |contexts_controller_velocity_initialized_0                               |    1|   0|    1|          0|
+    |contexts_controller_velocity_initialized_1                               |    1|   0|    1|          0|
+    |contexts_controller_velocity_num_0                                       |   32|   0|   32|          0|
+    |contexts_controller_velocity_num_1                                       |   32|   0|   32|          0|
+    |contexts_controller_velocity_previous_count_0                            |   64|   0|   64|          0|
+    |contexts_controller_velocity_previous_count_1                            |   64|   0|   64|          0|
+    |contexts_controller_velocity_previous_direction_epoch_0                  |   32|   0|   32|          0|
+    |contexts_controller_velocity_previous_direction_epoch_1                  |   32|   0|   32|          0|
+    |contexts_controller_velocity_previous_invalid_transitions_0              |   32|   0|   32|          0|
+    |contexts_controller_velocity_previous_invalid_transitions_1              |   32|   0|   32|          0|
+    |contexts_controller_velocity_previous_last_edge_0                        |   64|   0|   64|          0|
+    |contexts_controller_velocity_previous_last_edge_1                        |   64|   0|   64|          0|
+    |contexts_controller_velocity_previous_negative_0                         |    1|   0|    1|          0|
+    |contexts_controller_velocity_previous_negative_1                         |    1|   0|    1|          0|
+    |contexts_controller_velocity_previous_now_0                              |   64|   0|   64|          0|
+    |contexts_controller_velocity_previous_now_1                              |   64|   0|   64|          0|
+    |contexts_controller_velocity_result_age_0                                |   64|   0|   64|          0|
+    |contexts_controller_velocity_result_age_1                                |   64|   0|   64|          0|
+    |contexts_controller_velocity_result_averaged_0                           |    1|   0|    1|          0|
+    |contexts_controller_velocity_result_averaged_1                           |    1|   0|    1|          0|
+    |contexts_controller_velocity_result_fault_0                              |   32|   0|   32|          0|
+    |contexts_controller_velocity_result_fault_1                              |   32|   0|   32|          0|
+    |contexts_controller_velocity_result_mrpm_0                               |   32|   0|   32|          0|
+    |contexts_controller_velocity_result_mrpm_1                               |   32|   0|   32|          0|
+    |contexts_controller_velocity_result_timed_out_0                          |    1|   0|    1|          0|
+    |contexts_controller_velocity_result_timed_out_1                          |    1|   0|    1|          0|
+    |contexts_controller_velocity_result_valid_0                              |    1|   0|    1|          0|
+    |contexts_controller_velocity_result_valid_1                              |    1|   0|    1|          0|
+    |contexts_controller_velocity_started_0                                   |   64|   0|   64|          0|
+    |contexts_controller_velocity_started_1                                   |   64|   0|   64|          0|
+    |contexts_controller_velocity_timeout_0                                   |   32|   0|   32|          0|
+    |contexts_controller_velocity_timeout_1                                   |   32|   0|   32|          0|
+    |contexts_faults_0                                                        |   32|   0|   32|          0|
+    |contexts_faults_1                                                        |   32|   0|   32|          0|
+    |contexts_last_acquiring_0                                                |    1|   0|    1|          0|
+    |contexts_last_acquiring_1                                                |    1|   0|    1|          0|
+    |contexts_last_faults_0                                                   |   32|   0|   32|          0|
+    |contexts_last_faults_1                                                   |   32|   0|   32|          0|
+    |contexts_last_motion_accepted_0                                          |    1|   0|    1|          0|
+    |contexts_last_motion_accepted_1                                          |    1|   0|    1|          0|
+    |contexts_last_motion_activation_0                                        |   64|   0|   64|          0|
+    |contexts_last_motion_activation_1                                        |   64|   0|   64|          0|
+    |contexts_last_motion_busy_0                                              |    1|   0|    1|          0|
+    |contexts_last_motion_busy_1                                              |    1|   0|    1|          0|
+    |contexts_last_motion_completion_valid_0                                  |    1|   0|    1|          0|
+    |contexts_last_motion_completion_valid_1                                  |    1|   0|    1|          0|
+    |contexts_last_motion_detail_0                                            |   32|   0|   32|          0|
+    |contexts_last_motion_detail_1                                            |   32|   0|   32|          0|
+    |contexts_last_motion_duty_q16_0                                          |   32|   0|   32|          0|
+    |contexts_last_motion_duty_q16_1                                          |   32|   0|   32|          0|
+    |contexts_last_motion_epoch_0                                             |   32|   0|   32|          0|
+    |contexts_last_motion_epoch_1                                             |   32|   0|   32|          0|
+    |contexts_last_motion_faults_0                                            |   32|   0|   32|          0|
+    |contexts_last_motion_faults_1                                            |   32|   0|   32|          0|
+    |contexts_last_motion_outcome_0                                           |   32|   0|   32|          0|
+    |contexts_last_motion_outcome_1                                           |   32|   0|   32|          0|
+    |contexts_last_motion_ramp_mrpm_0                                         |   32|   0|   32|          0|
+    |contexts_last_motion_ramp_mrpm_1                                         |   32|   0|   32|          0|
+    |contexts_last_motion_ready_0                                             |    1|   0|    1|          0|
+    |contexts_last_motion_ready_1                                             |    1|   0|    1|          0|
+    |contexts_last_motion_sequence_0                                          |   32|   0|   32|          0|
+    |contexts_last_motion_sequence_1                                          |   32|   0|   32|          0|
+    |contexts_last_motion_terminal_0                                          |   64|   0|   64|          0|
+    |contexts_last_motion_terminal_1                                          |   64|   0|   64|          0|
+    |contexts_last_velocity_age_0                                             |   64|   0|   64|          0|
+    |contexts_last_velocity_age_1                                             |   64|   0|   64|          0|
+    |contexts_last_velocity_averaged_0                                        |    1|   0|    1|          0|
+    |contexts_last_velocity_averaged_1                                        |    1|   0|    1|          0|
+    |contexts_last_velocity_fault_0                                           |   32|   0|   32|          0|
+    |contexts_last_velocity_fault_1                                           |   32|   0|   32|          0|
+    |contexts_last_velocity_mrpm_0                                            |   32|   0|   32|          0|
+    |contexts_last_velocity_mrpm_1                                            |   32|   0|   32|          0|
+    |contexts_last_velocity_timed_out_0                                       |    1|   0|    1|          0|
+    |contexts_last_velocity_timed_out_1                                       |    1|   0|    1|          0|
+    |contexts_last_velocity_valid_0                                           |    1|   0|    1|          0|
+    |contexts_last_velocity_valid_1                                           |    1|   0|    1|          0|
+    |contexts_last_warming_up_0                                               |    1|   0|    1|          0|
+    |contexts_last_warming_up_1                                               |    1|   0|    1|          0|
+    |contexts_ring_activation_0                                               |   64|   0|   64|          0|
+    |contexts_ring_activation_1                                               |   64|   0|   64|          0|
+    |contexts_ring_active_0_addr_reg_8241                                     |    1|   0|    1|          0|
+    |contexts_ring_active_10_addr_reg_8291                                    |    1|   0|    1|          0|
+    |contexts_ring_active_11_addr_reg_8296                                    |    1|   0|    1|          0|
+    |contexts_ring_active_12_addr_reg_8301                                    |    1|   0|    1|          0|
+    |contexts_ring_active_13_addr_reg_8306                                    |    1|   0|    1|          0|
+    |contexts_ring_active_14_addr_reg_8311                                    |    1|   0|    1|          0|
+    |contexts_ring_active_15_addr_reg_8316                                    |    1|   0|    1|          0|
+    |contexts_ring_active_1_addr_reg_8246                                     |    1|   0|    1|          0|
+    |contexts_ring_active_2_addr_reg_8251                                     |    1|   0|    1|          0|
+    |contexts_ring_active_3_addr_reg_8256                                     |    1|   0|    1|          0|
+    |contexts_ring_active_4_addr_reg_8261                                     |    1|   0|    1|          0|
+    |contexts_ring_active_5_addr_reg_8266                                     |    1|   0|    1|          0|
+    |contexts_ring_active_6_addr_reg_8271                                     |    1|   0|    1|          0|
+    |contexts_ring_active_7_addr_reg_8276                                     |    1|   0|    1|          0|
+    |contexts_ring_active_8_addr_reg_8281                                     |    1|   0|    1|          0|
+    |contexts_ring_active_9_addr_reg_8286                                     |    1|   0|    1|          0|
+    |contexts_ring_admission_0                                                |    1|   0|    1|          0|
+    |contexts_ring_admission_1                                                |    1|   0|    1|          0|
+    |contexts_ring_busy_0                                                     |    1|   0|    1|          0|
+    |contexts_ring_busy_1                                                     |    1|   0|    1|          0|
+    |contexts_ring_cancellation_active_sequence_0                             |   32|   0|   32|          0|
+    |contexts_ring_cancellation_active_sequence_1                             |   32|   0|   32|          0|
+    |contexts_ring_cancellation_active_valid_0                                |    1|   0|    1|          0|
+    |contexts_ring_cancellation_active_valid_1                                |    1|   0|    1|          0|
+    |contexts_ring_cancellation_cause_0                                       |   32|   0|   32|          0|
+    |contexts_ring_cancellation_cause_1                                       |   32|   0|   32|          0|
+    |contexts_ring_cancellation_epoch_0                                       |   32|   0|   32|          0|
+    |contexts_ring_cancellation_epoch_1                                       |   32|   0|   32|          0|
+    |contexts_ring_cancellation_pending_begin_0                               |   32|   0|   32|          0|
+    |contexts_ring_cancellation_pending_begin_1                               |   32|   0|   32|          0|
+    |contexts_ring_cancellation_pending_end_0                                 |   32|   0|   32|          0|
+    |contexts_ring_cancellation_pending_end_1                                 |   32|   0|   32|          0|
+    |contexts_ring_cancellation_timestamp_0                                   |   64|   0|   64|          0|
+    |contexts_ring_cancellation_timestamp_1                                   |   64|   0|   64|          0|
+    |contexts_ring_cancellation_valid_0                                       |    1|   0|    1|          0|
+    |contexts_ring_cancellation_valid_1                                       |    1|   0|    1|          0|
+    |contexts_ring_completion_consumer_0                                      |   32|   0|   32|          0|
+    |contexts_ring_completion_consumer_1                                      |   32|   0|   32|          0|
+    |contexts_ring_completion_producer_0                                      |   32|   0|   32|          0|
+    |contexts_ring_completion_producer_1                                      |   32|   0|   32|          0|
+    |contexts_ring_completions_0_addr_reg_7801                                |    1|   0|    1|          0|
+    |contexts_ring_completions_10_addr_reg_7991                               |    1|   0|    1|          0|
+    |contexts_ring_completions_11_addr_reg_7996                               |    1|   0|    1|          0|
+    |contexts_ring_completions_12_addr_reg_8031                               |    1|   0|    1|          0|
+    |contexts_ring_completions_13_addr_reg_8036                               |    1|   0|    1|          0|
+    |contexts_ring_completions_14_addr_reg_8151                               |    1|   0|    1|          0|
+    |contexts_ring_completions_15_addr_reg_8156                               |    1|   0|    1|          0|
+    |contexts_ring_completions_16_addr_reg_8161                               |    1|   0|    1|          0|
+    |contexts_ring_completions_17_addr_reg_8166                               |    1|   0|    1|          0|
+    |contexts_ring_completions_18_addr_reg_8171                               |    1|   0|    1|          0|
+    |contexts_ring_completions_19_addr_reg_8176                               |    1|   0|    1|          0|
+    |contexts_ring_completions_1_addr_reg_7806                                |    1|   0|    1|          0|
+    |contexts_ring_completions_20_addr_reg_8181                               |    1|   0|    1|          0|
+    |contexts_ring_completions_21_addr_reg_8186                               |    1|   0|    1|          0|
+    |contexts_ring_completions_22_addr_reg_8191                               |    1|   0|    1|          0|
+    |contexts_ring_completions_23_addr_reg_8196                               |    1|   0|    1|          0|
+    |contexts_ring_completions_24_addr_reg_8201                               |    1|   0|    1|          0|
+    |contexts_ring_completions_25_addr_reg_8206                               |    1|   0|    1|          0|
+    |contexts_ring_completions_26_addr_reg_8211                               |    1|   0|    1|          0|
+    |contexts_ring_completions_27_addr_reg_8216                               |    1|   0|    1|          0|
+    |contexts_ring_completions_28_addr_reg_8221                               |    1|   0|    1|          0|
+    |contexts_ring_completions_29_addr_reg_8226                               |    1|   0|    1|          0|
+    |contexts_ring_completions_2_addr_reg_7831                                |    1|   0|    1|          0|
+    |contexts_ring_completions_30_addr_reg_8231                               |    1|   0|    1|          0|
+    |contexts_ring_completions_31_addr_reg_8236                               |    1|   0|    1|          0|
+    |contexts_ring_completions_3_addr_reg_7836                                |    1|   0|    1|          0|
+    |contexts_ring_completions_4_addr_reg_7871                                |    1|   0|    1|          0|
+    |contexts_ring_completions_5_addr_reg_7876                                |    1|   0|    1|          0|
+    |contexts_ring_completions_6_addr_reg_7911                                |    1|   0|    1|          0|
+    |contexts_ring_completions_7_addr_reg_7916                                |    1|   0|    1|          0|
+    |contexts_ring_completions_8_addr_reg_7951                                |    1|   0|    1|          0|
+    |contexts_ring_completions_9_addr_reg_7956                                |    1|   0|    1|          0|
+    |contexts_ring_consumer_0                                                 |   32|   0|   32|          0|
+    |contexts_ring_consumer_1                                                 |   32|   0|   32|          0|
+    |contexts_ring_epoch_0                                                    |   32|   0|   32|          0|
+    |contexts_ring_epoch_1                                                    |   32|   0|   32|          0|
+    |contexts_ring_generation_0                                               |   32|   0|   32|          0|
+    |contexts_ring_generation_1                                               |   32|   0|   32|          0|
+    |contexts_ring_producer_0                                                 |   32|   0|   32|          0|
+    |contexts_ring_producer_1                                                 |   32|   0|   32|          0|
+    |contexts_ring_slots_0_0_addr_reg_7471                                    |    1|   0|    1|          0|
+    |contexts_ring_slots_0_10_addr_reg_7571                                   |    1|   0|    1|          0|
+    |contexts_ring_slots_0_11_addr_reg_7576                                   |    1|   0|    1|          0|
+    |contexts_ring_slots_0_12_addr_reg_7591                                   |    1|   0|    1|          0|
+    |contexts_ring_slots_0_13_addr_reg_7596                                   |    1|   0|    1|          0|
+    |contexts_ring_slots_0_14_addr_reg_7611                                   |    1|   0|    1|          0|
+    |contexts_ring_slots_0_15_addr_reg_7616                                   |    1|   0|    1|          0|
+    |contexts_ring_slots_0_1_addr_reg_7476                                    |    1|   0|    1|          0|
+    |contexts_ring_slots_0_2_addr_reg_7491                                    |    1|   0|    1|          0|
+    |contexts_ring_slots_0_3_addr_reg_7496                                    |    1|   0|    1|          0|
+    |contexts_ring_slots_0_4_addr_reg_7511                                    |    1|   0|    1|          0|
+    |contexts_ring_slots_0_5_addr_reg_7516                                    |    1|   0|    1|          0|
+    |contexts_ring_slots_0_6_addr_reg_7531                                    |    1|   0|    1|          0|
+    |contexts_ring_slots_0_7_addr_reg_7536                                    |    1|   0|    1|          0|
+    |contexts_ring_slots_0_8_addr_reg_7551                                    |    1|   0|    1|          0|
+    |contexts_ring_slots_0_9_addr_reg_7556                                    |    1|   0|    1|          0|
+    |contexts_ring_slots_1_0_addr_reg_7631                                    |    1|   0|    1|          0|
+    |contexts_ring_slots_1_10_addr_reg_7731                                   |    1|   0|    1|          0|
+    |contexts_ring_slots_1_11_addr_reg_7736                                   |    1|   0|    1|          0|
+    |contexts_ring_slots_1_12_addr_reg_7751                                   |    1|   0|    1|          0|
+    |contexts_ring_slots_1_13_addr_reg_7756                                   |    1|   0|    1|          0|
+    |contexts_ring_slots_1_14_addr_reg_7771                                   |    1|   0|    1|          0|
+    |contexts_ring_slots_1_15_addr_reg_7776                                   |    1|   0|    1|          0|
+    |contexts_ring_slots_1_1_addr_reg_7636                                    |    1|   0|    1|          0|
+    |contexts_ring_slots_1_2_addr_reg_7651                                    |    1|   0|    1|          0|
+    |contexts_ring_slots_1_3_addr_reg_7656                                    |    1|   0|    1|          0|
+    |contexts_ring_slots_1_4_addr_reg_7671                                    |    1|   0|    1|          0|
+    |contexts_ring_slots_1_5_addr_reg_7676                                    |    1|   0|    1|          0|
+    |contexts_ring_slots_1_6_addr_reg_7691                                    |    1|   0|    1|          0|
+    |contexts_ring_slots_1_7_addr_reg_7696                                    |    1|   0|    1|          0|
+    |contexts_ring_slots_1_8_addr_reg_7711                                    |    1|   0|    1|          0|
+    |contexts_ring_slots_1_9_addr_reg_7716                                    |    1|   0|    1|          0|
+    |contexts_ring_slots_2_0_addr_reg_7791                                    |    1|   0|    1|          0|
+    |contexts_ring_slots_2_10_addr_reg_7981                                   |    1|   0|    1|          0|
+    |contexts_ring_slots_2_11_addr_reg_7986                                   |    1|   0|    1|          0|
+    |contexts_ring_slots_2_12_addr_reg_8021                                   |    1|   0|    1|          0|
+    |contexts_ring_slots_2_13_addr_reg_8026                                   |    1|   0|    1|          0|
+    |contexts_ring_slots_2_14_addr_reg_8061                                   |    1|   0|    1|          0|
+    |contexts_ring_slots_2_15_addr_reg_8066                                   |    1|   0|    1|          0|
+    |contexts_ring_slots_2_1_addr_reg_7796                                    |    1|   0|    1|          0|
+    |contexts_ring_slots_2_2_addr_reg_7821                                    |    1|   0|    1|          0|
+    |contexts_ring_slots_2_3_addr_reg_7826                                    |    1|   0|    1|          0|
+    |contexts_ring_slots_2_4_addr_reg_7861                                    |    1|   0|    1|          0|
+    |contexts_ring_slots_2_5_addr_reg_7866                                    |    1|   0|    1|          0|
+    |contexts_ring_slots_2_6_addr_reg_7901                                    |    1|   0|    1|          0|
+    |contexts_ring_slots_2_7_addr_reg_7906                                    |    1|   0|    1|          0|
+    |contexts_ring_slots_2_8_addr_reg_7941                                    |    1|   0|    1|          0|
+    |contexts_ring_slots_2_9_addr_reg_7946                                    |    1|   0|    1|          0|
+    |contexts_ring_slots_3_0_addr_reg_8071                                    |    1|   0|    1|          0|
+    |contexts_ring_slots_3_10_addr_reg_8121                                   |    1|   0|    1|          0|
+    |contexts_ring_slots_3_11_addr_reg_8126                                   |    1|   0|    1|          0|
+    |contexts_ring_slots_3_12_addr_reg_8131                                   |    1|   0|    1|          0|
+    |contexts_ring_slots_3_13_addr_reg_8136                                   |    1|   0|    1|          0|
+    |contexts_ring_slots_3_14_addr_reg_8141                                   |    1|   0|    1|          0|
+    |contexts_ring_slots_3_15_addr_reg_8146                                   |    1|   0|    1|          0|
+    |contexts_ring_slots_3_1_addr_reg_8076                                    |    1|   0|    1|          0|
+    |contexts_ring_slots_3_2_addr_reg_8081                                    |    1|   0|    1|          0|
+    |contexts_ring_slots_3_3_addr_reg_8086                                    |    1|   0|    1|          0|
+    |contexts_ring_slots_3_4_addr_reg_8091                                    |    1|   0|    1|          0|
+    |contexts_ring_slots_3_5_addr_reg_8096                                    |    1|   0|    1|          0|
+    |contexts_ring_slots_3_6_addr_reg_8101                                    |    1|   0|    1|          0|
+    |contexts_ring_slots_3_7_addr_reg_8106                                    |    1|   0|    1|          0|
+    |contexts_ring_slots_3_8_addr_reg_8111                                    |    1|   0|    1|          0|
+    |contexts_ring_slots_3_9_addr_reg_8116                                    |    1|   0|    1|          0|
+    |contexts_stop_pending_0                                                  |    1|   0|    1|          0|
+    |contexts_stop_pending_1                                                  |    1|   0|    1|          0|
+    |contexts_tick_authorized_0                                               |    1|   0|    1|          0|
+    |contexts_tick_authorized_1                                               |    1|   0|    1|          0|
+    |count_read_reg_8971                                                      |   64|   0|   64|          0|
+    |direction_epoch_read_reg_8961                                            |   32|   0|   32|          0|
+    |dispatcher_ack_1_reg_9707                                                |    1|   0|    1|          0|
+    |dispatcher_ack_s_reg_9491                                                |    1|   0|    1|          0|
+    |dispatcher_cancel_pending_1_reg_9845                                     |    1|   0|    1|          0|
+    |dispatcher_cancel_pending_s_reg_9496                                     |    1|   0|    1|          0|
+    |dispatcher_controller_acquiring_1_reg_9923                               |    1|   0|    1|          0|
+    |dispatcher_controller_acquiring_s_reg_9356                               |    1|   0|    1|          0|
+    |dispatcher_controller_acquisition_start_1_reg_9929                       |   64|   0|   64|          0|
+    |dispatcher_controller_acquisition_start_s_reg_9366                       |   64|   0|   64|          0|
+    |dispatcher_controller_faults_1_reg_9935                                  |   32|   0|   32|          0|
+    |dispatcher_controller_faults_s_reg_9371                                  |   32|   0|   32|          0|
+    |dispatcher_controller_invalid_1_reg_9563                                 |   32|   0|   32|          0|
+    |dispatcher_controller_invalid_s_reg_9376                                 |   32|   0|   32|          0|
+    |dispatcher_controller_motion_generation_1_reg_9983                       |   32|   0|   32|          0|
+    |dispatcher_controller_motion_generation_s_reg_9251                       |   32|   0|   32|          0|
+    |dispatcher_controller_motion_integral_nano_1_reg_9533                    |   64|   0|   64|          0|
+    |dispatcher_controller_motion_integral_nano_s_reg_9216                    |   64|   0|   64|          0|
+    |dispatcher_controller_motion_motion_mode_1_reg_9539                      |    8|   0|    8|          0|
+    |dispatcher_controller_motion_motion_mode_s_reg_9206                      |    8|   0|    8|          0|
+    |dispatcher_controller_motion_opcode_1_reg_10109                          |    8|   0|    8|          0|
+    |dispatcher_controller_motion_opcode_s_reg_9191                           |    8|   0|    8|          0|
+    |dispatcher_controller_motion_previous_tick_1_reg_9965                    |   64|   0|   64|          0|
+    |dispatcher_controller_motion_previous_tick_s_reg_9226                    |   64|   0|   64|          0|
+    |dispatcher_controller_motion_ramp_remainder_1_reg_9527                   |   16|   0|   16|          0|
+    |dispatcher_controller_motion_ramp_remainder_s_reg_9231                   |   16|   0|   16|          0|
+    |dispatcher_controller_motion_result_accepted_1_reg_9641                  |    1|   0|    1|          0|
+    |dispatcher_controller_motion_result_accepted_reg_9151                    |    1|   0|    1|          0|
+    |dispatcher_controller_motion_result_activation_1_reg_9623                |   64|   0|   64|          0|
+    |dispatcher_controller_motion_result_activation_reg_9181                  |   64|   0|   64|          0|
+    |dispatcher_controller_motion_result_busy_1_reg_10079                     |    1|   0|    1|          0|
+    |dispatcher_controller_motion_result_busy_reg_9141                        |    1|   0|    1|          0|
+    |dispatcher_controller_motion_result_completion_valid_1_reg_10085         |    1|   0|    1|          0|
+    |dispatcher_controller_motion_result_completion_valid_reg_9146            |    1|   0|    1|          0|
+    |dispatcher_controller_motion_result_detail_1_reg_10097                   |   32|   0|   32|          0|
+    |dispatcher_controller_motion_result_detail_reg_9171                      |   32|   0|   32|          0|
+    |dispatcher_controller_motion_result_duty_q16_1_reg_9557                  |   32|   0|   32|          0|
+    |dispatcher_controller_motion_result_duty_q16_reg_9126                    |   32|   0|   32|          0|
+    |dispatcher_controller_motion_result_epoch_1_reg_9629                     |   32|   0|   32|          0|
+    |dispatcher_controller_motion_result_epoch_reg_9161                       |   32|   0|   32|          0|
+    |dispatcher_controller_motion_result_faults_1_reg_9545                    |   32|   0|   32|          0|
+    |dispatcher_controller_motion_result_faults_reg_9176                      |   32|   0|   32|          0|
+    |dispatcher_controller_motion_result_outcome_1_reg_10091                  |   32|   0|   32|          0|
+    |dispatcher_controller_motion_result_outcome_reg_9166                     |   32|   0|   32|          0|
+    |dispatcher_controller_motion_result_ramp_mrpm_1_reg_9551                 |   32|   0|   32|          0|
+    |dispatcher_controller_motion_result_ramp_mrpm_reg_9131                   |   32|   0|   32|          0|
+    |dispatcher_controller_motion_result_ready_1_reg_9647                     |    1|   0|    1|          0|
+    |dispatcher_controller_motion_result_ready_reg_9136                       |    1|   0|    1|          0|
+    |dispatcher_controller_motion_result_sequence_1_reg_9635                  |   32|   0|   32|          0|
+    |dispatcher_controller_motion_result_sequence_reg_9156                    |   32|   0|   32|          0|
+    |dispatcher_controller_motion_result_terminal_1_reg_10103                 |   64|   0|   64|          0|
+    |dispatcher_controller_motion_result_terminal_reg_9186                    |   64|   0|   64|          0|
+    |dispatcher_controller_motion_session_1_reg_9977                          |   32|   0|   32|          0|
+    |dispatcher_controller_motion_session_s_reg_9246                          |   32|   0|   32|          0|
+    |dispatcher_controller_motion_settling_1_reg_9617                         |   32|   0|   32|          0|
+    |dispatcher_controller_motion_settling_s_reg_9196                         |   32|   0|   32|          0|
+    |dispatcher_controller_motion_started_1_reg_9599                          |   64|   0|   64|          0|
+    |dispatcher_controller_motion_started_s_reg_9221                          |   64|   0|   64|          0|
+    |dispatcher_controller_motion_stopping_1_reg_9521                         |    1|   0|    1|          0|
+    |dispatcher_controller_motion_stopping_s_reg_9241                         |    1|   0|    1|          0|
+    |dispatcher_controller_motion_target_mrpm_1_reg_9605                      |   32|   0|   32|          0|
+    |dispatcher_controller_motion_target_mrpm_s_reg_9211                      |   32|   0|   32|          0|
+    |dispatcher_controller_motion_tick_primed_1_reg_9971                      |    1|   0|    1|          0|
+    |dispatcher_controller_motion_tick_primed_s_reg_9236                      |    1|   0|    1|          0|
+    |dispatcher_controller_motion_timeout_us_1_reg_9611                       |   32|   0|   32|          0|
+    |dispatcher_controller_motion_timeout_us_s_reg_9201                       |   32|   0|   32|          0|
+    |dispatcher_controller_prepared_1_reg_9953                                |    1|   0|    1|          0|
+    |dispatcher_controller_prepared_acquisition_valid_1_reg_9959              |    1|   0|    1|          0|
+    |dispatcher_controller_prepared_acquisition_valid_s_reg_9121              |    1|   0|    1|          0|
+    |dispatcher_controller_prepared_motion_integral_limit_1_reg_9947          |   64|   0|   64|          0|
+    |dispatcher_controller_prepared_motion_integral_limit_reg_9111            |   64|   0|   64|          0|
+    |dispatcher_controller_prepared_motion_valid_1_reg_9941                   |    1|   0|    1|          0|
+    |dispatcher_controller_prepared_motion_valid_reg_9106                     |    1|   0|    1|          0|
+    |dispatcher_controller_prepared_s_reg_9116                                |    1|   0|    1|          0|
+    |dispatcher_controller_primed_1_reg_9569                                  |    1|   0|    1|          0|
+    |dispatcher_controller_primed_s_reg_9361                                  |    1|   0|    1|          0|
+    |dispatcher_controller_qualified_1_reg_9917                               |    1|   0|    1|          0|
+    |dispatcher_controller_qualified_s_reg_9351                               |    1|   0|    1|          0|
+    |dispatcher_controller_velocity_den_1_reg_10067                           |   32|   0|   32|          0|
+    |dispatcher_controller_velocity_den_s_reg_9341                            |   32|   0|   32|          0|
+    |dispatcher_controller_velocity_generation_1_reg_10055                    |   32|   0|   32|          0|
+    |dispatcher_controller_velocity_generation_s_reg_9331                     |   32|   0|   32|          0|
+    |dispatcher_controller_velocity_have_edge_1_reg_10037                     |    1|   0|    1|          0|
+    |dispatcher_controller_velocity_have_edge_s_reg_9316                      |    1|   0|    1|          0|
+    |dispatcher_controller_velocity_initialized_1_reg_10031                   |    1|   0|    1|          0|
+    |dispatcher_controller_velocity_initialized_s_reg_9311                    |    1|   0|    1|          0|
+    |dispatcher_controller_velocity_num_1_reg_10061                           |   32|   0|   32|          0|
+    |dispatcher_controller_velocity_num_s_reg_9336                            |   32|   0|   32|          0|
+    |dispatcher_controller_velocity_previous_count_1_reg_9989                 |   64|   0|   64|          0|
+    |dispatcher_controller_velocity_previous_count_reg_9256                   |   64|   0|   64|          0|
+    |dispatcher_controller_velocity_previous_direction_epoch_1_reg_10001      |   32|   0|   32|          0|
+    |dispatcher_controller_velocity_previous_direction_epoch_reg_9266         |   32|   0|   32|          0|
+    |dispatcher_controller_velocity_previous_invalid_transitions_1_reg_10007  |   32|   0|   32|          0|
+    |dispatcher_controller_velocity_previous_invalid_transitions_reg_9271     |   32|   0|   32|          0|
+    |dispatcher_controller_velocity_previous_last_edge_1_reg_9995             |   64|   0|   64|          0|
+    |dispatcher_controller_velocity_previous_last_edge_reg_9261               |   64|   0|   64|          0|
+    |dispatcher_controller_velocity_previous_negative_1_reg_10013             |    1|   0|    1|          0|
+    |dispatcher_controller_velocity_previous_negative_reg_9276                |    1|   0|    1|          0|
+    |dispatcher_controller_velocity_previous_now_1_reg_10049                  |   64|   0|   64|          0|
+    |dispatcher_controller_velocity_previous_now_s_reg_9326                   |   64|   0|   64|          0|
+    |dispatcher_controller_velocity_result_age_1_reg_10019                    |   64|   0|   64|          0|
+    |dispatcher_controller_velocity_result_age_reg_9286                       |   64|   0|   64|          0|
+    |dispatcher_controller_velocity_result_averaged_1_reg_9581                |    1|   0|    1|          0|
+    |dispatcher_controller_velocity_result_averaged_reg_9301                  |    1|   0|    1|          0|
+    |dispatcher_controller_velocity_result_fault_1_reg_9575                   |   32|   0|   32|          0|
+    |dispatcher_controller_velocity_result_fault_reg_9306                     |   32|   0|   32|          0|
+    |dispatcher_controller_velocity_result_mrpm_1_reg_9593                    |   32|   0|   32|          0|
+    |dispatcher_controller_velocity_result_mrpm_reg_9281                      |   32|   0|   32|          0|
+    |dispatcher_controller_velocity_result_timed_out_1_reg_10025              |    1|   0|    1|          0|
+    |dispatcher_controller_velocity_result_timed_out_reg_9296                 |    1|   0|    1|          0|
+    |dispatcher_controller_velocity_result_valid_1_reg_9587                   |    1|   0|    1|          0|
+    |dispatcher_controller_velocity_result_valid_reg_9291                     |    1|   0|    1|          0|
+    |dispatcher_controller_velocity_started_1_reg_10043                       |   64|   0|   64|          0|
+    |dispatcher_controller_velocity_started_s_reg_9321                        |   64|   0|   64|          0|
+    |dispatcher_controller_velocity_timeout_1_reg_10073                       |   32|   0|   32|          0|
+    |dispatcher_controller_velocity_timeout_s_reg_9346                        |   32|   0|   32|          0|
+    |dispatcher_faults_1_reg_9857                                             |   32|   0|   32|          0|
+    |dispatcher_faults_s_reg_9511                                             |   32|   0|   32|          0|
+    |dispatcher_last_acquiring_1_reg_9833                                     |    1|   0|    1|          0|
+    |dispatcher_last_acquiring_reg_9481                                       |    1|   0|    1|          0|
+    |dispatcher_last_faults_1_reg_9827                                        |   32|   0|   32|          0|
+    |dispatcher_last_faults_reg_9476                                          |   32|   0|   32|          0|
+    |dispatcher_last_motion_accepted_1_reg_9743                               |    1|   0|    1|          0|
+    |dispatcher_last_motion_accepted_reg_9406                                 |    1|   0|    1|          0|
+    |dispatcher_last_motion_activation_1_reg_9779                             |   64|   0|   64|          0|
+    |dispatcher_last_motion_activation_reg_9436                               |   64|   0|   64|          0|
+    |dispatcher_last_motion_busy_1_reg_9731                                   |    1|   0|    1|          0|
+    |dispatcher_last_motion_busy_reg_9396                                     |    1|   0|    1|          0|
+    |dispatcher_last_motion_completion_valid_1_reg_9737                       |    1|   0|    1|          0|
+    |dispatcher_last_motion_completion_valid_reg_9401                         |    1|   0|    1|          0|
+    |dispatcher_last_motion_detail_1_reg_9767                                 |   32|   0|   32|          0|
+    |dispatcher_last_motion_detail_reg_9426                                   |   32|   0|   32|          0|
+    |dispatcher_last_motion_duty_q16_1_reg_9713                               |   32|   0|   32|          0|
+    |dispatcher_last_motion_duty_q16_reg_9381                                 |   32|   0|   32|          0|
+    |dispatcher_last_motion_epoch_1_reg_9755                                  |   32|   0|   32|          0|
+    |dispatcher_last_motion_epoch_reg_9416                                    |   32|   0|   32|          0|
+    |dispatcher_last_motion_faults_1_reg_9773                                 |   32|   0|   32|          0|
+    |dispatcher_last_motion_faults_reg_9431                                   |   32|   0|   32|          0|
+    |dispatcher_last_motion_outcome_1_reg_9761                                |   32|   0|   32|          0|
+    |dispatcher_last_motion_outcome_reg_9421                                  |   32|   0|   32|          0|
+    |dispatcher_last_motion_ramp_mrpm_1_reg_9719                              |   32|   0|   32|          0|
+    |dispatcher_last_motion_ramp_mrpm_reg_9386                                |   32|   0|   32|          0|
+    |dispatcher_last_motion_ready_1_reg_9725                                  |    1|   0|    1|          0|
+    |dispatcher_last_motion_ready_reg_9391                                    |    1|   0|    1|          0|
+    |dispatcher_last_motion_sequence_1_reg_9749                               |   32|   0|   32|          0|
+    |dispatcher_last_motion_sequence_reg_9411                                 |   32|   0|   32|          0|
+    |dispatcher_last_motion_terminal_1_reg_9785                               |   64|   0|   64|          0|
+    |dispatcher_last_motion_terminal_reg_9441                                 |   64|   0|   64|          0|
+    |dispatcher_last_velocity_age_1_reg_9797                                  |   64|   0|   64|          0|
+    |dispatcher_last_velocity_age_reg_9451                                    |   64|   0|   64|          0|
+    |dispatcher_last_velocity_averaged_1_reg_9815                             |    1|   0|    1|          0|
+    |dispatcher_last_velocity_averaged_reg_9466                               |    1|   0|    1|          0|
+    |dispatcher_last_velocity_fault_1_reg_9821                                |   32|   0|   32|          0|
+    |dispatcher_last_velocity_fault_reg_9471                                  |   32|   0|   32|          0|
+    |dispatcher_last_velocity_mrpm_1_reg_9791                                 |   32|   0|   32|          0|
+    |dispatcher_last_velocity_mrpm_reg_9446                                   |   32|   0|   32|          0|
+    |dispatcher_last_velocity_timed_out_1_reg_9809                            |    1|   0|    1|          0|
+    |dispatcher_last_velocity_timed_out_reg_9461                              |    1|   0|    1|          0|
+    |dispatcher_last_velocity_valid_1_reg_9803                                |    1|   0|    1|          0|
+    |dispatcher_last_velocity_valid_reg_9456                                  |    1|   0|    1|          0|
+    |dispatcher_last_warming_up_1_reg_9839                                    |    1|   0|    1|          0|
+    |dispatcher_last_warming_up_reg_9486                                      |    1|   0|    1|          0|
+    |dispatcher_ring_activation_1_reg_9911                                    |   64|   0|   64|          0|
+    |dispatcher_ring_activation_s_reg_9091                                    |   64|   0|   64|          0|
+    |dispatcher_ring_admission_1_reg_9659                                     |    1|   0|    1|          0|
+    |dispatcher_ring_admission_s_reg_9096                                     |    1|   0|    1|          0|
+    |dispatcher_ring_busy_1_reg_9653                                          |    1|   0|    1|          0|
+    |dispatcher_ring_busy_s_reg_9101                                          |    1|   0|    1|          0|
+    |dispatcher_ring_cancellation_active_sequence_1_reg_9875                  |   32|   0|   32|          0|
+    |dispatcher_ring_cancellation_active_sequence_reg_9036                    |   32|   0|   32|          0|
+    |dispatcher_ring_cancellation_active_valid_1_reg_9863                     |    1|   0|    1|          0|
+    |dispatcher_ring_cancellation_active_valid_reg_9026                       |    1|   0|    1|          0|
+    |dispatcher_ring_cancellation_cause_1_reg_9893                            |   32|   0|   32|          0|
+    |dispatcher_ring_cancellation_cause_reg_9051                              |   32|   0|   32|          0|
+    |dispatcher_ring_cancellation_epoch_1_reg_9869                            |   32|   0|   32|          0|
+    |dispatcher_ring_cancellation_epoch_reg_9031                              |   32|   0|   32|          0|
+    |dispatcher_ring_cancellation_pending_begin_1_reg_9881                    |   32|   0|   32|          0|
+    |dispatcher_ring_cancellation_pending_begin_reg_9041                      |   32|   0|   32|          0|
+    |dispatcher_ring_cancellation_pending_end_1_reg_9887                      |   32|   0|   32|          0|
+    |dispatcher_ring_cancellation_pending_end_reg_9046                        |   32|   0|   32|          0|
+    |dispatcher_ring_cancellation_timestamp_1_reg_9899                        |   64|   0|   64|          0|
+    |dispatcher_ring_cancellation_timestamp_reg_9056                          |   64|   0|   64|          0|
+    |dispatcher_ring_cancellation_valid_1_reg_9695                            |    1|   0|    1|          0|
+    |dispatcher_ring_cancellation_valid_reg_9021                              |    1|   0|    1|          0|
+    |dispatcher_ring_completion_consumer_1_reg_9671                           |   32|   0|   32|          0|
+    |dispatcher_ring_completion_consumer_s_reg_9076                           |   32|   0|   32|          0|
+    |dispatcher_ring_completion_producer_1_reg_9677                           |   32|   0|   32|          0|
+    |dispatcher_ring_completion_producer_s_reg_9071                           |   32|   0|   32|          0|
+    |dispatcher_ring_consumer_1_reg_9683                                      |   32|   0|   32|          0|
+    |dispatcher_ring_consumer_s_reg_9066                                      |   32|   0|   32|          0|
+    |dispatcher_ring_epoch_1_reg_9665                                         |   32|   0|   32|          0|
+    |dispatcher_ring_epoch_s_reg_9081                                         |   32|   0|   32|          0|
+    |dispatcher_ring_generation_1_reg_9905                                    |   32|   0|   32|          0|
+    |dispatcher_ring_generation_s_reg_9086                                    |   32|   0|   32|          0|
+    |dispatcher_ring_producer_1_reg_9689                                      |   32|   0|   32|          0|
+    |dispatcher_ring_producer_s_reg_9061                                      |   32|   0|   32|          0|
+    |dispatcher_stop_pending_1_reg_9851                                       |    1|   0|    1|          0|
+    |dispatcher_stop_pending_s_reg_9501                                       |    1|   0|    1|          0|
+    |dispatcher_tick_authorized_1_reg_9701                                    |    1|   0|    1|          0|
+    |dispatcher_tick_authorized_s_reg_9506                                    |    1|   0|    1|          0|
+    |drained_read_reg_8981                                                    |    1|   0|    1|          0|
+    |grp_service_fu_4080_ap_start_reg                                         |    1|   0|    1|          0|
+    |invalid_transitions_read_reg_8956                                        |   32|   0|   32|          0|
+    |last_edge_read_reg_8966                                                  |   64|   0|   64|          0|
+    |motor_read_reg_7237                                                      |    1|   0|    1|          0|
+    |negative_read_reg_8951                                                   |    1|   0|    1|          0|
+    |now_read_reg_8976                                                        |   64|   0|   64|          0|
+    |reset_read_reg_9016                                                      |    1|   0|    1|          0|
+    |stop_read_reg_8991                                                       |    1|   0|    1|          0|
+    |tick_read_reg_9011                                                       |    1|   0|    1|          0|
+    |zext_ln170_reg_7340                                                      |    1|   0|   64|         63|
+    +-------------------------------------------------------------------------+-----+----+-----+-----------+
+    |Total                                                                    |11356|   0|11419|         63|
+    +-------------------------------------------------------------------------+-----+----+-----+-----------+
+
+
+
+================================================================
+== Interface
+================================================================
+* Summary: 
++--------------------------+-----+-----+------------+------------------------+--------------+
+|         RTL Ports        | Dir | Bits|  Protocol  |      Source Object     |    C Type    |
++--------------------------+-----+-----+------------+------------------------+--------------+
+|ap_clk                    |   in|    1|  ap_ctrl_hs|  dmotor_dispatcher_pair|  return value|
+|ap_rst                    |   in|    1|  ap_ctrl_hs|  dmotor_dispatcher_pair|  return value|
+|ap_start                  |   in|    1|  ap_ctrl_hs|  dmotor_dispatcher_pair|  return value|
+|ap_done                   |  out|    1|  ap_ctrl_hs|  dmotor_dispatcher_pair|  return value|
+|ap_idle                   |  out|    1|  ap_ctrl_hs|  dmotor_dispatcher_pair|  return value|
+|ap_ready                  |  out|    1|  ap_ctrl_hs|  dmotor_dispatcher_pair|  return value|
+|motor                     |   in|    1|     ap_none|                   motor|        scalar|
+|reset                     |   in|    1|     ap_none|                   reset|        scalar|
+|request_address0          |  out|    2|   ap_memory|                 request|         array|
+|request_ce0               |  out|    1|   ap_memory|                 request|         array|
+|request_q0                |   in|   32|   ap_memory|                 request|         array|
+|request_address1          |  out|    2|   ap_memory|                 request|         array|
+|request_ce1               |  out|    1|   ap_memory|                 request|         array|
+|request_q1                |   in|   32|   ap_memory|                 request|         array|
+|tick                      |   in|    1|     ap_none|                    tick|        scalar|
+|authorized                |   in|    1|     ap_none|              authorized|        scalar|
+|cancel_x                  |   in|    1|     ap_none|                  cancel|        scalar|
+|cause                     |   in|   32|     ap_none|                   cause|        scalar|
+|stop                      |   in|    1|     ap_none|                    stop|        scalar|
+|capture_fault             |   in|    1|     ap_none|           capture_fault|        scalar|
+|drained                   |   in|    1|     ap_none|                 drained|        scalar|
+|now                       |   in|   64|     ap_none|                     now|        scalar|
+|count                     |   in|   64|     ap_none|                   count|        scalar|
+|last_edge                 |   in|   64|     ap_none|               last_edge|        scalar|
+|direction_epoch           |   in|   32|     ap_none|         direction_epoch|        scalar|
+|invalid_transitions       |   in|   32|     ap_none|     invalid_transitions|        scalar|
+|negative                  |   in|    1|     ap_none|                negative|        scalar|
+|position                  |   in|   64|     ap_none|                position|        scalar|
+|configuration_r_address0  |  out|    5|   ap_memory|         configuration_r|         array|
+|configuration_r_ce0       |  out|    1|   ap_memory|         configuration_r|         array|
+|configuration_r_q0        |   in|   32|   ap_memory|         configuration_r|         array|
+|configuration_r_address1  |  out|    5|   ap_memory|         configuration_r|         array|
+|configuration_r_ce1       |  out|    1|   ap_memory|         configuration_r|         array|
+|configuration_r_q1        |   in|   32|   ap_memory|         configuration_r|         array|
+|reply_address0            |  out|    6|   ap_memory|                   reply|         array|
+|reply_ce0                 |  out|    1|   ap_memory|                   reply|         array|
+|reply_we0                 |  out|    1|   ap_memory|                   reply|         array|
+|reply_d0                  |  out|   32|   ap_memory|                   reply|         array|
+|reply_address1            |  out|    6|   ap_memory|                   reply|         array|
+|reply_ce1                 |  out|    1|   ap_memory|                   reply|         array|
+|reply_we1                 |  out|    1|   ap_memory|                   reply|         array|
+|reply_d1                  |  out|   32|   ap_memory|                   reply|         array|
++--------------------------+-----+-----+------------+------------------------+--------------+
+

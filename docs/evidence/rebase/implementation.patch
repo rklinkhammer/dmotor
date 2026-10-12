@@ -1,0 +1,379 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8f4894e..03b6c72 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -81,3 +81,6 @@ add_test(NAME dispatcher COMMAND dispatcher_test)
+ add_executable(position_error_test tests/position_error_test.cpp)
+ target_link_libraries(position_error_test PRIVATE dmotor)
+ add_test(NAME position_error COMMAND position_error_test)
++add_executable(rebase_test tests/rebase_test.cpp)
++target_link_libraries(rebase_test PRIVATE dmotor)
++add_test(NAME rebase COMMAND rebase_test)
+diff --git a/DMOTOR_ARCH.md b/DMOTOR_ARCH.md
+index ff56ef1..0acaaf7 100644
+--- a/DMOTOR_ARCH.md
++++ b/DMOTOR_ARCH.md
+@@ -783,6 +783,7 @@ For deterministic tests, characterize settling time and phase lag at each sweep
+ #### 24.2 Numeric representation and verification
+ 
+ - Position is signed 64-bit encoder counts. Saturate on overflow and latch ARITHMETIC_RANGE; do not wrap commanded or accumulated physical position silently.
++- Approved local trajectory profile: position tolerance and the sum of maximum-speed braking distance plus one-tick lookahead must each be at most 2^28 encoder counts (268,435,456). Reject configurations outside this combined envelope; do not silently clamp them. Keep public positions and absolute/relative command fields 64-bit. Execute long commands through internal, frame-aligned local windows; update the frame offset at a coherent control-tick snapshot, including reverse motion. Internal frame/segment transitions must not stop the ramp, retire the command, restart its timeout, or change sequence/session identity. Completion requires the final target's existing position/velocity settling conditions. The current encoder capture counter remains 64-bit; rebasing applies to motion arithmetic, not resetting physical capture.
+ - Public velocity and acceleration are signed milli-RPM and positive milli-RPM/second respectively. Duty uses signed int32 scaled by 65536 with magnitude bounded to one. Timestamps/durations are unsigned with explicit units.
+ - Store encoder PPR, gearbox numerator/denominator, and calibration numerator/denominator as positive integers. Reject zero denominators. Cross-reduce rational factors before bounded multiplication. Preserve 468/10 and 10296/5 exactly for the default nominal profile.
+ - Proposed initial software-visible range: encoder PPR 1..65,535; gearbox/calibration components 1..1,000,000; speed limit up to 1,000,000 milli-RPM; acceleration/deceleration up to 10,000,000 milli-RPM/s. Individual fields in range do not imply a valid combination: reject combinations exceeding capture rate, arithmetic width, or timing envelopes.
+diff --git a/README.md b/README.md
+index d90f770..ddbbbe4 100644
+--- a/README.md
++++ b/README.md
+@@ -110,3 +110,12 @@ five-clock HALT pipeline bound is 250 ns, within the 10 us budget.
+ See `docs/verification.md` for profile-change validation. The reference Vivado
+ design requires clock/reset integration changes; see `docs/vivado_reference.md`.
+ RTL projects must compile `rtl/timing.sv` before `scheduler.sv` and `pwm.sv`.
++
++### Local position execution
++
++Long 64-bit position commands now use rebased 32-bit local trajectory coordinates.
++Internal frame transitions do not complete or restart the command. Position
++tolerance and maximum braking-plus-lookahead distance must each fit within
++268,435,456 encoder counts; invalid profiles fault during preparation. The hardware
++encoder count and public positions remain 64-bit. See `docs/motion_executor.md`.
++Rebasing currently increases measured resources; it is not a demonstrated LUT saving.
+diff --git a/docs/motion_executor.md b/docs/motion_executor.md
+index 1b585dc..95ed05d 100644
+--- a/docs/motion_executor.md
++++ b/docs/motion_executor.md
+@@ -238,3 +238,36 @@ boundaries and allocation directives live in the platform configurations. Sharin
+ is local to each scheduled hierarchy; this is not a shared engine across motors.
+ Prepared denominators are computed by the controller while disabled; the standalone
+ motion top continues to prepare its own constants per call.
++
++
++## Rebased local trajectory coordinates
++
++`detail::RebasedPosition` maps each coherent 64-bit position snapshot to an
++aligned 2^28-count frame. `frame_ << local_position_bits` represents the absolute
++frame offset; the lower 28 position bits are the local coordinate. On command
++activation or frame change, the absolute target is converted to a local target.
++Targets in [-span, 2*span] relative to the frame origin are terminal targets;
++more distant targets use a bounded, nonterminal local target on the same side.
++The local signed error fits 32 bits, including overshoot and reversal. Rebasing
++uses the supplied snapshot directly, so no encoder edge is reset or discarded.
++Encoder capture and externally visible position remain signed 64-bit.
++
++Named constants are in `include/dmotor/detail/local_position.hpp`. Configuration
++preparation now rejects position tolerance above `local_position_span`, or
++`ceil(max_speed^2 * counts_num / braking_denominator) +
++ceil(max_speed * counts_num / lookahead_denominator)` above that span. Both are
++268,435,456 counts. This check preserves rational CPR and upward rounding; it is
++not a braking approximation. The combined controller prepares once while disabled;
++the standalone motion top still prepares on each call for its stateless config
++interface. Invalid profiles latch the existing configuration fault.
++
++A nonterminal target is always farther than the admitted braking/tolerance
++horizon from the real target. It therefore keeps the commanded direction/speed
++without braking at an internal boundary. Frame changes preserve the absolute
++target, ramp/integral, command identity, activation time and timeout. Only terminal
++coordinates can satisfy completion. Overshoot, immediate stop, authorization loss,
++faults and completion backpressure retain their previous behavior.
++
++This is local trajectory rebasing, not a 32-bit replacement for the hardware
++encoder accumulator. It adds rebase/preparation hardware and must not be claimed
++as a LUT saving; see the measured results in `verification.md`.
+diff --git a/include/dmotor/motion.hpp b/include/dmotor/motion.hpp
+index 561692d..08726f8 100644
+--- a/include/dmotor/motion.hpp
++++ b/include/dmotor/motion.hpp
+@@ -1,5 +1,6 @@
+ #pragma once
+ #include "dmotor/protocol.hpp"
++#include "dmotor/detail/local_position.hpp"
+ #include <cstdint>
+ namespace dmotor {
+ struct MotionConfig {
+@@ -51,6 +52,7 @@ class MotionExecutor {
+     int32_t open_duty_ = 0; // Clamped to +/-65536, including both endpoints.
+     int32_t speed_cap_ = 0; // Validated positive speed <= 1000000.
+     int64_t target_position_ = 0;
++    detail::RebasedPosition local_position_{};
+     int64_t integral_nano_ = 0; // Clamped to +/-65536 * 1000000000.
+     uint64_t started_ = 0, duration_us_ = 0, previous_tick_ = 0;
+     uint16_t ramp_remainder_ = 0; // Modulo 1000, always 0..999.
+diff --git a/src/motion.cpp b/src/motion.cpp
+index 424f3d7..07b6902 100644
+--- a/src/motion.cpp
++++ b/src/motion.cpp
+@@ -34,6 +34,7 @@ bool valid_config(const MotionConfig& c) {
+            c.acceleration_mrpm_s && c.acceleration_mrpm_s <= 10000000 && c.deceleration_mrpm_s &&
+            c.deceleration_mrpm_s <= 10000000 && c.counts_num && c.counts_num <= 1000000 &&
+            c.counts_den && c.counts_den <= 1000000 &&
++           c.position_tolerance <= detail::local_position_span &&
+            c.velocity_tolerance_mrpm <= static_cast<uint32_t>(c.max_speed_mrpm) && c.settle_ticks &&
+            c.settle_ticks <= timing::settle_max_ticks && c.kp_q16 >= 0 &&
+            c.kp_q16 <= 1048576 && c.ki_q16 >= 0 &&
+@@ -58,6 +59,14 @@ PreparedMotionConfig prepare_motion_config(const MotionConfig& c) {
+         const uint32_t denominator = c.counts_den & 0xfffffU;
+         p.braking_denominator = 120000ULL * (c.deceleration_mrpm_s & 0xffffffU) * denominator;
+         p.lookahead_denominator = 60000000ULL * denominator;
++        // Validate the combined maximum horizon while disabled in the coordinator.
++        // Both distances increase monotonically with nonnegative ramp speed.
++        const uint64_t speed = static_cast<uint32_t>(c.max_speed_mrpm);
++        const uint64_t braking = detail::divide(speed * speed * c.counts_num +
++            p.braking_denominator - 1, p.braking_denominator);
++        const uint64_t lookahead = detail::divide(speed * c.counts_num +
++            p.lookahead_denominator - 1, p.lookahead_denominator);
++        p.valid = braking + lookahead <= detail::local_position_span;
+         p.integral_limit = static_cast<int64_t>(static_cast<uint32_t>(c.integral_limit_q16) &
+                                                 0x1ffffU) * integral_scale;
+     }
+@@ -239,20 +248,19 @@ MotionResult MotionExecutor::step_impl(bool reset, bool authorized, bool command
+     }
+     bool in_position = false;
+     if (opcode_ == 2 || opcode_ == 3) {
+-        const bool forward = target_position_ >= position;
+-        const uint64_t distance =
+-            forward ? static_cast<uint64_t>(target_position_) - static_cast<uint64_t>(position)
+-                    : static_cast<uint64_t>(position) - static_cast<uint64_t>(target_position_);
+-        in_position = distance <= c.position_tolerance;
++        const auto local = local_position_.sample(position, target_position_, result_.accepted);
++        const bool forward = local.forward;
++        const uint32_t distance = local.distance;
++        in_position = local.terminal && distance <= c.position_tolerance;
+         const uint64_t speed = static_cast<uint64_t>(magnitude(result_.ramp_mrpm));
+         const uint64_t denominator = prepared.braking_denominator;
+-        const uint64_t stop_distance =
+-            detail::divide(speed * speed * c.counts_num + denominator - 1, denominator);
++        const uint32_t stop_distance = static_cast<uint32_t>(
++            detail::divide(speed * speed * c.counts_num + denominator - 1, denominator));
+         const uint64_t step_denominator = prepared.lookahead_denominator;
+-        const uint64_t lookahead =
+-            detail::divide(speed * c.counts_num + step_denominator - 1, step_denominator);
++        const uint32_t lookahead = static_cast<uint32_t>(
++            detail::divide(speed * c.counts_num + step_denominator - 1, step_denominator));
+         const bool moving_toward = (result_.ramp_mrpm >= 0) == forward;
+-        target_mrpm_ = (in_position || (moving_toward && distance <= stop_distance + lookahead)) ? 0
++        target_mrpm_ = (in_position || (local.terminal && moving_toward && distance <= stop_distance + lookahead)) ? 0
+                        : forward ? speed_cap_
+                                  : -speed_cap_;
+     }
+diff --git a/tests/motion_test.cpp b/tests/motion_test.cpp
+index 28080ea..23cf58a 100644
+--- a/tests/motion_test.cpp
++++ b/tests/motion_test.cpp
+@@ -162,6 +162,7 @@ int main() {
+     CHECK(!reply[7]);
+     // Compare the HLS top against the original wide quotient/remainder ramp.
+     // Exercise fractional carries, rate changes, reversal, clamping and reset.
++    config[1] = 10000; // Low-deceleration sweep must fit the local braking envelope.
+     const uint32_t rates[] = {1, 999, 1000, 1001, 9999999, 10000000};
+     for (unsigned run = 0; run < 2; ++run) {
+         reset();
+@@ -259,6 +260,35 @@ int main() {
+             CHECK(!reply[7] && (reply[2] & 2));
+         }
+     }
++    // A long command crosses internal frames without retiring or restarting.
++    // Snapshot jumps accelerate this coordinate test; they are not a plant model.
++    config[1] = 130000;
++    config[2] = config[3] = 1000000;
++    config[4] = 10296;
++    config[5] = 5;
++    config[6] = 1;
++    config[9] = 655;
++    config[10] = 65536;
++    const int64_t span = dmotor::detail::local_position_span;
++    for (int sign : {-1, 1}) {
++        reset();
++        const int64_t target = sign * (4 * span + 5);
++        command[0] = 2;
++        command[2] = 37;
++        command[5] = 1000;
++        command[6] = static_cast<uint32_t>(static_cast<uint64_t>(target));
++        command[7] = static_cast<uint32_t>(static_cast<uint64_t>(target) >> 32);
++        command[11] = 1000000;
++        tick(true);
++        CHECK(!reply[7] && (reply[2] & 2) && reply[3] == 37);
++        for (int frame : {1, 2, 1, 3, 4}) {
++            tick(false, sign * (frame * span));
++            CHECK(!reply[7] && (reply[2] & 2) && !(reply[2] & 4) && reply[3] == 37);
++        }
++        tick(false, target);
++        tick(false, target);
++        CHECK(!reply[7] && (reply[2] & 4) && !(reply[2] & 2) && reply[0] == 0);
++    }
+     std::cout << "motion: six commands, ramps, residuals, settling, timeouts, inhibit and timing "
+                  "passed\n";
+ }
+diff --git a/tests/position_error_test.cpp b/tests/position_error_test.cpp
+index 4069b38..d12eff7 100644
+--- a/tests/position_error_test.cpp
++++ b/tests/position_error_test.cpp
+@@ -14,7 +14,7 @@ static dmotor::MotionConfig config() {
+     c.generation = 1;
+     c.max_speed_mrpm = 1000000;
+     c.acceleration_mrpm_s = 10000000;
+-    c.deceleration_mrpm_s = 1;
++    c.deceleration_mrpm_s = 1000;
+     c.counts_num = 6000;
+     c.counts_den = 1;
+     c.settle_ticks = 1;
+@@ -33,7 +33,8 @@ static dmotor::Descriptor command(int64_t target) {
+ }
+ int main() {
+     const int64_t positions[] = {INT64_MIN, -4294967296LL, -1, 0, 4294967296LL, INT64_MAX};
+-    const uint32_t tolerances[] = {0, 1, INT32_MAX, UINT32_MAX};
++    const uint32_t tolerances[] = {0, 1, dmotor::detail::local_position_span,
++        dmotor::detail::local_position_span + 1, UINT32_MAX};
+     for (auto position : positions) {
+         for (auto target : positions) {
+             const uint64_t distance = target >= position
+@@ -45,14 +46,17 @@ int main() {
+                 dmotor::MotionExecutor executor;
+                 const auto result = executor.step(false, true, true, command(target), false,
+                     false, 1, dmotor::timing::control_tick_cycles, position, 0, true, c);
++                if (tolerance > dmotor::detail::local_position_span) {
++                    check(result.faults & 1);
++                    continue;
++                }
+                 check(!result.faults && result.accepted);
+                 check(result.completion_valid == (distance <= tolerance));
+             }
+         }
+     }
+-    // At this deliberately low deceleration, braking distance exceeds 32 bits.
+-    // The ramp must decelerate exactly at the wide braking/lookahead threshold.
+-    constexpr uint64_t threshold = 50000000100ULL;
++    // The ramp must decelerate exactly at the supported braking/lookahead threshold.
++    constexpr uint64_t threshold = 50000100ULL;
+     const uint64_t distances[] = {UINT32_MAX, uint64_t{UINT32_MAX} + 1,
+                                   threshold - 1, threshold, threshold + 1};
+     for (auto distance : distances) {
+@@ -61,7 +65,7 @@ int main() {
+             dmotor::MotionExecutor executor;
+             const int64_t target = static_cast<int64_t>(distance) * direction;
+             dmotor::MotionResult result;
+-            for (uint64_t tick = 1; tick <= 1000; ++tick) {
++            for (uint64_t tick = 1; tick <= 1; ++tick) {
+                 result = executor.step(false, true, tick == 1, command(target), false,
+                     false, 1, tick * dmotor::timing::control_tick_cycles, 0,
+                     direction * 1000000, true, c);
+@@ -71,5 +75,12 @@ int main() {
+             check(result.ramp_mrpm == expected);
+         }
+     }
+-    std::cout << "position-error: full-width endpoints, tolerance and wide braking boundaries passed\n";
++    auto invalid = config();
++    invalid.deceleration_mrpm_s = 1; // Former wide-horizon profile is now rejected.
++    check(!dmotor::prepare_motion_config(invalid).valid);
++    invalid.deceleration_mrpm_s = 186; // Just beyond the admitted horizon.
++    check(!dmotor::prepare_motion_config(invalid).valid);
++    invalid.deceleration_mrpm_s = 187;
++    check(dmotor::prepare_motion_config(invalid).valid);
++    std::cout << "position-error: full-width endpoints, tolerance and bounded braking boundaries and rejected profiles passed\n";
+ }
+diff --git a/include/dmotor/detail/local_position.hpp b/include/dmotor/detail/local_position.hpp
+new file mode 100644
+index 0000000..18deaa8
+--- /dev/null
++++ b/include/dmotor/detail/local_position.hpp
+@@ -0,0 +1,54 @@
++#pragma once
++#include <cstdint>
++namespace dmotor {
++namespace detail {
++// A frame leaves one full horizon of headroom on either side. Public positions
++// remain signed 64-bit counts; only trajectory coordinates are rebased.
++constexpr unsigned local_position_bits = 28;
++constexpr uint32_t local_position_span = uint32_t{1} << local_position_bits;
++constexpr uint32_t local_position_mask = local_position_span - 1;
++struct LocalPosition {
++    uint32_t distance = 0;
++    bool forward = true;
++    bool terminal = false;
++};
++class RebasedPosition {
++  public:
++    LocalPosition sample(int64_t position, int64_t target, bool new_target) {
++        const uint64_t frame = static_cast<uint64_t>(position) >> local_position_bits;
++        const int32_t local = static_cast<int32_t>(static_cast<uint64_t>(position) &
++                                                  local_position_mask);
++        if (!primed_ || new_target || frame != frame_) {
++            // Rounding down to an aligned frame is safe even at INT64_MIN.
++            const int64_t origin = position - local;
++            frame_ = frame;
++            primed_ = true;
++            if (target >= origin) {
++                const uint64_t distance = static_cast<uint64_t>(target) -
++                                          static_cast<uint64_t>(origin);
++                terminal_ = distance <= 2 * local_position_span;
++                target_ = terminal_ ? static_cast<int32_t>(distance)
++                                    : static_cast<int32_t>(2 * local_position_span);
++            } else {
++                const uint64_t distance = static_cast<uint64_t>(origin) -
++                                          static_cast<uint64_t>(target);
++                terminal_ = distance <= local_position_span;
++                target_ = terminal_ ? -static_cast<int32_t>(distance)
++                                    : -static_cast<int32_t>(local_position_span);
++            }
++        }
++        // Range [-2*span+1, 2*span], so signed 32-bit subtraction cannot overflow.
++        const int32_t error = target_ - local;
++        LocalPosition result;
++        result.forward = error >= 0;
++        result.distance = static_cast<uint32_t>(error >= 0 ? error : -error);
++        result.terminal = terminal_;
++        return result;
++    }
++  private:
++    uint64_t frame_ = 0; // Only 36 significant bits; offset is frame << 28.
++    int32_t target_ = 0;
++    bool terminal_ = false, primed_ = false;
++};
++} // namespace detail
++} // namespace dmotor
+diff --git a/tests/rebase_test.cpp b/tests/rebase_test.cpp
+new file mode 100644
+index 0000000..29b2618
+--- /dev/null
++++ b/tests/rebase_test.cpp
+@@ -0,0 +1,41 @@
++#include "dmotor/detail/local_position.hpp"
++#include <cstdint>
++#include <cstdlib>
++#include <iostream>
++#include <vector>
++static void check(bool value) {
++    if (!value) { std::cerr << "rebase mismatch\n"; std::exit(1); }
++}
++int main() {
++    using namespace dmotor::detail;
++    const int64_t span = local_position_span;
++    std::vector<int64_t> points = {INT64_MIN, INT64_MIN + 1, INT64_MAX - 1, INT64_MAX};
++    for (int64_t frame = -5; frame <= 5; ++frame)
++        for (int64_t delta : {-1LL, 0LL, 1LL}) points.push_back(frame * span + delta);
++    for (auto target : points) {
++        RebasedPosition window;
++        bool first = true;
++        // Forward/reverse traversal reuses the state through many frame crossings.
++        for (unsigned pass = 0; pass < 2; ++pass) {
++            for (unsigned i = 0; i < points.size(); ++i) {
++                const auto position = points[pass ? points.size() - 1 - i : i];
++                auto result = window.sample(position, target, first);
++                first = false;
++                const bool forward = target >= position;
++                const uint64_t distance = forward
++                    ? static_cast<uint64_t>(target) - static_cast<uint64_t>(position)
++                    : static_cast<uint64_t>(position) - static_cast<uint64_t>(target);
++                check(result.forward == forward);
++                if (result.terminal) check(result.distance == distance);
++                else check(distance > local_position_span && result.distance >= local_position_span);
++                check(result.distance <= 2 * local_position_span);
++                if (distance <= local_position_span) check(result.terminal);
++            }
++        }
++        // New target in an unchanged frame must invalidate the previous local target.
++        check(window.sample(0, 1, true).distance == 1);
++        check(window.sample(0, -1, true).distance == 1);
++        check(!window.sample(0, -1, false).forward);
++    }
++    std::cout << "rebase: signed endpoints, repeated forward/reverse frames and target replacement passed\n";
++}

@@ -885,3 +885,13 @@ Initial evidence review (2026-10-11) preceded implementation and checked require
 Nominal arithmetic checks at 20 MHz: one clock is 50 ns; 5 clocks is 250 ns; the 1 kHz tick spans 20,000 clocks; the 16,000-clock HLS deadline is 800 us with 200 us remaining; 20 kHz PWM spans 1,000 clocks (50 us); 2,048-clock proposed MMIO response budget is 102.4 us. The 200-clock encoder-state dwell is 10 us, consistent with 100,000 transitions/s. At 10296/5 counts/revolution, 1 RPM gives approximately 29.14 ms between edges and 130 RPM gives 4,461.6 transitions/s. These checks establish arithmetic consistency only, not achieved hardware timing.
 
 
+
+### Bounded velocity candidate operating envelope
+
+The velocity-only candidate defines a maximum wheel/output-shaft speed of
+200 RPM and a maximum wheel diameter of 100 mm. Diameter and linear-speed
+conversion belong to the system controller; encoder scaling must include gearing.
+The active full-profile contract is unchanged pending profile adoption.
+See [bounded velocity implementation and measurements](docs/bounded_velocity.md)
+for the evaluated 16-bit Q7 PI inputs and exact bounded milliRPM alternative,
+quantization limits, verification, and measured resource trade-offs.

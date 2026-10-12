@@ -1110,3 +1110,142 @@ tests pass, including the new position-error test and the generated motion and
 peripheral integration tests. Restored dispatcher synthesis reproduces 24,578
 LUT, 12,107 FF, 1,064 clocks and a 34.617 ns path. Experimental evidence remains
 separate from the active top-level reports.
+
+
+## Rebased local moves at 20 MHz — reverted experiment
+
+This experiment was reverted at the user’s request because it increased LUT usage.
+The active implementation is again the preceding 20 MHz wide-position design;
+the added 2^28-count configuration limit is removed. The following describes
+the archived experiment, not the active code. Its patch and resource reports are
+in `evidence/rebase/`.
+
+Implemented the user-approved 2^28-count local profile limit after revision
+`17116b7562f761b5ecb58ba82e20db8991adae66`. Absolute/relative command fields,
+reported positions and encoder capture remain 64-bit. `detail::RebasedPosition`
+uses a 28-bit local position and a signed 32-bit local target/error, with a cached
+36-bit frame ID. Rebase on command activation or a changed snapshot frame; no
+physical encoder counter is reset. Wide target subtraction remains at rebase.
+Nonterminal frames continue the original move without retirement, ramp reset,
+timeout restart or intermediate stop. Only the terminal target can settle.
+
+Preparation validates the exact combined worst-case braking/lookahead distance
+at configured maximum speed, and position tolerance, against the named span.
+Rejected profiles latch the existing configuration fault; there is no truncation
+or wide fallback. Tests for previously allowed extreme configurations were updated
+to expect rejection. The fractional ramp test uses a smaller maximum configured
+speed so its 1 milli-RPM/s deceleration remains a supported profile. The physical
+position and rational CPR contracts have not changed.
+
+Vitis 2026.1, xc7z020clg400-1, 20 MHz:
+
+| Kernel | LUT before → after | FF before → after | DSP before → after | Max clocks before → after | Path ns |
+|---|---:|---:|---:|---:|---:|
+| Motion | 16616 → 18162 | 7135 → 7932 | 32 → 40 | 752 → 882 | 30.965 |
+| Controller | 23793 → 25396 | 10526 → 11344 | 39 → 47 | 951 → 1082 | 36.205 |
+| Dispatcher | 24578 → 25577 | 12107 → 12872 | 39 → 47 | 1064 → 1196 | 34.617 |
+
+BRAM is unchanged (four BRAM_18K for dispatcher, zero for motion/controller).
+Dispatcher costs 999 additional LUT (4.06%), 765 FF and eight DSP. This is an
+implemented local-coordinate architecture, **not a resource optimization win**.
+The new configuration arithmetic and frame/target state outweigh the narrowed
+comparisons; infrequent wide operations still require hardware. No hardware fit
+or physical timing closure is claimed. Maximum dispatcher latency is 59.8 us,
+below the 800 us budget; all listed paths meet the 36.50 ns effective HLS target.
+
+Native equivalence matches 16,387 motion snapshots and 1,379 dispatcher replies
+against the reference for the existing trace profiles (`evidence/rebase/equivalence.log`).
+This does not assert equivalence for newly rejected configurations. Added tests
+cover repeated positive/negative frame crossings, full signed-position endpoints,
+new targets in an unchanged frame, local error/direction agreement with a wide
+reference, valid/invalid tolerance/horizon boundaries, and a long command that
+crosses and reverses through internal frames without premature completion. The
+long-command test also runs through the motion HLS top for RTL co-simulation.
+Snapshot jumps in these coordinate tests accelerate frame traversal; they do not
+represent physical motor travel or establish plant behavior.
+
+Final verification passed: all 23 native/RTL tests, generated ABI consistency,
+and Vitis C simulation, synthesis and Verilog co-simulation for motion,
+controller and dispatcher. Archived reports in `evidence/rebase/` describe this implementation;
+`evidence/rebase/native_rtl_tests.log` records the complete regression. The
+previous position-error experiment remains archived, including its old full-range
+configuration behavior; the new profile deliberately narrows that admissibility.
+
+Rollback restores the original motion/configuration code and full-range boundary
+tests from `17116b7`, including the 20 MHz clock and combined-register divider.
+The active dispatcher baseline is 24,578 LUT, 12,107 FF, 39 DSP, four BRAM_18K
+and 53.2 us worst-case HLS latency. The local rebasing helper/test are removed;
+experimental patch and evidence remain archived.
+
+Rollback verification passed: all 22 native/RTL tests and regenerated Vitis C
+simulation, synthesis and Verilog co-simulation for motion, controller and
+dispatcher. Vitis C-simulation caches were cleared to remove dependencies on the
+deleted rebasing header. See `evidence/rebase/rollback_native_rtl_tests.log`.
+
+
+## Isolated velocity-only profile evaluation
+
+The full 20 MHz profile remains active. An isolated build removes position moves,
+dwell and raw-duty commands while retaining velocity/stop commands, the queue,
+estimator, PI, ramping and protection behavior. Dispatcher LUT usage falls from
+24,578 to 21,532 (12.39%), FF from 12,107 to 10,695 and DSP from 39 to 22; BRAM
+remains four BRAM_18K. Maximum estimated service latency falls from 53.2 to
+40.05 us. Four independent copies still exceed device LUT capacity.
+
+All three affected HLS flows pass C simulation, synthesis and Verilog co-simulation;
+14 selected native/RTL tests pass. Retained-behavior trace comparisons match the
+full profile, while removed commands are separately verified as rejected. This
+is not full AXI-to-PWM integration or physical validation. See
+[velocity_only.md](velocity_only.md) for the contract, complete results,
+limitations and reproducible commands. Evidence is separate under
+`evidence/velocity_only/`; active source and top-level reports remain unchanged.
+
+
+## Two-motor shared velocity engine measurement
+
+Measured two isolated designs at 20 MHz: explicit context copy uses 32,225 LUT,
+34,912 FF, 22 DSP and four BRAM_18K; in-place context access uses 29,650 LUT,
+24,157 FF, 22 DSP and eight BRAM_18K. Generated RTL contains one service instance.
+The latter saves 31.15% LUT versus two independent velocity-only dispatchers
+(43,064 LUT total), but two pairs would still need 59,300 LUT before integration,
+exceeding the xc7z020's 53,200 LUT. It is not yet a four-motor fit.
+
+The better variant estimates at most 789 clocks per service (39.45 us), with a
+790-clock maximum interval and a 35.086 ns path within the 36.50 ns effective
+budget. Both variants passed C simulation, synthesis, Verilog co-simulation and
+UBSan native testing: 1,192 interleaved services compare all 40 reply words against
+two independent reference contexts. Protection, scheduling and bus integration
+remain external/unqualified. See [velocity_pair.md](velocity_pair.md) and
+`evidence/velocity_pair/` for reproducible experiments and full limitations.
+The active full-feature project and its top-level reports remain unchanged.
+
+## Bounded velocity profiles (200 RPM, 100 mm wheel envelope)
+
+Implemented and measured isolated Q7 and exact milliRPM candidates; see
+[bounded velocity](bounded_velocity.md). Both enforce a 200 RPM operating limit
+and define the host-side 100 mm wheel limit by name. Q7 uses 16-bit PI velocity
+inputs and a 34-bit integrator but increases dispatcher LUTs from 21,532 to
+21,766. Exact bounded milliRPM uses a 20-bit PI error and 37-bit integrator,
+saving 185 LUTs and two DSPs (21,347 LUT, 20 DSP); maximum latency remains
+801 cycles at 20 MHz. The active full profile is unchanged.
+
+Both pass 14 applicable native/RTL tests. Q7 motion, velocity and dispatcher,
+and exact dispatcher pass Vitis C simulation, synthesis and Verilog co-simulation.
+Exact retained-behavior traces match the prior implementation. Evidence and
+reproducible patches are in `docs/evidence/velocity_bounded/`; these are HLS
+estimates, not board qualification or shared-engine measurements.
+
+## Decimal 0.1 RPM PI experiment
+
+[Measurement and reproduction](velocity_tenths.md): evaluated 12-bit PI velocity
+inputs, 13-bit error and a 31-bit integrator at 20 MHz, retaining exact encoder
+ratio, milliRPM ramp and public units. Dispatcher costs 21628 LUT, 10678 FF,
+22 DSP, 4 BRAM18K; maximum 804 cycles (40.20 us). This adds 96 LUT versus the
+original velocity-only profile and 281 versus bounded exact milliRPM. Do not
+adopt this precision reduction for LUT savings on this evidence. Main sources
+are unchanged; candidate patch and evidence are in `docs/evidence/velocity_tenths/`.
+
+All 14 applicable native/RTL tests passed; motion and dispatcher both passed
+Vitis C simulation, synthesis and Verilog co-simulation. The tests include
+exhaustive input conversion and sub-quantum acceleration progress; physical
+closed-loop performance and shared-engine resource usage remain unmeasured.

@@ -1,0 +1,190 @@
+--- a/src/dispatcher.cpp
++++ b/src/dispatcher.cpp
+@@ -157,3 +157,18 @@
+                        drained, now, encoder, position,
+                        dmotor::decode_controller_config(configuration), reply);
+ }
++
++extern "C" void dmotor_dispatcher_pair(bool motor, bool reset, const uint32_t request[4], bool tick, bool authorized,
++                                  bool cancel, uint32_t cause, bool stop, bool capture_fault,
++                                  bool drained, uint64_t now, uint64_t count, uint64_t last_edge,
++                                  uint32_t direction_epoch, uint32_t invalid_transitions,
++                                  bool negative, int64_t position, const uint32_t configuration[20],
++                                  uint32_t reply[40]) {
++    static dmotor::Dispatcher contexts[2];
++    // One call site shares the computation; context fields are accessed in place.
++    const dmotor::EncoderSample encoder{count, last_edge, direction_epoch, invalid_transitions,
++                                        negative};
++    contexts[motor ? 1 : 0].service(reset, request, tick, authorized, cancel, cause, stop, capture_fault,
++                       drained, now, encoder, position,
++                       dmotor::decode_controller_config(configuration), reply);
++}
+--- a/include/dmotor/dispatcher.hpp
++++ b/include/dmotor/dispatcher.hpp
+@@ -24,3 +24,10 @@
+                                   uint32_t direction_epoch, uint32_t invalid_transitions,
+                                   bool negative, int64_t position, const uint32_t configuration[20],
+                                   uint32_t reply[40]);
++
++extern "C" void dmotor_dispatcher_pair(bool motor, bool reset, const uint32_t request[4], bool tick, bool authorized,
++                                  bool cancel, uint32_t cause, bool stop, bool capture_fault,
++                                  bool drained, uint64_t now, uint64_t count, uint64_t last_edge,
++                                  uint32_t direction_epoch, uint32_t invalid_transitions,
++                                  bool negative, int64_t position, const uint32_t configuration[20],
++                                  uint32_t reply[40]);
+--- a/platforms/vitis/dispatcher.cfg
++++ b/platforms/vitis/dispatcher.cfg
+@@ -2,7 +2,7 @@
+ freqhz=20000000
+ [hls]
+ syn.file=../../src/arithmetic.cpp
+-syn.top=dmotor_dispatcher
++syn.top=dmotor_dispatcher_pair
+ syn.file=../../src/protocol.cpp
+ syn.file=../../src/motion.cpp
+ syn.file=../../src/velocity.cpp
+@@ -10,7 +10,7 @@
+ syn.file=../../src/dispatcher.cpp
+ syn.cflags=-I../../include
+ syn.rtl.reset=all
+-tb.file=../../tests/dispatcher_test.cpp
++tb.file=../../tests/pair_test.cpp
+ tb.cflags=-I../../include
+ package.output.format=ip_catalog
+ # Keep exact arithmetic units reusable; no changes to the public interface.
+--- /dev/null
++++ b/tests/pair_test.cpp
+@@ -0,0 +1,133 @@
++#include "timing_fixture.hpp"
++#include "dmotor/dispatcher.hpp"
++#include <cstdlib>
++#include <iostream>
++#define CHECK(x) do { if (!(x)) { std::cerr << __LINE__ << ": " #x "\n"; std::exit(1); } } while (false)
++struct Inputs {
++    uint64_t now = 0, count = 0, edge = 0;
++    bool authorized = false, negative = false;
++    int64_t position = 0;
++    uint32_t epoch = 0;
++    uint32_t cfg[20] = {1, 130000, 1000000, 1000000, 10296, 5, 1, 100, 2,
++        655, 65536, 65536, 65536, 1000000,
++        test_timing::cycles_us(100000), test_timing::cycles_us(60000), 128, 0, 0, 0};
++    uint32_t reply[40] = {};
++};
++static Inputs inputs[2];
++static dmotor::Dispatcher reference[2];
++static unsigned transactions = 0;
++static void service(unsigned motor, uint32_t op = 0, uint32_t a = 0, uint32_t b = 0,
++                    uint32_t c = 0, bool tick = false, bool reset = false,
++                    bool cancel = false, bool stop = false, bool fault = false) {
++    auto& v = inputs[motor];
++    uint32_t request[4] = {op, a, b, c};
++    uint32_t expected[40] = {};
++    dmotor::EncoderSample encoder{v.count, v.edge, v.epoch, 0, v.negative};
++    reference[motor].service(reset, request, tick, v.authorized, cancel, 8, stop,
++        fault, true, v.now, encoder, v.position, dmotor::decode_controller_config(v.cfg), expected);
++    dmotor_dispatcher_pair(motor != 0, reset, request, tick, v.authorized, cancel, 8,
++        stop, fault, true, v.now, v.count, v.edge, v.epoch, 0, v.negative, v.position, v.cfg, v.reply);
++    for (unsigned word = 0; word < 40; ++word) {
++        if (v.reply[word] != expected[word]) {
++            std::cerr << "context mismatch motor=" << motor << " tx=" << transactions
++                      << " word=" << word << " expected=" << expected[word]
++                      << " got=" << v.reply[word] << '\n';
++            std::exit(1);
++        }
++    }
++    ++transactions;
++}
++static void tick(unsigned motor, bool cancel = false, bool stop = false, bool fault = false) {
++    inputs[motor].now += test_timing::tick_cycles;
++    service(motor, 0, 0, 0, 0, true, false, cancel, stop, fault);
++}
++static void enqueue(unsigned motor, uint32_t opcode, int32_t speed = 0) {
++    auto& v = inputs[motor];
++    const auto seq = v.reply[2], epoch = v.reply[5];
++    for (uint32_t word = 0; word < 16; ++word) {
++        uint32_t value = 0;
++        if (word == 0) value = opcode;
++        if (word == 2) value = seq;
++        if (word == 3) value = epoch;
++        if (word == 4) value = 1;
++        if (word == 5 && opcode == 1) value = static_cast<uint32_t>(speed);
++        if (word == 11 && opcode == 6) value = 1000000;
++        service(motor, 1, seq & dmotor::ring_mask, word, value);
++        CHECK(v.reply[0]);
++        // A service on the other context cannot disturb a half-staged descriptor.
++        service(1 - motor);
++    }
++    service(motor, 2, seq + 1, epoch);
++    CHECK(v.reply[0]);
++}
++static void initialize(unsigned motor) {
++    inputs[motor] = Inputs{};
++    inputs[motor].cfg[9] = motor ? 1310 : 655;
++    service(motor, 0, 0, 0, 0, false, true);
++    service(motor, 3);
++    CHECK(inputs[motor].reply[0]);
++    tick(motor);
++    inputs[motor].authorized = true;
++}
++int main() {
++    initialize(0);
++    initialize(1);
++    enqueue(0, 1, 1000);
++    enqueue(1, 1, -2000);
++    for (unsigned i = 0; i < 110; ++i) {
++        // Alternate which motor is processed first; timestamps remain per motor.
++        tick(i & 1U);
++        tick(1U - (i & 1U));
++    }
++    CHECK(inputs[0].reply[4] == 1 && inputs[1].reply[4] == 1);
++    CHECK(dmotor::signed_word(inputs[0].reply[17]) == 1000);
++    CHECK(dmotor::signed_word(inputs[1].reply[17]) == -2000);
++    // Independent encoder history and acquisition/PI state on repeated switches.
++    for (unsigned i = 0; i < 50; ++i) {
++        for (unsigned m = 0; m < 2; ++m) {
++            if (i % (m ? 10 : 5) == 0) {
++                ++inputs[m].count;
++                inputs[m].edge = inputs[m].now + test_timing::tick_cycles;
++                inputs[m].negative = m != 0;
++                inputs[m].position += m ? -1 : 1;
++            }
++            tick(m);
++            CHECK(!inputs[m].reply[32]);
++        }
++    }
++    // Reinitialize one context while the other continues: reset is per context.
++    initialize(0);
++    tick(1);
++    CHECK(!inputs[1].reply[32] && inputs[1].reply[4] == 1);
++    initialize(1);
++    for (unsigned i = 0; i < 100; ++i) { tick(0); tick(1); }
++    // Fill independent completion rings; backpressure must not stop regulation.
++    for (unsigned i = 0; i < dmotor::ring_depth; ++i) {
++        enqueue(0, 1, 1000);
++        enqueue(1, 1, -1000);
++        tick(0); tick(1);
++    }
++    enqueue(0, 6);
++    tick(0); tick(1);
++    CHECK(inputs[0].reply[3] == dmotor::ring_depth);
++    service(0, 5, dmotor::ring_depth);
++    tick(0); tick(1);
++    tick(0); tick(1);
++    CHECK(inputs[0].reply[4] == dmotor::ring_depth + 1 && !inputs[0].reply[16]);
++    CHECK(inputs[1].reply[4] == dmotor::ring_depth && inputs[1].reply[16]);
++    // The external safety wrapper fans a detected fault out as lost authorization.
++    tick(0, false, false, true);
++    CHECK(inputs[0].reply[32]);
++    inputs[0].authorized = inputs[1].authorized = false;
++    tick(1); tick(0);
++    CHECK(!inputs[0].reply[16] && !inputs[1].reply[16]);
++    // Rejected opcodes and immediate controlled stop remain context-local services.
++    initialize(0); initialize(1);
++    enqueue(0, 2); enqueue(1, 1, -1000);
++    for (unsigned i = 0; i < 101; ++i) { tick(1); tick(0); }
++    service(0, 7, 0, 3);
++    CHECK(inputs[0].reply[7] == static_cast<uint32_t>(dmotor::Error::opcode));
++    tick(1, false, true); tick(0); tick(1);
++    CHECK(!inputs[1].reply[16]);
++    std::cout << "pair: " << transactions << " interleaved services match two independent contexts\n";
++}
