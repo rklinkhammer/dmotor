@@ -1,7 +1,7 @@
 # Engineering Design Prompt
 ## DMOTOR — Shared Four-Motor FPGA Velocity Controller
 **Revision 0.18 — Shared Velocity Engine and Processor-Owned Motion**
-**Updated:** 2026-10-11
+**Updated:** 2026-10-12
 **Workspace:** `~/workspace/dmotor`
 
 **Primary target:** AMD Zynq-7000 `xc7z020clg400-1`, Vitis HLS, 20 MHz
@@ -12,9 +12,13 @@
 **Status:** Recommended implementation architecture, with the user decisions below
 approved. The shared calculation engine has scoped HLS evidence. The standalone atomic batch
 protocol now implements publication, tick reservation and retirement with a draft
-generated ABI; see [implementation status](docs/atomic_mailbox.md). Target-age
-protection, batch-to-engine/output integration, the multi-channel scheduler and
-complete board integration remain requirements to implement and measure.
+generated ABI; see [implementation status](docs/atomic_mailbox.md). Independent
+[target-age protection](docs/target_age.md) is also implemented and RTL-tested as
+a separate component. The [scheduler/protection/PWM boundary](docs/shared_control.md)
+now has RTL tests with behavioral engine/protocol responses. The
+[atomic HLS transport](docs/atomic_hls_adapter.md) is tested with generated mailbox
+RTL. Scheduler arbitration, the motor-engine adapter, complete batch-to-engine
+integration and board integration remain to be implemented and measured.
 The active full-profile control sources and legacy ring ABI have not been replaced
 by this document update.
 

@@ -23,7 +23,7 @@ find_program(IVERILOG iverilog)
 find_program(VVP vvp)
 set(IVERILOG_BASE "" CACHE PATH "Optional relocated Icarus backend directory")
 if(IVERILOG AND VVP)
-  foreach(test safety scheduler qcencoder pwm latency axi_bridge encoder_snapshot)
+  foreach(test safety scheduler qcencoder pwm latency axi_bridge encoder_snapshot target_age shared_scheduler)
     add_test(NAME rtl_${test} COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/rtl_test.py
       --iverilog ${IVERILOG} --vvp ${VVP} --base "${IVERILOG_BASE}"
       --source ${CMAKE_SOURCE_DIR} --build ${CMAKE_BINARY_DIR} --test ${test})
@@ -93,3 +93,10 @@ target_sources(dmotor PRIVATE src/atomic_mailbox_top.cpp)
 add_executable(atomic_mailbox_top_test tests/atomic_mailbox_top_test.cpp)
 target_link_libraries(atomic_mailbox_top_test PRIVATE dmotor)
 add_test(NAME atomic_mailbox_top COMMAND atomic_mailbox_top_test)
+
+# Exercise the transport against generated C++ HLS RTL, when available.
+if(IVERILOG AND VVP AND EXISTS "${CMAKE_SOURCE_DIR}/build/vitis_atomic/hls/syn/verilog/dmotor_atomic_mailbox.v")
+  add_test(NAME rtl_atomic_adapter COMMAND ${Python3_EXECUTABLE}
+    ${CMAKE_SOURCE_DIR}/tools/atomic_adapter_rtl.py --iverilog ${IVERILOG} --vvp ${VVP}
+    --base "${IVERILOG_BASE}")
+endif()

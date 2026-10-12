@@ -1,0 +1,28 @@
+Start testing: Oct 11 23:18 EDT
+----------------------------------------------------------
+12/27 Testing: rtl_shared_scheduler
+12/27 Test: rtl_shared_scheduler
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/rtl_test.py" "--iverilog" "/tmp/dmotor-tools/root/usr/bin/iverilog" "--vvp" "/tmp/dmotor-tools/root/usr/bin/vvp" "--base" "/tmp/dmotor-tools/root/usr/lib/x86_64-linux-gnu/ivl" "--source" "/home/rklinkhammer/workspace/dmotor" "--build" "/home/rklinkhammer/workspace/dmotor/build/atomic_protocol" "--test" "shared_scheduler"
+Directory: /home/rklinkhammer/workspace/dmotor/build/atomic_protocol
+"rtl_shared_scheduler" start time: Oct 11 23:18 EDT
+Output:
+----------------------------------------------------------
+warning: Some design elements have no explicit time unit and/or
+       : time precision. This may cause confusing timing results.
+       : Affected design elements are:
+       :   -- module dmotor_pwm declared here: /home/rklinkhammer/workspace/dmotor/rtl/pwm.sv:4
+       :   -- module dmotor_shared_control declared here: /home/rklinkhammer/workspace/dmotor/rtl/shared_control.sv:4
+       :   -- module dmotor_shared_scheduler declared here: /home/rklinkhammer/workspace/dmotor/rtl/shared_scheduler.sv:3
+       :   -- module dmotor_target_age declared here: /home/rklinkhammer/workspace/dmotor/rtl/target_age.sv:3
+       :   -- package dmotor_timing declared here: /home/rklinkhammer/workspace/dmotor/rtl/timing.sv:2
+shared_scheduler PASS: captured inputs, four-channel PWM commit, target-age/retirement gating, cancellation, stale tags and deadlines
+/home/rklinkhammer/workspace/dmotor/tests/shared_scheduler_tb.sv:138: $finish called at 97926000 (1ps)
+<end of output>
+Test time =   0.13 sec
+----------------------------------------------------------
+Test Passed.
+"rtl_shared_scheduler" end time: Oct 11 23:18 EDT
+"rtl_shared_scheduler" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Oct 11 23:18 EDT

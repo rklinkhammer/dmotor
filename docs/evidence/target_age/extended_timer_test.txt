@@ -1,0 +1,27 @@
+Start testing: Oct 11 23:07 EDT
+----------------------------------------------------------
+11/26 Testing: rtl_target_age
+11/26 Test: rtl_target_age
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/rtl_test.py" "--iverilog" "/tmp/dmotor-tools/root/usr/bin/iverilog" "--vvp" "/tmp/dmotor-tools/root/usr/bin/vvp" "--base" "/tmp/dmotor-tools/root/usr/lib/x86_64-linux-gnu/ivl" "--source" "/home/rklinkhammer/workspace/dmotor" "--build" "/home/rklinkhammer/workspace/dmotor/build/atomic_protocol" "--test" "target_age"
+Directory: /home/rklinkhammer/workspace/dmotor/build/atomic_protocol
+"rtl_target_age" start time: Oct 11 23:07 EDT
+Output:
+----------------------------------------------------------
+warning: Some design elements have no explicit time unit and/or
+       : time precision. This may cause confusing timing results.
+       : Affected design elements are:
+       :   -- module dmotor_halt_aggregator declared here: /home/rklinkhammer/workspace/dmotor/rtl/safety.sv:70
+       :   -- module dmotor_safety declared here: /home/rklinkhammer/workspace/dmotor/rtl/safety.sv:4
+       :   -- module dmotor_target_age declared here: /home/rklinkhammer/workspace/dmotor/rtl/target_age.sv:3
+       :   -- package dmotor_timing declared here: /home/rklinkhammer/workspace/dmotor/rtl/timing.sv:2
+target_age PASS: lifecycle, atomic renewal, expiration priority, four-motor attribution, watchdog independence, wrap and configuration
+/home/rklinkhammer/workspace/dmotor/tests/target_age_tb.sv:132: $finish called at 10476000 (1ps)
+<end of output>
+Test time =   0.06 sec
+----------------------------------------------------------
+Test Passed.
+"rtl_target_age" end time: Oct 11 23:07 EDT
+"rtl_target_age" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Oct 11 23:07 EDT

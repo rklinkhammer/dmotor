@@ -1,0 +1,371 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2026.1 (lin64) Build 6511674 Tue Jun 16 11:01:26 MDT 2026
+| Date         : Sun Oct 11 23:06:18 2026
+| Host         : luna running 64-bit Ubuntu 26.04.1 LTS
+| Command      : report_timing_summary -file /home/rklinkhammer/workspace/dmotor/build/target_age_synth/timing.rpt
+| Design       : dmotor_target_age
+| Device       : 7z020-clg400
+| Speed File   : -1  PRODUCTION 1.12 2019-11-22
+| Design State : Synthesized
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+Timing Summary Report
+
+------------------------------------------------------------------------------------------------
+| Timer Settings
+| --------------
+------------------------------------------------------------------------------------------------
+
+  Enable Multi Corner Analysis               :  Yes
+  Enable Pessimism Removal                   :  Yes
+  Pessimism Removal Resolution               :  Nearest Common Node
+  Enable Input Delay Default Clock           :  No
+  Enable Preset / Clear Arcs                 :  No
+  Disable Flight Delays                      :  No
+  Ignore I/O Paths                           :  No
+  Timing Early Launch at Borrowing Latches   :  No
+  Borrow Time for Max Delay Exceptions       :  Yes
+  Merge Timing Exceptions                    :  Yes
+  Inter-SLR Compensation                     :  Conservative
+
+  Corner  Analyze    Analyze    
+  Name    Max Paths  Min Paths  
+  ------  ---------  ---------  
+  Slow    Yes        Yes        
+  Fast    Yes        Yes        
+
+
+------------------------------------------------------------------------------------------------
+| Report Methodology
+| ------------------
+------------------------------------------------------------------------------------------------
+
+No report available as report_methodology has not been run prior. Run report_methodology on the current design for the summary of methodology violations.
+
+
+
+check_timing report
+
+Table of Contents
+-----------------
+1. checking no_clock (0)
+2. checking constant_clock (0)
+3. checking pulse_width_clock (0)
+4. checking unconstrained_internal_endpoints (0)
+5. checking no_input_delay (0)
+6. checking no_output_delay (0)
+7. checking multiple_clock (0)
+8. checking generated_clocks (0)
+9. checking loops (0)
+10. checking partial_input_delay (0)
+11. checking partial_output_delay (0)
+12. checking latch_loops (0)
+
+1. checking no_clock (0)
+------------------------
+ There are 0 register/latch pins with no clock.
+
+
+2. checking constant_clock (0)
+------------------------------
+ There are 0 register/latch pins with constant_clock.
+
+
+3. checking pulse_width_clock (0)
+---------------------------------
+ There are 0 register/latch pins which need pulse_width check
+
+
+4. checking unconstrained_internal_endpoints (0)
+------------------------------------------------
+ There are 0 pins that are not constrained for maximum delay.
+
+ There are 0 pins that are not constrained for maximum delay due to constant clock.
+
+
+5. checking no_input_delay (0)
+------------------------------
+ There are 0 input ports with no input delay specified.
+
+ There are 0 input ports with no input delay but user has a false path constraint.
+
+
+6. checking no_output_delay (0)
+-------------------------------
+ There are 0 ports with no output delay specified.
+
+ There are 0 ports with no output delay but user has a false path constraint
+
+ There are 0 ports with no output delay but with a timing clock defined on it or propagating through it
+
+
+7. checking multiple_clock (0)
+------------------------------
+ There are 0 register/latch pins with multiple clocks.
+
+
+8. checking generated_clocks (0)
+--------------------------------
+ There are 0 generated clocks that are not connected to a clock source.
+
+
+9. checking loops (0)
+---------------------
+ There are 0 combinational loops in the design.
+
+
+10. checking partial_input_delay (0)
+------------------------------------
+ There are 0 input ports with partial input delay specified.
+
+
+11. checking partial_output_delay (0)
+-------------------------------------
+ There are 0 ports with partial output delay specified.
+
+
+12. checking latch_loops (0)
+----------------------------
+ There are 0 combinational latch loops in the design through latch input
+
+
+
+------------------------------------------------------------------------------------------------
+| Design Timing Summary
+| ---------------------
+------------------------------------------------------------------------------------------------
+
+    WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints  
+    -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------  
+     40.925        0.000                      0                 2741       -0.327     -291.415                   1305                 2741       24.500        0.000                       0                   657  
+
+
+Timing constraints are not met.
+
+
+------------------------------------------------------------------------------------------------
+| Clock Summary
+| -------------
+------------------------------------------------------------------------------------------------
+
+Clock   Waveform(ns)       Period(ns)      Frequency(MHz)
+-----   ------------       ----------      --------------
+fabric  {0.000 25.000}     50.000          20.000          
+
+
+------------------------------------------------------------------------------------------------
+| Intra Clock Table
+| -----------------
+------------------------------------------------------------------------------------------------
+
+Clock             WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints  
+-----             -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------  
+fabric             40.925        0.000                      0                 2741       -0.327     -291.415                   1305                 2741       24.500        0.000                       0                   657  
+
+
+------------------------------------------------------------------------------------------------
+| Inter Clock Table
+| -----------------
+------------------------------------------------------------------------------------------------
+
+From Clock    To Clock          WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints  
+----------    --------          -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------  
+
+
+------------------------------------------------------------------------------------------------
+| Other Path Groups Table
+| -----------------------
+------------------------------------------------------------------------------------------------
+
+Path Group    From Clock    To Clock          WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints  
+----------    ----------    --------          -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------  
+
+
+------------------------------------------------------------------------------------------------
+| Timing Details
+| --------------
+------------------------------------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------------------------
+From Clock:  fabric
+  To Clock:  fabric
+
+Setup :            0  Failing Endpoints,  Worst Slack       40.925ns,  Total Violation        0.000ns
+Hold  :         1305  Failing Endpoints,  Worst Slack       -0.327ns,  Total Violation     -291.415ns
+PW    :            0  Failing Endpoints,  Worst Slack       24.500ns,  Total Violation        0.000ns
+---------------------------------------------------------------------------------------------------
+
+
+Max Delay Paths
+--------------------------------------------------------------------------------------
+Slack (MET) :             40.925ns  (required time - arrival time)
+  Source:                 channel[2].last_tick_reg[2][1]/C
+                            (rising edge-triggered cell FDRE clocked by fabric  {rise@0.000ns fall@25.000ns period=50.000ns})
+  Destination:            inhibit_all
+                            (output port clocked by fabric  {rise@0.000ns fall@25.000ns period=50.000ns})
+  Path Group:             fabric
+  Path Type:              Max at Slow Process Corner
+  Requirement:            50.000ns  (fabric rise@50.000ns - fabric rise@0.000ns)
+  Data Path Delay:        8.067ns  (logic 4.294ns (53.229%)  route 3.773ns (46.771%))
+  Logic Levels:           21  (CARRY4=17 LUT2=3 LUT6=1)
+  Output Delay:           0.000ns
+  Clock Path Skew:        -0.973ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.000ns = ( 50.000 - 50.000 ) 
+    Source Clock Delay      (SCD):    0.973ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock fabric rise edge)     0.000     0.000 r  <hidden>
+                                                      0.000     0.000 r  clk
+                         net (fo=656, unset)          0.973     0.973    clk
+                         FDRE                                         r  channel[2].last_tick_reg[2][1]/C
+  -------------------------------------------------------------------    -------------------
+                         FDRE (Prop_fdre_C_Q)         0.518     1.491 r  channel[2].last_tick_reg[2][1]/Q
+                         net (fo=1, unplaced)         0.311     1.802    last_applied_ticks[129]
+                         LUT2 (Prop_lut2_I1_O)        0.295     2.097 r  age_cycles[131]_INST_0_i_4/O
+                         net (fo=1, unplaced)         0.000     2.097    age_cycles[131]_INST_0_i_4_n_0
+                         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.533     2.630 r  age_cycles[131]_INST_0_i_1/CO[3]
+                         net (fo=1, unplaced)         0.009     2.639    age_cycles[131]_INST_0_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     2.756 r  age_cycles[135]_INST_0_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000     2.756    age_cycles[135]_INST_0_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     2.873 r  age_cycles[139]_INST_0_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000     2.873    age_cycles[139]_INST_0_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     2.990 r  age_cycles[143]_INST_0_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000     2.990    age_cycles[143]_INST_0_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     3.107 r  age_cycles[147]_INST_0_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000     3.107    age_cycles[147]_INST_0_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     3.224 r  age_cycles[151]_INST_0_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000     3.224    age_cycles[151]_INST_0_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     3.341 r  age_cycles[155]_INST_0_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000     3.341    age_cycles[155]_INST_0_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     3.458 r  age_cycles[159]_INST_0_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000     3.458    age_cycles[159]_INST_0_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     3.575 r  age_cycles[163]_INST_0_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000     3.575    age_cycles[163]_INST_0_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     3.692 r  age_cycles[167]_INST_0_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000     3.692    age_cycles[167]_INST_0_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     3.809 r  age_cycles[171]_INST_0_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000     3.809    age_cycles[171]_INST_0_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     3.926 r  age_cycles[175]_INST_0_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000     3.926    age_cycles[175]_INST_0_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     4.043 r  age_cycles[179]_INST_0_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000     4.043    age_cycles[179]_INST_0_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     4.160 r  age_cycles[183]_INST_0_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000     4.160    age_cycles[183]_INST_0_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     4.277 r  age_cycles[187]_INST_0_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000     4.277    age_cycles[187]_INST_0_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_O[3])
+                                                      0.331     4.608 r  age_cycles[191]_INST_0_i_1/O[3]
+                         net (fo=3, unplaced)         0.636     5.244    channel[2].age[63]
+                         LUT2 (Prop_lut2_I1_O)        0.302     5.546 r  expired_now[2]_INST_0_i_3/O
+                         net (fo=1, unplaced)         0.000     5.546    expired_now[2]_INST_0_i_3_n_0
+                         CARRY4 (Prop_carry4_DI[3]_CO[3])
+                                                      0.429     5.975 r  expired_now[2]_INST_0_i_1/CO[3]
+                         net (fo=4, unplaced)         0.942     6.917    expired_now_20
+                         LUT2 (Prop_lut2_I1_O)        0.124     7.041 r  expired_now[2]_INST_0/O
+                         net (fo=1, unplaced)         0.902     7.943    expired_now[2]
+                         LUT6 (Prop_lut6_I3_O)        0.124     8.067 r  inhibit_all_INST_0/O
+                         net (fo=8, unset)            0.973     9.040    inhibit_all
+                                                                      r  inhibit_all
+  -------------------------------------------------------------------    -------------------
+
+                         (clock fabric rise edge)    50.000    50.000 r  <hidden>
+                         clock pessimism              0.000    50.000    <hidden>
+                         clock uncertainty           -0.035    49.965    <hidden>
+                         output delay                -0.000    49.965    <hidden>
+  -------------------------------------------------------------------
+                         required time                         49.965    <hidden>
+                         arrival time                          -9.040    <hidden>
+  -------------------------------------------------------------------
+                         slack                                 40.925    <hidden>
+
+
+
+
+
+Min Delay Paths
+--------------------------------------------------------------------------------------
+Slack (VIOLATED) :        -0.327ns  (arrival time - required time)
+  Source:                 timestamp[0]
+                            (input port clocked by fabric  {rise@0.000ns fall@25.000ns period=50.000ns})
+  Destination:            channel[0].fault_time_reg[0][0]/D
+                            (rising edge-triggered cell FDRE clocked by fabric  {rise@0.000ns fall@25.000ns period=50.000ns})
+  Path Group:             fabric
+  Path Type:              Hold (Min at Slow Process Corner)
+  Requirement:            0.000ns  (fabric rise@0.000ns - fabric rise@0.000ns)
+  Data Path Delay:        0.924ns  (logic 0.000ns (0.000%)  route 0.924ns (100.000%))
+  Logic Levels:           0  
+  Input Delay:            0.000ns
+  Clock Path Skew:        0.973ns (DCD - SCD - CPR)
+    Destination Clock Delay (DCD):    0.973ns
+    Source Clock Delay      (SCD):    0.000ns
+    Clock Pessimism Removal (CPR):    -0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock fabric rise edge)     0.000     0.000 r  <hidden>
+                         input delay                  0.000     0.000    <hidden>
+                                                      0.000     0.000 r  timestamp[0]
+                         net (fo=13, unset)           0.924     0.924    timestamp[0]
+                         FDRE                                         r  channel[0].fault_time_reg[0][0]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock fabric rise edge)     0.000     0.000 r  <hidden>
+                                                      0.000     0.000 r  clk
+                         net (fo=656, unset)          0.973     0.973    clk
+                         FDRE                                         r  channel[0].fault_time_reg[0][0]/C
+                         clock pessimism              0.000     0.973    <hidden>
+                         clock uncertainty            0.035     1.008    <hidden>
+                         FDRE (Hold_fdre_C_D)         0.243     1.251    channel[0].fault_time_reg[0][0]
+  -------------------------------------------------------------------
+                         required time                         -1.251    <hidden>
+                         arrival time                           0.924    <hidden>
+  -------------------------------------------------------------------
+                         slack                                 -0.327    <hidden>
+
+
+
+
+
+Pulse Width Checks
+--------------------------------------------------------------------------------------
+Clock Name:         fabric
+Waveform(ns):       { 0.000 25.000 }
+Period(ns):         50.000
+Sources:            { clk }
+
+Check Type        Corner  Lib Pin  Reference Pin  Required(ns)  Actual(ns)  Slack(ns)  Location  Pin
+Min Period        n/a     FDRE/C   n/a            1.000         50.000      49.000               applied_accepted_reg/C
+Low Pulse Width   Slow    FDRE/C   n/a            0.500         25.000      24.500               applied_accepted_reg/C
+High Pulse Width  Slow    FDRE/C   n/a            0.500         25.000      24.500               applied_accepted_reg/C
+
+
+

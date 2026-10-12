@@ -110,6 +110,10 @@ python3 tools/vitis_check.py --kernel atomic
 ```
 
 Icarus is required for existing RTL regressions. Evidence is retained in
-`docs/evidence/atomic_mailbox/`. The next integration milestone is independent
-per-motor target-age protection, followed by the shared scheduler and common PWM
-commit. The previous ring/profile implementation remains available throughout.
+`docs/evidence/atomic_mailbox/`. Independent [per-motor target-age protection](target_age.md) is now implemented
+as a separate RTL component. The next milestone is connecting it to the protocol,
+shared scheduler and common PWM commit. The previous ring/profile implementation remains available throughout.
+
+The [generated-HLS transport adapter](atomic_hls_adapter.md) now passes standalone
+RTL integration tests. Scheduler arbitration and live-safety revalidation remain
+outstanding; the transport alone does not connect the complete controller.

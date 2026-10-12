@@ -1,0 +1,59 @@
+Test project /home/rklinkhammer/workspace/dmotor/build/atomic_protocol
+      Start  1: arithmetic
+ 1/27 Test  #1: arithmetic .......................   Passed    0.02 sec
+      Start  2: protocol
+ 2/27 Test  #2: protocol .........................   Passed    0.00 sec
+      Start  3: generated_abi
+ 3/27 Test  #3: generated_abi ....................   Passed    0.05 sec
+      Start  4: rtl_safety
+ 4/27 Test  #4: rtl_safety .......................   Passed    0.07 sec
+      Start  5: rtl_scheduler
+ 5/27 Test  #5: rtl_scheduler ....................   Passed    0.06 sec
+      Start  6: rtl_qcencoder
+ 6/27 Test  #6: rtl_qcencoder ....................   Passed    0.06 sec
+      Start  7: rtl_pwm
+ 7/27 Test  #7: rtl_pwm ..........................   Passed    0.05 sec
+      Start  8: rtl_latency
+ 8/27 Test  #8: rtl_latency ......................   Passed    0.05 sec
+      Start  9: rtl_axi_bridge
+ 9/27 Test  #9: rtl_axi_bridge ...................   Passed    0.06 sec
+      Start 10: rtl_encoder_snapshot
+10/27 Test #10: rtl_encoder_snapshot .............   Passed    0.05 sec
+      Start 11: rtl_target_age
+11/27 Test #11: rtl_target_age ...................   Passed    0.06 sec
+      Start 12: rtl_shared_scheduler
+12/27 Test #12: rtl_shared_scheduler .............   Passed    0.08 sec
+      Start 13: control
+13/27 Test #13: control ..........................   Passed    0.00 sec
+      Start 14: command_engine
+14/27 Test #14: command_engine ...................   Passed    0.00 sec
+      Start 15: peripheral
+15/27 Test #15: peripheral .......................   Passed    0.00 sec
+      Start 16: rtl_peripheral_integrated
+16/27 Test #16: rtl_peripheral_integrated ........   Passed    9.68 sec
+      Start 17: configuration
+17/27 Test #17: configuration ....................   Passed    0.00 sec
+      Start 18: motion
+18/27 Test #18: motion ...........................   Passed    0.00 sec
+      Start 19: motion_queue
+19/27 Test #19: motion_queue .....................   Passed    0.00 sec
+      Start 20: rtl_motion_integrated
+20/27 Test #20: rtl_motion_integrated ............   Passed   26.02 sec
+      Start 21: velocity
+21/27 Test #21: velocity .........................   Passed    0.00 sec
+      Start 22: controller
+22/27 Test #22: controller .......................   Passed    0.00 sec
+      Start 23: dispatcher
+23/27 Test #23: dispatcher .......................   Passed    0.00 sec
+      Start 24: position_error
+24/27 Test #24: position_error ...................   Passed    0.01 sec
+      Start 25: atomic_mailbox
+25/27 Test #25: atomic_mailbox ...................   Passed    0.00 sec
+      Start 26: generated_mailbox_abi
+26/27 Test #26: generated_mailbox_abi ............   Passed    0.04 sec
+      Start 27: atomic_mailbox_top
+27/27 Test #27: atomic_mailbox_top ...............   Passed    0.00 sec
+
+100% tests passed, 0 tests failed out of 27
+
+Total Test time (real) =  36.41 sec

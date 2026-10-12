@@ -60,7 +60,7 @@ timing = json.loads((root / 'abi/timing.json').read_text())
 fabric = next(r['reset'] for r in schema['registers'] if r['name'] == 'CLOCK_HZ')
 assert all(isinstance(v, int) and v > 0 for v in timing.values())
 assert 1000000 <= fabric <= 100000000 and fabric % 1000000 == 0, 'Validated clock range: integer MHz from 1 to 100'
-for prefix in ('zero_timeout', 'watchdog', 'pi_period'):
+for prefix in ('zero_timeout', 'watchdog', 'pi_period', 'target_timeout'):
     assert timing[prefix + '_min_us'] <= timing[prefix + '_max_us']
 assert all(fabric % timing[k] == 0 for k in ('control_hz', 'pwm_hz', 'encoder_max_events_hz'))
 assert 1000000 % timing['control_hz'] == 0
@@ -71,9 +71,12 @@ assert timing['control_hz'] == 1000
 assert timing['encoder_max_events_hz'] <= 100000
 assert timing['pi_period_max_us'] <= 100000
 assert timing['settle_max_ticks'] <= 1000000
+assert 1000000 % timing['target_publish_hz'] == 0
+assert timing['target_timeout_min_us'] <= timing['target_timeout_default_us'] <= timing['target_timeout_max_us']
 units = {'microseconds_per_second': 1000000}
 derived = {
     'fabric_hz': fabric,
+    'target_publish_period_us': 1000000 // timing['target_publish_hz'],
     'clocks_per_us': fabric // 1000000,
     'control_period_us': 1000000 // timing['control_hz'],
     'control_tick_cycles': fabric // timing['control_hz'],
@@ -83,7 +86,7 @@ derived = {
     'encoder_min_edge_cycles': fabric // timing['encoder_max_events_hz'],
     'encoder_max_events_per_tick': timing['encoder_max_events_hz'] // timing['control_hz'],
 }
-for name in ('encoder_max_interval', 'zero_timeout_min', 'zero_timeout_max', 'acquisition_timeout_min'):
+for name in ('encoder_max_interval', 'zero_timeout_min', 'zero_timeout_max', 'acquisition_timeout_min', 'target_timeout_default', 'target_timeout_min', 'target_timeout_max'):
     derived[name + '_cycles'] = timing[name + '_us'] * (fabric // 1000000)
 assert derived['control_deadline_cycles'] < derived['control_tick_cycles']
 assert timing['external_halt_pipeline_max_cycles'] <= derived['external_halt_budget_cycles']

@@ -1372,3 +1372,51 @@ pending. The legacy ring ABI and control implementations remain intact.
 
 The final 25-test native/RTL regression passes, including both existing generated-RTL
 integration tests, the new atomic protocol/top tests and both ABI consistency checks.
+
+## Independent four-motor target-age protection
+
+[Component contract and evidence](target_age.md): the independent RTL target timers
+use named generated publication/timeout constants, per-channel disabled-only
+configuration, atomic selected-channel activation, exact-boundary expiry priority,
+sticky source attribution and global inhibit/HALT requests. READY and controlled
+STOPPING disarm target age; the separate authorization watchdog remains active.
+
+All 26 regression tests pass. Additional timer tests pass after extending exact
+renewal/unconfigured cases. The timer bench includes a real authorization watchdog
+and HALT aggregator; it demonstrates watchdog/target-age independence and no
+automatic restart. Timestamp stimuli are deterministic, not a qualified system
+time source. Evidence: `docs/evidence/target_age/`.
+
+Vivado 2026.1 standalone OOC synthesis: 887 LUT, 657 FF, no DSP/BRAM. Setup slack
++40.925 ns at 20 MHz; hold slack -0.327 ns with ideal zero boundary delays and no
+integrated clock skew. Timing closure is not established. The batch/engine/AXI/PWM
+integration and complete protective path still need implementation and verification.
+
+## Shared scheduler/protection/PWM boundary
+
+[Implementation and scope](shared_control.md): an autonomous four-channel frame
+scheduler now connects target-age acceptance, normalized protocol/engine handshakes
+and actual phase-aligned PWM blocks. Result tags, frame deadline, age acceptance
+and successful retirement gate the common PWM update. Cancel drains an accepted
+call without resetting peer HLS state; disabling clears retained output duty.
+
+All 27 regression tests pass. Extended boundary tests pass after adding disabled
+duty replay prevention. The test uses real target-age/PWM RTL and behavioral
+engine/protocol responses, not generated-HLS IP. Evidence: `docs/evidence/shared_control/`.
+The C++ algorithms and shared context engine remain HLS; no control algorithm was
+reimplemented in this RTL boundary. Generated-port adapters are the next milestone.
+
+Vivado 2026.1 OOC synthesis at 20 MHz: 3167 LUT, 2872 FF, no DSP/BRAM, including
+target-age and four PWM blocks. Setup/hold slack +33.808/-0.327 ns under ideal
+boundary constraints; full clock constraints and routed timing closure remain
+outstanding. Neither the atomic protocol IP nor motor HLS engine is included.
+
+## Generated atomic-mailbox transport
+
+The [atomic HLS adapter](atomic_hls_adapter.md) now passes against actual generated
+mailbox RTL, including synchronous dual-port reads, reply capture, immutable launch
+inputs, backpressure, invalidate/late-retire behavior and timeout/reset recovery.
+All 28 native/RTL regression tests pass (35.44 seconds). Evidence is retained in
+`docs/evidence/atomic_adapter/regression.log`. No new resource or timing-closure
+claim is made. Scheduler/host arbitration, live-safety revalidation and the shared
+motor-engine adapter remain outstanding.

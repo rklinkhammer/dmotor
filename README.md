@@ -8,8 +8,13 @@ It is **not an integrated motor controller or a board-ready bitstream**.
 The [shared-engine experiment](docs/shared_mailbox.md) uses 25,894 LUT for four
 motor contexts by HLS estimate. The new [atomic batch protocol](docs/atomic_mailbox.md)
 implements the first integration milestone with its own provisional generated ABI
-and host reference interface. Target-age protection, the multi-channel scheduler
-and physical output integration remain pending. Existing C++/RTL components and
+and host reference interface. [Independent target-age protection](docs/target_age.md)
+is implemented and tested. The [shared scheduler/PWM boundary](docs/shared_control.md)
+now connects it to four phase-aligned outputs using normalized HLS handshakes.
+The [atomic HLS transport](docs/atomic_hls_adapter.md) is tested against generated
+mailbox RTL. Scheduler arbitration, the motor-engine adapter and full physical
+integration remain pending.
+Existing C++/RTL components and
 the legacy full-profile ring interface are retained and tested.
 
 The active full profile uses exact 64-bit division with one restoring phase per
