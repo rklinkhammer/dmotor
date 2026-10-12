@@ -1,0 +1,192 @@
+[
+  {
+    "width": "16",
+    "LUT": 232,
+    "FF": 56,
+    "DSP": 0,
+    "BRAM_18K": 0,
+    "Worst-caseLatency": 33,
+    "Interval-max": 32,
+    "period_ns": 6.058
+  },
+  {
+    "width": "24",
+    "LUT": 282,
+    "FF": 81,
+    "DSP": 0,
+    "BRAM_18K": 0,
+    "Worst-caseLatency": 49,
+    "Interval-max": 48,
+    "period_ns": 6.184
+  },
+  {
+    "width": "30",
+    "LUT": 318,
+    "FF": 99,
+    "DSP": 0,
+    "BRAM_18K": 0,
+    "Worst-caseLatency": 61,
+    "Interval-max": 60,
+    "period_ns": 6.437
+  },
+  {
+    "width": "32",
+    "LUT": 330,
+    "FF": 105,
+    "DSP": 0,
+    "BRAM_18K": 0,
+    "Worst-caseLatency": 65,
+    "Interval-max": 64,
+    "period_ns": 6.426
+  },
+  {
+    "width": "33",
+    "LUT": 336,
+    "FF": 109,
+    "DSP": 0,
+    "BRAM_18K": 0,
+    "Worst-caseLatency": 67,
+    "Interval-max": 66,
+    "period_ns": 6.575
+  },
+  {
+    "width": "36",
+    "LUT": 354,
+    "FF": 118,
+    "DSP": 0,
+    "BRAM_18K": 0,
+    "Worst-caseLatency": 73,
+    "Interval-max": 72,
+    "period_ns": 7.021
+  },
+  {
+    "width": "original64",
+    "LUT": 440,
+    "FF": 138,
+    "DSP": 0,
+    "BRAM_18K": 0,
+    "Worst-caseLatency": 129,
+    "Interval-max": 128,
+    "period_ns": 8.177
+  },
+  {
+    "width": "39",
+    "LUT": 372,
+    "FF": 127,
+    "DSP": 0,
+    "BRAM_18K": 0,
+    "Worst-caseLatency": 79,
+    "Interval-max": 78,
+    "period_ns": 7.466
+  },
+  {
+    "width": "48",
+    "LUT": 426,
+    "FF": 154,
+    "DSP": 0,
+    "BRAM_18K": 0,
+    "Worst-caseLatency": 97,
+    "Interval-max": 96,
+    "period_ns": 7.244
+  },
+  {
+    "width": "64",
+    "LUT": 522,
+    "FF": 202,
+    "DSP": 0,
+    "BRAM_18K": 0,
+    "Worst-caseLatency": 129,
+    "Interval-max": 128,
+    "period_ns": 8.177
+  },
+  {
+    "width": "32x4",
+    "LUT": 222,
+    "FF": 77,
+    "DSP": 0,
+    "BRAM_18K": 0,
+    "Worst-caseLatency": 65,
+    "Interval-max": 64,
+    "period_ns": 5.935
+  },
+  {
+    "width": "30x14",
+    "LUT": 246,
+    "FF": 83,
+    "DSP": 0,
+    "BRAM_18K": 0,
+    "Worst-caseLatency": 61,
+    "Interval-max": 60,
+    "period_ns": 5.69
+  },
+  {
+    "width": "32x14",
+    "LUT": 250,
+    "FF": 87,
+    "DSP": 0,
+    "BRAM_18K": 0,
+    "Worst-caseLatency": 65,
+    "Interval-max": 64,
+    "period_ns": 5.69
+  },
+  {
+    "width": "36x8",
+    "LUT": 242,
+    "FF": 90,
+    "DSP": 0,
+    "BRAM_18K": 0,
+    "Worst-caseLatency": 73,
+    "Interval-max": 72,
+    "period_ns": 6.339
+  },
+  {
+    "width": "33x17",
+    "LUT": 272,
+    "FF": 93,
+    "DSP": 0,
+    "BRAM_18K": 0,
+    "Worst-caseLatency": 67,
+    "Interval-max": 66,
+    "period_ns": 6.063
+  },
+  {
+    "width": "36x17",
+    "LUT": 278,
+    "FF": 99,
+    "DSP": 0,
+    "BRAM_18K": 0,
+    "Worst-caseLatency": 73,
+    "Interval-max": 72,
+    "period_ns": 6.063
+  },
+  {
+    "width": "39x10",
+    "LUT": 248,
+    "FF": 98,
+    "DSP": 0,
+    "BRAM_18K": 0,
+    "Worst-caseLatency": 79,
+    "Interval-max": 78,
+    "period_ns": 5.594
+  },
+  {
+    "width": "36x20",
+    "LUT": 290,
+    "FF": 102,
+    "DSP": 0,
+    "BRAM_18K": 0,
+    "Worst-caseLatency": 73,
+    "Interval-max": 72,
+    "period_ns": 6.08
+  },
+  {
+    "width": "39x20",
+    "LUT": 296,
+    "FF": 108,
+    "DSP": 0,
+    "BRAM_18K": 0,
+    "Worst-caseLatency": 79,
+    "Interval-max": 78,
+    "period_ns": 6.08
+  }
+]

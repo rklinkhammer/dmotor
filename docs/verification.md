@@ -1249,3 +1249,33 @@ All 14 applicable native/RTL tests passed; motion and dispatcher both passed
 Vitis C simulation, synthesis and Verilog co-simulation. The tests include
 exhaustive input conversion and sub-quantum acceleration progress; physical
 closed-loop performance and shared-engine resource usage remain unmeasured.
+
+## Width-specialized restoring dividers
+
+Measured 19 standalone variants at 20 MHz on xc7z020clg400-1 with Vitis 2026.1;
+all passed native boundary/random checks, C simulation and Verilog co-simulation.
+See [divider resource tables](divider_widths.md) and
+`docs/evidence/divider_widths/`. The shared tailored unsigned numerator/denominator
+sizes are 32/14 for 0.1 RPM (250 LUT, 87 FF), 36/17 for Q7 (278 LUT, 99 FF), and
+39/20 for exact milliRPM (296 LUT, 108 FF). Original standalone 64-bit division
+uses 440 LUT and 138 FF. All variants use zero DSP/BRAM. These are unit-level
+HLS estimates; no production divider was changed, and complete-engine resource
+savings have not yet been measured. The tool also measures equal-width and
+separate proportional/integral specializations for comparison.
+
+## Shared exact PI divider integrated into bounded velocity candidate
+
+[Integration report](velocity_exact_shared.md): one 39/20-bit PI divider is shared
+through `rounded()`, while the encoder estimator retains its wide divider.
+Complete dispatcher LUTs decrease from 21347 to 21007 (-340), FF from 10635 to
+10443, maximum latency from 801 to 651 cycles (40.05 to 32.55 us at 20 MHz).
+DSP/BRAM remain 20/4 and the estimated path remains 34.617 ns. Generated RTL
+confirms one PI divider, separate from the estimator divider.
+
+All 14 applicable native/RTL tests pass, plus 100000 bounded random divisions
+with both native and Vitis arbitrary-width arithmetic. Motion/controller/dispatcher
+retained traces match exactly. Motion and dispatcher pass HLS C simulation and
+Verilog co-simulation. Evidence: `docs/evidence/velocity_exact_shared/`.
+Reproduce with `prepare_bounded_velocity.py --variant exact-shared` and a fresh
+output path. Main full-profile sources are unchanged; this is complete candidate
+integration, not yet full-profile adoption or two-motor remeasurement.

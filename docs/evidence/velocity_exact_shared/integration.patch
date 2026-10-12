@@ -1,0 +1,166 @@
+--- a/include/dmotor/detail/arithmetic.hpp
++++ b/include/dmotor/detail/arithmetic.hpp
+@@ -5,5 +5,8 @@
+ // Exact unsigned division; denominator must be nonzero. Two phases per bit
+ // separate comparison from subtraction, bounding the combinational path.
+ uint64_t divide(uint64_t numerator, uint64_t denominator);
++// Bounded PI only: numerator < 2^39, 0 < denominator < 2^20.
++// Callers include rounding offsets before entry and prove these bounds.
++uint64_t divide_pi(uint64_t numerator, uint32_t denominator);
+ } // namespace detail
+ } // namespace dmotor
+--- a/src/arithmetic.cpp
++++ b/src/arithmetic.cpp
+@@ -1,4 +1,7 @@
+ #include "dmotor/detail/arithmetic.hpp"
++#if defined(__SYNTHESIS__) || defined(DMOTOR_USE_AP_INT)
++#include <ap_int.h>
++#endif
+ namespace dmotor {
+ namespace detail {
+ uint64_t divide(uint64_t numerator, uint64_t denominator) {
+@@ -21,5 +24,37 @@
+     return dividend_quotient;
+ }
+ 
++uint64_t divide_pi(uint64_t numerator, uint32_t denominator) {
++    constexpr unsigned numerator_bits = 39;
++    constexpr unsigned denominator_bits = 20;
++    constexpr uint64_t numerator_mask = (uint64_t{1} << numerator_bits) - 1;
++    constexpr uint32_t denominator_mask = (uint32_t{1} << denominator_bits) - 1;
++#if defined(__SYNTHESIS__) || defined(DMOTOR_USE_AP_INT)
++    using quotient_type = ap_uint<numerator_bits>;
++    using remainder_type = ap_uint<denominator_bits>;
++#else
++    // The masked native model follows the same per-phase truncation as HLS.
++    using quotient_type = uint64_t;
++    using remainder_type = uint32_t;
++#endif
++    quotient_type quotient = numerator & numerator_mask;
++    remainder_type remainder = 0;
++    const remainder_type divisor = denominator & denominator_mask;
++    bool subtract = false;
++    for (unsigned phase = 0; phase < 2 * numerator_bits; ++phase) {
++        if ((phase & 1U) == 0) {
++            const bool carry = (remainder >> (denominator_bits - 1)) != 0;
++            remainder = ((remainder << 1) |
++                         static_cast<remainder_type>(quotient >> (numerator_bits - 1))) &
++                        denominator_mask;
++            subtract = carry || remainder >= divisor;
++        } else {
++            if (subtract) remainder = (remainder - divisor) & denominator_mask;
++            quotient = ((quotient << 1) | static_cast<quotient_type>(subtract)) & numerator_mask;
++        }
++    }
++    return static_cast<uint64_t>(quotient);
++}
++
+ } // namespace detail
+ } // namespace dmotor
+--- a/src/motion.cpp
++++ b/src/motion.cpp
+@@ -14,7 +14,11 @@
+     const uint64_t absolute =
+         negative ? uint64_t{0} - static_cast<uint64_t>(value) : static_cast<uint64_t>(value);
+     const uint64_t divisor = static_cast<uint64_t>(denominator);
+-    const int64_t quotient = static_cast<int64_t>(divide(absolute + divisor / 2, divisor));
++    // Bounded exact milliRPM: |error| <= 400000, gain <= 1048576.
++    // P rounded numerator <= 419430400500; clamped I <= 65536500000.
++    // Divisors are 1000 and 1000000. Both calls fit the shared 39/20 core.
++    const int64_t quotient = static_cast<int64_t>(
++        divide_pi(absolute + divisor / 2, static_cast<uint32_t>(divisor)));
+     return negative ? -quotient : quotient;
+ }
+ } // namespace detail
+--- a/tests/arithmetic_test.cpp
++++ b/tests/arithmetic_test.cpp
+@@ -7,7 +7,28 @@
+         std::exit(1);
+     }
+ }
++static void check_pi(uint64_t n, uint32_t d) {
++    if (dmotor::detail::divide_pi(n, d) != n / d) {
++        std::cerr << "bounded PI division mismatch\n";
++        std::exit(1);
++    }
++}
+ int main() {
++    constexpr uint64_t max_n = (uint64_t{1} << 39) - 1;
++    constexpr uint32_t max_d = (uint32_t{1} << 20) - 1;
++    for (uint64_t n : {uint64_t{0}, uint64_t{1}, uint64_t{65536500000},
++                       uint64_t{419430400500}, max_n - 1, max_n}) {
++        for (uint32_t d : {1U, 2U, 1000U, 1000000U, max_d}) check_pi(n, d);
++    }
++    uint64_t pi_state = 0x238493;
++    for (unsigned i = 0; i < 100000; ++i) {
++        pi_state = pi_state * 6364136223846793005ULL + 1;
++        const uint64_t n = pi_state & max_n;
++        pi_state = pi_state * 6364136223846793005ULL + 1;
++        const uint32_t d = static_cast<uint32_t>(pi_state) & max_d;
++        check_pi(n, d ? d : 1);
++    }
++
+     const uint64_t limits[] = {0, 1, 2, 3, 999, 1000, 1000000000, UINT32_MAX,
+                                uint64_t{1} << 32, (uint64_t{1} << 63) - 1,
+                                uint64_t{1} << 63, UINT64_MAX - 1, UINT64_MAX};
+--- a/platforms/vitis/motion.cfg
++++ b/platforms/vitis/motion.cfg
+@@ -5,13 +5,15 @@
+ syn.top=dmotor_motion
+ syn.file=../../src/protocol.cpp
+ syn.file=../../src/motion.cpp
+-syn.cflags=-I../../include
++syn.cflags=-I../../include -DDMOTOR_USE_AP_INT
+ syn.rtl.reset=all
+ tb.file=../../tests/motion_test.cpp
+-tb.cflags=-I../../include
++tb.cflags=-I../../include -DDMOTOR_USE_AP_INT
+ package.output.format=ip_catalog
+ # Keep exact arithmetic units reusable; no changes to the public interface.
+ syn.directive.inline=location=dmotor::detail::rounded off=1
+ syn.directive.allocation=location=dmotor::MotionExecutor::step_impl instances=dmotor::detail::rounded limit=1 type=function
+ syn.directive.inline=location=dmotor::detail::divide off=1
+ syn.directive.allocation=location=dmotor::MotionExecutor::step_impl instances=dmotor::detail::divide limit=1 type=function
++
++syn.directive.inline=location=dmotor::detail::divide_pi off=1
+--- a/platforms/vitis/controller.cfg
++++ b/platforms/vitis/controller.cfg
+@@ -7,13 +7,15 @@
+ syn.file=../../src/motion.cpp
+ syn.file=../../src/velocity.cpp
+ syn.file=../../src/controller.cpp
+-syn.cflags=-I../../include
++syn.cflags=-I../../include -DDMOTOR_USE_AP_INT
+ syn.rtl.reset=all
+ tb.file=../../tests/controller_test.cpp
+-tb.cflags=-I../../include
++tb.cflags=-I../../include -DDMOTOR_USE_AP_INT
+ package.output.format=ip_catalog
+ # Keep exact arithmetic units reusable; no changes to the public interface.
+ syn.directive.inline=location=dmotor::detail::rounded off=1
+ syn.directive.allocation=location=dmotor::MotionExecutor::step_impl instances=dmotor::detail::rounded limit=1 type=function
+ syn.directive.inline=location=dmotor::detail::divide off=1
+ syn.directive.allocation=location=dmotor::MotionExecutor::step_impl instances=dmotor::detail::divide limit=1 type=function
++
++syn.directive.inline=location=dmotor::detail::divide_pi off=1
+--- a/platforms/vitis/dispatcher.cfg
++++ b/platforms/vitis/dispatcher.cfg
+@@ -8,10 +8,10 @@
+ syn.file=../../src/velocity.cpp
+ syn.file=../../src/controller.cpp
+ syn.file=../../src/dispatcher.cpp
+-syn.cflags=-I../../include
++syn.cflags=-I../../include -DDMOTOR_USE_AP_INT
+ syn.rtl.reset=all
+ tb.file=../../tests/dispatcher_test.cpp
+-tb.cflags=-I../../include
++tb.cflags=-I../../include -DDMOTOR_USE_AP_INT
+ package.output.format=ip_catalog
+ # Keep exact arithmetic units reusable; no changes to the public interface.
+ syn.directive.inline=location=dmotor::detail::rounded off=1
+@@ -22,3 +22,5 @@
+ syn.directive.allocation=location=dmotor::MotionExecutor::step_impl instances=dmotor::MotionExecutor::finish limit=1 type=function
+ syn.directive.inline=location=dmotor::MotionExecutor::fail off=1
+ syn.directive.allocation=location=dmotor::MotionExecutor::step_impl instances=dmotor::MotionExecutor::fail limit=1 type=function
++
++syn.directive.inline=location=dmotor::detail::divide_pi off=1
