@@ -1319,3 +1319,56 @@ reports, equivalence logs, and full test output are preserved in
 Motion, velocity, controller and dispatcher also passed HLS C simulation and
 Verilog co-simulation with the adopted divider. Their current evidence reports
 are refreshed; no hardware or place-and-route qualification is implied.
+
+## Atomic velocity mailbox experiment
+
+[Measurement and contract](velocity_mailbox.md): replacing the bounded velocity
+profile's command/completion rings with a latest-pending-target mailbox reduces
+LUT from 20794 to 17589 (-3205, 15.4%), FF from 10439 to 7191, and BRAM18K
+from 4 to 0. DSP remains 20. Maximum HLS latency falls from 470 to 324 cycles
+(23.50 to 16.20 us at 20 MHz); both fresh candidates meet HLS timing.
+
+All 15 applicable native/RTL tests pass, including 740 control snapshots matched
+to the existing Controller oracle and separate mailbox protocol assertions. Both
+tops pass HLS C simulation and Verilog co-simulation. Evidence is preserved in
+`docs/evidence/velocity_mailbox/`. Main sources and public ABI remain unchanged;
+physical protection and AXI integration are not part of this isolated measurement.
+Four independent instances still exceed device LUT capacity.
+
+## Four-motor shared velocity mailbox
+
+[Measurement](shared_mailbox.md): the isolated four-context load/store engine
+uses 25894 LUT, 32416 FF, 20 DSP and no BRAM18K at 20 MHz. Against four
+independent mailbox estimates (70356 LUT), this saves 44462 LUT (63.2%) while
+adding 3652 FF. The HLS path estimate is 35.578 ns within the 36.50 ns budget.
+Maximum service latency/interval are 333/334 cycles; four reserved intervals
+require 66.8 us before wrapper overhead, within the 800 us control budget.
+
+All 16 applicable native/RTL tests and HLS C simulation/Verilog co-simulation
+pass. All 16 reply words match four independent reference contexts across
+1673 interleaved transactions. Evidence: `docs/evidence/shared_mailbox/`.
+Main sources are unchanged. The engine occupies 48.7% of device LUT by HLS
+estimate; full scheduler, encoder/PWM and protective integration, arbitration
+bounds, and place-and-route remain to be measured. The in-place alternatives
+were stopped in compilation and have no resource or RTL co-simulation result.
+
+## Revision 0.18 atomic batch protocol
+
+[Implementation](atomic_mailbox.md) adds a standalone C++ HLS atomic velocity
+batch state machine, a distinct generated DMB1 draft ABI, and a host transport
+reference. Publication, pending replacement, tick reservation and whole-frame
+retirement are separate. Invalidations prevent stale retirement and discard whole
+intersecting batches. Native tests cover 60 mask/invalidation combinations plus
+protocol/range/session/generation/stop/failure/snapshot races.
+
+Vitis 2026.1 on xc7z020clg400-1 at 20 MHz reports 6249 LUT, 4507 FF, zero
+DSP/BRAM, maximum latency 52 cycles (2.60 us), interval 53, and estimated path
+19.860 ns. HLS C simulation and Verilog co-simulation pass 1165 transactions
+comparing all 16 reply words to the C++ reference. Evidence is retained in
+`docs/evidence/atomic_mailbox/`. This is a standalone component measurement, not
+the integrated four-motor cost or same-cycle safety-priority qualification.
+Target-age timers, shared scheduler/PWM retirement and new AXI integration remain
+pending. The legacy ring ABI and control implementations remain intact.
+
+The final 25-test native/RTL regression passes, including both existing generated-RTL
+integration tests, the new atomic protocol/top tests and both ABI consistency checks.

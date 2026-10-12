@@ -1,0 +1,199 @@
+
+
+================================================================
+== Vitis HLS Report for 'dmotor_mailbox'
+================================================================
+* Date:           Sun Oct 11 22:23:08 2026
+
+* Version:        2026.1 (Build 6493734 on Jun 16 2026)
+* Project:        vitis_dispatcher
+* Solution:       hls
+* Product family: zynq
+* Target device:  xc7z020-clg400-1
+
+
+================================================================
+== Performance Estimates
+================================================================
++ Timing: 
+    * Summary: 
+    +--------+----------+-----------+------------+
+    |  Clock |  Target  | Estimated | Uncertainty|
+    +--------+----------+-----------+------------+
+    |ap_clk  |  50.00 ns|  35.251 ns|    13.50 ns|
+    +--------+----------+-----------+------------+
+
++ Latency: 
+    * Summary: 
+    +---------+---------+----------+-----------+-----+-----+---------+
+    |  Latency (cycles) |  Latency (absolute)  |  Interval | Pipeline|
+    |   min   |   max   |    min   |    max    | min | max |   Type  |
+    +---------+---------+----------+-----------+-----+-----+---------+
+    |       22|      324|  1.100 us|  16.200 us|   23|  325|       no|
+    +---------+---------+----------+-----------+-----+-----+---------+
+
+    + Detail: 
+        * Instance: 
+        +--------------------+---------+---------+---------+----------+-----------+-----+-----+---------+
+        |                    |         |  Latency (cycles) |  Latency (absolute)  |  Interval | Pipeline|
+        |      Instance      |  Module |   min   |   max   |    min   |    max    | min | max |   Type  |
+        +--------------------+---------+---------+---------+----------+-----------+-----+-----+---------+
+        |grp_service_fu_497  |service  |       11|      313|  0.550 us|  15.650 us|   11|  313|       no|
+        +--------------------+---------+---------+---------+----------+-----------+-----+-----+---------+
+
+        * Loop: 
+        N/A
+
+
+
+================================================================
+== Utilization Estimates
+================================================================
+* Summary: 
++-----------------+---------+-----+--------+-------+-----+
+|       Name      | BRAM_18K| DSP |   FF   |  LUT  | URAM|
++-----------------+---------+-----+--------+-------+-----+
+|DSP              |        -|    -|       -|      -|    -|
+|Expression       |        -|    -|       0|    135|    -|
+|FIFO             |        -|    -|       -|      -|    -|
+|Instance         |        0|   20|    6276|  17271|    0|
+|Memory           |        -|    -|       -|      -|    -|
+|Multiplexer      |        -|    -|       0|    183|    -|
+|Register         |        -|    -|     915|      -|    -|
++-----------------+---------+-----+--------+-------+-----+
+|Total            |        0|   20|    7191|  17589|    0|
++-----------------+---------+-----+--------+-------+-----+
+|Available        |      280|  220|  106400|  53200|    0|
++-----------------+---------+-----+--------+-------+-----+
+|Utilization (%)  |        0|    9|       6|     33|    0|
++-----------------+---------+-----+--------+-------+-----+
+
++ Detail: 
+    * Instance: 
+    +--------------------+---------+---------+----+------+-------+-----+
+    |      Instance      |  Module | BRAM_18K| DSP|  FF  |  LUT  | URAM|
+    +--------------------+---------+---------+----+------+-------+-----+
+    |grp_service_fu_497  |service  |        0|  20|  6276|  17271|    0|
+    +--------------------+---------+---------+----+------+-------+-----+
+    |Total               |         |        0|  20|  6276|  17271|    0|
+    +--------------------+---------+---------+----+------+-------+-----+
+
+    * DSP: 
+    N/A
+
+    * Memory: 
+    N/A
+
+    * FIFO: 
+    N/A
+
+    * Expression: 
+    +---------------------------------+----------+----+---+----+------------+------------+
+    |          Variable Name          | Operation| DSP| FF| LUT| Bitwidth P0| Bitwidth P1|
+    +---------------------------------+----------+----+---+----+------------+------------+
+    |icmp_ln187_fu_697_p2             |      icmp|   0|  0|  39|          32|           1|
+    |or_ln187_1_fu_692_p2             |        or|   0|  0|  32|          32|          32|
+    |or_ln187_fu_686_p2               |        or|   0|  0|  32|          32|          32|
+    |c_motion_generation_1_fu_703_p3  |    select|   0|  0|  32|           1|          32|
+    +---------------------------------+----------+----+---+----+------------+------------+
+    |Total                            |          |   0|  0| 135|          97|          97|
+    +---------------------------------+----------+----+---+----+------------+------------+
+
+    * Multiplexer: 
+    +--------------------------------+----+-----------+-----+-----------+
+    |              Name              | LUT| Input Size| Bits| Total Bits|
+    +--------------------------------+----+-----------+-----+-----------+
+    |ap_NS_fsm                       |  65|         13|    1|         13|
+    |configuration_r_address0_local  |  59|         11|    5|         55|
+    |configuration_r_address1_local  |  59|         11|    5|         55|
+    +--------------------------------+----+-----------+-----+-----------+
+    |Total                           | 183|         35|   11|        123|
+    +--------------------------------+----+-----------+-----+-----------+
+
+    * Register: 
+    +------------------------------------------+----+----+-----+-----------+
+    |                   Name                   | FF | LUT| Bits| Const Bits|
+    +------------------------------------------+----+----+-----+-----------+
+    |ap_CS_fsm                                 |  12|   0|   12|          0|
+    |authorized_read_reg_946                   |   1|   0|    1|          0|
+    |c_acquisition_duty_limit_q16_reg_881      |  32|   0|   32|          0|
+    |c_acquisition_timeout_cycles_reg_866      |  32|   0|   32|          0|
+    |c_motion_acceleration_mrpm_s_reg_741      |  32|   0|   32|          0|
+    |c_motion_counts_den_reg_766               |  32|   0|   32|          0|
+    |c_motion_counts_num_reg_761               |  32|   0|   32|          0|
+    |c_motion_deceleration_mrpm_s_reg_746      |  32|   0|   32|          0|
+    |c_motion_duty_limit_q16_reg_826           |  32|   0|   32|          0|
+    |c_motion_generation_1_reg_961             |  32|   0|   32|          0|
+    |c_motion_generation_reg_721               |  32|   0|   32|          0|
+    |c_motion_integral_limit_q16_reg_841       |  32|   0|   32|          0|
+    |c_motion_ki_q16_reg_821                   |  32|   0|   32|          0|
+    |c_motion_kp_q16_reg_806                   |  32|   0|   32|          0|
+    |c_motion_max_speed_mrpm_reg_726           |  32|   0|   32|          0|
+    |c_motion_position_tolerance_reg_781       |  32|   0|   32|          0|
+    |c_motion_settle_ticks_reg_801             |  32|   0|   32|          0|
+    |c_motion_stop_timeout_us_reg_846          |  32|   0|   32|          0|
+    |c_motion_velocity_tolerance_mrpm_reg_786  |  32|   0|   32|          0|
+    |c_zero_timeout_cycles_reg_861             |  32|   0|   32|          0|
+    |capture_fault_read_reg_936                |   1|   0|    1|          0|
+    |configuration_r_load_reg_886              |  32|   0|   32|          0|
+    |count_read_reg_921                        |  64|   0|   64|          0|
+    |direction_epoch_read_reg_911              |  32|   0|   32|          0|
+    |grp_service_fu_497_ap_start_reg           |   1|   0|    1|          0|
+    |invalid_transitions_read_reg_906          |  32|   0|   32|          0|
+    |last_edge_read_reg_916                    |  64|   0|   64|          0|
+    |negative_read_reg_901                     |   1|   0|    1|          0|
+    |now_read_reg_926                          |  64|   0|   64|          0|
+    |reset_read_reg_956                        |   1|   0|    1|          0|
+    |session_read_reg_931                      |  32|   0|   32|          0|
+    |stop_read_reg_941                         |   1|   0|    1|          0|
+    |tick_read_reg_951                         |   1|   0|    1|          0|
+    +------------------------------------------+----+----+-----+-----------+
+    |Total                                     | 915|   0|  915|          0|
+    +------------------------------------------+----+----+-----+-----------+
+
+
+
+================================================================
+== Interface
+================================================================
+* Summary: 
++--------------------------+-----+-----+------------+---------------------+--------------+
+|         RTL Ports        | Dir | Bits|  Protocol  |    Source Object    |    C Type    |
++--------------------------+-----+-----+------------+---------------------+--------------+
+|ap_clk                    |   in|    1|  ap_ctrl_hs|       dmotor_mailbox|  return value|
+|ap_rst                    |   in|    1|  ap_ctrl_hs|       dmotor_mailbox|  return value|
+|ap_start                  |   in|    1|  ap_ctrl_hs|       dmotor_mailbox|  return value|
+|ap_done                   |  out|    1|  ap_ctrl_hs|       dmotor_mailbox|  return value|
+|ap_idle                   |  out|    1|  ap_ctrl_hs|       dmotor_mailbox|  return value|
+|ap_ready                  |  out|    1|  ap_ctrl_hs|       dmotor_mailbox|  return value|
+|reset                     |   in|    1|     ap_none|                reset|        scalar|
+|request_address0          |  out|    2|   ap_memory|              request|         array|
+|request_ce0               |  out|    1|   ap_memory|              request|         array|
+|request_q0                |   in|   32|   ap_memory|              request|         array|
+|tick                      |   in|    1|     ap_none|                 tick|        scalar|
+|authorized                |   in|    1|     ap_none|           authorized|        scalar|
+|stop                      |   in|    1|     ap_none|                 stop|        scalar|
+|capture_fault             |   in|    1|     ap_none|        capture_fault|        scalar|
+|session                   |   in|   32|     ap_none|              session|        scalar|
+|now                       |   in|   64|     ap_none|                  now|        scalar|
+|count                     |   in|   64|     ap_none|                count|        scalar|
+|last_edge                 |   in|   64|     ap_none|            last_edge|        scalar|
+|direction_epoch           |   in|   32|     ap_none|      direction_epoch|        scalar|
+|invalid_transitions       |   in|   32|     ap_none|  invalid_transitions|        scalar|
+|negative                  |   in|    1|     ap_none|             negative|        scalar|
+|configuration_r_address0  |  out|    5|   ap_memory|      configuration_r|         array|
+|configuration_r_ce0       |  out|    1|   ap_memory|      configuration_r|         array|
+|configuration_r_q0        |   in|   32|   ap_memory|      configuration_r|         array|
+|configuration_r_address1  |  out|    5|   ap_memory|      configuration_r|         array|
+|configuration_r_ce1       |  out|    1|   ap_memory|      configuration_r|         array|
+|configuration_r_q1        |   in|   32|   ap_memory|      configuration_r|         array|
+|reply_address0            |  out|    4|   ap_memory|                reply|         array|
+|reply_ce0                 |  out|    1|   ap_memory|                reply|         array|
+|reply_we0                 |  out|    1|   ap_memory|                reply|         array|
+|reply_d0                  |  out|   32|   ap_memory|                reply|         array|
+|reply_address1            |  out|    4|   ap_memory|                reply|         array|
+|reply_ce1                 |  out|    1|   ap_memory|                reply|         array|
+|reply_we1                 |  out|    1|   ap_memory|                reply|         array|
+|reply_d1                  |  out|   32|   ap_memory|                reply|         array|
++--------------------------+-----+-----+------------+---------------------+--------------+
+

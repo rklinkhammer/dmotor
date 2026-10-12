@@ -1,0 +1,154 @@
+{
+  "profile": "atomic_velocity_mailbox",
+  "schema_version": 1,
+  "motor_count": 4,
+  "identity": 1145913905,
+  "stage_motor_base": 128,
+  "stage_motor_stride": 8,
+  "registers": [
+    {
+      "name": "IDENTITY",
+      "offset": 0,
+      "access": "RO",
+      "reset": 1145913905,
+      "meaning": "Mailbox profile identity DMB1"
+    },
+    {
+      "name": "SCHEMA",
+      "offset": 4,
+      "access": "RO",
+      "reset": 1,
+      "meaning": "Development schema; not frozen ABI"
+    },
+    {
+      "name": "MOTOR_COUNT",
+      "offset": 8,
+      "access": "RO",
+      "reset": 4,
+      "meaning": "Implemented channels"
+    },
+    {
+      "name": "SESSION",
+      "offset": 12,
+      "access": "RO",
+      "reset": 0,
+      "meaning": "Trusted engine session"
+    },
+    {
+      "name": "STAGE_SESSION",
+      "offset": 16,
+      "access": "RW",
+      "reset": 0,
+      "meaning": "Staged ownership token"
+    },
+    {
+      "name": "STAGE_SEQUENCE",
+      "offset": 20,
+      "access": "RW",
+      "reset": 0,
+      "meaning": "Strictly increasing publication sequence"
+    },
+    {
+      "name": "STAGE_MASK",
+      "offset": 24,
+      "access": "RW",
+      "reset": 0,
+      "meaning": "Nonzero selected motor mask"
+    },
+    {
+      "name": "COMMIT",
+      "offset": 28,
+      "access": "WO",
+      "reset": 0,
+      "meaning": "Write 1 to validate full staged batch"
+    },
+    {
+      "name": "PUBLISHED_SEQUENCE",
+      "offset": 32,
+      "access": "RO",
+      "reset": 0,
+      "meaning": "Last accepted sequence"
+    },
+    {
+      "name": "PENDING_SEQUENCE",
+      "offset": 36,
+      "access": "RO",
+      "reset": 0,
+      "meaning": "Pending sequence or zero"
+    },
+    {
+      "name": "PENDING_MASK",
+      "offset": 40,
+      "access": "RO",
+      "reset": 0,
+      "meaning": "Pending mask or zero"
+    },
+    {
+      "name": "APPLIED_SEQUENCE",
+      "offset": 44,
+      "access": "RO",
+      "reset": 0,
+      "meaning": "Last successful frame sequence"
+    },
+    {
+      "name": "APPLIED_MASK",
+      "offset": 48,
+      "access": "RO",
+      "reset": 0,
+      "meaning": "Last successful frame mask"
+    },
+    {
+      "name": "APPLIED_TICK_LO",
+      "offset": 52,
+      "access": "RO",
+      "reset": 0,
+      "meaning": "Last successful effective tick low"
+    },
+    {
+      "name": "APPLIED_TICK_HI",
+      "offset": 56,
+      "access": "RO",
+      "reset": 0,
+      "meaning": "Last successful effective tick high"
+    },
+    {
+      "name": "REJECT_REASON",
+      "offset": 60,
+      "access": "RO",
+      "reset": 0,
+      "meaning": "Last rejected publication/access reason"
+    },
+    {
+      "name": "INFLIGHT_SEQUENCE",
+      "offset": 64,
+      "access": "RO",
+      "reset": 0,
+      "meaning": "Reserved frame sequence or zero"
+    }
+  ],
+  "motor_fields": [
+    {
+      "name": "GENERATION",
+      "offset": 0
+    },
+    {
+      "name": "VELOCITY_MRPM",
+      "offset": 4
+    }
+  ],
+  "reject_reasons": {
+    "none": 0,
+    "access": 1,
+    "incomplete": 2,
+    "mask": 3,
+    "ownership": 4,
+    "sequence": 5,
+    "speed": 6,
+    "unavailable": 7,
+    "pending_mask": 8,
+    "busy": 9,
+    "retirement": 10
+  },
+  "applied_motor_base": 256,
+  "applied_motor_stride": 16
+}

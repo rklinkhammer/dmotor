@@ -1,0 +1,56 @@
+
+****** vitis-run v2026.1 (64-bit)
+  **** SW Build 6511674 on 2026-06-16-13:16:19
+  **** Start of session at: Sun Oct 11 22:40:06 2026
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
+
+  **** HLS Build v2026.1 6493734
+INFO: [HLS 200-2005] Using work_dir /home/rklinkhammer/workspace/dmotor/build/shared_mailbox_copy/build/vitis_dispatcher 
+INFO: [HLS 200-2006] Changing directory to /home/rklinkhammer/workspace/dmotor/build/shared_mailbox_copy/build
+INFO: [HLS 200-2176] Writing Vitis IDE component file /home/rklinkhammer/workspace/dmotor/build/shared_mailbox_copy/build/vitis_dispatcher/vitis-comp.json
+INFO: [HLS 200-10] Creating and opening component '/home/rklinkhammer/workspace/dmotor/build/shared_mailbox_copy/build/vitis_dispatcher'.
+INFO: [HLS 200-2174] Applying component config ini file ../platforms/vitis/dispatcher.cfg
+INFO: [HLS 200-1465] Applying config ini 'syn.file=../../src/arithmetic.cpp' from ../platforms/vitis/dispatcher.cfg(4)
+INFO: [HLS 200-10] Adding design file '/home/rklinkhammer/workspace/dmotor/build/shared_mailbox_copy/src/arithmetic.cpp' to the project
+INFO: [HLS 200-1465] Applying config ini 'syn.file=../../src/shared_mailbox.cpp' from ../platforms/vitis/dispatcher.cfg(6)
+INFO: [HLS 200-10] Adding design file '/home/rklinkhammer/workspace/dmotor/build/shared_mailbox_copy/src/shared_mailbox.cpp' to the project
+INFO: [HLS 200-1465] Applying config ini 'syn.file=../../src/mailbox.cpp' from ../platforms/vitis/dispatcher.cfg(7)
+INFO: [HLS 200-10] Adding design file '/home/rklinkhammer/workspace/dmotor/build/shared_mailbox_copy/src/mailbox.cpp' to the project
+INFO: [HLS 200-1465] Applying config ini 'syn.file=../../src/protocol.cpp' from ../platforms/vitis/dispatcher.cfg(8)
+INFO: [HLS 200-10] Adding design file '/home/rklinkhammer/workspace/dmotor/build/shared_mailbox_copy/src/protocol.cpp' to the project
+INFO: [HLS 200-1465] Applying config ini 'syn.file=../../src/motion.cpp' from ../platforms/vitis/dispatcher.cfg(9)
+INFO: [HLS 200-10] Adding design file '/home/rklinkhammer/workspace/dmotor/build/shared_mailbox_copy/src/motion.cpp' to the project
+INFO: [HLS 200-1465] Applying config ini 'syn.file=../../src/velocity.cpp' from ../platforms/vitis/dispatcher.cfg(10)
+INFO: [HLS 200-10] Adding design file '/home/rklinkhammer/workspace/dmotor/build/shared_mailbox_copy/src/velocity.cpp' to the project
+INFO: [HLS 200-1465] Applying config ini 'syn.file=../../src/controller.cpp' from ../platforms/vitis/dispatcher.cfg(11)
+INFO: [HLS 200-10] Adding design file '/home/rklinkhammer/workspace/dmotor/build/shared_mailbox_copy/src/controller.cpp' to the project
+INFO: [HLS 200-1465] Applying config ini 'syn.cflags=-I../../include -DDMOTOR_USE_AP_INT -DDMOTOR_MAILBOX_COPY_CONTEXT' from ../platforms/vitis/dispatcher.cfg(12)
+INFO: [HLS 200-1465] Applying config ini 'tb.file=../../tests/shared_mailbox_test.cpp' from ../platforms/vitis/dispatcher.cfg(14)
+INFO: [HLS 200-10] Adding test bench file '/home/rklinkhammer/workspace/dmotor/build/shared_mailbox_copy/tests/shared_mailbox_test.cpp' to the project
+INFO: [HLS 200-1465] Applying config ini 'tb.cflags=-I../../include -DDMOTOR_USE_AP_INT -DDMOTOR_MAILBOX_COPY_CONTEXT' from ../platforms/vitis/dispatcher.cfg(15)
+INFO: [HLS 200-1465] Applying config ini 'syn.top=dmotor_mailbox_shared' from ../platforms/vitis/dispatcher.cfg(5)
+INFO: [HLS 200-1465] Applying config ini 'part=xc7z020clg400-1' from ../platforms/vitis/dispatcher.cfg(1)
+INFO: [HLS 200-1611] Setting target device to 'xc7z020-clg400-1'
+INFO: [HLS 200-1465] Applying config ini 'freqhz=20000000' from ../platforms/vitis/dispatcher.cfg(2)
+INFO: [SYN 201-201] Setting up clock 'default' with a period of 50ns.
+INFO: [HLS 200-1465] Applying config ini 'package.output.format=ip_catalog' from ../platforms/vitis/dispatcher.cfg(16)
+INFO: [HLS 200-1465] Applying config ini 'syn.rtl.reset=all' from ../platforms/vitis/dispatcher.cfg(13)
+INFO: [HLS 200-1465] Applying config ini 'syn.directive.allocation=location=dmotor::MotionExecutor::step_impl instances=dmotor::detail::rounded limit=1 type=function' from ../platforms/vitis/dispatcher.cfg(19)
+INFO: [HLS 200-1465] Applying config ini 'syn.directive.allocation=location=dmotor::MotionExecutor::step_impl instances=dmotor::detail::divide limit=1 type=function' from ../platforms/vitis/dispatcher.cfg(21)
+INFO: [HLS 200-1465] Applying config ini 'syn.directive.inline=location=dmotor::detail::rounded off=1' from ../platforms/vitis/dispatcher.cfg(18)
+INFO: [HLS 200-1465] Applying config ini 'syn.directive.inline=location=dmotor::detail::divide off=1' from ../platforms/vitis/dispatcher.cfg(20)
+INFO: [HLS 200-1465] Applying config ini 'syn.directive.inline=location=dmotor::detail::divide_pi off=1' from ../platforms/vitis/dispatcher.cfg(23)
+INFO: [HLS 200-2176] Writing Vitis IDE component file /home/rklinkhammer/workspace/dmotor/build/shared_mailbox_copy/build/vitis_dispatcher/vitis-comp.json
+INFO: [HLS 200-1465] Applying config ini 'clock=20000000Hz' from command line
+INFO: [SIM 211-2] *************** CSIM start ***************
+INFO: [HLS 200-2191] C-Simulation will use clang-16 as the compiler
+INFO: [HLS 200-2036] Building debug C Simulation binaries
+   Compiling ../../../../../src/shared_mailbox.cpp in debug mode
+   Compiling ../../../../../src/arithmetic.cpp in debug mode
+   Generating csim.exe
+shared mailbox: 1673 interleaved transactions, all 16 reply words match four independent contexts
+INFO: [SIM 211-1] CSim done with 0 errors.
+INFO: [SIM 211-3] *************** CSIM finish ***************
+INFO: [HLS 200-112] Total CPU user time: 3.49 seconds. Total CPU system time: 0.55 seconds. Total elapsed time: 3.91 seconds; peak allocated memory: 278.344 MB.
+INFO: [vitis-run 60-791] Total elapsed time: 0h 0m 7s

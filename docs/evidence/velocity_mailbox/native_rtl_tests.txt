@@ -1,0 +1,35 @@
+Test project /home/rklinkhammer/workspace/dmotor/build/velocity_mailbox/build
+      Start  1: arithmetic
+ 1/15 Test  #1: arithmetic .......................   Passed    0.04 sec
+      Start  3: generated_abi
+ 2/15 Test  #3: generated_abi ....................   Passed    0.06 sec
+      Start  4: rtl_safety
+ 3/15 Test  #4: rtl_safety .......................   Passed    0.07 sec
+      Start  5: rtl_scheduler
+ 4/15 Test  #5: rtl_scheduler ....................   Passed    0.06 sec
+      Start  6: rtl_qcencoder
+ 5/15 Test  #6: rtl_qcencoder ....................   Passed    0.07 sec
+      Start  7: rtl_pwm
+ 6/15 Test  #7: rtl_pwm ..........................   Passed    0.07 sec
+      Start  8: rtl_latency
+ 7/15 Test  #8: rtl_latency ......................   Passed    0.05 sec
+      Start  9: rtl_axi_bridge
+ 8/15 Test  #9: rtl_axi_bridge ...................   Passed    0.08 sec
+      Start 10: rtl_encoder_snapshot
+ 9/15 Test #10: rtl_encoder_snapshot .............   Passed    0.06 sec
+      Start 11: control
+10/15 Test #11: control ..........................   Passed    0.00 sec
+      Start 15: motion
+11/15 Test #15: motion ...........................   Passed    0.01 sec
+      Start 17: velocity
+12/15 Test #17: velocity .........................   Passed    0.00 sec
+      Start 18: controller
+13/15 Test #18: controller .......................   Passed    0.00 sec
+      Start 19: dispatcher
+14/15 Test #19: dispatcher .......................   Passed    0.00 sec
+      Start 21: mailbox
+15/15 Test #21: mailbox ..........................   Passed    0.00 sec
+
+100% tests passed, 0 tests failed out of 15
+
+Total Test time (real) =   0.58 sec

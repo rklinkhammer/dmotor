@@ -1,0 +1,161 @@
+
+
+================================================================
+== Vitis HLS Report for 'dmotor_atomic_mailbox'
+================================================================
+* Date:           Sun Oct 11 22:58:44 2026
+
+* Version:        2026.1 (Build 6493734 on Jun 16 2026)
+* Project:        vitis_atomic
+* Solution:       hls
+* Product family: zynq
+* Target device:  xc7z020-clg400-1
+
+
+================================================================
+== Performance Estimates
+================================================================
++ Timing: 
+    * Summary: 
+    +--------+----------+-----------+------------+
+    |  Clock |  Target  | Estimated | Uncertainty|
+    +--------+----------+-----------+------------+
+    |ap_clk  |  50.00 ns|  19.860 ns|    13.50 ns|
+    +--------+----------+-----------+------------+
+
++ Latency: 
+    * Summary: 
+    +---------+---------+----------+----------+-----+-----+---------+
+    |  Latency (cycles) |  Latency (absolute) |  Interval | Pipeline|
+    |   min   |   max   |    min   |    max   | min | max |   Type  |
+    +---------+---------+----------+----------+-----+-----+---------+
+    |       34|       52|  1.700 us|  2.600 us|   35|   53|       no|
+    +---------+---------+----------+----------+-----+-----+---------+
+
+    + Detail: 
+        * Instance: 
+        +-----------------------------------------------------------+------------------------------------------------+---------+---------+----------+----------+-----+-----+-------------------+
+        |                                                           |                                                |  Latency (cycles) |  Latency (absolute) |  Interval |      Pipeline     |
+        |                          Instance                         |                     Module                     |   min   |   max   |    min   |    max   | min | max |        Type       |
+        +-----------------------------------------------------------+------------------------------------------------+---------+---------+----------+----------+-----+-----+-------------------+
+        |grp_dmotor_atomic_mailbox_Pipeline_VITIS_LOOP_38_1_fu_214  |dmotor_atomic_mailbox_Pipeline_VITIS_LOOP_38_1  |        6|        6|  0.300 us|  0.300 us|    0|    0|  loop pipeline stp|
+        |grp_batch_transaction_fu_228                               |batch_transaction                               |       22|       40|  1.100 us|  2.000 us|   22|   40|                 no|
+        +-----------------------------------------------------------+------------------------------------------------+---------+---------+----------+----------+-----+-----+-------------------+
+
+        * Loop: 
+        N/A
+
+
+
+================================================================
+== Utilization Estimates
+================================================================
+* Summary: 
++-----------------+---------+-----+--------+-------+-----+
+|       Name      | BRAM_18K| DSP |   FF   |  LUT  | URAM|
++-----------------+---------+-----+--------+-------+-----+
+|DSP              |        -|    -|       -|      -|    -|
+|Expression       |        -|    -|       -|      -|    -|
+|FIFO             |        -|    -|       -|      -|    -|
+|Instance         |        -|    -|    4394|   6157|    -|
+|Memory           |        -|    -|       -|      -|    -|
+|Multiplexer      |        -|    -|       0|     92|    -|
+|Register         |        -|    -|     113|      -|    -|
++-----------------+---------+-----+--------+-------+-----+
+|Total            |        0|    0|    4507|   6249|    0|
++-----------------+---------+-----+--------+-------+-----+
+|Available        |      280|  220|  106400|  53200|    0|
++-----------------+---------+-----+--------+-------+-----+
+|Utilization (%)  |        0|    0|       4|     11|    0|
++-----------------+---------+-----+--------+-------+-----+
+
++ Detail: 
+    * Instance: 
+    +-----------------------------------------------------------+------------------------------------------------+---------+----+------+------+-----+
+    |                          Instance                         |                     Module                     | BRAM_18K| DSP|  FF  |  LUT | URAM|
+    +-----------------------------------------------------------+------------------------------------------------+---------+----+------+------+-----+
+    |grp_batch_transaction_fu_228                               |batch_transaction                               |        0|   0|  4129|  6012|    0|
+    |grp_dmotor_atomic_mailbox_Pipeline_VITIS_LOOP_38_1_fu_214  |dmotor_atomic_mailbox_Pipeline_VITIS_LOOP_38_1  |        0|   0|   265|   145|    0|
+    +-----------------------------------------------------------+------------------------------------------------+---------+----+------+------+-----+
+    |Total                                                      |                                                |        0|   0|  4394|  6157|    0|
+    +-----------------------------------------------------------+------------------------------------------------+---------+----+------+------+-----+
+
+    * DSP: 
+    N/A
+
+    * Memory: 
+    N/A
+
+    * FIFO: 
+    N/A
+
+    * Expression: 
+    N/A
+
+    * Multiplexer: 
+    +--------------------------+----+-----------+-----+-----------+
+    |           Name           | LUT| Input Size| Bits| Total Bits|
+    +--------------------------+----+-----------+-----+-----------+
+    |admission_address0        |   9|          2|    4|          8|
+    |admission_address0_local  |  14|          3|    4|         12|
+    |admission_address1        |   9|          2|    4|          8|
+    |admission_ce0             |   9|          2|    1|          2|
+    |admission_ce1             |   9|          2|    1|          2|
+    |ap_NS_fsm                 |  42|          8|    1|          8|
+    +--------------------------+----+-----------+-----+-----------+
+    |Total                     |  92|         19|   15|         40|
+    +--------------------------+----+-----------+-----+-----------+
+
+    * Register: 
+    +------------------------------------------------------------------------+----+----+-----+-----------+
+    |                                  Name                                  | FF | LUT| Bits| Const Bits|
+    +------------------------------------------------------------------------+----+----+-----+-----------+
+    |ap_CS_fsm                                                               |   7|   0|    7|          0|
+    |grp_batch_transaction_fu_228_ap_start_reg                               |   1|   0|    1|          0|
+    |grp_dmotor_atomic_mailbox_Pipeline_VITIS_LOOP_38_1_fu_214_ap_start_reg  |   1|   0|    1|          0|
+    |live_session_reg_444                                                    |  32|   0|   32|          0|
+    |tick_read_reg_469                                                       |  64|   0|   64|          0|
+    |trunc_ln36_1_reg_464                                                    |   4|   0|    4|          0|
+    |trunc_ln36_reg_459                                                      |   4|   0|    4|          0|
+    +------------------------------------------------------------------------+----+----+-----+-----------+
+    |Total                                                                   | 113|   0|  113|          0|
+    +------------------------------------------------------------------------+----+----+-----+-----------+
+
+
+
+================================================================
+== Interface
+================================================================
+* Summary: 
++--------------------+-----+-----+------------+-----------------------+--------------+
+|      RTL Ports     | Dir | Bits|  Protocol  |     Source Object     |    C Type    |
++--------------------+-----+-----+------------+-----------------------+--------------+
+|ap_clk              |   in|    1|  ap_ctrl_hs|  dmotor_atomic_mailbox|  return value|
+|ap_rst              |   in|    1|  ap_ctrl_hs|  dmotor_atomic_mailbox|  return value|
+|ap_start            |   in|    1|  ap_ctrl_hs|  dmotor_atomic_mailbox|  return value|
+|ap_done             |  out|    1|  ap_ctrl_hs|  dmotor_atomic_mailbox|  return value|
+|ap_idle             |  out|    1|  ap_ctrl_hs|  dmotor_atomic_mailbox|  return value|
+|ap_ready            |  out|    1|  ap_ctrl_hs|  dmotor_atomic_mailbox|  return value|
+|request_address0    |  out|    3|   ap_memory|                request|         array|
+|request_ce0         |  out|    1|   ap_memory|                request|         array|
+|request_q0          |   in|   32|   ap_memory|                request|         array|
+|request_address1    |  out|    3|   ap_memory|                request|         array|
+|request_ce1         |  out|    1|   ap_memory|                request|         array|
+|request_q1          |   in|   32|   ap_memory|                request|         array|
+|tick                |   in|   64|     ap_none|                   tick|        scalar|
+|admission_address0  |  out|    4|   ap_memory|              admission|         array|
+|admission_ce0       |  out|    1|   ap_memory|              admission|         array|
+|admission_q0        |   in|   32|   ap_memory|              admission|         array|
+|admission_address1  |  out|    4|   ap_memory|              admission|         array|
+|admission_ce1       |  out|    1|   ap_memory|              admission|         array|
+|admission_q1        |   in|   32|   ap_memory|              admission|         array|
+|reply_address0      |  out|    4|   ap_memory|                  reply|         array|
+|reply_ce0           |  out|    1|   ap_memory|                  reply|         array|
+|reply_we0           |  out|    1|   ap_memory|                  reply|         array|
+|reply_d0            |  out|   32|   ap_memory|                  reply|         array|
+|reply_address1      |  out|    4|   ap_memory|                  reply|         array|
+|reply_ce1           |  out|    1|   ap_memory|                  reply|         array|
+|reply_we1           |  out|    1|   ap_memory|                  reply|         array|
+|reply_d1            |  out|   32|   ap_memory|                  reply|         array|
++--------------------+-----+-----+------------+-----------------------+--------------+
+

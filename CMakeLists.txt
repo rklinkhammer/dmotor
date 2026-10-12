@@ -81,3 +81,15 @@ add_test(NAME dispatcher COMMAND dispatcher_test)
 add_executable(position_error_test tests/position_error_test.cpp)
 target_link_libraries(position_error_test PRIVATE dmotor)
 add_test(NAME position_error COMMAND position_error_test)
+
+# Revision 0.18 atomic batch protocol; distinct from the retained ring ABI.
+target_sources(dmotor PRIVATE src/atomic_mailbox.cpp)
+add_executable(atomic_mailbox_test tests/atomic_mailbox_test.cpp)
+target_link_libraries(atomic_mailbox_test PRIVATE dmotor)
+add_test(NAME atomic_mailbox COMMAND atomic_mailbox_test)
+add_test(NAME generated_mailbox_abi COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tools/generate_mailbox_abi.py --check)
+target_sources(dmotor PRIVATE src/atomic_mailbox_top.cpp)
+add_executable(atomic_mailbox_top_test tests/atomic_mailbox_top_test.cpp)
+target_link_libraries(atomic_mailbox_top_test PRIVATE dmotor)
+add_test(NAME atomic_mailbox_top COMMAND atomic_mailbox_top_test)

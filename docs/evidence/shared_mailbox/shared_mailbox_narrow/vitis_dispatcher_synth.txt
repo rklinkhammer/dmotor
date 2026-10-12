@@ -1,0 +1,100 @@
+
+****** v++ v2026.1 (64-bit)
+  **** SW Build 6511674 on 2026-06-16-13:16:19
+  **** Start of session at: Sun Oct 11 22:38:53 2026
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
+
+  **** HLS Build v2026.1 6493734
+INFO: [HLS 200-2005] Using work_dir /home/rklinkhammer/workspace/dmotor/build/shared_mailbox_narrow/build/vitis_dispatcher 
+INFO: [HLS 200-2006] Changing directory to /home/rklinkhammer/workspace/dmotor/build/shared_mailbox_narrow/build
+INFO: [HLS 200-2176] Writing Vitis IDE component file /home/rklinkhammer/workspace/dmotor/build/shared_mailbox_narrow/build/vitis_dispatcher/vitis-comp.json
+INFO: [HLS 200-10] Creating and opening component '/home/rklinkhammer/workspace/dmotor/build/shared_mailbox_narrow/build/vitis_dispatcher'.
+INFO: [HLS 200-2174] Applying component config ini file ../platforms/vitis/dispatcher.cfg
+INFO: [HLS 200-1465] Applying config ini 'syn.file=../../src/arithmetic.cpp' from ../platforms/vitis/dispatcher.cfg(4)
+INFO: [HLS 200-10] Adding design file '/home/rklinkhammer/workspace/dmotor/build/shared_mailbox_narrow/src/arithmetic.cpp' to the project
+INFO: [HLS 200-1465] Applying config ini 'syn.file=../../src/shared_mailbox.cpp' from ../platforms/vitis/dispatcher.cfg(6)
+INFO: [HLS 200-10] Adding design file '/home/rklinkhammer/workspace/dmotor/build/shared_mailbox_narrow/src/shared_mailbox.cpp' to the project
+INFO: [HLS 200-1465] Applying config ini 'syn.file=../../src/mailbox.cpp' from ../platforms/vitis/dispatcher.cfg(7)
+INFO: [HLS 200-10] Adding design file '/home/rklinkhammer/workspace/dmotor/build/shared_mailbox_narrow/src/mailbox.cpp' to the project
+INFO: [HLS 200-1465] Applying config ini 'syn.file=../../src/protocol.cpp' from ../platforms/vitis/dispatcher.cfg(8)
+INFO: [HLS 200-10] Adding design file '/home/rklinkhammer/workspace/dmotor/build/shared_mailbox_narrow/src/protocol.cpp' to the project
+INFO: [HLS 200-1465] Applying config ini 'syn.file=../../src/motion.cpp' from ../platforms/vitis/dispatcher.cfg(9)
+INFO: [HLS 200-10] Adding design file '/home/rklinkhammer/workspace/dmotor/build/shared_mailbox_narrow/src/motion.cpp' to the project
+INFO: [HLS 200-1465] Applying config ini 'syn.file=../../src/velocity.cpp' from ../platforms/vitis/dispatcher.cfg(10)
+INFO: [HLS 200-10] Adding design file '/home/rklinkhammer/workspace/dmotor/build/shared_mailbox_narrow/src/velocity.cpp' to the project
+INFO: [HLS 200-1465] Applying config ini 'syn.file=../../src/controller.cpp' from ../platforms/vitis/dispatcher.cfg(11)
+INFO: [HLS 200-10] Adding design file '/home/rklinkhammer/workspace/dmotor/build/shared_mailbox_narrow/src/controller.cpp' to the project
+INFO: [HLS 200-1465] Applying config ini 'syn.cflags=-I../../include -DDMOTOR_USE_AP_INT' from ../platforms/vitis/dispatcher.cfg(12)
+INFO: [HLS 200-1465] Applying config ini 'tb.file=../../tests/shared_mailbox_test.cpp' from ../platforms/vitis/dispatcher.cfg(14)
+INFO: [HLS 200-10] Adding test bench file '/home/rklinkhammer/workspace/dmotor/build/shared_mailbox_narrow/tests/shared_mailbox_test.cpp' to the project
+INFO: [HLS 200-1465] Applying config ini 'tb.cflags=-I../../include -DDMOTOR_USE_AP_INT' from ../platforms/vitis/dispatcher.cfg(15)
+INFO: [HLS 200-1465] Applying config ini 'syn.top=dmotor_mailbox_shared' from ../platforms/vitis/dispatcher.cfg(5)
+INFO: [HLS 200-1465] Applying config ini 'part=xc7z020clg400-1' from ../platforms/vitis/dispatcher.cfg(1)
+INFO: [HLS 200-1611] Setting target device to 'xc7z020-clg400-1'
+INFO: [HLS 200-1465] Applying config ini 'freqhz=20000000' from ../platforms/vitis/dispatcher.cfg(2)
+INFO: [SYN 201-201] Setting up clock 'default' with a period of 50ns.
+INFO: [HLS 200-1465] Applying config ini 'package.output.format=ip_catalog' from ../platforms/vitis/dispatcher.cfg(16)
+INFO: [HLS 200-1465] Applying config ini 'syn.rtl.reset=all' from ../platforms/vitis/dispatcher.cfg(13)
+INFO: [HLS 200-1465] Applying config ini 'syn.directive.allocation=location=dmotor::MotionExecutor::step_impl instances=dmotor::detail::rounded limit=1 type=function' from ../platforms/vitis/dispatcher.cfg(19)
+INFO: [HLS 200-1465] Applying config ini 'syn.directive.allocation=location=dmotor::MotionExecutor::step_impl instances=dmotor::detail::divide limit=1 type=function' from ../platforms/vitis/dispatcher.cfg(21)
+INFO: [HLS 200-1465] Applying config ini 'syn.directive.inline=location=dmotor::detail::rounded off=1' from ../platforms/vitis/dispatcher.cfg(18)
+INFO: [HLS 200-1465] Applying config ini 'syn.directive.inline=location=dmotor::detail::divide off=1' from ../platforms/vitis/dispatcher.cfg(20)
+INFO: [HLS 200-1465] Applying config ini 'syn.directive.inline=location=dmotor::detail::divide_pi off=1' from ../platforms/vitis/dispatcher.cfg(23)
+INFO: [HLS 200-2176] Writing Vitis IDE component file /home/rklinkhammer/workspace/dmotor/build/shared_mailbox_narrow/build/vitis_dispatcher/vitis-comp.json
+INFO: [HLS 200-1465] Applying config ini 'clock=20000000Hz' from command line
+INFO: [HLS 200-111] Finished File checks and directory preparation: CPU user time: 3.14 seconds. CPU system time: 0.69 seconds. Elapsed time: 3.73 seconds; current allocated memory: 278.270 MB.
+INFO: [HLS 200-2191] C-Synthesis will use clang-16 as the compiler
+INFO: [HLS 200-10] Analyzing design file '../src/controller.cpp' ... 
+INFO: [HLS 200-10] Analyzing design file '../src/velocity.cpp' ... 
+INFO: [HLS 200-10] Analyzing design file '../src/motion.cpp' ... 
+INFO: [HLS 200-10] Analyzing design file '../src/protocol.cpp' ... 
+INFO: [HLS 200-10] Analyzing design file '../src/mailbox.cpp' ... 
+INFO: [HLS 200-10] Analyzing design file '../src/shared_mailbox.cpp' ... 
+INFO: [HLS 200-10] Analyzing design file '../src/arithmetic.cpp' ... 
+INFO: [HLS 200-111] Finished Source Code Analysis and Preprocessing: CPU user time: 10.07 seconds. CPU system time: 2.42 seconds. Elapsed time: 12.51 seconds; current allocated memory: 280.602 MB.
+INFO: [HLS 200-1995] There were 12,694 instructions in the design after the 'Compile/Link' phase of compilation. See the Design Size Report for more details (/home/rklinkhammer/workspace/dmotor/build/shared_mailbox_narrow/build/vitis_dispatcher/hls/syn/report/csynth_design_size.rpt:2)
+INFO: [HLS 200-1995] There were 5,849 instructions in the design after the 'Unroll/Inline' phase of compilation. See the Design Size Report for more details (/home/rklinkhammer/workspace/dmotor/build/shared_mailbox_narrow/build/vitis_dispatcher/hls/syn/report/csynth_design_size.rpt:2)
+INFO: [HLS 200-1995] There were 5,082 instructions in the design after the 'Unroll/Inline (step 2)' phase of compilation. See the Design Size Report for more details (/home/rklinkhammer/workspace/dmotor/build/shared_mailbox_narrow/build/vitis_dispatcher/hls/syn/report/csynth_design_size.rpt:2)
+INFO: [HLS 214-178] Inlining function 'dmotor::ControllerConfig::ControllerConfig()' into 'dmotor::decode_controller_config(unsigned int const*)' (../src/controller.cpp:167:0)
+INFO: [HLS 214-178] Inlining function 'dmotor::signed_word(unsigned int)' into 'dmotor::decode_controller_config(unsigned int const*)' (../src/controller.cpp:167:0)
+INFO: [HLS 214-178] Inlining function 'dmotor::PreparedMotionConfig::PreparedMotionConfig()' into 'dmotor::prepare_motion_config(dmotor::MotionConfig const&) (.94)' (../src/motion.cpp:57:0)
+INFO: [HLS 214-178] Inlining function 'dmotor::(anonymous namespace)::valid_config(dmotor::MotionConfig const&) (.97)' into 'dmotor::prepare_motion_config(dmotor::MotionConfig const&) (.94)' (../src/motion.cpp:57:0)
+INFO: [HLS 214-178] Inlining function 'dmotor::(anonymous namespace)::config_words(dmotor::ControllerConfig const&, unsigned int*) (.70.100)' into 'dmotor::Controller::prepare(dmotor::ControllerConfig const&) (.67.91.129.146.163.180.203.226.243)' (../src/controller.cpp:30:0)
+INFO: [HLS 214-178] Inlining function 'dmotor::prepare_motion_config(dmotor::MotionConfig const&) (.94)' into 'dmotor::Controller::prepare(dmotor::ControllerConfig const&) (.67.91.129.146.163.180.203.226.243)' (../src/controller.cpp:30:0)
+INFO: [HLS 214-178] Inlining function 'dmotor::(anonymous namespace)::config_words(dmotor::ControllerConfig const&, unsigned int*) (.70.100)' into 'dmotor::Controller::matches(dmotor::ControllerConfig const&) const (.73.103.132.149.166.183.206.229.246)' (../src/controller.cpp:40:0)
+INFO: [HLS 214-178] Inlining function 'dmotor::MotionExecutor::finish(unsigned long, unsigned int, unsigned int) (.197.220)' into 'dmotor::MotionExecutor::fail(unsigned long, unsigned int) (.200.223)' (../src/motion.cpp:74:0)
+INFO: [HLS 214-178] Inlining function 'std::__array_traits<unsigned int, 16ul>::_S_ref(unsigned int const (&) [16], unsigned long)' into 'std::array<unsigned int, 16ul>::operator[](unsigned long) const (.46)' (/opt/vitis/2026.1/Vitis/tps/lnx64/gcc-8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../include/c++/8.3.0/array:190:0)
+INFO: [HLS 214-178] Inlining function 'std::array<unsigned int, 16ul>::operator[](unsigned long) const (.46)' into 'dmotor::validate(std::array<unsigned int, 16ul> const&, unsigned int, unsigned int, unsigned int, long, int) (.49)' (../src/protocol.cpp:14:0)
+INFO: [HLS 214-178] Inlining function 'dmotor::signed_word(unsigned int)' into 'dmotor::validate(std::array<unsigned int, 16ul> const&, unsigned int, unsigned int, unsigned int, long, int) (.49)' (../src/protocol.cpp:14:0)
+INFO: [HLS 214-178] Inlining function 'dmotor::MotionExecutor::finish(unsigned long, unsigned int, unsigned int) (.197.220)' into 'dmotor::MotionExecutor::step_impl(bool, bool, bool, std::array<unsigned int, 16ul> const&, bool, bool, unsigned int, unsigned long, long, int, bool, dmotor::MotionConfig const&, bool, bool, dmotor::PreparedMotionConfig const&) (.43.88.194.217.240)' (../src/motion.cpp:102:0)
+INFO: [HLS 214-178] Inlining function 'dmotor::MotionExecutor::fail(unsigned long, unsigned int) (.200.223)' into 'dmotor::MotionExecutor::step_impl(bool, bool, bool, std::array<unsigned int, 16ul> const&, bool, bool, unsigned int, unsigned long, long, int, bool, dmotor::MotionConfig const&, bool, bool, dmotor::PreparedMotionConfig const&) (.43.88.194.217.240)' (../src/motion.cpp:102:0)
+INFO: [HLS 214-178] Inlining function 'std::array<unsigned int, 16ul>::operator[](unsigned long) const (.46)' into 'dmotor::MotionExecutor::step_impl(bool, bool, bool, std::array<unsigned int, 16ul> const&, bool, bool, unsigned int, unsigned long, long, int, bool, dmotor::MotionConfig const&, bool, bool, dmotor::PreparedMotionConfig const&) (.43.88.194.217.240)' (../src/motion.cpp:102:0)
+INFO: [HLS 214-178] Inlining function 'dmotor::validate(std::array<unsigned int, 16ul> const&, unsigned int, unsigned int, unsigned int, long, int) (.49)' into 'dmotor::MotionExecutor::step_impl(bool, bool, bool, std::array<unsigned int, 16ul> const&, bool, bool, unsigned int, unsigned long, long, int, bool, dmotor::MotionConfig const&, bool, bool, dmotor::PreparedMotionConfig const&) (.43.88.194.217.240)' (../src/motion.cpp:102:0)
+INFO: [HLS 214-178] Inlining function 'dmotor::(anonymous namespace)::magnitude(int)' into 'dmotor::MotionExecutor::step_impl(bool, bool, bool, std::array<unsigned int, 16ul> const&, bool, bool, unsigned int, unsigned long, long, int, bool, dmotor::MotionConfig const&, bool, bool, dmotor::PreparedMotionConfig const&) (.43.88.194.217.240)' (../src/motion.cpp:102:0)
+INFO: [HLS 214-178] Inlining function 'dmotor::signed_word(unsigned int)' into 'dmotor::MotionExecutor::step_impl(bool, bool, bool, std::array<unsigned int, 16ul> const&, bool, bool, unsigned int, unsigned long, long, int, bool, dmotor::MotionConfig const&, bool, bool, dmotor::PreparedMotionConfig const&) (.43.88.194.217.240)' (../src/motion.cpp:102:0)
+INFO: [HLS 214-178] Inlining function 'long dmotor::detail::narrow_signed<19u>(long)' into 'dmotor::MotionExecutor::step_impl(bool, bool, bool, std::array<unsigned int, 16ul> const&, bool, bool, unsigned int, unsigned long, long, int, bool, dmotor::MotionConfig const&, bool, bool, dmotor::PreparedMotionConfig const&) (.43.88.194.217.240)' (../src/motion.cpp:102:0)
+INFO: [HLS 214-178] Inlining function 'long dmotor::detail::narrow_signed<20u>(long)' into 'dmotor::MotionExecutor::step_impl(bool, bool, bool, std::array<unsigned int, 16ul> const&, bool, bool, unsigned int, unsigned long, long, int, bool, dmotor::MotionConfig const&, bool, bool, dmotor::PreparedMotionConfig const&) (.43.88.194.217.240)' (../src/motion.cpp:102:0)
+INFO: [HLS 214-178] Inlining function 'long dmotor::detail::narrow_signed<37u>(long)' into 'dmotor::MotionExecutor::step_impl(bool, bool, bool, std::array<unsigned int, 16ul> const&, bool, bool, unsigned int, unsigned long, long, int, bool, dmotor::MotionConfig const&, bool, bool, dmotor::PreparedMotionConfig const&) (.43.88.194.217.240)' (../src/motion.cpp:102:0)
+INFO: [HLS 214-178] Inlining function 'dmotor::(anonymous namespace)::clamp(long, int)' into 'dmotor::MotionExecutor::step_impl(bool, bool, bool, std::array<unsigned int, 16ul> const&, bool, bool, unsigned int, unsigned long, long, int, bool, dmotor::MotionConfig const&, bool, bool, dmotor::PreparedMotionConfig const&) (.43.88.194.217.240)' (../src/motion.cpp:102:0)
+INFO: [HLS 214-178] Inlining function 'dmotor::ControllerResult::ControllerResult() (.16.25.34)' into 'dmotor::Controller::step_impl(bool, bool, bool, unsigned long, dmotor::EncoderSample const&, long, unsigned int, bool, std::array<unsigned int, 16ul> const&, bool, bool, dmotor::ControllerConfig const&, bool) (.13.22.31.40.64.85.111.126.140.157.174.191.214.237)' (../src/controller.cpp:63:0)
+INFO: [HLS 214-178] Inlining function 'dmotor::Controller::matches(dmotor::ControllerConfig const&) const (.73.103.132.149.166.183.206.229.246)' into 'dmotor::Controller::step_impl(bool, bool, bool, unsigned long, dmotor::EncoderSample const&, long, unsigned int, bool, std::array<unsigned int, 16ul> const&, bool, bool, dmotor::ControllerConfig const&, bool) (.13.22.31.40.64.85.111.126.140.157.174.191.214.237)' (../src/controller.cpp:63:0)
+INFO: [HLS 214-178] Inlining function 'std::__array_traits<unsigned int, 16ul>::_S_ref(unsigned int const (&) [16], unsigned long)' into 'std::array<unsigned int, 16ul>::operator[](unsigned long)' (/opt/vitis/2026.1/Vitis/tps/lnx64/gcc-8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../include/c++/8.3.0/array:186:0)
+INFO: [HLS 214-178] Inlining function 'dmotor::Controller::step(bool, bool, bool, unsigned long, dmotor::EncoderSample const&, long, unsigned int, bool, std::array<unsigned int, 16ul> const&, bool, bool, dmotor::ControllerConfig const&)' into 'dmotor::VelocityMailbox::service(bool, unsigned int const*, bool, bool, bool, bool, unsigned int, unsigned long, dmotor::EncoderSample const&, dmotor::ControllerConfig const&, unsigned int*)' (../src/mailbox.cpp:5:0)
+INFO: [HLS 214-178] Inlining function 'dmotor::signed_word(unsigned int)' into 'dmotor::VelocityMailbox::service(bool, unsigned int const*, bool, bool, bool, bool, unsigned int, unsigned long, dmotor::EncoderSample const&, dmotor::ControllerConfig const&, unsigned int*)' (../src/mailbox.cpp:5:0)
+INFO: [HLS 214-178] Inlining function 'std::array<unsigned int, 16ul>::operator[](unsigned long)' into 'dmotor::VelocityMailbox::service(bool, unsigned int const*, bool, bool, bool, bool, unsigned int, unsigned long, dmotor::EncoderSample const&, dmotor::ControllerConfig const&, unsigned int*)' (../src/mailbox.cpp:5:0)
+INFO: [HLS 214-178] Inlining function 'dmotor::decode_controller_config(unsigned int const*)' into 'dmotor_mailbox_shared' (../src/shared_mailbox.cpp:9:0)
+INFO: [HLS 200-1995] There were 4,667 instructions in the design after the 'Unroll/Inline (step 3)' phase of compilation. See the Design Size Report for more details (/home/rklinkhammer/workspace/dmotor/build/shared_mailbox_narrow/build/vitis_dispatcher/hls/syn/report/csynth_design_size.rpt:2)
+INFO: [HLS 200-1995] There were 4,432 instructions in the design after the 'Unroll/Inline (step 4)' phase of compilation. See the Design Size Report for more details (/home/rklinkhammer/workspace/dmotor/build/shared_mailbox_narrow/build/vitis_dispatcher/hls/syn/report/csynth_design_size.rpt:2)
+INFO: [HLS 200-1995] There were 4,435 instructions in the design after the 'Array/Struct' phase of compilation. See the Design Size Report for more details (/home/rklinkhammer/workspace/dmotor/build/shared_mailbox_narrow/build/vitis_dispatcher/hls/syn/report/csynth_design_size.rpt:2)
+INFO: [HLS 200-1995] There were 4,435 instructions in the design after the 'Array/Struct (step 2)' phase of compilation. See the Design Size Report for more details (/home/rklinkhammer/workspace/dmotor/build/shared_mailbox_narrow/build/vitis_dispatcher/hls/syn/report/csynth_design_size.rpt:2)
+INFO: [HLS 200-1995] There were 4,435 instructions in the design after the 'Array/Struct (step 3)' phase of compilation. See the Design Size Report for more details (/home/rklinkhammer/workspace/dmotor/build/shared_mailbox_narrow/build/vitis_dispatcher/hls/syn/report/csynth_design_size.rpt:2)
+INFO: [HLS 200-1995] There were 4,435 instructions in the design after the 'Array/Struct (step 4)' phase of compilation. See the Design Size Report for more details (/home/rklinkhammer/workspace/dmotor/build/shared_mailbox_narrow/build/vitis_dispatcher/hls/syn/report/csynth_design_size.rpt:2)
+INFO: [HLS 200-1995] There were 4,445 instructions in the design after the 'Array/Struct (step 5)' phase of compilation. See the Design Size Report for more details (/home/rklinkhammer/workspace/dmotor/build/shared_mailbox_narrow/build/vitis_dispatcher/hls/syn/report/csynth_design_size.rpt:2)
+INFO: [HLS 200-1995] There were 4,168 instructions in the design after the 'Performance' phase of compilation. See the Design Size Report for more details (/home/rklinkhammer/workspace/dmotor/build/shared_mailbox_narrow/build/vitis_dispatcher/hls/syn/report/csynth_design_size.rpt:2)
+INFO: [HLS 214-376] Pipelining loop< VITIS_LOOP_44_1> at ../src/arithmetic.cpp:44:22 due to pipeline_loops threshold
+INFO: [HLS 214-376] Pipelining loop< VITIS_LOOP_14_1> at ../src/arithmetic.cpp:14:22 due to pipeline_loops threshold
+INFO: [HLS 214-376] Pipelining loop< unknown> at  due to pipeline_loops threshold
+INFO: [HLS 214-376] Pipelining loop< VITIS_LOOP_44_1> at ../src/controller.cpp:44:22 due to pipeline_loops threshold
+INFO: [HLS 214-376] Pipelining loop< VITIS_LOOP_12_1> at ../src/shared_mailbox.cpp:12:26 due to pipeline_loops threshold
+INFO: [HLS 200-1995] There were 4,154 instructions in the design after the 'Performance (step 2)' phase of compilation. See the Design Size Report for more details (/home/rklinkhammer/workspace/dmotor/build/shared_mailbox_narrow/build/vitis_dispatcher/hls/syn/report/csynth_design_size.rpt:2)

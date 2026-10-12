@@ -5,7 +5,7 @@ from pathlib import Path
 import subprocess
 p = argparse.ArgumentParser()
 p.add_argument('--vitis', type=Path, default=Path('/opt/vitis/2026.1/Vitis'))
-p.add_argument('--kernel', choices=['pi', 'command', 'peripheral', 'motion', 'velocity', 'controller', 'dispatcher'], default='pi')
+p.add_argument('--kernel', choices=['pi', 'command', 'peripheral', 'motion', 'velocity', 'controller', 'dispatcher', 'atomic'], default='pi')
 a = p.parse_args()
 root = Path(__file__).resolve().parents[1]
 (root / 'build').mkdir(exist_ok=True)

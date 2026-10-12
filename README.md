@@ -1,15 +1,16 @@
 # DMOTOR
 
-Portable single-motor FPGA controller under development, following
-[DMOTOR_ARCH.md](DMOTOR_ARCH.md). The first implementation provides independently
-tested C++ HLS command-engine, register peripheral, motion-executor and velocity
-estimator components, plus RTL protection, scheduling, encoder and PWM components. The architecture now prefers C++ HLS
-wherever practical. It is **not
-an integrated motor controller or a board-ready bitstream**.
+Portable FPGA motor control under development, following
+[DMOTOR_ARCH.md](DMOTOR_ARCH.md). Revision 0.18 recommends one shared four-motor
+velocity engine with processor-owned trajectories and independent protection.
+It is **not an integrated motor controller or a board-ready bitstream**.
 
-The system target is at most four motors with independent controllers. Current
-resource estimates do not yet fit four instances on xc7z020clg400-1; see
-[verification results](docs/verification.md) for measured optimization progress.
+The [shared-engine experiment](docs/shared_mailbox.md) uses 25,894 LUT for four
+motor contexts by HLS estimate. The new [atomic batch protocol](docs/atomic_mailbox.md)
+implements the first integration milestone with its own provisional generated ABI
+and host reference interface. Target-age protection, the multi-channel scheduler
+and physical output integration remain pending. Existing C++/RTL components and
+the legacy full-profile ring interface are retained and tested.
 
 The active full profile uses exact 64-bit division with one restoring phase per
 bit; see the [measured before/after results](docs/evidence/onephase_main/README.md).

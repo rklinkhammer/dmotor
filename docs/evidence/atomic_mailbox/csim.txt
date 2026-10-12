@@ -1,0 +1,42 @@
+
+****** vitis-run v2026.1 (64-bit)
+  **** SW Build 6511674 on 2026-06-16-13:16:19
+  **** Start of session at: Sun Oct 11 22:58:21 2026
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
+
+  **** HLS Build v2026.1 6493734
+INFO: [HLS 200-2005] Using work_dir /home/rklinkhammer/workspace/dmotor/build/vitis_atomic 
+INFO: [HLS 200-2006] Changing directory to /home/rklinkhammer/workspace/dmotor/build
+INFO: [HLS 200-2176] Writing Vitis IDE component file /home/rklinkhammer/workspace/dmotor/build/vitis_atomic/vitis-comp.json
+INFO: [HLS 200-10] Creating and opening component '/home/rklinkhammer/workspace/dmotor/build/vitis_atomic'.
+INFO: [HLS 200-2174] Applying component config ini file ../platforms/vitis/atomic.cfg
+INFO: [HLS 200-1465] Applying config ini 'syn.file=../../src/atomic_mailbox.cpp' from ../platforms/vitis/atomic.cfg(5)
+INFO: [HLS 200-10] Adding design file '/home/rklinkhammer/workspace/dmotor/src/atomic_mailbox.cpp' to the project
+INFO: [HLS 200-1465] Applying config ini 'syn.file=../../src/atomic_mailbox_top.cpp' from ../platforms/vitis/atomic.cfg(6)
+INFO: [HLS 200-10] Adding design file '/home/rklinkhammer/workspace/dmotor/src/atomic_mailbox_top.cpp' to the project
+INFO: [HLS 200-1465] Applying config ini 'syn.cflags=-I../../include' from ../platforms/vitis/atomic.cfg(7)
+INFO: [HLS 200-1465] Applying config ini 'tb.file=../../tests/atomic_mailbox_top_test.cpp' from ../platforms/vitis/atomic.cfg(9)
+INFO: [HLS 200-10] Adding test bench file '/home/rklinkhammer/workspace/dmotor/tests/atomic_mailbox_top_test.cpp' to the project
+INFO: [HLS 200-1465] Applying config ini 'tb.cflags=-I../../include' from ../platforms/vitis/atomic.cfg(10)
+INFO: [HLS 200-1465] Applying config ini 'syn.top=dmotor_atomic_mailbox' from ../platforms/vitis/atomic.cfg(4)
+INFO: [HLS 200-1465] Applying config ini 'part=xc7z020clg400-1' from ../platforms/vitis/atomic.cfg(1)
+INFO: [HLS 200-1611] Setting target device to 'xc7z020-clg400-1'
+INFO: [HLS 200-1465] Applying config ini 'freqhz=20000000' from ../platforms/vitis/atomic.cfg(2)
+INFO: [SYN 201-201] Setting up clock 'default' with a period of 50ns.
+INFO: [HLS 200-1465] Applying config ini 'package.output.format=ip_catalog' from ../platforms/vitis/atomic.cfg(11)
+INFO: [HLS 200-1465] Applying config ini 'syn.rtl.reset=all' from ../platforms/vitis/atomic.cfg(8)
+INFO: [HLS 200-2176] Writing Vitis IDE component file /home/rklinkhammer/workspace/dmotor/build/vitis_atomic/vitis-comp.json
+INFO: [HLS 200-1465] Applying config ini 'clock=20000000Hz' from command line
+INFO: [SIM 211-2] *************** CSIM start ***************
+INFO: [HLS 200-2191] C-Simulation will use clang-16 as the compiler
+INFO: [HLS 200-2036] Building debug C Simulation binaries
+   Compiling ../../../../../tests/atomic_mailbox_top_test.cpp in debug mode
+   Compiling ../../../../../src/atomic_mailbox_top.cpp in debug mode
+   Compiling ../../../../../src/atomic_mailbox.cpp in debug mode
+   Generating csim.exe
+atomic mailbox HLS: 1165 transactions matched all 16 reply words
+INFO: [SIM 211-1] CSim done with 0 errors.
+INFO: [SIM 211-3] *************** CSIM finish ***************
+INFO: [HLS 200-112] Total CPU user time: 1.59 seconds. Total CPU system time: 0.5 seconds. Total elapsed time: 1.96 seconds; peak allocated memory: 278.012 MB.
+INFO: [vitis-run 60-791] Total elapsed time: 0h 0m 5s
