@@ -946,3 +946,46 @@ co-simulation for motion, controller and dispatcher. The final controller/dispat
 flows verify entry normalization; motion RTL is unchanged by that follow-up.
 See `evidence/native_rtl_tests.log`, the updated top-level synthesis/co-simulation
 reports and `evidence/lut_review/retained_equivalence.log`.
+
+
+## Combined dividend/quotient register experiment
+
+Against `0ea8f180f06d64d65e5808d7eef5f84174105daf`, the exact unsigned
+64-bit divider now shifts dividend bits out and quotient bits into the same
+register. The high dividend bit is consumed in the comparison phase; the shared
+register shifts and appends the quotient bit in the subtraction phase. After
+64 iterations it contains the quotient. The full-width remainder carry and
+nonzero-denominator precondition are unchanged. There is no change to rounding,
+accepted ranges, MMIO, clock profile or control/safety requirements.
+
+Vitis 2026.1 estimates at 100 MHz on xc7z020clg400-1:
+
+| Unit | LUT before → after | FF before → after | Max clocks before → after | Path ns before → after |
+|---|---:|---:|---:|---:|
+| Divider core | 523 → 450 | 206 → 142 | 130 → 130 | 6.589 → 6.589 |
+| Motion | 16300 → 16166 | 9942 → 9810 | 913 → 915 | 7.181 → 7.290 |
+| Velocity | 3858 → 3785 | 3011 → 2883 | 145 → 145 | 7.040 → 7.040 |
+| Controller | 24073 → 23866 | 15143 → 14995 | 999 → 1001 | 7.241 → 7.244 |
+| Dispatcher | 24915 → 24774 | 16097 → 15946 | 1250 → 1252 | 7.181 → 7.244 |
+
+The core saves 73 LUT (13.96%) and 64 FF (31.07%). Its expression selections
+fall by 64 LUT and additional multiplexers by nine LUT. There are still two
+physical divider instances in the dispatcher. Integrated dispatcher savings are
+141 LUT (0.57%) and 151 FF (0.94%), rather than simply twice the core saving,
+because surrounding scheduling and binding also change. DSP and BRAM counts
+are unchanged. Maximum dispatcher latency is 12.52 us, within the existing
+800 us computation budget. Four dispatcher copies still exceed device LUT
+capacity; this experiment does not establish a four-motor fit.
+
+These are pre-route HLS estimates. All four kernels meet the 7.30 ns effective
+synthesis budget, but standalone motion has only 0.010 ns margin and dispatcher
+has 0.056 ns. Physical implementation must establish timing closure. Baseline
+reports and equivalence evidence are in `evidence/divider_register/`.
+
+Retained after verification: all 21 native/RTL tests passed, including the
+regenerated motion kernel with scheduler/PWM integration. Vitis C simulation,
+synthesis and Verilog co-simulation passed for motion, velocity, controller and
+dispatcher. Native divider boundary/random tests and all 16,387 motion snapshots
+and 1,379 dispatcher replies match the reference under UBSan. See
+`evidence/divider_register/native_rtl_tests.log`, `equivalence.log` in that same
+directory, and the updated top-level synthesis/co-simulation reports.
