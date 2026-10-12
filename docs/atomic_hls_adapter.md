@@ -38,7 +38,9 @@ session, generations and safety before accepting results or releasing outputs.
 It must serialize host operations, scheduler begin/retire and fault invalidations,
 convert held scheduler requests into exactly one invocation, and invalidate/drain
 canceled work. The adapter's fault must feed shared protection. None of those
-connections is established by this standalone test.
+connections is established by this standalone test. The subsequent
+[mailbox-control wrapper](mailbox_control.md) now provides scheduler/host arbitration,
+invalidation and live-response qualification with a separate integration test.
 
 ## Verification
 

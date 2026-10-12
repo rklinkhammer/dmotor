@@ -115,5 +115,7 @@ as a separate RTL component. The next milestone is connecting it to the protocol
 shared scheduler and common PWM commit. The previous ring/profile implementation remains available throughout.
 
 The [generated-HLS transport adapter](atomic_hls_adapter.md) now passes standalone
-RTL integration tests. Scheduler arbitration and live-safety revalidation remain
-outstanding; the transport alone does not connect the complete controller.
+RTL integration tests. The [mailbox-control wrapper](mailbox_control.md) now adds
+scheduler/host arbitration, invalidation and live-response qualification. Motor
+computation remains behavioral in this integration test; the full controller is
+not yet connected.

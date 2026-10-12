@@ -23,7 +23,7 @@ find_program(IVERILOG iverilog)
 find_program(VVP vvp)
 set(IVERILOG_BASE "" CACHE PATH "Optional relocated Icarus backend directory")
 if(IVERILOG AND VVP)
-  foreach(test safety scheduler qcencoder pwm latency axi_bridge encoder_snapshot target_age shared_scheduler)
+  foreach(test safety scheduler qcencoder pwm latency axi_bridge encoder_snapshot target_age shared_scheduler vivado_dev)
     add_test(NAME rtl_${test} COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/rtl_test.py
       --iverilog ${IVERILOG} --vvp ${VVP} --base "${IVERILOG_BASE}"
       --source ${CMAKE_SOURCE_DIR} --build ${CMAKE_BINARY_DIR} --test ${test})
@@ -98,5 +98,19 @@ add_test(NAME atomic_mailbox_top COMMAND atomic_mailbox_top_test)
 if(IVERILOG AND VVP AND EXISTS "${CMAKE_SOURCE_DIR}/build/vitis_atomic/hls/syn/verilog/dmotor_atomic_mailbox.v")
   add_test(NAME rtl_atomic_adapter COMMAND ${Python3_EXECUTABLE}
     ${CMAKE_SOURCE_DIR}/tools/atomic_adapter_rtl.py --iverilog ${IVERILOG} --vvp ${VVP}
+    --base "${IVERILOG_BASE}")
+endif()
+
+# Generated atomic mailbox plus real scheduler, target age and PWM; motor math mocked.
+if(IVERILOG AND VVP AND EXISTS "${CMAKE_SOURCE_DIR}/build/vitis_atomic/hls/syn/verilog/dmotor_atomic_mailbox.v")
+  add_test(NAME rtl_mailbox_control COMMAND ${Python3_EXECUTABLE}
+    ${CMAKE_SOURCE_DIR}/tools/atomic_adapter_rtl.py --test mailbox_control
+    --iverilog ${IVERILOG} --vvp ${VVP} --base "${IVERILOG_BASE}")
+endif()
+
+# Measured four-context motor kernel; requires the prepared/synthesized experiment.
+if(IVERILOG AND VVP AND EXISTS "${CMAKE_SOURCE_DIR}/build/shared_mailbox_copy/build/vitis_dispatcher/hls/syn/verilog/dmotor_mailbox_shared.v")
+  add_test(NAME rtl_shared_engine_transport COMMAND ${Python3_EXECUTABLE}
+    ${CMAKE_SOURCE_DIR}/tools/shared_engine_rtl.py --iverilog ${IVERILOG} --vvp ${VVP}
     --base "${IVERILOG_BASE}")
 endif()

@@ -1,0 +1,1 @@
+/ps7/Data/SEG_dmotor_registers 0x43C00000 0x00010000

@@ -1,0 +1,81 @@
+INFO: [Common 17-3922] A valid Vivado Design Suite BASIC license has been detected. Your current license is active and will expire on 02-oct-2027.
+#-----------------------------------------------------------
+# Vivado v2026.1 (64-bit)
+# SW Build 6511674 on Tue Jun 16 11:01:26 MDT 2026
+# IP Build 6504888 on Tue Jun 09 09:05:25 MDT 2026
+# SharedData Build 6501428 on Mon Jun 08 17:34:18 MDT 2026
+# Start of session at: Mon Oct 12 19:44:28 2026
+# Process ID         : 3939515
+# Current directory  : /home/rklinkhammer/workspace/dmotor
+# Command line       : vivado -mode batch -source platforms/vivado/create_dev_bd.tcl -log build/vivado_dev_bd.log -journal build/vivado_dev_bd.jou
+# Log file           : /home/rklinkhammer/workspace/dmotor/build/vivado_dev_bd.log
+# Journal file       : /home/rklinkhammer/workspace/dmotor/build/vivado_dev_bd.jou
+# Running On         : luna
+# Platform           : Ubuntu
+# Operating System   : Ubuntu 26.04.1 LTS
+# Processor Detail   : 12th Gen Intel(R) Core(TM) i5-1240P
+# CPU Frequency      : 3565.691 MHz
+# CPU Physical cores : 12
+# CPU Logical cores  : 16
+# Host memory        : 32665 MB
+# Swap memory        : 8589 MB
+# Total Virtual      : 41255 MB
+# Available Virtual  : 24809 MB
+#-----------------------------------------------------------
+source platforms/vivado/create_dev_bd.tcl
+# set root [file normalize [file join [file dirname [info script]] ../..]]
+# set out [file join $root build vivado_dev_bd]
+# set board_repo [file normalize ~/.Xilinx/Vivado/2026.1/xhub/board_store/xilinx_board_store]
+# if {[file isdirectory $board_repo]} {set_param board.repoPaths [list $board_repo]}
+# create_project -force dmotor_dev_bd $out -part xc7z020clg400-1
+# set board digilentinc.com:arty-z7-20:part0:1.1
+# if {![llength [get_board_parts -quiet $board]]} {error "Install the Arty Z7-20 board definition used by dvrmc"}
+# set_property board_part $board [current_project]
+WARNING: [Board 49-151] The current board 'digilentinc.com::arty-z7-20:1.1' is from a local repo. The vivado install has a corresponding board with version greater than or equal to the local repo board. Please use boards from vivado install to avoid any upgrade/migrate issues
+# set_property ip_repo_paths [list [file join $root build vivado_dev ip]] [current_project]
+# update_ip_catalog
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1700] Loaded user IP repository '/home/rklinkhammer/workspace/dmotor/build/vivado_dev/ip'.
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/opt/vitis/2026.1/data/ip'.
+# create_bd_design development
+Wrote  : </home/rklinkhammer/workspace/dmotor/build/vivado_dev_bd/dmotor_dev_bd.srcs/sources_1/bd/development/development.bd> 
+# create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:* ps7
+# apply_bd_automation -rule xilinx.com:bd_rule:processing_system7 -config {make_external "FIXED_IO, DDR" apply_board_preset "1"} [get_bd_cells ps7]
+# set_property -dict [list CONFIG.PCW_USE_M_AXI_GP0 {1} CONFIG.PCW_FPGA0_PERIPHERAL_FREQMHZ {20.000000}] [get_bd_cells ps7]
+CRITICAL WARNING: [PSU-1]  Parameter : PCW_UIPARAM_DDR_DQS_TO_CLK_DELAY_2 has negative value -0.009 . PS DDR interfaces might fail when entering negative DQS skew values. 
+CRITICAL WARNING: [PSU-2]  Parameter : PCW_UIPARAM_DDR_DQS_TO_CLK_DELAY_3 has negative value -0.033 . PS DDR interfaces might fail when entering negative DQS skew values. 
+# create_bd_cell -type ip -vlnv dmotor.org:user:dmotor_dev:1.0 dmotor
+# apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config {Master "/ps7/M_AXI_GP0" Clk "Auto"} [get_bd_intf_pins dmotor/S_AXI]
+INFO: [Ipptcl 7-1463] No Compatible Board Interface found. Board Tab not created in customize GUI
+Slave segment '/dmotor/registers/registers' is being assigned into address space '/ps7/Data' at <0x43C0_0000 [ 64K ]>.
+# assign_bd_address -offset 0x43C00000 -range 64K -target_address_space [get_bd_addr_spaces ps7/Data] [get_bd_addr_segs dmotor/registers/registers] -force
+# validate_bd_design
+WARNING: [BD 41-702] Propagation TCL tries to overwrite USER strength parameter PCW_M_AXI_GP0_FREQMHZ(10) on '/ps7' with propagated value(20). Command ignored
+# save_bd_design
+Wrote  : </home/rklinkhammer/workspace/dmotor/build/vivado_dev_bd/dmotor_dev_bd.srcs/sources_1/bd/development/development.bd> 
+# generate_target all [get_files development.bd]
+INFO: [BD 41-1662] The design 'development.bd' is already validated. Therefore parameter propagation will not be re-run.
+Verilog Output written to : /home/rklinkhammer/workspace/dmotor/build/vivado_dev_bd/dmotor_dev_bd.gen/sources_1/bd/development/synth/development.v
+Verilog Output written to : /home/rklinkhammer/workspace/dmotor/build/vivado_dev_bd/dmotor_dev_bd.gen/sources_1/bd/development/sim/development.v
+Verilog Output written to : /home/rklinkhammer/workspace/dmotor/build/vivado_dev_bd/dmotor_dev_bd.gen/sources_1/bd/development/hdl/development_wrapper.v
+INFO: [IP_Flow 19-5611] Unable to find an associated reset port for the interface 'M_AXI_GP0'. A default connection has been created.
+INFO: [BD 41-1029] Generation completed for the IP Integrator block ps7 .
+INFO: [BD 41-1029] Generation completed for the IP Integrator block dmotor .
+WARNING: [IP_Flow 19-4994] Overwriting existing constraint file '/home/rklinkhammer/workspace/dmotor/build/vivado_dev_bd/dmotor_dev_bd.gen/sources_1/bd/development/ip/development_ps7_axi_periph_imp_auto_pc_0/development_ps7_axi_periph_imp_auto_pc_0_ooc.xdc'
+INFO: [BD 41-1029] Generation completed for the IP Integrator block ps7_axi_periph/s00_couplers/auto_pc .
+INFO: [BD 41-1029] Generation completed for the IP Integrator block rst_ps7_20M .
+Exporting to file /home/rklinkhammer/workspace/dmotor/build/vivado_dev_bd/dmotor_dev_bd.gen/sources_1/bd/development/hw_handoff/development.hwh
+Generated Hardware Definition File /home/rklinkhammer/workspace/dmotor/build/vivado_dev_bd/dmotor_dev_bd.gen/sources_1/bd/development/synth/development.hwdef
+INFO: [BD 41-3262] Generated VHDL Instantiation Template file /home/rklinkhammer/workspace/dmotor/build/vivado_dev_bd/dmotor_dev_bd.gen/sources_1/bd/development/development.vho
+INFO: [BD 41-3262] Generated Verilog Instantiation Template file /home/rklinkhammer/workspace/dmotor/build/vivado_dev_bd/dmotor_dev_bd.gen/sources_1/bd/development/development.veo
+INFO: [BD 41-3262] Generated System Verilog Instantiation Template file /home/rklinkhammer/workspace/dmotor/build/vivado_dev_bd/dmotor_dev_bd.gen/sources_1/bd/development/development_sv.sveo
+generate_target: Time (s): cpu = 00:00:08 ; elapsed = 00:00:09 . Memory (MB): peak = 1903.395 ; gain = 37.781 ; free physical = 5028 ; free virtual = 24815
+# make_wrapper -files [get_files development.bd] -top -import
+# set f [open [file join $out addresses.txt] w]
+# foreach seg [get_bd_addr_segs -of_objects [get_bd_addr_spaces ps7/Data]] {
+#     puts $f "$seg [get_property OFFSET $seg] [get_property RANGE $seg]"
+# }
+# close $f
+# puts "Arty Z7-20 development BD validated. No motor pins or board bitstream generated."
+Arty Z7-20 development BD validated. No motor pins or board bitstream generated.
+INFO: [Common 17-206] Exiting Vivado at Mon Oct 12 19:44:45 2026...

@@ -12,13 +12,24 @@ and host reference interface. [Independent target-age protection](docs/target_ag
 is implemented and tested. The [shared scheduler/PWM boundary](docs/shared_control.md)
 now connects it to four phase-aligned outputs using normalized HLS handshakes.
 The [atomic HLS transport](docs/atomic_hls_adapter.md) is tested against generated
-mailbox RTL. Scheduler arbitration, the motor-engine adapter and full physical
-integration remain pending.
+mailbox RTL. [Mailbox arbitration and scheduler integration](docs/mailbox_control.md)
+now connect that IP to target-age acceptance and PWM retirement. The motor-engine
+scheduler adapter, host AXI interface and full physical integration remain pending.
+The [shared-engine transport](docs/shared_engine_transport.md) now connects the
+measured motor kernel ports for generated-RTL verification.
 Existing C++/RTL components and
 the legacy full-profile ring interface are retained and tested.
 
 The active full profile uses exact 64-bit division with one restoring phase per
 bit; see the [measured before/after results](docs/evidence/onephase_main/README.md).
+
+The [first Vivado milestone](docs/vivado_development.md) provides packaged AXI
+identification/configuration diagnostics and a separate Arty Z7-20 reference BD,
+with motor outputs permanently inhibited. It does not contain the motor engine.
+
+The [current controller component export](docs/current_ip_export.md) packages the
+real mailbox/PWM block and shared HLS engine separately for Vivado integration,
+and provides a passing XSim SystemVerilog host-driver simulation.
 
 ## Build and test
 

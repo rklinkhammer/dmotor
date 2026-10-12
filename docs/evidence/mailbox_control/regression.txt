@@ -1,0 +1,532 @@
+Start testing: Oct 12 07:35 EDT
+----------------------------------------------------------
+1/29 Testing: arithmetic
+1/29 Test: arithmetic
+Command: "/home/rklinkhammer/workspace/dmotor/build/atomic_protocol/arithmetic_test"
+Directory: /home/rklinkhammer/workspace/dmotor/build/atomic_protocol
+"arithmetic" start time: Oct 12 07:35 EDT
+Output:
+----------------------------------------------------------
+arithmetic: exact division, full-width boundaries and 100000 random pairs passed
+<end of output>
+Test time =   0.02 sec
+----------------------------------------------------------
+Test Passed.
+"arithmetic" end time: Oct 12 07:35 EDT
+"arithmetic" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/29 Testing: protocol
+2/29 Test: protocol
+Command: "/home/rklinkhammer/workspace/dmotor/build/atomic_protocol/protocol_test"
+Directory: /home/rklinkhammer/workspace/dmotor/build/atomic_protocol
+"protocol" start time: Oct 12 07:35 EDT
+Output:
+----------------------------------------------------------
+protocol: wrap, ownership, rejection, cancellation, backpressure passed
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"protocol" end time: Oct 12 07:35 EDT
+"protocol" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/29 Testing: generated_abi
+3/29 Test: generated_abi
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/generate_abi.py" "--check"
+Directory: /home/rklinkhammer/workspace/dmotor/build/atomic_protocol
+"generated_abi" start time: Oct 12 07:35 EDT
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.04 sec
+----------------------------------------------------------
+Test Passed.
+"generated_abi" end time: Oct 12 07:35 EDT
+"generated_abi" time elapsed: 00:00:00
+----------------------------------------------------------
+
+4/29 Testing: rtl_safety
+4/29 Test: rtl_safety
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/rtl_test.py" "--iverilog" "/tmp/dmotor-tools/root/usr/bin/iverilog" "--vvp" "/tmp/dmotor-tools/root/usr/bin/vvp" "--base" "/tmp/dmotor-tools/root/usr/lib/x86_64-linux-gnu/ivl" "--source" "/home/rklinkhammer/workspace/dmotor" "--build" "/home/rklinkhammer/workspace/dmotor/build/atomic_protocol" "--test" "safety"
+Directory: /home/rklinkhammer/workspace/dmotor/build/atomic_protocol
+"rtl_safety" start time: Oct 12 07:35 EDT
+Output:
+----------------------------------------------------------
+warning: Some design elements have no explicit time unit and/or
+       : time precision. This may cause confusing timing results.
+       : Affected design elements are:
+       :   -- module dmotor_halt_aggregator declared here: /home/rklinkhammer/workspace/dmotor/rtl/safety.sv:70
+       :   -- module dmotor_safety declared here: /home/rklinkhammer/workspace/dmotor/rtl/safety.sv:4
+       :   -- package dmotor_timing declared here: /home/rklinkhammer/workspace/dmotor/rtl/timing.sv:2
+safety: 36 fault/source cases, recovery, stale refresh, expiry boundary passed
+/home/rklinkhammer/workspace/dmotor/tests/safety_tb.sv:80: $finish called at 41676000 (1ps)
+<end of output>
+Test time =   0.06 sec
+----------------------------------------------------------
+Test Passed.
+"rtl_safety" end time: Oct 12 07:35 EDT
+"rtl_safety" time elapsed: 00:00:00
+----------------------------------------------------------
+
+5/29 Testing: rtl_scheduler
+5/29 Test: rtl_scheduler
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/rtl_test.py" "--iverilog" "/tmp/dmotor-tools/root/usr/bin/iverilog" "--vvp" "/tmp/dmotor-tools/root/usr/bin/vvp" "--base" "/tmp/dmotor-tools/root/usr/lib/x86_64-linux-gnu/ivl" "--source" "/home/rklinkhammer/workspace/dmotor" "--build" "/home/rklinkhammer/workspace/dmotor/build/atomic_protocol" "--test" "scheduler"
+Directory: /home/rklinkhammer/workspace/dmotor/build/atomic_protocol
+"rtl_scheduler" start time: Oct 12 07:35 EDT
+Output:
+----------------------------------------------------------
+warning: Some design elements have no explicit time unit and/or
+       : time precision. This may cause confusing timing results.
+       : Affected design elements are:
+       :   -- module dmotor_scheduler declared here: /home/rklinkhammer/workspace/dmotor/rtl/scheduler.sv:3
+       :   -- package dmotor_timing declared here: /home/rklinkhammer/workspace/dmotor/rtl/timing.sv:2
+scheduler: handshake, result, deadline priority, inhibit passed
+/home/rklinkhammer/workspace/dmotor/tests/scheduler_tb.sv:23: $finish called at 2676000 (1ps)
+<end of output>
+Test time =   0.05 sec
+----------------------------------------------------------
+Test Passed.
+"rtl_scheduler" end time: Oct 12 07:35 EDT
+"rtl_scheduler" time elapsed: 00:00:00
+----------------------------------------------------------
+
+6/29 Testing: rtl_qcencoder
+6/29 Test: rtl_qcencoder
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/rtl_test.py" "--iverilog" "/tmp/dmotor-tools/root/usr/bin/iverilog" "--vvp" "/tmp/dmotor-tools/root/usr/bin/vvp" "--base" "/tmp/dmotor-tools/root/usr/lib/x86_64-linux-gnu/ivl" "--source" "/home/rklinkhammer/workspace/dmotor" "--build" "/home/rklinkhammer/workspace/dmotor/build/atomic_protocol" "--test" "qcencoder"
+Directory: /home/rklinkhammer/workspace/dmotor/build/atomic_protocol
+"rtl_qcencoder" start time: Oct 12 07:35 EDT
+Output:
+----------------------------------------------------------
+warning: Some design elements have no explicit time unit and/or
+       : time precision. This may cause confusing timing results.
+       : Affected design elements are:
+       :   -- module qcencoder declared here: /home/rklinkhammer/workspace/dmotor/rtl/qcencoder.sv:3
+       :   -- package dmotor_timing declared here: /home/rklinkhammer/workspace/dmotor/rtl/timing.sv:2
+qcencoder: X1/X2/X4, reverse, invalid, saturation at capture envelope passed
+/home/rklinkhammer/workspace/dmotor/tests/qcencoder_tb.sv:31: $finish called at 261550000 (1ps)
+<end of output>
+Test time =   0.06 sec
+----------------------------------------------------------
+Test Passed.
+"rtl_qcencoder" end time: Oct 12 07:35 EDT
+"rtl_qcencoder" time elapsed: 00:00:00
+----------------------------------------------------------
+
+7/29 Testing: rtl_pwm
+7/29 Test: rtl_pwm
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/rtl_test.py" "--iverilog" "/tmp/dmotor-tools/root/usr/bin/iverilog" "--vvp" "/tmp/dmotor-tools/root/usr/bin/vvp" "--base" "/tmp/dmotor-tools/root/usr/lib/x86_64-linux-gnu/ivl" "--source" "/home/rklinkhammer/workspace/dmotor" "--build" "/home/rklinkhammer/workspace/dmotor/build/atomic_protocol" "--test" "pwm"
+Directory: /home/rklinkhammer/workspace/dmotor/build/atomic_protocol
+"rtl_pwm" start time: Oct 12 07:35 EDT
+Output:
+----------------------------------------------------------
+warning: Some design elements have no explicit time unit and/or
+       : time precision. This may cause confusing timing results.
+       : Affected design elements are:
+       :   -- module dmotor_pwm declared here: /home/rklinkhammer/workspace/dmotor/rtl/pwm.sv:4
+       :   -- package dmotor_timing declared here: /home/rklinkhammer/workspace/dmotor/rtl/timing.sv:2
+PWM: duty, reversal blanking, immediate inhibit passed
+/home/rklinkhammer/workspace/dmotor/tests/pwm_tb.sv:27: $finish called at 4200000 (1ps)
+<end of output>
+Test time =   0.05 sec
+----------------------------------------------------------
+Test Passed.
+"rtl_pwm" end time: Oct 12 07:35 EDT
+"rtl_pwm" time elapsed: 00:00:00
+----------------------------------------------------------
+
+8/29 Testing: rtl_latency
+8/29 Test: rtl_latency
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/rtl_test.py" "--iverilog" "/tmp/dmotor-tools/root/usr/bin/iverilog" "--vvp" "/tmp/dmotor-tools/root/usr/bin/vvp" "--base" "/tmp/dmotor-tools/root/usr/lib/x86_64-linux-gnu/ivl" "--source" "/home/rklinkhammer/workspace/dmotor" "--build" "/home/rklinkhammer/workspace/dmotor/build/atomic_protocol" "--test" "latency"
+Directory: /home/rklinkhammer/workspace/dmotor/build/atomic_protocol
+"rtl_latency" start time: Oct 12 07:35 EDT
+Output:
+----------------------------------------------------------
+warning: Some design elements have no explicit time unit and/or
+       : time precision. This may cause confusing timing results.
+       : Affected design elements are:
+       :   -- module dmotor_halt_aggregator declared here: /home/rklinkhammer/workspace/dmotor/rtl/safety.sv:70
+       :   -- module dmotor_safety declared here: /home/rklinkhammer/workspace/dmotor/rtl/safety.sv:4
+       :   -- package dmotor_timing declared here: /home/rklinkhammer/workspace/dmotor/rtl/timing.sv:2
+latency: 10 phases, HALT <=10000 ns budget and <=250 ns pipeline bound passed
+/home/rklinkhammer/workspace/dmotor/tests/latency_tb.sv:35: $finish called at 4700000 (1ps)
+<end of output>
+Test time =   0.05 sec
+----------------------------------------------------------
+Test Passed.
+"rtl_latency" end time: Oct 12 07:35 EDT
+"rtl_latency" time elapsed: 00:00:00
+----------------------------------------------------------
+
+9/29 Testing: rtl_axi_bridge
+9/29 Test: rtl_axi_bridge
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/rtl_test.py" "--iverilog" "/tmp/dmotor-tools/root/usr/bin/iverilog" "--vvp" "/tmp/dmotor-tools/root/usr/bin/vvp" "--base" "/tmp/dmotor-tools/root/usr/lib/x86_64-linux-gnu/ivl" "--source" "/home/rklinkhammer/workspace/dmotor" "--build" "/home/rklinkhammer/workspace/dmotor/build/atomic_protocol" "--test" "axi_bridge"
+Directory: /home/rklinkhammer/workspace/dmotor/build/atomic_protocol
+"rtl_axi_bridge" start time: Oct 12 07:35 EDT
+Output:
+----------------------------------------------------------
+warning: Some design elements have no explicit time unit and/or
+       : time precision. This may cause confusing timing results.
+       : Affected design elements are:
+       :   -- module dmotor_axi_bridge declared here: /home/rklinkhammer/workspace/dmotor/rtl/axi_bridge.sv:4
+       :   -- package dmotor_timing declared here: /home/rklinkhammer/workspace/dmotor/rtl/timing.sv:2
+AXI bridge: split channels, stalled responses, idle polling, errors, timeout passed
+/home/rklinkhammer/workspace/dmotor/tests/axi_bridge_tb.sv:74: $finish called at 7026000 (1ps)
+<end of output>
+Test time =   0.05 sec
+----------------------------------------------------------
+Test Passed.
+"rtl_axi_bridge" end time: Oct 12 07:35 EDT
+"rtl_axi_bridge" time elapsed: 00:00:00
+----------------------------------------------------------
+
+10/29 Testing: rtl_encoder_snapshot
+10/29 Test: rtl_encoder_snapshot
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/rtl_test.py" "--iverilog" "/tmp/dmotor-tools/root/usr/bin/iverilog" "--vvp" "/tmp/dmotor-tools/root/usr/bin/vvp" "--base" "/tmp/dmotor-tools/root/usr/lib/x86_64-linux-gnu/ivl" "--source" "/home/rklinkhammer/workspace/dmotor" "--build" "/home/rklinkhammer/workspace/dmotor/build/atomic_protocol" "--test" "encoder_snapshot"
+Directory: /home/rklinkhammer/workspace/dmotor/build/atomic_protocol
+"rtl_encoder_snapshot" start time: Oct 12 07:35 EDT
+Output:
+----------------------------------------------------------
+warning: Some design elements have no explicit time unit and/or
+       : time precision. This may cause confusing timing results.
+       : Affected design elements are:
+       :   -- module dmotor_encoder_snapshot declared here: /home/rklinkhammer/workspace/dmotor/rtl/encoder_snapshot.sv:5
+       :   -- package dmotor_timing declared here: /home/rklinkhammer/workspace/dmotor/rtl/timing.sv:2
+encoder snapshot: count, direction epochs, invalid exclusion and fault latching passed
+/home/rklinkhammer/workspace/dmotor/tests/encoder_snapshot_tb.sv:37: $finish called at 1000000 (1ps)
+<end of output>
+Test time =   0.05 sec
+----------------------------------------------------------
+Test Passed.
+"rtl_encoder_snapshot" end time: Oct 12 07:35 EDT
+"rtl_encoder_snapshot" time elapsed: 00:00:00
+----------------------------------------------------------
+
+11/29 Testing: rtl_target_age
+11/29 Test: rtl_target_age
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/rtl_test.py" "--iverilog" "/tmp/dmotor-tools/root/usr/bin/iverilog" "--vvp" "/tmp/dmotor-tools/root/usr/bin/vvp" "--base" "/tmp/dmotor-tools/root/usr/lib/x86_64-linux-gnu/ivl" "--source" "/home/rklinkhammer/workspace/dmotor" "--build" "/home/rklinkhammer/workspace/dmotor/build/atomic_protocol" "--test" "target_age"
+Directory: /home/rklinkhammer/workspace/dmotor/build/atomic_protocol
+"rtl_target_age" start time: Oct 12 07:35 EDT
+Output:
+----------------------------------------------------------
+warning: Some design elements have no explicit time unit and/or
+       : time precision. This may cause confusing timing results.
+       : Affected design elements are:
+       :   -- module dmotor_halt_aggregator declared here: /home/rklinkhammer/workspace/dmotor/rtl/safety.sv:70
+       :   -- module dmotor_safety declared here: /home/rklinkhammer/workspace/dmotor/rtl/safety.sv:4
+       :   -- module dmotor_target_age declared here: /home/rklinkhammer/workspace/dmotor/rtl/target_age.sv:3
+       :   -- package dmotor_timing declared here: /home/rklinkhammer/workspace/dmotor/rtl/timing.sv:2
+target_age PASS: lifecycle, atomic renewal, expiration priority, four-motor attribution, watchdog independence, wrap and configuration
+/home/rklinkhammer/workspace/dmotor/tests/target_age_tb.sv:132: $finish called at 10476000 (1ps)
+<end of output>
+Test time =   0.06 sec
+----------------------------------------------------------
+Test Passed.
+"rtl_target_age" end time: Oct 12 07:35 EDT
+"rtl_target_age" time elapsed: 00:00:00
+----------------------------------------------------------
+
+12/29 Testing: rtl_shared_scheduler
+12/29 Test: rtl_shared_scheduler
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/rtl_test.py" "--iverilog" "/tmp/dmotor-tools/root/usr/bin/iverilog" "--vvp" "/tmp/dmotor-tools/root/usr/bin/vvp" "--base" "/tmp/dmotor-tools/root/usr/lib/x86_64-linux-gnu/ivl" "--source" "/home/rklinkhammer/workspace/dmotor" "--build" "/home/rklinkhammer/workspace/dmotor/build/atomic_protocol" "--test" "shared_scheduler"
+Directory: /home/rklinkhammer/workspace/dmotor/build/atomic_protocol
+"rtl_shared_scheduler" start time: Oct 12 07:35 EDT
+Output:
+----------------------------------------------------------
+warning: Some design elements have no explicit time unit and/or
+       : time precision. This may cause confusing timing results.
+       : Affected design elements are:
+       :   -- module dmotor_pwm declared here: /home/rklinkhammer/workspace/dmotor/rtl/pwm.sv:4
+       :   -- module dmotor_shared_control declared here: /home/rklinkhammer/workspace/dmotor/rtl/shared_control.sv:4
+       :   -- module dmotor_shared_scheduler declared here: /home/rklinkhammer/workspace/dmotor/rtl/shared_scheduler.sv:3
+       :   -- module dmotor_target_age declared here: /home/rklinkhammer/workspace/dmotor/rtl/target_age.sv:3
+       :   -- package dmotor_timing declared here: /home/rklinkhammer/workspace/dmotor/rtl/timing.sv:2
+shared_scheduler PASS: captured inputs, four-channel PWM commit, target-age/retirement gating, cancellation, stale tags and deadlines
+/home/rklinkhammer/workspace/dmotor/tests/shared_scheduler_tb.sv:138: $finish called at 97926000 (1ps)
+<end of output>
+Test time =   0.12 sec
+----------------------------------------------------------
+Test Passed.
+"rtl_shared_scheduler" end time: Oct 12 07:35 EDT
+"rtl_shared_scheduler" time elapsed: 00:00:00
+----------------------------------------------------------
+
+13/29 Testing: control
+13/29 Test: control
+Command: "/home/rklinkhammer/workspace/dmotor/build/atomic_protocol/control_test"
+Directory: /home/rklinkhammer/workspace/dmotor/build/atomic_protocol
+"control" start time: Oct 12 07:35 EDT
+Output:
+----------------------------------------------------------
+PI: signed rounding, limits, anti-windup, range checks passed
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"control" end time: Oct 12 07:35 EDT
+"control" time elapsed: 00:00:00
+----------------------------------------------------------
+
+14/29 Testing: command_engine
+14/29 Test: command_engine
+Command: "/home/rklinkhammer/workspace/dmotor/build/atomic_protocol/command_engine_test"
+Directory: /home/rklinkhammer/workspace/dmotor/build/atomic_protocol
+"command_engine" start time: Oct 12 07:35 EDT
+Output:
+----------------------------------------------------------
+command engine: publication, activation, stale completion, cancellation, full ring passed
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"command_engine" end time: Oct 12 07:35 EDT
+"command_engine" time elapsed: 00:00:00
+----------------------------------------------------------
+
+15/29 Testing: peripheral
+15/29 Test: peripheral
+Command: "/home/rklinkhammer/workspace/dmotor/build/atomic_protocol/peripheral_test"
+Directory: /home/rklinkhammer/workspace/dmotor/build/atomic_protocol
+"peripheral" start time: Oct 12 07:35 EDT
+Output:
+----------------------------------------------------------
+peripheral: decode, strobe/alignment errors, queue, cancellation, actions passed
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"peripheral" end time: Oct 12 07:35 EDT
+"peripheral" time elapsed: 00:00:00
+----------------------------------------------------------
+
+16/29 Testing: rtl_peripheral_integrated
+16/29 Test: rtl_peripheral_integrated
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/integrated_rtl.py" "--iverilog" "/tmp/dmotor-tools/root/usr/bin/iverilog" "--vvp" "/tmp/dmotor-tools/root/usr/bin/vvp" "--base" "/tmp/dmotor-tools/root/usr/lib/x86_64-linux-gnu/ivl"
+Directory: /home/rklinkhammer/workspace/dmotor/build/atomic_protocol
+"rtl_peripheral_integrated" start time: Oct 12 07:35 EDT
+Output:
+----------------------------------------------------------
+integrated AXI/HLS: PASS; max observed write=99 read=103 cycles
+/home/rklinkhammer/workspace/dmotor/tests/peripheral_top_tb.sv:81: $finish called at 1247200000 (1ps)
+<end of output>
+Test time =   9.01 sec
+----------------------------------------------------------
+Test Passed.
+"rtl_peripheral_integrated" end time: Oct 12 07:35 EDT
+"rtl_peripheral_integrated" time elapsed: 00:00:09
+----------------------------------------------------------
+
+17/29 Testing: configuration
+17/29 Test: configuration
+Command: "/home/rklinkhammer/workspace/dmotor/build/atomic_protocol/configuration_test"
+Directory: /home/rklinkhammer/workspace/dmotor/build/atomic_protocol
+"configuration" start time: Oct 12 07:35 EDT
+Output:
+----------------------------------------------------------
+configuration: bounds, atomic commit, authorization and acknowledgment guards passed
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"configuration" end time: Oct 12 07:35 EDT
+"configuration" time elapsed: 00:00:00
+----------------------------------------------------------
+
+18/29 Testing: motion
+18/29 Test: motion
+Command: "/home/rklinkhammer/workspace/dmotor/build/atomic_protocol/motion_test"
+Directory: /home/rklinkhammer/workspace/dmotor/build/atomic_protocol
+"motion" start time: Oct 12 07:35 EDT
+Output:
+----------------------------------------------------------
+motion: six commands, ramps, residuals, settling, timeouts, inhibit and timing passed
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"motion" end time: Oct 12 07:35 EDT
+"motion" time elapsed: 00:00:00
+----------------------------------------------------------
+
+19/29 Testing: motion_queue
+19/29 Test: motion_queue
+Command: "/home/rklinkhammer/workspace/dmotor/build/atomic_protocol/motion_queue_test"
+Directory: /home/rklinkhammer/workspace/dmotor/build/atomic_protocol
+"motion_queue" start time: Oct 12 07:35 EDT
+Output:
+----------------------------------------------------------
+motion queue: ordered execution, dwell, stop, backpressure and cancellation passed
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"motion_queue" end time: Oct 12 07:35 EDT
+"motion_queue" time elapsed: 00:00:00
+----------------------------------------------------------
+
+20/29 Testing: rtl_motion_integrated
+20/29 Test: rtl_motion_integrated
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/motion_rtl.py" "--iverilog" "/tmp/dmotor-tools/root/usr/bin/iverilog" "--vvp" "/tmp/dmotor-tools/root/usr/bin/vvp" "--base" "/tmp/dmotor-tools/root/usr/lib/x86_64-linux-gnu/ivl"
+Directory: /home/rklinkhammer/workspace/dmotor/build/atomic_protocol
+"rtl_motion_integrated" start time: Oct 12 07:35 EDT
+Output:
+----------------------------------------------------------
+motion RTL: first result at 20164 clocks
+motion RTL: acknowledgment at 40149 clocks
+motion generated RTL: scheduled execution, completion, 50% PWM, mid-flight inhibit and feedback fault passed; maximum latency 159 cycles
+/home/rklinkhammer/workspace/dmotor/tests/motion_top_tb.sv:78: $finish called at 4066400000 (1ps)
+<end of output>
+Test time =  25.26 sec
+----------------------------------------------------------
+Test Passed.
+"rtl_motion_integrated" end time: Oct 12 07:35 EDT
+"rtl_motion_integrated" time elapsed: 00:00:25
+----------------------------------------------------------
+
+21/29 Testing: velocity
+21/29 Test: velocity
+Command: "/home/rklinkhammer/workspace/dmotor/build/atomic_protocol/velocity_test"
+Directory: /home/rklinkhammer/workspace/dmotor/build/atomic_protocol
+"velocity" start time: Oct 12 07:35 EDT
+Output:
+----------------------------------------------------------
+velocity: both-direction 1/5/30/130 RPM sweep, zero timeout, restart, reversal, invalid edges and snapshot faults passed
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"velocity" end time: Oct 12 07:35 EDT
+"velocity" time elapsed: 00:00:00
+----------------------------------------------------------
+
+22/29 Testing: controller
+22/29 Test: controller
+Command: "/home/rklinkhammer/workspace/dmotor/build/atomic_protocol/controller_test"
+Directory: /home/rklinkhammer/workspace/dmotor/build/atomic_protocol
+"controller" start time: Oct 12 07:35 EDT
+Output:
+----------------------------------------------------------
+controller: warmup, bounded acquisition, startup/reversal, stop, deadline priority and protective faults passed
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"controller" end time: Oct 12 07:35 EDT
+"controller" time elapsed: 00:00:00
+----------------------------------------------------------
+
+23/29 Testing: dispatcher
+23/29 Test: dispatcher
+Command: "/home/rklinkhammer/workspace/dmotor/build/atomic_protocol/dispatcher_test"
+Directory: /home/rklinkhammer/workspace/dmotor/build/atomic_protocol
+"dispatcher" start time: Oct 12 07:35 EDT
+Output:
+----------------------------------------------------------
+dispatcher: exact activation, ordered completion, backpressure, stop, rejection and cancellation priority passed
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"dispatcher" end time: Oct 12 07:35 EDT
+"dispatcher" time elapsed: 00:00:00
+----------------------------------------------------------
+
+24/29 Testing: position_error
+24/29 Test: position_error
+Command: "/home/rklinkhammer/workspace/dmotor/build/atomic_protocol/position_error_test"
+Directory: /home/rklinkhammer/workspace/dmotor/build/atomic_protocol
+"position_error" start time: Oct 12 07:35 EDT
+Output:
+----------------------------------------------------------
+position-error: full-width endpoints, tolerance and wide braking boundaries passed
+<end of output>
+Test time =   0.02 sec
+----------------------------------------------------------
+Test Passed.
+"position_error" end time: Oct 12 07:35 EDT
+"position_error" time elapsed: 00:00:00
+----------------------------------------------------------
+
+25/29 Testing: atomic_mailbox
+25/29 Test: atomic_mailbox
+Command: "/home/rklinkhammer/workspace/dmotor/build/atomic_protocol/atomic_mailbox_test"
+Directory: /home/rklinkhammer/workspace/dmotor/build/atomic_protocol
+"atomic_mailbox" start time: Oct 12 07:35 EDT
+Output:
+----------------------------------------------------------
+atomic mailbox: publication/retirement races, host ABI checks, and 60 mask invalidation cases passed
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"atomic_mailbox" end time: Oct 12 07:35 EDT
+"atomic_mailbox" time elapsed: 00:00:00
+----------------------------------------------------------
+
+26/29 Testing: generated_mailbox_abi
+26/29 Test: generated_mailbox_abi
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/generate_mailbox_abi.py" "--check"
+Directory: /home/rklinkhammer/workspace/dmotor/build/atomic_protocol
+"generated_mailbox_abi" start time: Oct 12 07:35 EDT
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.04 sec
+----------------------------------------------------------
+Test Passed.
+"generated_mailbox_abi" end time: Oct 12 07:35 EDT
+"generated_mailbox_abi" time elapsed: 00:00:00
+----------------------------------------------------------
+
+27/29 Testing: atomic_mailbox_top
+27/29 Test: atomic_mailbox_top
+Command: "/home/rklinkhammer/workspace/dmotor/build/atomic_protocol/atomic_mailbox_top_test"
+Directory: /home/rklinkhammer/workspace/dmotor/build/atomic_protocol
+"atomic_mailbox_top" start time: Oct 12 07:35 EDT
+Output:
+----------------------------------------------------------
+atomic mailbox HLS: 1165 transactions matched all 16 reply words
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"atomic_mailbox_top" end time: Oct 12 07:35 EDT
+"atomic_mailbox_top" time elapsed: 00:00:00
+----------------------------------------------------------
+
+28/29 Testing: rtl_atomic_adapter
+28/29 Test: rtl_atomic_adapter
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/atomic_adapter_rtl.py" "--iverilog" "/tmp/dmotor-tools/root/usr/bin/iverilog" "--vvp" "/tmp/dmotor-tools/root/usr/bin/vvp" "--base" "/tmp/dmotor-tools/root/usr/lib/x86_64-linux-gnu/ivl"
+Directory: /home/rklinkhammer/workspace/dmotor/build/atomic_protocol
+"rtl_atomic_adapter" start time: Oct 12 07:35 EDT
+Output:
+----------------------------------------------------------
+atomic_adapter PASS: 49 generated-RTL transactions, dual-port memory timing, immutable capture, backpressure, cancellation and timeout
+/home/rklinkhammer/workspace/dmotor/tests/atomic_adapter_tb.sv:78: $finish called at 112450000 (1ps)
+<end of output>
+Test time =   0.41 sec
+----------------------------------------------------------
+Test Passed.
+"rtl_atomic_adapter" end time: Oct 12 07:35 EDT
+"rtl_atomic_adapter" time elapsed: 00:00:00
+----------------------------------------------------------
+
+29/29 Testing: rtl_mailbox_control
+29/29 Test: rtl_mailbox_control
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/atomic_adapter_rtl.py" "--test" "mailbox_control" "--iverilog" "/tmp/dmotor-tools/root/usr/bin/iverilog" "--vvp" "/tmp/dmotor-tools/root/usr/bin/vvp" "--base" "/tmp/dmotor-tools/root/usr/lib/x86_64-linux-gnu/ivl"
+Directory: /home/rklinkhammer/workspace/dmotor/build/atomic_protocol
+"rtl_mailbox_control" start time: Oct 12 07:35 EDT
+Output:
+----------------------------------------------------------
+mailbox_control PASS: generated HLS admission/retirement, host backpressure, atomic PWM, no-batch tick, cancellation, ownership/retirement races, timeout and session protection
+/home/rklinkhammer/workspace/dmotor/tests/mailbox_control_tb.sv:146: $finish called at 628126000 (1ps)
+<end of output>
+Test time =   1.62 sec
+----------------------------------------------------------
+Test Passed.
+"rtl_mailbox_control" end time: Oct 12 07:35 EDT
+"rtl_mailbox_control" time elapsed: 00:00:01
+----------------------------------------------------------
+
+End testing: Oct 12 07:35 EDT

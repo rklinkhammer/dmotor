@@ -17,8 +17,11 @@ generated ABI; see [implementation status](docs/atomic_mailbox.md). Independent
 a separate component. The [scheduler/protection/PWM boundary](docs/shared_control.md)
 now has RTL tests with behavioral engine/protocol responses. The
 [atomic HLS transport](docs/atomic_hls_adapter.md) is tested with generated mailbox
-RTL. Scheduler arbitration, the motor-engine adapter, complete batch-to-engine
-integration and board integration remain to be implemented and measured.
+RTL. [Mailbox arbitration and scheduler integration](docs/mailbox_control.md) now
+have generated-mailbox RTL tests through PWM release, with behavioral motor results.
+The [shared-engine transport](docs/shared_engine_transport.md) connects the measured
+motor kernel ports. Its scheduler/lifecycle adapter, host AXI interface and board
+integration remain to be implemented and measured.
 The active full-profile control sources and legacy ring ABI have not been replaced
 by this document update.
 

@@ -121,6 +121,7 @@ clock constraints remain outstanding. These figures exclude both HLS IP blocks.
 ## Generated mailbox transport progress
 
 The [atomic HLS transport](atomic_hls_adapter.md) is now tested separately against
-the generated mailbox RTL. Its request/response interface still needs an arbiter
-to connect these scheduler admission/retirement requests and host operations.
-The scheduler bench continues to use behavioral protocol and engine responses.
+the generated mailbox RTL. The [mailbox-control wrapper](mailbox_control.md) now
+connects these scheduler admission/retirement requests and host operations through
+an arbiter. Its integration test uses generated mailbox RTL and behavioral motor
+results. The original scheduler-only bench retains behavioral protocol responses.

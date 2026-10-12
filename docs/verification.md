@@ -1420,3 +1420,47 @@ All 28 native/RTL regression tests pass (35.44 seconds). Evidence is retained in
 `docs/evidence/atomic_adapter/regression.log`. No new resource or timing-closure
 claim is made. Scheduler/host arbitration, live-safety revalidation and the shared
 motor-engine adapter remain outstanding.
+
+## Mailbox arbitration and scheduler integration
+
+The [mailbox-control wrapper](mailbox_control.md) connects actual generated C++ HLS
+mailbox RTL to the scheduler, target-age acceptance and PWM. The arbiter serializes
+host requests, tick admission, retirement and invalidation, buffers host replies
+independently, and qualifies scheduler responses against live ownership/safety.
+Canceled retirement faults until reset because HLS may already have written its
+applied metadata; no stale success is exposed to the scheduler.
+
+All 29 regression tests pass (37.02 seconds), including generated-mailbox integration
+through atomic PWM release, no-batch age behavior, cancellation, ownership races,
+retirement-edge cancellation, timeout propagation and session protection. Evidence:
+`docs/evidence/mailbox_control/regression.txt`. Motor calculation remains behavioral
+in this test. No integrated resource/timing claim is made. Shared-engine adaptation,
+STOP/lifecycle handling, host AXI and physical safety integration remain outstanding.
+
+## Actual shared motor-engine transport
+
+The [shared-engine transport](shared_engine_transport.md) captures every scalar,
+configuration and request word, drives synchronous dual-port HLS memories and
+holds complete replies under backpressure. Motor algorithms remain C++ HLS.
+
+All 30 regression tests pass in 148.11 seconds. The new generated-RTL test compares
+all sixteen words for 1,673 transactions against four independent C++ contexts,
+including warm-up, interleaved targets, encoder changes, selected reset, STOP and
+faults; additional transport checks cover input mutation, backpressure and timeout
+recovery. Maximum observed invocation latency is 315 cycles (15.75 us at 20 MHz);
+this does not establish the integrated frame worst case. Evidence:
+`docs/evidence/shared_engine_transport/regression.txt`.
+
+The scheduler/lifecycle adapter remains outstanding: target staging and warm-up
+are not equivalent to motor acceptance. No new LUT or routed timing measurement
+is claimed, and the mailbox-control integration bench still uses behavioral motor
+results until that adapter is connected.
+
+## First Vivado development milestone
+
+[Development IP and reference BD](vivado_development.md) are now reproducible.
+The AXI endpoint simulation and two ABI checks pass. Endpoint-only OOC placement
+and routing reports 82 LUT/186 FF and setup/hold +37.867/+0.168 ns under assumed
+5 ns boundary delays. The Arty Z7-20 BD validates and generates, with the documented
+preset DDR-skew warnings. No board bitstream or powered motor test is claimed.
+Evidence: `docs/evidence/vivado_development/`.

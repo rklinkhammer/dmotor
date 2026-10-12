@@ -1,0 +1,55 @@
+Start testing: Oct 12 19:44 EDT
+----------------------------------------------------------
+3/31 Testing: generated_abi
+3/31 Test: generated_abi
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/generate_abi.py" "--check"
+Directory: /home/rklinkhammer/workspace/dmotor/build/atomic_protocol
+"generated_abi" start time: Oct 12 19:44 EDT
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.04 sec
+----------------------------------------------------------
+Test Passed.
+"generated_abi" end time: Oct 12 19:44 EDT
+"generated_abi" time elapsed: 00:00:00
+----------------------------------------------------------
+
+13/31 Testing: rtl_vivado_dev
+13/31 Test: rtl_vivado_dev
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/rtl_test.py" "--iverilog" "/tmp/dmotor-tools/root/usr/bin/iverilog" "--vvp" "/tmp/dmotor-tools/root/usr/bin/vvp" "--base" "/tmp/dmotor-tools/root/usr/lib/x86_64-linux-gnu/ivl" "--source" "/home/rklinkhammer/workspace/dmotor" "--build" "/home/rklinkhammer/workspace/dmotor/build/atomic_protocol" "--test" "vivado_dev"
+Directory: /home/rklinkhammer/workspace/dmotor/build/atomic_protocol
+"rtl_vivado_dev" start time: Oct 12 19:44 EDT
+Output:
+----------------------------------------------------------
+warning: Some design elements have no explicit time unit and/or
+       : time precision. This may cause confusing timing results.
+       : Affected design elements are:
+       :   -- module dmotor_vivado_dev declared here: /home/rklinkhammer/workspace/dmotor/rtl/vivado_dev.sv:3
+       :   -- package dmotor_timing declared here: /home/rklinkhammer/workspace/dmotor/rtl/timing.sv:2
+vivado_dev PASS: split AXI channels, backpressure, invalid accesses, reset and permanent inhibit
+/home/rklinkhammer/workspace/dmotor/tests/vivado_dev_tb.sv:55: $finish called at 7850000 (1ps)
+<end of output>
+Test time =   0.06 sec
+----------------------------------------------------------
+Test Passed.
+"rtl_vivado_dev" end time: Oct 12 19:44 EDT
+"rtl_vivado_dev" time elapsed: 00:00:00
+----------------------------------------------------------
+
+27/31 Testing: generated_mailbox_abi
+27/31 Test: generated_mailbox_abi
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/generate_mailbox_abi.py" "--check"
+Directory: /home/rklinkhammer/workspace/dmotor/build/atomic_protocol
+"generated_mailbox_abi" start time: Oct 12 19:44 EDT
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.04 sec
+----------------------------------------------------------
+Test Passed.
+"generated_mailbox_abi" end time: Oct 12 19:44 EDT
+"generated_mailbox_abi" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Oct 12 19:44 EDT
