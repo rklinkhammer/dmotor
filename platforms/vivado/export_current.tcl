@@ -24,6 +24,9 @@ proc export_block {root out name top generated sources} {
             foreach data [glob -nocomplain [file join $directory $pattern]] {add_files $data}
         }
     }
+    if {$name eq "controller_axi"} {
+        add_files [file join $root constraints controller_halt.xdc]
+    }
     set_property top $top [current_fileset]
     update_compile_order -fileset sources_1
     ipx::package_project -root_dir [file join $out $name ip] -vendor dmotor.org -library user -taxonomy /UserIP -import_files -set_current true
@@ -32,7 +35,7 @@ proc export_block {root out name top generated sources} {
     set_property version 0.18 $core
     # Scheduler feedback-loop repair: advertise a new revision to existing BDs.
     if {$name in {mailbox_control controller_axi}} {set_property core_revision 2 $core}
-    if {$name eq "controller_axi"} {set_property core_revision 3 $core}
+    if {$name eq "controller_axi"} {set_property core_revision 4 $core}
     set_property display_name "DMOTOR current $name (integration preview)" $core
     set_property description "Current tested component. Not a complete motor controller; see docs/current_ip_export.md." $core
     ipx::infer_bus_interfaces xilinx.com:signal:clock_rtl:1.0 $core

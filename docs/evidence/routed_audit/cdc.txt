@@ -1,0 +1,96 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2026.1 (lin64) Build 6511674 Tue Jun 16 11:01:26 MDT 2026
+| Date         : Mon Oct 12 23:30:00 2026
+| Host         : luna running 64-bit Ubuntu 26.04.1 LTS
+| Command      : report_cdc -details -file build/routed_audit/cdc.txt
+| Design       : design_1_wrapper
+| Device       : 7z020-clg400
+| Speed File   : -1  PRODUCTION 1.12 2019-11-22
+| Design State : Routed
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+CDC Report
+
+ID      Severity  Count  Description
+------  --------  -----  ----------------------------------------------
+CDC-3   Info         49  1-bit synchronized with ASYNC_REG property
+CDC-6   Warning       2  Multi-bit synchronized with ASYNC_REG property
+CDC-11  Critical      4  Fan-out from launch flop to destination clock
+
+Source Clock: clk_fpga_1
+Destination Clock: clk_fpga_0
+CDC Type: No Common Primary Clock
+
+Row  ID     Severity  Description                                     Depth  Exception   Source (From)                                                                                                          Destination (To)
+---  -----  --------  ----------------------------------------------  -----  ----------  ---------------------------------------------------------------------------------------------------------------------  -------------------------------------------------------------------------------------------------------------------------------------------------------
+  1  CDC-3  Info      1-bit synchronized with ASYNC_REG property          3  False Path  design_1_i/axi_smc/inst/sc_ul/inst/M_AXI[4].mi_cdc.m_cdc_inst/ar_dest_ack_reg/C                                        design_1_i/axi_smc/inst/sc_ul/inst/M_AXI[4].mi_cdc.m_cdc_inst/gen_async_conv.gen_read.ar_async_cdc/xpm_cdc_single_dest2src_inst/syncstages_ff_reg[0]/D
+  2  CDC-3  Info      1-bit synchronized with ASYNC_REG property          4  False Path  design_1_i/axi_smc/inst/sc_ul/inst/M_AXI[4].mi_cdc.m_cdc_inst/gen_async_conv.gen_read.r_async_cdc/src_sendd_ff_reg/C   design_1_i/axi_smc/inst/sc_ul/inst/M_AXI[4].mi_cdc.m_cdc_inst/gen_async_conv.gen_read.r_async_cdc/xpm_cdc_single_src2dest_inst/syncstages_ff_reg[0]/D
+  3  CDC-6  Warning   Multi-bit synchronized with ASYNC_REG property      2  False Path  design_1_i/controller_axi_0/inst/bus/rdata_reg[31:0]/C                                                                 design_1_i/axi_smc/inst/sc_ul/inst/M_AXI[4].mi_cdc.m_cdc_inst/gen_async_conv.gen_read.rdata_async_cdc/syncstages_ff_reg[0][31:0]/D
+  4  CDC-3  Info      1-bit synchronized with ASYNC_REG property          3  False Path  design_1_i/axi_smc/inst/sc_ul/inst/M_AXI[4].mi_cdc.m_cdc_inst/aw_dest_ack_reg/C                                        design_1_i/axi_smc/inst/sc_ul/inst/M_AXI[4].mi_cdc.m_cdc_inst/gen_async_conv.gen_write.aw_async_cdc/xpm_cdc_single_dest2src_inst/syncstages_ff_reg[0]/D
+  5  CDC-3  Info      1-bit synchronized with ASYNC_REG property          4  False Path  design_1_i/axi_smc/inst/sc_ul/inst/M_AXI[4].mi_cdc.m_cdc_inst/gen_async_conv.gen_write.b_async_cdc/src_sendd_ff_reg/C  design_1_i/axi_smc/inst/sc_ul/inst/M_AXI[4].mi_cdc.m_cdc_inst/gen_async_conv.gen_write.b_async_cdc/xpm_cdc_single_src2dest_inst/syncstages_ff_reg[0]/D
+  6  CDC-3  Info      1-bit synchronized with ASYNC_REG property          3  False Path  design_1_i/axi_smc/inst/sc_ul/inst/M_AXI[4].mi_cdc.m_cdc_inst/w_dest_ack_reg/C                                         design_1_i/axi_smc/inst/sc_ul/inst/M_AXI[4].mi_cdc.m_cdc_inst/gen_async_conv.gen_write.w_async_cdc/xpm_cdc_single_dest2src_inst/syncstages_ff_reg[0]/D
+
+Source Clock: input port clock
+Destination Clock: clk_fpga_0
+CDC Type: No Common Primary Clock
+
+Row  ID     Severity  Description                                 Depth  Exception   Source (From)                Destination (To)
+---  -----  --------  ------------------------------------------  -----  ----------  ---------------------------  --------------------------------------------------------------------------------------------
+  1  CDC-3  Info      1-bit synchronized with ASYNC_REG property      4  False Path  sws_2bits_tri_i[0]           design_1_i/axi_gpio_0/U0/gpio_core_1/Dual.INPUT_DOUBLE_REGS5/syncstages_ff_reg[0][0]/D
+  2  CDC-3  Info      1-bit synchronized with ASYNC_REG property      4  False Path  sws_2bits_tri_i[1]           design_1_i/axi_gpio_0/U0/gpio_core_1/Dual.INPUT_DOUBLE_REGS5/syncstages_ff_reg[0][1]/D
+  3  CDC-3  Info      1-bit synchronized with ASYNC_REG property      4  False Path  btns_4bits_tri_i[0]          design_1_i/axi_gpio_1/U0/gpio_core_1/Dual.INPUT_DOUBLE_REGS4/syncstages_ff_reg[0][0]/D
+  4  CDC-3  Info      1-bit synchronized with ASYNC_REG property      4  False Path  btns_4bits_tri_i[1]          design_1_i/axi_gpio_1/U0/gpio_core_1/Dual.INPUT_DOUBLE_REGS4/syncstages_ff_reg[0][1]/D
+  5  CDC-3  Info      1-bit synchronized with ASYNC_REG property      4  False Path  btns_4bits_tri_i[2]          design_1_i/axi_gpio_1/U0/gpio_core_1/Dual.INPUT_DOUBLE_REGS4/syncstages_ff_reg[0][2]/D
+  6  CDC-3  Info      1-bit synchronized with ASYNC_REG property      4  False Path  btns_4bits_tri_i[3]          design_1_i/axi_gpio_1/U0/gpio_core_1/Dual.INPUT_DOUBLE_REGS4/syncstages_ff_reg[0][3]/D
+  7  CDC-3  Info      1-bit synchronized with ASYNC_REG property      4  False Path  shield_dp0_dp13_tri_io[0]    design_1_i/axi_gpio_2/U0/gpio_core_1/Dual.INPUT_DOUBLE_REGS4/syncstages_ff_reg[0][0]/D
+  8  CDC-3  Info      1-bit synchronized with ASYNC_REG property      4  False Path  shield_dp0_dp13_tri_io[1]    design_1_i/axi_gpio_2/U0/gpio_core_1/Dual.INPUT_DOUBLE_REGS4/syncstages_ff_reg[0][1]/D
+  9  CDC-3  Info      1-bit synchronized with ASYNC_REG property      4  False Path  shield_dp0_dp13_tri_io[2]    design_1_i/axi_gpio_2/U0/gpio_core_1/Dual.INPUT_DOUBLE_REGS4/syncstages_ff_reg[0][2]/D
+ 10  CDC-3  Info      1-bit synchronized with ASYNC_REG property      4  False Path  shield_dp0_dp13_tri_io[3]    design_1_i/axi_gpio_2/U0/gpio_core_1/Dual.INPUT_DOUBLE_REGS4/syncstages_ff_reg[0][3]/D
+ 11  CDC-3  Info      1-bit synchronized with ASYNC_REG property      4  False Path  shield_dp0_dp13_tri_io[4]    design_1_i/axi_gpio_2/U0/gpio_core_1/Dual.INPUT_DOUBLE_REGS4/syncstages_ff_reg[0][4]/D
+ 12  CDC-3  Info      1-bit synchronized with ASYNC_REG property      4  False Path  shield_dp0_dp13_tri_io[5]    design_1_i/axi_gpio_2/U0/gpio_core_1/Dual.INPUT_DOUBLE_REGS4/syncstages_ff_reg[0][5]/D
+ 13  CDC-3  Info      1-bit synchronized with ASYNC_REG property      4  False Path  shield_dp0_dp13_tri_io[6]    design_1_i/axi_gpio_2/U0/gpio_core_1/Dual.INPUT_DOUBLE_REGS4/syncstages_ff_reg[0][6]/D
+ 14  CDC-3  Info      1-bit synchronized with ASYNC_REG property      4  False Path  shield_dp0_dp13_tri_io[7]    design_1_i/axi_gpio_2/U0/gpio_core_1/Dual.INPUT_DOUBLE_REGS4/syncstages_ff_reg[0][7]/D
+ 15  CDC-3  Info      1-bit synchronized with ASYNC_REG property      4  False Path  shield_dp0_dp13_tri_io[8]    design_1_i/axi_gpio_2/U0/gpio_core_1/Dual.INPUT_DOUBLE_REGS4/syncstages_ff_reg[0][8]/D
+ 16  CDC-3  Info      1-bit synchronized with ASYNC_REG property      4  False Path  shield_dp0_dp13_tri_io[9]    design_1_i/axi_gpio_2/U0/gpio_core_1/Dual.INPUT_DOUBLE_REGS4/syncstages_ff_reg[0][9]/D
+ 17  CDC-3  Info      1-bit synchronized with ASYNC_REG property      4  False Path  shield_dp0_dp13_tri_io[10]   design_1_i/axi_gpio_2/U0/gpio_core_1/Dual.INPUT_DOUBLE_REGS4/syncstages_ff_reg[0][10]/D
+ 18  CDC-3  Info      1-bit synchronized with ASYNC_REG property      4  False Path  shield_dp0_dp13_tri_io[11]   design_1_i/axi_gpio_2/U0/gpio_core_1/Dual.INPUT_DOUBLE_REGS4/syncstages_ff_reg[0][11]/D
+ 19  CDC-3  Info      1-bit synchronized with ASYNC_REG property      4  False Path  shield_dp0_dp13_tri_io[12]   design_1_i/axi_gpio_2/U0/gpio_core_1/Dual.INPUT_DOUBLE_REGS4/syncstages_ff_reg[0][12]/D
+ 20  CDC-3  Info      1-bit synchronized with ASYNC_REG property      4  False Path  shield_dp0_dp13_tri_io[13]   design_1_i/axi_gpio_2/U0/gpio_core_1/Dual.INPUT_DOUBLE_REGS4/syncstages_ff_reg[0][13]/D
+ 21  CDC-3  Info      1-bit synchronized with ASYNC_REG property      4  False Path  shield_dp26_dp41_tri_io[0]   design_1_i/axi_gpio_2/U0/gpio_core_1/Dual.INPUT_DOUBLE_REGS5/syncstages_ff_reg[0][0]/D
+ 22  CDC-3  Info      1-bit synchronized with ASYNC_REG property      4  False Path  shield_dp26_dp41_tri_io[1]   design_1_i/axi_gpio_2/U0/gpio_core_1/Dual.INPUT_DOUBLE_REGS5/syncstages_ff_reg[0][1]/D
+ 23  CDC-3  Info      1-bit synchronized with ASYNC_REG property      4  False Path  shield_dp26_dp41_tri_io[2]   design_1_i/axi_gpio_2/U0/gpio_core_1/Dual.INPUT_DOUBLE_REGS5/syncstages_ff_reg[0][2]/D
+ 24  CDC-3  Info      1-bit synchronized with ASYNC_REG property      4  False Path  shield_dp26_dp41_tri_io[3]   design_1_i/axi_gpio_2/U0/gpio_core_1/Dual.INPUT_DOUBLE_REGS5/syncstages_ff_reg[0][3]/D
+ 25  CDC-3  Info      1-bit synchronized with ASYNC_REG property      4  False Path  shield_dp26_dp41_tri_io[4]   design_1_i/axi_gpio_2/U0/gpio_core_1/Dual.INPUT_DOUBLE_REGS5/syncstages_ff_reg[0][4]/D
+ 26  CDC-3  Info      1-bit synchronized with ASYNC_REG property      4  False Path  shield_dp26_dp41_tri_io[5]   design_1_i/axi_gpio_2/U0/gpio_core_1/Dual.INPUT_DOUBLE_REGS5/syncstages_ff_reg[0][5]/D
+ 27  CDC-3  Info      1-bit synchronized with ASYNC_REG property      4  False Path  shield_dp26_dp41_tri_io[6]   design_1_i/axi_gpio_2/U0/gpio_core_1/Dual.INPUT_DOUBLE_REGS5/syncstages_ff_reg[0][6]/D
+ 28  CDC-3  Info      1-bit synchronized with ASYNC_REG property      4  False Path  shield_dp26_dp41_tri_io[7]   design_1_i/axi_gpio_2/U0/gpio_core_1/Dual.INPUT_DOUBLE_REGS5/syncstages_ff_reg[0][7]/D
+ 29  CDC-3  Info      1-bit synchronized with ASYNC_REG property      4  False Path  shield_dp26_dp41_tri_io[8]   design_1_i/axi_gpio_2/U0/gpio_core_1/Dual.INPUT_DOUBLE_REGS5/syncstages_ff_reg[0][8]/D
+ 30  CDC-3  Info      1-bit synchronized with ASYNC_REG property      4  False Path  shield_dp26_dp41_tri_io[9]   design_1_i/axi_gpio_2/U0/gpio_core_1/Dual.INPUT_DOUBLE_REGS5/syncstages_ff_reg[0][9]/D
+ 31  CDC-3  Info      1-bit synchronized with ASYNC_REG property      4  False Path  shield_dp26_dp41_tri_io[10]  design_1_i/axi_gpio_2/U0/gpio_core_1/Dual.INPUT_DOUBLE_REGS5/syncstages_ff_reg[0][10]/D
+ 32  CDC-3  Info      1-bit synchronized with ASYNC_REG property      4  False Path  shield_dp26_dp41_tri_io[11]  design_1_i/axi_gpio_2/U0/gpio_core_1/Dual.INPUT_DOUBLE_REGS5/syncstages_ff_reg[0][11]/D
+ 33  CDC-3  Info      1-bit synchronized with ASYNC_REG property      4  False Path  shield_dp26_dp41_tri_io[12]  design_1_i/axi_gpio_2/U0/gpio_core_1/Dual.INPUT_DOUBLE_REGS5/syncstages_ff_reg[0][12]/D
+ 34  CDC-3  Info      1-bit synchronized with ASYNC_REG property      4  False Path  shield_dp26_dp41_tri_io[13]  design_1_i/axi_gpio_2/U0/gpio_core_1/Dual.INPUT_DOUBLE_REGS5/syncstages_ff_reg[0][13]/D
+ 35  CDC-3  Info      1-bit synchronized with ASYNC_REG property      4  False Path  shield_dp26_dp41_tri_io[14]  design_1_i/axi_gpio_2/U0/gpio_core_1/Dual.INPUT_DOUBLE_REGS5/syncstages_ff_reg[0][14]/D
+ 36  CDC-3  Info      1-bit synchronized with ASYNC_REG property      4  False Path  shield_dp26_dp41_tri_io[15]  design_1_i/axi_gpio_2/U0/gpio_core_1/Dual.INPUT_DOUBLE_REGS5/syncstages_ff_reg[0][15]/D
+ 37  CDC-3  Info      1-bit synchronized with ASYNC_REG property      4  False Path  i2c_scl_io                   design_1_i/axi_iic_0/U0/X_IIC/FILTER_I/SCL_DEBOUNCE/INPUT_DOUBLE_REGS/syncstages_ff_reg[0]/D
+ 38  CDC-3  Info      1-bit synchronized with ASYNC_REG property      4  False Path  i2c_sda_io                   design_1_i/axi_iic_0/U0/X_IIC/FILTER_I/SDA_DEBOUNCE/INPUT_DOUBLE_REGS/syncstages_ff_reg[0]/D
+
+Source Clock: clk_fpga_0
+Destination Clock: clk_fpga_1
+CDC Type: No Common Primary Clock
+
+Row  ID      Severity  Description                                     Depth  Exception   Source (From)                                                                                                           Destination (To)
+---  ------  --------  ----------------------------------------------  -----  ----------  ----------------------------------------------------------------------------------------------------------------------  -------------------------------------------------------------------------------------------------------------------------------------------------------
+  1  CDC-3   Info      1-bit synchronized with ASYNC_REG property          3  False Path  design_1_i/axi_smc/inst/sc_ul/inst/M_AXI[4].mi_cdc.m_cdc_inst/gen_async_conv.gen_read.ar_async_cdc/src_sendd_ff_reg/C   design_1_i/axi_smc/inst/sc_ul/inst/M_AXI[4].mi_cdc.m_cdc_inst/gen_async_conv.gen_read.ar_async_cdc/xpm_cdc_single_src2dest_inst/syncstages_ff_reg[0]/D
+  2  CDC-3   Info      1-bit synchronized with ASYNC_REG property          4  False Path  design_1_i/axi_smc/inst/sc_ul/inst/M_AXI[4].mi_cdc.m_cdc_inst/r_dest_ack_reg/C                                          design_1_i/axi_smc/inst/sc_ul/inst/M_AXI[4].mi_cdc.m_cdc_inst/gen_async_conv.gen_read.r_async_cdc/xpm_cdc_single_dest2src_inst/syncstages_ff_reg[0]/D
+  3  CDC-3   Info      1-bit synchronized with ASYNC_REG property          3  False Path  design_1_i/axi_smc/inst/sc_ul/inst/M_AXI[4].mi_cdc.m_cdc_inst/gen_async_conv.gen_write.aw_async_cdc/src_sendd_ff_reg/C  design_1_i/axi_smc/inst/sc_ul/inst/M_AXI[4].mi_cdc.m_cdc_inst/gen_async_conv.gen_write.aw_async_cdc/xpm_cdc_single_src2dest_inst/syncstages_ff_reg[0]/D
+  4  CDC-3   Info      1-bit synchronized with ASYNC_REG property          4  False Path  design_1_i/axi_smc/inst/sc_ul/inst/M_AXI[4].mi_cdc.m_cdc_inst/b_dest_ack_reg/C                                          design_1_i/axi_smc/inst/sc_ul/inst/M_AXI[4].mi_cdc.m_cdc_inst/gen_async_conv.gen_write.b_async_cdc/xpm_cdc_single_dest2src_inst/syncstages_ff_reg[0]/D
+  5  CDC-3   Info      1-bit synchronized with ASYNC_REG property          3  False Path  design_1_i/axi_smc/inst/sc_ul/inst/M_AXI[4].mi_cdc.m_cdc_inst/gen_async_conv.gen_write.w_async_cdc/src_sendd_ff_reg/C   design_1_i/axi_smc/inst/sc_ul/inst/M_AXI[4].mi_cdc.m_cdc_inst/gen_async_conv.gen_write.w_async_cdc/xpm_cdc_single_src2dest_inst/syncstages_ff_reg[0]/D
+  6  CDC-6   Warning   Multi-bit synchronized with ASYNC_REG property      2  False Path  design_1_i/axi_smc/inst/sc_ul/inst/gen_axi_full_nxm.sasd_inst/gen_write.m_wdata_reg[31:0]/C                             design_1_i/axi_smc/inst/sc_ul/inst/M_AXI[4].mi_cdc.m_cdc_inst/gen_async_conv.gen_write.wdata_async_cdc/syncstages_ff_reg[0][31:0]/D
+  7  CDC-3   Info      1-bit synchronized with ASYNC_REG property          5  False Path  design_1_i/rst_ps7_0_100M/U0/ACTIVE_LOW_PR_OUT_DFF[0].FDRE_PER_N/C                                                      design_1_i/axi_smc/inst/sc_ul/inst/M_AXI[4].mi_cdc.m_psr/U0/EXT_LPF/ACTIVE_LOW_AUX.ACT_LO_AUX/syncstages_ff_reg[0]/D
+  8  CDC-11  Critical  Fan-out from launch flop to destination clock       2  None        design_1_i/axi_gpio_3/U0/gpio_core_1/Not_Dual.gpio_Data_Out_reg[0]/C                                                    design_1_i/controller_axi_0/inst/controller/channel[0].safety/halt_meta_reg/D
+  9  CDC-11  Critical  Fan-out from launch flop to destination clock       2  None        design_1_i/axi_gpio_3/U0/gpio_core_1/Not_Dual.gpio_Data_Out_reg[0]/C                                                    design_1_i/controller_axi_0/inst/controller/channel[1].safety/halt_meta_reg/D
+ 10  CDC-11  Critical  Fan-out from launch flop to destination clock       2  None        design_1_i/axi_gpio_3/U0/gpio_core_1/Not_Dual.gpio_Data_Out_reg[0]/C                                                    design_1_i/controller_axi_0/inst/controller/channel[2].safety/halt_meta_reg/D
+ 11  CDC-11  Critical  Fan-out from launch flop to destination clock       2  None        design_1_i/axi_gpio_3/U0/gpio_core_1/Not_Dual.gpio_Data_Out_reg[0]/C                                                    design_1_i/controller_axi_0/inst/controller/channel[3].safety/halt_meta_reg/D
+

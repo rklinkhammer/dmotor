@@ -1,0 +1,19 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2026.1 (lin64) Build 6511674 Tue Jun 16 11:01:26 MDT 2026
+| Date         : Mon Oct 12 23:42:54 2026
+| Host         : luna running 64-bit Ubuntu 26.04.1 LTS
+| Command      : report_exceptions -file /home/rklinkhammer/workspace/dmotor/build/shared_halt/exceptions.txt
+| Design       : dmotor_controller_axi
+| Device       : 7z020-clg400
+| Speed File   : -1  PRODUCTION 1.12 2019-11-22
+| Design State : Synthesized
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+Exceptions Report
+
+Position  From            Through         To                                                                                Setup           Hold            Status           
+--------  --------------  --------------  --------------------------------------------------------------------------------  --------------  --------------  -----------------
+2         *               *               [get_pins -of_objects [get_cells -hierarchical -filter {NAME =~ */halt_meta_reg}  false           false           
+                                          ] -filter {REF_PIN_NAME == D}]                                                                                    
+

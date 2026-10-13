@@ -1,0 +1,4 @@
+FILE /home/rklinkhammer/workspace/dmotor/build/shared_halt/package_project/halt_package_check.gen/sources_1/ip/halt_package/src/controller_halt.xdc
+SCOPED_TO_REF halt_package
+USED_IN_SYNTHESIS 1
+USED_IN_IMPLEMENTATION 1

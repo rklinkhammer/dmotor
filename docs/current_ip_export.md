@@ -95,3 +95,10 @@ and passing expanded AXI/HLS simulation. The controller archive is now core
 revision **3** (version 0.18). Earlier resource-overflow reports are historical;
 board-level regeneration, implementation and physical fault-pin constraints
 remain outstanding.
+
+Current HALT update: `controller_axi` version 0.18 **core revision 4** includes
+one shared internal HALT synchronizer and `controller_halt.xdc`, scoped to the IP
+and enabled for synthesis/implementation. Keep GPIO connected directly to
+`halt_async`; do not add external synchronizers. Refresh the catalog, upgrade the
+IP and regenerate outputs, then repeat board CDC and implementation. See the
+[architecture/milestone review](architecture_status.md).

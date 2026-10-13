@@ -1499,3 +1499,11 @@ and passing expanded AXI/HLS simulation. The controller archive is now core
 revision **3** (version 0.18). Earlier resource-overflow reports are historical;
 board-level regeneration, implementation and physical fault-pin constraints
 remain outstanding.
+
+## Shared HALT update (revision 4)
+
+All 33 CTest tests and actual-HLS controller XSim pass. Fresh synthesis confirms
+a single two-stage HALT chain and no LUTLP-1 violations. The IP includes a scoped
+first-stage XDC; generated-IP consumption confirms synthesis/implementation use.
+Evidence: `docs/evidence/shared_halt/`. Full architecture and milestone assessment:
+[architecture_status.md](architecture_status.md). Board CDC/routing must be repeated.

@@ -12,9 +12,10 @@
 **Status:** An [integrated AXI controller](docs/controller_axi.md) now connects the
 actual mailbox and shared motor HLS kernels, scheduler, encoder channels,
 watchdog/target-age protection and PWM. Priorities 1–4 have an executable initial
-implementation and generated-RTL tests. The host ABI remains provisional. Full
-lifecycle stress qualification, integrated place-and-route, clock crossing,
-electrical adapter and board testing remain outstanding. The legacy full-profile
+implementation and generated-RTL tests. The host ABI remains provisional. Revision 3 has integrated place-and-route evidence with passing specified timing.
+Lifecycle stress qualification, CDC/external-I/O closure, electrical adapter and
+board testing remain outstanding. Revision 4 consolidates HALT synchronization;
+its board routing must be repeated. See the [architecture status review](docs/architecture_status.md). The legacy full-profile
 sources remain available; their measurements are not integrated-controller results.
 
 This revision supersedes the single-controller duplication, FPGA position/dwell
@@ -65,7 +66,7 @@ margin. See [shared-engine measurement](docs/shared_mailbox.md) and
 
 | ID | Decision | Status |
 |---|---|---|
-| A01 | Shared four-context velocity engine with independent per-motor protection and I/O | Recommended architecture based on measured experiment; integration pending |
+| A01 | Shared four-context velocity engine with independent per-motor protection and I/O | Implemented and integration-tested; qualification incomplete |
 | A02 | Processor owns position, trajectories, dwell and completion; FPGA owns velocity/PI/ramp/PWM/protection | APPROVED by user, 2026-10-11 |
 | A03 | Separate per-motor target timeout; expiration requests shared HALT | APPROVED by user, 2026-10-11 |
 | A04 | Selected motors receive a coordinated batch atomically at one control tick | APPROVED by user, 2026-10-11 |
@@ -427,12 +428,14 @@ HLS simulation.
    SmartHLS synthesis/integration qualification. Freeze release ABI after applicable
    tests and integration requirements pass.
 
-Current evidence: 16 applicable native/RTL tests and shared-engine HLS C/Verilog
-co-simulation pass; 1,673 interleaved transactions compare every reply word with
-four independent mailbox contexts. Existing standalone mailbox tests also compare
-control snapshots against the Controller oracle. These tests do not cover the new
-atomic multi-motor batch, target-age timers, autonomous four-channel wrapper,
-physical HALT distribution or routed device fit. See [measurement](docs/shared_mailbox.md).
+Current evidence includes native/RTL regressions, shared-engine HLS co-simulation,
+actual atomic-mailbox and four-context engine integration, expanded AXI simulation,
+and revision 3 full-board placement/routing. The old 1,673-transaction shared-kernel
+comparison remains valid for its original scope. These are not evidence of complete
+lifecycle, processor-runtime or physical-system qualification. See the
+[implementation/milestone review](docs/architecture_status.md) for remaining
+requirements and the distinction between routed revision 3 and the revision 4
+HALT synchronization update.
 
 ### 14. Remaining engineering decisions
 

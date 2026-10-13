@@ -123,3 +123,6 @@ five-clock HALT pipeline bound is 250 ns, within the 10 us budget.
 See `docs/verification.md` for profile-change validation. The reference Vivado
 design requires clock/reset integration changes; see `docs/vivado_reference.md`.
 RTL projects must compile `rtl/timing.sv` before `scheduler.sv` and `pwm.sv`.
+
+Current architecture, priorities, integration milestones and revision 4 HALT update:
+[implementation status](docs/architecture_status.md).

@@ -120,7 +120,12 @@ module controller_axi_tb;
   // External HALT blocks atomic traffic with SLVERR rather than hanging AXI.
   @(negedge clk);reset=1;repeat(3)step();@(negedge clk);reset=0;
   write_word('h1008,8,0);write_word('h1020,0,0);repeat(100)step();
-  @(negedge clk);halt_async=1;repeat(8)step();read_word(0,2);
+  @(negedge clk);#7;halt_async=1;
+  step();if(dut.controller.halt_detected!==0)$fatal(1,"HALT bypassed first stage");
+  step();if(dut.controller.halt_detected!==15 || drive_enable!==0)
+   $fatal(1,"HALT was not simultaneous at shared second stage");
+  step();if(dut.controller.external_latches!==15)$fatal(1,"HALT latches diverged");
+  read_word(0,2);
   if(drive_enable || shared_halt)$fatal(1,"external HALT echoed as local cause");
   @(negedge clk);halt_async=0;repeat(8)step();read_word(0,2);
   write_word('h1024,4,0);repeat(8)step();read_word(0);

@@ -4,7 +4,7 @@ The first complete logical control path is now implemented in
 `rtl/controller_axi.sv`. It connects AXI4-Lite, the actual atomic-mailbox HLS IP,
 the scheduler, the actual shared four-context motor HLS IP, four encoder channels,
 independent authorization/target-age protection and four PWM outputs. It is an
-integration preview with a provisional register map, not a routed or board-qualified
+integration preview with a provisional register map, with revision 3 routed evidence but not a board-qualified
 controller. The separate DMD1 diagnostics endpoint is unchanged.
 
 ```mermaid
@@ -81,7 +81,7 @@ reset-time board behavior remain integration work.
 
 The endpoint is a 32-bit AXI4-Lite slave in the **20 MHz domain**, with independent
 AW/W buffering, separate read/write response backpressure and serialized downstream
-operations. Use an AXI Clock Converter to connect the existing 100 MHz bus.
+operations. Use the tested dual-clock SmartConnect connection to the existing 100 MHz bus.
 Addresses below 0x1000 retain the DMB1 atomic-mailbox ABI. Blocked atomic accesses
 return SLVERR instead of hanging during HALT/reset. Local status/recovery registers
 remain accessible. Full aligned writes with WSTRB=0xf are required.
@@ -160,9 +160,10 @@ The integrated IP is packaged as `controller_axi.zip`, VLNV
 Priorities 1–4 now have an executable integrated implementation, but qualification
 is not complete: adversarial lifecycle/configuration timing, realistic feedback,
 full reset isolation and operating-envelope tests remain. MMIO is still provisional.
-Integrated synthesis/place-and-route, 100-to-20 MHz CDC verification, board pin and
-driver integration, and powered motor tests are the next milestones. No prior
-component resource estimate is presented as the integrated utilization.
+Revision 3 completed board synthesis/place-and-route with passing specified timing.
+Revision 4 must repeat board implementation after the shared HALT CDC update.
+CDC/external-I/O closure, driver integration and powered motor tests remain open.
+No component resource estimate is presented as integrated utilization.
 
 ## Vivado board-project validation
 
@@ -183,3 +184,6 @@ and passing expanded AXI/HLS simulation. The controller archive is now core
 revision **3** (version 0.18). Earlier resource-overflow reports are historical;
 board-level regeneration, implementation and physical fault-pin constraints
 remain outstanding.
+
+Current architecture/milestone analysis and revision 4 shared HALT CDC details:
+[architecture_status.md](architecture_status.md).

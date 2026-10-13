@@ -1,7 +1,7 @@
 // Synchronous commands are qualified by the HLS register/session adapter and
 // revalidated against live safety state at transaction retirement.
 // local_faults are already synchronized/qualified; halt_async is synchronized here.
-module dmotor_safety (
+module dmotor_safety #(parameter HALT_ALREADY_SYNCHRONIZED = 0) (
     input wire clk, reset,
     input wire halt_async,
     input wire [31:0] local_faults,
@@ -19,7 +19,18 @@ module dmotor_safety (
     output wire halt_detected,
     input wire [31:0] acknowledge_mask
 );
-    (* ASYNC_REG = "TRUE" *) reg halt_meta, halt_sync;
+    wire halt_sync;
+    generate if (HALT_ALREADY_SYNCHRONIZED) begin: shared_halt_input
+        // Only for a signal already synchronized to this clk at the shared boundary.
+        assign halt_sync = halt_async;
+    end else begin: local_halt_input
+        (* ASYNC_REG = "TRUE" *) reg halt_meta, halt_stage;
+        assign halt_sync = halt_stage;
+        always @(posedge clk) begin
+            if(reset) begin halt_meta<=0;halt_stage<=0;end
+            else begin halt_meta<=halt_async;halt_stage<=halt_meta;end
+        end
+    end endgenerate
     wire expired = enabled && (timestamp - last_refresh >= timeout_cycles);
     wire [31:0] new_faults = local_faults | (expired ? 32'h00000001 : 0);
     assign halt_detected = halt_sync;
@@ -28,8 +39,6 @@ module dmotor_safety (
                      (|faults) || (|new_faults);
     always @(posedge clk) begin
         if (reset) begin
-            halt_meta <= 1'b0;
-            halt_sync <= 1'b0;
             enabled <= 1'b0;
             external_latched <= 1'b0;
             faults <= 0;
@@ -38,8 +47,6 @@ module dmotor_safety (
             last_refresh <= 0;
             first_fault_timestamp <= 0;
         end else begin
-            halt_meta <= halt_async;
-            halt_sync <= halt_meta;
             timestamp <= timestamp + 1'b1;
             // New simultaneous causes win over acknowledgment.
             if (acknowledge_local) faults <= faults & ~(acknowledge_mask & ~local_faults);

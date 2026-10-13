@@ -54,7 +54,14 @@ module dmotor_motor_io #(
 );
     wire [1023:0] snapshots;
     wire [3:0] safety_requests,external_latches,halt_detected,decoder_fault,safety_inhibits;
-    reg [3:0] physical_meta,physical_sync;
+    (* ASYNC_REG = "TRUE" *) reg [3:0] physical_meta,physical_sync;
+    // One CDC chain for the common HALT input, before fan-out to motor safety.
+    // Preserve the chain across MMIO core_reset, like the protective latches.
+    (* ASYNC_REG = "TRUE", DONT_TOUCH = "TRUE" *) reg halt_meta,halt_sync;
+    always @(posedge clk)begin
+        if(reset)begin halt_meta<=0;halt_sync<=0;end
+        else begin halt_meta<=halt_async;halt_sync<=halt_meta;end
+    end
     wire ctrl_fault,ctrl_halt,aggregated;
     wire global_inhibit=inhibit || aggregated || |halt_detected || |external_latches || |physical_sync || ctrl_fault || |(enabled & safety_inhibits);
     assign shared_halt=aggregated || |safety_requests || ctrl_halt;
@@ -90,7 +97,7 @@ module dmotor_motor_io #(
             .count(count),.last_edge(last_edge),.direction_epoch(epoch),.invalid_transitions(snapshot_invalid),
             .negative(negative),.capture_fault(capture_fault));
         assign snapshots[m*256 +:256]={62'd0,capture_fault,negative,snapshot_invalid,epoch,last_edge,count};
-        dmotor_safety safety(.clk(clk),.reset(reset),.halt_async(halt_async),
+        dmotor_safety #(.HALT_ALREADY_SYNCHRONIZED(1)) safety(.clk(clk),.reset(reset),.halt_async(halt_sync),
             .local_faults({27'd0,stop_expired,decoder_fault[m],physical_sync[m],ctrl_fault,1'b0}),
             .enable_request(enable_request[m]),.disable_request(disable_request[m] || global_inhibit),
             .prerequisites_valid(authorized[m] && protocol_initialized && !global_inhibit),
