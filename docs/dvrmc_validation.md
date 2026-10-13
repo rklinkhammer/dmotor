@@ -90,3 +90,10 @@ now passes fresh complete-controller out-of-context LUTLP-1 checks with zero
 violations. Updated IP is version 0.18, core revision 2. The original board-audit
 reports remain historical evidence; LUT capacity and fault-pin constraints are
 still unresolved.
+
+MMIO optimization update (2026-10-12): [fixed bank decoding](mmio_logic.md)
+reduces the controller from 72,104 to **34,129 LUTs**, with zero LUTLP-1 violations
+and passing expanded AXI/HLS simulation. The controller archive is now core
+revision **3** (version 0.18). Earlier resource-overflow reports are historical;
+board-level regeneration, implementation and physical fault-pin constraints
+remain outstanding.

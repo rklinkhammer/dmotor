@@ -1,0 +1,5 @@
+Time resolution is 1 ps
+fault time=          7289100000 hls_fault=00000000 reject=00000000 core_fault=0 scheduler=0 stop=f
+controller_axi PASS: real AXI, both HLS kernels, configuration, four-motor targets, encoder capture, telemetry shared physical fault, explicit recovery and watchdog expiration
+$finish called at time : 8308400 ns : File "/home/rklinkhammer/workspace/dmotor/tests/controller_axi_tb.sv" Line 128
+INFO: xsimkernel Simulation Memory Usage: 296784 KB (Peak: 353224 KB), Simulation CPU Usage: 3490 ms

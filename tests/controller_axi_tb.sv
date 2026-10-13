@@ -29,6 +29,7 @@ module controller_axi_tb;
   @(negedge clk);rready=1;step();@(negedge clk);rready=0;
  end endtask
  reg [31:0] cfg[0:19];integer i,m;
+ reg [2687:0] snapshot_pattern;
  reg seen_fault=0;
  always @(negedge clk)begin
   if(reset)seen_fault=0;
@@ -47,6 +48,36 @@ module controller_axi_tb;
   repeat(4)step();@(negedge clk);reset=0;
   read_word('h1000);if(value!=32'h444d4931)$fatal(1,"identity");
   write_word('h1008,7,0);
+  // Exercise every bank/word with distinct data before loading valid motor configs.
+  for(m=0;m<4;m=m+1)begin
+   write_word('h2080+m*256,1,2); // incomplete bank cannot commit
+   for(i=0;i<20;i=i+1)write_word('h2000+m*256+i*4,32'ha5000000+m*256+i,0);
+   for(i=0;i<20;i=i+1)begin
+    read_word('h2000+m*256+i*4);if(value!=0)$fatal(1,"staging leaked before commit");
+   end
+   write_word('h2080+m*256,1,0);
+  end
+  for(m=0;m<4;m=m+1)for(i=0;i<20;i=i+1)begin
+   read_word('h2000+m*256+i*4);
+   if(value!=(32'ha5000000+m*256+i))$fatal(1,"configuration bank alias");
+  end
+  write_word('h2004,123,0);write_word('h2080,1,2); // partial replacement rejected
+  read_word('h2004);if(value!=32'ha5000001)$fatal(1,"partial replacement escaped");
+  read_word('h2050,2);read_word('h2400,2);read_word('h2001,2);
+  wstrb=1;write_word('h2004,0,2);wstrb=15;
+  // Distinct words expose telemetry selection aliases and boundary mistakes.
+  for(i=0;i<84;i=i+1)snapshot_pattern[i*32 +:32]=32'h5a000000+i;
+  force dut.snapshot_bank=snapshot_pattern;
+  for(i=0;i<84;i=i+1)begin
+   read_word('h3000+i*4);if(value!=(32'h5a000000+i))$fatal(1,"snapshot word alias");
+  end
+  read_word('h3150,2);read_word('h3001,2);write_word('h3000,0,2);
+  release dut.snapshot_bank;
+  for(m=0;m<4;m=m+1)begin
+   write_word('h1040+m*4,32'h12340000+m,0);
+   if(dut.refresh_sequences[m*32 +:32]!=(32'h12340000+m))$fatal(1,"refresh bank alias");
+  end
+
   for(m=0;m<4;m=m+1)begin
    cfg[0]=21+m;
    for(i=0;i<20;i=i+1)write_word('h2000+m*256+i*4,cfg[i],0);

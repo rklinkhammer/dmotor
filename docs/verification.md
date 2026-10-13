@@ -1492,3 +1492,10 @@ mailbox cleanup correction, adversarial handshake regressions, actual-HLS XSim,
 and fresh complete-controller synthesis with zero LUTLP-1 violations. Evidence:
 `docs/evidence/protection_loops/`. Exported controller/mailbox core revision is 2.
 Resource fit and routed timing remain unqualified.
+
+MMIO optimization update (2026-10-12): [fixed bank decoding](mmio_logic.md)
+reduces the controller from 72,104 to **34,129 LUTs**, with zero LUTLP-1 violations
+and passing expanded AXI/HLS simulation. The controller archive is now core
+revision **3** (version 0.18). Earlier resource-overflow reports are historical;
+board-level regeneration, implementation and physical fault-pin constraints
+remain outstanding.

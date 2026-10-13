@@ -62,7 +62,23 @@ module dmotor_controller_axi(
   .stop_or_ready(stop),.age_timeout_cycles(age_timeout_cycles),.age_configured(),.age_configure_accepted(),
   .age_armed(),.age_faults(age_faults),.target_ages(),.target_ticks(),.target_fault_times(),.halt_request(),
   .pwm(pwm),.drive_enable(drive_enable),.direction(direction),.applied_duties());
- integer channel,index,i;
+ // Fixed bank/word decoders avoid variable shifts of the entire packed bank.
+ // Keep the full address range checks below: low bits alone must never alias.
+ wire [1:0] channel=host_address[9:8];
+ wire [5:0] word_index=host_address[7:2];
+ reg [31:0] configuration_read,snapshot_read;
+ integer r,c,w,i;
+ always @* begin
+  configuration_read=0;snapshot_read=0;
+  for(integer bank=0;bank<4;bank=bank+1)
+   for(integer word_no=0;word_no<20;word_no=word_no+1)
+    configuration_read=configuration_read |
+      (configurations[(bank*20+word_no)*32 +:32] &
+       {32{channel==bank && word_index==word_no}});
+  for(integer word_no=0;word_no<84;word_no=word_no+1)
+   snapshot_read=snapshot_read | (snapshot_bank[word_no*32 +:32] &
+       {32{host_address==TELEMETRY_BASE+word_no*4}});
+ end
  always @(posedge clk)begin
   if(reset)begin
    local_valid<=0;local_okay<=0;local_data<=0;atomic_owner<=0;core_reset<=1;session<=0;
@@ -82,19 +98,26 @@ module dmotor_controller_axi(
     if(atomic_select)atomic_owner<=1;
     else begin
      local_valid<=1;local_okay<=0;local_data<=0;
-     channel=(host_address-CONFIG_BASE)>>8;index=(host_address & 255)>>2;
      if(host_address[1:0]==0 && (!host_write || host_strobes==15))begin
-      if(host_address>=CONFIG_BASE && host_address<32'h2400 && index<20)begin
+      if(host_address>=CONFIG_BASE && host_address<32'h2400 && word_index<20)begin
        if(host_write)begin
-        if(!enabled[channel] && core_reset)begin staging[channel*640+index*32 +:32]<=host_wdata;written[channel*20+index]<=1;local_okay<=1;end
-       end else begin local_data<=configurations[channel*640+index*32 +:32];local_okay<=1;end
-      end else if(host_address>=CONFIG_BASE && host_address<32'h2400 && index==32 && host_write)begin
-       if(!enabled[channel] && core_reset && written[channel*20 +:20]==20'hfffff && host_wdata==1 && staging[channel*640 +:32]!=0)begin
-        configurations[channel*640 +:640]<=staging[channel*640 +:640];configured[channel]<=1;
-        written[channel*20 +:20]<=0;encoder_initialize[channel]<=1;local_okay<=1;
+        if(!enabled[channel] && core_reset)begin
+         for(c=0;c<4;c=c+1)for(w=0;w<20;w=w+1)
+          if(channel==c && word_index==w)begin
+           staging[(c*20+w)*32 +:32]<=host_wdata;written[c*20+w]<=1;
+          end
+         local_okay<=1;
+        end
+       end else begin local_data<=configuration_read;local_okay<=1;end
+      end else if(host_address>=CONFIG_BASE && host_address<32'h2400 && word_index==32 && host_write)begin
+       for(c=0;c<4;c=c+1)begin
+        if(channel==c && !enabled[c] && core_reset && written[c*20 +:20]==20'hfffff && host_wdata==1 && staging[c*640 +:32]!=0)begin
+         configurations[c*640 +:640]<=staging[c*640 +:640];configured[c]<=1;
+         written[c*20 +:20]<=0;encoder_initialize[c]<=1;local_okay<=1;
+        end
        end
       end else if(host_address>=TELEMETRY_BASE && host_address<32'h3150 && !host_write)begin
-       local_data<=snapshot_bank[(host_address-TELEMETRY_BASE)*8 +:32];local_okay<=1;
+       local_data<=snapshot_read;local_okay<=1;
       end else case(host_address)
        IDENTITY:if(!host_write)begin local_data<=PROFILE_ID;local_okay<=1;end
        STATUS:if(!host_write)begin local_data<={9'd0,age_faults,controller_blocked,shared_halt,fault,stopped,ready_mask,configured,enabled};local_okay<=1;end
@@ -127,8 +150,10 @@ module dmotor_controller_axi(
         end else if(!host_write)begin local_data<=snapshot_sequence;local_okay<=1;end
        end
        REFRESH_BASE,32'h1044,32'h1048,32'h104c:if(host_write)begin
-        refresh_sequences[((host_address-REFRESH_BASE)>>2)*32 +:32]<=host_wdata;
-        refresh_valid[(host_address-REFRESH_BASE)>>2]<=1;local_okay<=1;
+        for(r=0;r<4;r=r+1)if(host_address==REFRESH_BASE+r*4)begin
+         refresh_sequences[r*32 +:32]<=host_wdata;refresh_valid[r]<=1;
+        end
+        local_okay<=1;
        end
        default:begin end
       endcase

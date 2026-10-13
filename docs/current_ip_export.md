@@ -88,3 +88,10 @@ There is no new full-controller utilization, routed timing or board-bitstream cl
 
 Vivado 2026.1 successfully packaged both blocks and the XSim host test reported
 `mailbox_control PASS`. Evidence: `docs/evidence/current_ip_export/`.
+
+MMIO optimization update (2026-10-12): [fixed bank decoding](mmio_logic.md)
+reduces the controller from 72,104 to **34,129 LUTs**, with zero LUTLP-1 violations
+and passing expanded AXI/HLS simulation. The controller archive is now core
+revision **3** (version 0.18). Earlier resource-overflow reports are historical;
+board-level regeneration, implementation and physical fault-pin constraints
+remain outstanding.
