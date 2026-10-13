@@ -1,0 +1,3 @@
+build/current_ip/controller_axi.zip
+SHA256 9b71c487d717c157e479d7b69b8e2caae63e6ddc8dd2ff4d427465f881fec5e8
+ZIP integrity, final scheduler/arbiter and core revision 2 verified.

@@ -114,3 +114,9 @@ if(IVERILOG AND VVP AND EXISTS "${CMAKE_SOURCE_DIR}/build/shared_mailbox_copy/bu
     ${CMAKE_SOURCE_DIR}/tools/shared_engine_rtl.py --iverilog ${IVERILOG} --vvp ${VVP}
     --base "${IVERILOG_BASE}")
 endif()
+
+add_executable(controller_host_test tests/controller_host_test.cpp)
+target_link_libraries(controller_host_test PRIVATE dmotor)
+add_test(NAME controller_host COMMAND controller_host_test)
+add_test(NAME generated_controller_abi COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tools/generate_controller_abi.py --check)

@@ -1,8 +1,9 @@
 # Export the current controller components
 
-This export contains the real current blocks, separate from the DMD1 permanently
-inhibited diagnostics peripheral. It does not claim that the shared motor engine
-and scheduler are connected or that motor hardware is ready to run.
+This export contains the real current blocks and the new integrated AXI controller,
+separate from the permanently inhibited DMD1 diagnostic endpoint. See
+[controller implementation and qualification limits](controller_axi.md). Motor
+hardware is not yet qualified to run.
 
 ## Build/export
 
@@ -18,6 +19,7 @@ original source files are unchanged. Re-export after modifying or regenerating R
 
 | Archive | IP VLNV | Contents |
 | --- | --- | --- |
+| `build/current_ip/controller_axi.zip` | `dmotor.org:user:controller_axi:0.18` | Integrated AXI, both HLS kernels, encoders, protection and PWM |
 | `build/current_ip/mailbox_control.zip` | `dmotor.org:user:mailbox_control:0.18` | Actual HLS atomic mailbox, arbiter, scheduler, target-age protection and PWM |
 | `build/current_ip/shared_engine.zip` | `dmotor.org:user:shared_engine:0.18` | Actual four-context HLS motor kernel and its transport |
 
@@ -38,7 +40,13 @@ It does not instantiate blocks, change addresses or overwrite the block design.
 The helper has not been executed against the reference project as part of export.
 The components then appear in the IP Catalog under UserIP.
 
-The interfaces are intentionally their current interfaces:
+For new controller integration, select `controller_axi`. It exposes a native
+20 MHz AXI4-Lite slave and motor/encoder/protection signals. Connect the existing
+100 MHz bus through an AXI Clock Converter. Its cold reset clears protection and
+requires coordinated reset/external inhibition; software CORE_RESET preserves
+protection. Do not copy the standalone components' reset assumptions to this top.
+
+The retained standalone components keep their original interfaces:
 
 - `mailbox_control` has a serialized host valid/ready read/write interface, **not
   AXI**. It needs an AXI adapter before connection to PS GP0/SmartConnect.
@@ -72,7 +80,10 @@ protection. Logs are under:
 `build/current_ip/mailbox_control/project/mailbox_control.sim/sim_1/behav/xsim/`
 
 The separately verified shared-engine RTL test remains available through
-`tools/shared_engine_rtl.py`; it is not joined to the scheduler in this XSim test.
+`tools/shared_engine_rtl.py`; it is not joined to the scheduler in this older
+mailbox-only test. Run `platforms/vivado/sim_controller_axi.tcl` for the new complete
+AXI/SystemVerilog processor-driver test using both real HLS kernels, then open
+`build/controller_axi_sim/controller_axi_sim.xpr` for waveform inspection.
 There is no new full-controller utilization, routed timing or board-bitstream claim.
 
 Vivado 2026.1 successfully packaged both blocks and the XSim host test reported

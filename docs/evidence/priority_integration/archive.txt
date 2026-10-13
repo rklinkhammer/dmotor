@@ -1,0 +1,2 @@
+controller_axi.zip SHA256 436dbe516a537df854b690af20c4bb3f6787b9669f99c86ca06f25477260c5f0
+Interfaces: S_AXI (AXI4-Lite, 32-bit data, 16-bit address), clk (20 MHz), reset (active high)

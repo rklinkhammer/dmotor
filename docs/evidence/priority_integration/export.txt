@@ -1,0 +1,335 @@
+INFO: [Common 17-3922] A valid Vivado Design Suite BASIC license has been detected. Your current license is active and will expire on 02-oct-2027.
+#-----------------------------------------------------------
+# Vivado v2026.1 (64-bit)
+# SW Build 6511674 on Tue Jun 16 11:01:26 MDT 2026
+# IP Build 6504888 on Tue Jun 09 09:05:25 MDT 2026
+# SharedData Build 6501428 on Mon Jun 08 17:34:18 MDT 2026
+# Start of session at: Mon Oct 12 20:33:05 2026
+# Process ID         : 3996669
+# Current directory  : /home/rklinkhammer/workspace/dmotor
+# Command line       : vivado -mode batch -source platforms/vivado/export_current.tcl -log build/export_current.log -journal build/export_current.jou
+# Log file           : /home/rklinkhammer/workspace/dmotor/build/export_current.log
+# Journal file       : /home/rklinkhammer/workspace/dmotor/build/export_current.jou
+# Running On         : luna
+# Platform           : Ubuntu
+# Operating System   : Ubuntu 26.04.1 LTS
+# Processor Detail   : 12th Gen Intel(R) Core(TM) i5-1240P
+# CPU Frequency      : 1622.479 MHz
+# CPU Physical cores : 12
+# CPU Logical cores  : 16
+# Host memory        : 32665 MB
+# Swap memory        : 8589 MB
+# Total Virtual      : 41255 MB
+# Available Virtual  : 25492 MB
+#-----------------------------------------------------------
+source platforms/vivado/export_current.tcl
+# set root [file normalize [file join [file dirname [info script]] ../..]]
+# set out [file join $root build current_ip]
+# file mkdir $out
+# proc export_block {root out name top generated sources} {
+#     foreach directory $generated {if {![file exists $directory]} {error "Missing generated HLS RTL: $directory"}}
+#     create_project -force $name [file join $out $name project] -part xc7z020clg400-1
+#     # IP packager cannot parse package-qualified parameter defaults. Resolve only
+#     # those references in staged copies from the generated timing package.
+#     set f [open [file join $root rtl timing.sv] r]; set timing [read $f]; close $f
+#     set staged [file join $out $name staged]
+#     file mkdir $staged
+#     foreach source $sources {
+#         set f [open [file join $root rtl $source] r]; set text [read $f]; close $f
+#         foreach {whole key value} [regexp -all -inline {localparam integer ([A-Z_]+) = ([0-9]+);} $timing] {
+#             set text [string map [list "dmotor_timing::$key" $value] $text]
+#         }
+#         set f [open [file join $staged $source] w]; puts -nonewline $f $text; close $f
+#         add_files [file join $staged $source]
+#     }
+#     foreach directory $generated {
+#         add_files [glob [file join $directory *.v]]
+#         foreach pattern {*.dat *.mem} {
+#             foreach data [glob -nocomplain [file join $directory $pattern]] {add_files $data}
+#         }
+#     }
+#     set_property top $top [current_fileset]
+#     update_compile_order -fileset sources_1
+#     ipx::package_project -root_dir [file join $out $name ip] -vendor dmotor.org -library user -taxonomy /UserIP -import_files -set_current true
+#     set core [ipx::current_core]
+#     set_property name $name $core
+#     set_property version 0.18 $core
+#     set_property display_name "DMOTOR current $name (integration preview)" $core
+#     set_property description "Current tested component. Not a complete motor controller; see docs/current_ip_export.md." $core
+#     ipx::infer_bus_interfaces xilinx.com:signal:clock_rtl:1.0 $core
+#     ipx::infer_bus_interfaces xilinx.com:signal:reset_rtl:1.0 $core
+#     if {$name eq "controller_axi"} {
+#         foreach old [ipx::get_bus_interfaces -of_objects $core -filter {BUS_TYPE_NAME == aximm}] {
+#             ipx::remove_bus_interface [get_property NAME $old] $core
+#         }
+#         foreach old [ipx::get_memory_maps -of_objects $core] {
+#             ipx::remove_memory_map [get_property NAME $old] $core
+#         }
+#         set bus [ipx::add_bus_interface S_AXI $core]
+#         set_property bus_type_vlnv xilinx.com:interface:aximm:1.0 $bus
+#         set_property abstraction_type_vlnv xilinx.com:interface:aximm_rtl:1.0 $bus
+#         set_property interface_mode slave $bus
+#         foreach port {AWADDR AWVALID AWREADY WDATA WSTRB WVALID WREADY BRESP BVALID BREADY ARADDR ARVALID ARREADY RDATA RRESP RVALID RREADY} {
+#             set map [ipx::add_port_map $port $bus];set_property physical_name [string tolower $port] $map
+#         }
+#         foreach {key value} {PROTOCOL AXI4LITE DATA_WIDTH 32 ADDR_WIDTH 16} {
+#             set param [ipx::add_bus_parameter $key $bus];set_property value $value $param
+#         }
+#         set mmap [ipx::add_memory_map registers $core]
+#         set block [ipx::add_address_block registers $mmap]
+#         set_property range 65536 $block;set_property width 32 $block;set_property usage register $block
+#         set_property slave_memory_map_ref registers $bus
+#         ipx::associate_bus_interfaces -busif S_AXI -clock clk $core
+#         set clockif [ipx::get_bus_interfaces clk -of_objects $core]
+#         set assoc [ipx::get_bus_parameters ASSOCIATED_BUSIF -of_objects $clockif]
+#         set_property value S_AXI $assoc
+#         set resetif [ipx::get_bus_interfaces reset -of_objects $core]
+#         set polarity [ipx::add_bus_parameter POLARITY $resetif]
+#         set_property value ACTIVE_HIGH $polarity
+#         set hz [ipx::get_bus_parameters FREQ_HZ -of_objects $clockif]
+#         if {![llength $hz]} {set hz [ipx::add_bus_parameter FREQ_HZ $clockif]}
+#         set_property value 20000000 $hz
+#     }
+#     ipx::create_xgui_files $core
+#     ipx::update_checksums $core
+#     ipx::check_integrity $core
+#     ipx::save_core $core
+#     ipx::archive_core [file join $out ${name}.zip] $core
+#     close_project
+# }
+# export_block $root $out mailbox_control dmotor_mailbox_control \
+#     [file join $root build vitis_atomic hls syn verilog] \
+#     {timing.sv batch_registers.sv atomic_hls_adapter.sv atomic_mailbox_arbiter.sv shared_scheduler.sv target_age.sv pwm.sv shared_control.sv mailbox_control.sv}
+WARNING: [IP_Flow 19-3833] Unreferenced file from the top module is not packaged: '/home/rklinkhammer/workspace/dmotor/build/current_ip/mailbox_control/staged/batch_registers.sv'.
+WARNING: [IP_Flow 19-5101] Packaging a component with a SystemVerilog top file is not fully supported. Please refer to UG1118 'Creating and Packaging Custom IP'.
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/opt/vitis/2026.1/data/ip'.
+INFO: [IP_Flow 19-5151] The Range '31:0' is present in all ports of the interface 'host'. It is assumed that this is meant to declare an array of interface. If this is not the desired behaviour, switch of this feature by disabling the parameter 'ips.enableInterfaceArrayInference'.
+INFO: [IP_Flow 19-5107] Inferred bus interface 'engine_reset' of definition 'xilinx.com:signal:reset:1.0' (from Xilinx Repository).
+INFO: [IP_Flow 19-5107] Inferred bus interface 'reset' of definition 'xilinx.com:signal:reset:1.0' (from Xilinx Repository).
+INFO: [IP_Flow 19-5107] Inferred bus interface 'clk' of definition 'xilinx.com:signal:clock:1.0' (from Xilinx Repository).
+INFO: [IP_Flow 19-4728] Bus Interface 'clk': Added interface parameter 'ASSOCIATED_RESET' with value 'reset'.
+WARNING: [IP_Flow 19-11888] Component Definition 'dmotor.org:user:dmotor_mailbox_control:1.0 (dmotor_mailbox_control_v1_0)': IP description "dmotor_mailbox_control_v1_0" is not meaningful: same as name or display name
+WARNING: [IP_Flow 19-5661] Bus Interface 'clk' does not have any bus interfaces associated with it.
+WARNING: [IP_Flow 19-11770] Clock interface 'clk' has no FREQ_HZ parameter.
+INFO: [IP_Flow 19-2181] Payment is not required for this core.
+WARNING: [IP_Flow 19-2187] The Product Guide file is missing.
+WARNING: [IP_Flow 19-5661] Bus Interface 'clk' does not have any bus interfaces associated with it.
+WARNING: [IP_Flow 19-11770] Clock interface 'clk' has no FREQ_HZ parameter.
+INFO: [IP_Flow 19-2181] Payment is not required for this core.
+WARNING: [IP_Flow 19-2187] The Product Guide file is missing.
+INFO: [Ipptcl 7-1486] check_integrity: Integrity check passed.
+# export_block $root $out shared_engine dmotor_shared_engine_transport \
+#     [file join $root build shared_mailbox_copy build vitis_dispatcher hls syn verilog] \
+#     {timing.sv shared_engine_transport.sv}
+WARNING: [IP_Flow 19-3833] Unreferenced file from the top module is not packaged: '/home/rklinkhammer/workspace/dmotor/build/current_ip/shared_engine/staged/timing.sv'.
+WARNING: [IP_Flow 19-5101] Packaging a component with a SystemVerilog top file is not fully supported. Please refer to UG1118 'Creating and Packaging Custom IP'.
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/opt/vitis/2026.1/data/ip'.
+INFO: [IP_Flow 19-5107] Inferred bus interface 'reset' of definition 'xilinx.com:signal:reset:1.0' (from Xilinx Repository).
+INFO: [IP_Flow 19-5107] Inferred bus interface 'clk' of definition 'xilinx.com:signal:clock:1.0' (from Xilinx Repository).
+INFO: [IP_Flow 19-4728] Bus Interface 'clk': Added interface parameter 'ASSOCIATED_RESET' with value 'reset'.
+WARNING: [IP_Flow 19-11888] Component Definition 'dmotor.org:user:dmotor_shared_engine_transport:1.0 (dmotor_shared_engine_transport_v1_0)': IP description "dmotor_shared_engine_transport_v1_0" is not meaningful: same as name or display name
+WARNING: [IP_Flow 19-5661] Bus Interface 'clk' does not have any bus interfaces associated with it.
+WARNING: [IP_Flow 19-11770] Clock interface 'clk' has no FREQ_HZ parameter.
+INFO: [IP_Flow 19-2181] Payment is not required for this core.
+WARNING: [IP_Flow 19-2187] The Product Guide file is missing.
+WARNING: [IP_Flow 19-5661] Bus Interface 'clk' does not have any bus interfaces associated with it.
+WARNING: [IP_Flow 19-11770] Clock interface 'clk' has no FREQ_HZ parameter.
+INFO: [IP_Flow 19-2181] Payment is not required for this core.
+WARNING: [IP_Flow 19-2187] The Product Guide file is missing.
+INFO: [Ipptcl 7-1486] check_integrity: Integrity check passed.
+# export_block $root $out controller_axi dmotor_controller_axi \
+#     [list [file join $root build vitis_atomic hls syn verilog] [file join $root build shared_mailbox_copy build vitis_dispatcher hls syn verilog]] \
+#     {timing.sv controller_registers.sv batch_registers.sv atomic_hls_adapter.sv atomic_mailbox_arbiter.sv shared_scheduler.sv target_age.sv pwm.sv shared_control.sv mailbox_control.sv shared_engine_transport.sv motor_engine_adapter.sv integrated_control.sv safety.sv qcencoder.sv encoder_snapshot.sv motor_io.sv axi_host.sv controller_axi.sv}
+WARNING: [IP_Flow 19-3833] Unreferenced file from the top module is not packaged: '/home/rklinkhammer/workspace/dmotor/build/current_ip/controller_axi/staged/batch_registers.sv'.
+WARNING: [IP_Flow 19-5101] Packaging a component with a SystemVerilog top file is not fully supported. Please refer to UG1118 'Creating and Packaging Custom IP'.
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/opt/vitis/2026.1/data/ip'.
+INFO: [IP_Flow 19-5107] Inferred bus interface 'interface_aximm' of definition 'xilinx.com:interface:aximm:1.0' (from Xilinx Repository).
+INFO: [IP_Flow 19-5107] Inferred bus interface 'reset' of definition 'xilinx.com:signal:reset:1.0' (from Xilinx Repository).
+INFO: [IP_Flow 19-5107] Inferred bus interface 'clk' of definition 'xilinx.com:signal:clock:1.0' (from Xilinx Repository).
+INFO: [IP_Flow 19-4728] Bus Interface 'clk': Added interface parameter 'ASSOCIATED_BUSIF' with value 'interface_aximm'.
+INFO: [IP_Flow 19-4728] Bus Interface 'clk': Added interface parameter 'ASSOCIATED_RESET' with value 'reset'.
+WARNING: [IP_Flow 19-11888] Component Definition 'dmotor.org:user:dmotor_controller_axi:1.0 (dmotor_controller_axi_v1_0)': IP description "dmotor_controller_axi_v1_0" is not meaningful: same as name or display name
+WARNING: [IP_Flow 19-11770] Clock interface 'clk' has no FREQ_HZ parameter.
+INFO: [IP_Flow 19-2181] Payment is not required for this core.
+WARNING: [IP_Flow 19-2187] The Product Guide file is missing.
+INFO: [IP_Flow 19-3166] Bus Interface 'interface_aximm': References existing memory map 'interface_aximm'.
+INFO: [IP_Flow 19-3166] Bus Interface 'interface_aximm': References existing memory map 'interface_aximm'.
+INFO: [IP_Flow 19-7067] Note that bus interface 'clk' has a fixed FREQ_HZ of '20000000'. This value will be respected whenever this IP is instantiated in IP Integrator.
+INFO: [IP_Flow 19-2181] Payment is not required for this core.
+WARNING: [IP_Flow 19-2187] The Product Guide file is missing.
+INFO: [Ipptcl 7-1486] check_integrity: Integrity check passed.
+# open_project [file join $out mailbox_control project mailbox_control.xpr]
+INFO: [filemgmt 56-3] Default IP Output Path : Could not find the directory '/home/rklinkhammer/workspace/dmotor/build/current_ip/mailbox_control/project/mailbox_control.gen/sources_1'.
+Scanning sources...
+Finished scanning sources
+WARNING: [Project 1-5713] Board part '' set for the project  is not found. BoardPart property will be unset. Please select board from latest repo build 
+# add_files -fileset sim_1 [file join $root tests mailbox_control_tb.sv]
+# set_property top mailbox_control_tb [get_filesets sim_1]
+# set_property xsim.simulate.runtime 0ns [get_filesets sim_1]
+# update_compile_order -fileset sim_1
+# launch_simulation -simset sim_1 -mode behavioral
+Command: launch_simulation  -simset sim_1 -mode behavioral
+INFO: [Vivado 12-25911] Executing simulation for 'XSim' simulator
+INFO: [Project 1-5737] Running on host luna (64) - Ubuntu 26.04.1 LTS
+INFO: [Vivado 12-28535] Process started - Mon Oct 12 20:33:17 2026
+
+INFO: [Vivado 12-12493] Simulation top is 'mailbox_control_tb'
+INFO: [Vivado 12-5682] Launching behavioral simulation in '/home/rklinkhammer/workspace/dmotor/build/current_ip/mailbox_control/project/mailbox_control.sim/sim_1/behav/xsim'
+INFO: [SIM-utils-51] Simulation object is 'sim_1'
+INFO: [SIM-utils-72] Using boost library from '/opt/vitis/2026.1/tps/boost_1_72_0'
+INFO: [SIM-utils-54] Inspecting design source files for 'mailbox_control_tb' in fileset 'sim_1'...
+INFO: [USF-XSim-97] Finding global include files...
+INFO: [USF-XSim-98] Fetching design files from 'sim_1'...
+INFO: [USF-XSim-2] XSim::Compile design
+INFO: [USF-XSim-61] Executing 'COMPILE and ANALYZE' step in '/home/rklinkhammer/workspace/dmotor/build/current_ip/mailbox_control/project/mailbox_control.sim/sim_1/behav/xsim'
+xvlog --incr --relax -L uvm -prj mailbox_control_tb_vlog.prj
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/rklinkhammer/workspace/dmotor/build/vitis_atomic/hls/syn/verilog/dmotor_atomic_mailbox.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dmotor_atomic_mailbox
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/rklinkhammer/workspace/dmotor/build/vitis_atomic/hls/syn/verilog/dmotor_atomic_mailbox_batch_transaction.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dmotor_atomic_mailbox_batch_transaction
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/rklinkhammer/workspace/dmotor/build/vitis_atomic/hls/syn/verilog/dmotor_atomic_mailbox_batch_transaction_Pipeline_2.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dmotor_atomic_mailbox_batch_transaction_Pipeline_2
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/rklinkhammer/workspace/dmotor/build/vitis_atomic/hls/syn/verilog/dmotor_atomic_mailbox_batch_transaction_Pipeline_3.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dmotor_atomic_mailbox_batch_transaction_Pipeline_3
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/rklinkhammer/workspace/dmotor/build/vitis_atomic/hls/syn/verilog/dmotor_atomic_mailbox_batch_transaction_Pipeline_VITIS_LOOP_21_2.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dmotor_atomic_mailbox_batch_transaction_Pipeline_VITIS_LOOP_21_2
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/rklinkhammer/workspace/dmotor/build/vitis_atomic/hls/syn/verilog/dmotor_atomic_mailbox_batch_transaction_Pipeline_VITIS_LOOP_5_1.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dmotor_atomic_mailbox_batch_transaction_Pipeline_VITIS_LOOP_5_1
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/rklinkhammer/workspace/dmotor/build/vitis_atomic/hls/syn/verilog/dmotor_atomic_mailbox_begin_tick.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dmotor_atomic_mailbox_begin_tick
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/rklinkhammer/workspace/dmotor/build/vitis_atomic/hls/syn/verilog/dmotor_atomic_mailbox_begin_tick_Pipeline_VITIS_LOOP_24_1.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dmotor_atomic_mailbox_begin_tick_Pipeline_VITIS_LOOP_24_1
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/rklinkhammer/workspace/dmotor/build/vitis_atomic/hls/syn/verilog/dmotor_atomic_mailbox_dmotor_atomic_mailbox_Pipeline_VITIS_LOOP_38_1.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dmotor_atomic_mailbox_dmotor_atomic_mailbox_Pipeline_VITIS_LOOP_38_1
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/rklinkhammer/workspace/dmotor/build/vitis_atomic/hls/syn/verilog/dmotor_atomic_mailbox_flow_control_loop_pipe_sequential_init.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dmotor_atomic_mailbox_flow_control_loop_pipe_sequential_init
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/rklinkhammer/workspace/dmotor/build/vitis_atomic/hls/syn/verilog/dmotor_atomic_mailbox_read_r.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dmotor_atomic_mailbox_read_r
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/rklinkhammer/workspace/dmotor/build/vitis_atomic/hls/syn/verilog/dmotor_atomic_mailbox_retire.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dmotor_atomic_mailbox_retire
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/rklinkhammer/workspace/dmotor/build/vitis_atomic/hls/syn/verilog/dmotor_atomic_mailbox_retire_Pipeline_VITIS_LOOP_132_1.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dmotor_atomic_mailbox_retire_Pipeline_VITIS_LOOP_132_1
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/rklinkhammer/workspace/dmotor/build/vitis_atomic/hls/syn/verilog/dmotor_atomic_mailbox_retire_Pipeline_VITIS_LOOP_24_1.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dmotor_atomic_mailbox_retire_Pipeline_VITIS_LOOP_24_1
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/rklinkhammer/workspace/dmotor/build/vitis_atomic/hls/syn/verilog/dmotor_atomic_mailbox_sparsemux_9_2_32_1_1.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dmotor_atomic_mailbox_sparsemux_9_2_32_1_1
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/rklinkhammer/workspace/dmotor/build/vitis_atomic/hls/syn/verilog/dmotor_atomic_mailbox_sparsemux_9_2_64_1_1.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dmotor_atomic_mailbox_sparsemux_9_2_64_1_1
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/rklinkhammer/workspace/dmotor/build/vitis_atomic/hls/syn/verilog/dmotor_atomic_mailbox_write_Pipeline_VITIS_LOOP_24_1.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dmotor_atomic_mailbox_write_Pipeline_VITIS_LOOP_24_1
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/rklinkhammer/workspace/dmotor/build/vitis_atomic/hls/syn/verilog/dmotor_atomic_mailbox_write_Pipeline_VITIS_LOOP_55_1.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dmotor_atomic_mailbox_write_Pipeline_VITIS_LOOP_55_1
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/rklinkhammer/workspace/dmotor/build/vitis_atomic/hls/syn/verilog/dmotor_atomic_mailbox_write_r.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dmotor_atomic_mailbox_write_r
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/rklinkhammer/workspace/dmotor/build/current_ip/mailbox_control/staged/atomic_hls_adapter.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dmotor_atomic_hls_adapter
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/rklinkhammer/workspace/dmotor/build/current_ip/mailbox_control/staged/atomic_mailbox_arbiter.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dmotor_atomic_mailbox_arbiter
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/rklinkhammer/workspace/dmotor/build/current_ip/mailbox_control/staged/batch_registers.sv" into library xil_defaultlib
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/rklinkhammer/workspace/dmotor/build/current_ip/mailbox_control/staged/mailbox_control.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dmotor_mailbox_control
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/rklinkhammer/workspace/dmotor/build/current_ip/mailbox_control/staged/timing.sv" into library xil_defaultlib
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/rklinkhammer/workspace/dmotor/build/current_ip/mailbox_control/staged/pwm.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dmotor_pwm
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/rklinkhammer/workspace/dmotor/build/current_ip/mailbox_control/staged/shared_control.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dmotor_shared_control
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/rklinkhammer/workspace/dmotor/build/current_ip/mailbox_control/staged/shared_scheduler.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dmotor_shared_scheduler
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/rklinkhammer/workspace/dmotor/build/current_ip/mailbox_control/staged/target_age.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dmotor_target_age
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/rklinkhammer/workspace/dmotor/tests/mailbox_control_tb.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module mailbox_control_tb
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/rklinkhammer/workspace/dmotor/build/current_ip/mailbox_control/project/mailbox_control.sim/sim_1/behav/xsim/glbl.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module glbl
+Waiting for jobs to finish...
+No pending jobs, compilation finished.
+INFO: [USF-XSim-69] 'compile' step finished in '1' seconds
+INFO: [USF-XSim-3] XSim::Elaborate design
+INFO: [USF-XSim-61] Executing 'ELABORATE' step in '/home/rklinkhammer/workspace/dmotor/build/current_ip/mailbox_control/project/mailbox_control.sim/sim_1/behav/xsim'
+xelab --incr --debug typical --relax --mt 8 -L xil_defaultlib -L uvm -L unisims_ver -L unimacro_ver -L secureip --snapshot mailbox_control_tb_behav xil_defaultlib.mailbox_control_tb xil_defaultlib.glbl -log elaborate.log
+Vivado Simulator v2026.1
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
+Running: /opt/vitis/2026.1/Vivado/bin/unwrapped/lnx64.o/xelab --incr --debug typical --relax --mt 8 -L xil_defaultlib -L uvm -L unisims_ver -L unimacro_ver -L secureip --snapshot mailbox_control_tb_behav xil_defaultlib.mailbox_control_tb xil_defaultlib.glbl -log elaborate.log 
+INFO: [XSIM 43-3493] Using 8 slave threads.
+WARNING: [XSIM 43-3431] One or more environment variables have been detected which affect the operation of the C compiler. These are typically not set in standard installations and are not tested by AMD, however they may be appropriate for your system, so the flow will attempt to continue.  If errors occur, try running xelab with the "-mt off -v 1" switches to see more information from the C compiler. The following environment variables have been detected:
+    LIBRARY_PATH
+Starting static elaboration
+Pass Through NonSizing Optimizer
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling package xil_defaultlib.dmotor_batch_registers
+Compiling package xil_defaultlib.dmotor_timing
+Compiling module xil_defaultlib.dmotor_atomic_mailbox_flow_contr...
+Compiling module xil_defaultlib.dmotor_atomic_mailbox_dmotor_ato...
+Compiling module xil_defaultlib.dmotor_atomic_mailbox_batch_tran...
+Compiling module xil_defaultlib.dmotor_atomic_mailbox_batch_tran...
+Compiling module xil_defaultlib.dmotor_atomic_mailbox_batch_tran...
+Compiling module xil_defaultlib.dmotor_atomic_mailbox_sparsemux_...
+Compiling module xil_defaultlib.dmotor_atomic_mailbox_begin_tick...
+Compiling module xil_defaultlib.dmotor_atomic_mailbox_begin_tick
+Compiling module xil_defaultlib.dmotor_atomic_mailbox_retire_Pip...
+Compiling module xil_defaultlib.dmotor_atomic_mailbox_retire_Pip...
+Compiling module xil_defaultlib.dmotor_atomic_mailbox_retire
+Compiling module xil_defaultlib.dmotor_atomic_mailbox_sparsemux_...
+Compiling module xil_defaultlib.dmotor_atomic_mailbox_read_r
+Compiling module xil_defaultlib.dmotor_atomic_mailbox_batch_tran...
+Compiling module xil_defaultlib.dmotor_atomic_mailbox_write_Pipe...
+Compiling module xil_defaultlib.dmotor_atomic_mailbox_write_Pipe...
+Compiling module xil_defaultlib.dmotor_atomic_mailbox_write_r
+Compiling module xil_defaultlib.dmotor_atomic_mailbox_batch_tran...
+Compiling module xil_defaultlib.dmotor_atomic_mailbox
+Compiling module xil_defaultlib.dmotor_atomic_hls_adapter
+Compiling module xil_defaultlib.dmotor_atomic_mailbox_arbiter
+Compiling module xil_defaultlib.dmotor_shared_scheduler(SNAPSHOT...
+Compiling module xil_defaultlib.dmotor_target_age_default
+Compiling module xil_defaultlib.dmotor_pwm(PERIOD_CYCLES=20)
+Compiling module xil_defaultlib.dmotor_shared_control(SNAPSHOT_B...
+Compiling module xil_defaultlib.dmotor_mailbox_control(SNAPSHOT_...
+Compiling module xil_defaultlib.mailbox_control_tb
+Compiling module xil_defaultlib.glbl
+Built simulation snapshot mailbox_control_tb_behav
+INFO: [USF-XSim-69] 'elaborate' step finished in '5' seconds
+INFO: [USF-XSim-4] XSim::Simulate design
+INFO: [USF-XSim-61] Executing 'SIMULATE' step in '/home/rklinkhammer/workspace/dmotor/build/current_ip/mailbox_control/project/mailbox_control.sim/sim_1/behav/xsim'
+INFO: [USF-XSim-98] *** Running xsim
+   with args "mailbox_control_tb_behav -key {Behavioral:sim_1:Functional:mailbox_control_tb} -tclbatch {mailbox_control_tb.tcl} -log {simulate.log}"
+INFO: [USF-XSim-8] Loading simulator feature
+Time resolution is 1 ps
+source mailbox_control_tb.tcl
+## set curr_wave [current_wave_config]
+## if { [string length $curr_wave] == 0 } {
+##   if { [llength [get_objects]] > 0} {
+##     add_wave /
+##     set_property needs_save false [current_wave_config]
+##   } else {
+##      send_msg_id Add_Wave-1 WARNING "No top level signals found. Simulator will start without a wave window. If you want to open a wave window go to 'File->New Waveform Configuration' or type 'create_wave_config' in the TCL console."
+##   }
+## }
+## run 0ns
+INFO: [USF-XSim-96] XSim completed. Design snapshot 'mailbox_control_tb_behav' loaded.
+INFO: [USF-XSim-97] XSim simulation ran for 0ns
+launch_simulation: Time (s): cpu = 00:00:14 ; elapsed = 00:00:09 . Memory (MB): peak = 1793.551 ; gain = 37.188 ; free physical = 3738 ; free virtual = 23806
+# run all
+mailbox_control PASS: generated HLS admission/retirement, host backpressure, atomic PWM, no-batch tick, cancellation, ownership/retirement races, timeout and session protection
+$finish called at time : 628126 ns : File "/home/rklinkhammer/workspace/dmotor/tests/mailbox_control_tb.sv" Line 146
+# close_sim
+INFO: xsimkernel Simulation Memory Usage: 290748 KB (Peak: 348280 KB), Simulation CPU Usage: 840 ms
+INFO: [Simtcl 6-16] Simulation closed
+# set log_path [file join $out mailbox_control project mailbox_control.sim sim_1 behav xsim simulate.log]
+# set f [open $log_path r]
+# set result [read $f]
+# close $f
+# if {![string match {*mailbox_control PASS:*} $result]} {error "Host simulation did not report PASS: $log_path"}
+# close_project
+# puts "Current IP exported and SystemVerilog host simulation completed. Check PASS in simulate.log."
+Current IP exported and SystemVerilog host simulation completed. Check PASS in simulate.log.
+INFO: [Common 17-206] Exiting Vivado at Mon Oct 12 20:33:26 2026...

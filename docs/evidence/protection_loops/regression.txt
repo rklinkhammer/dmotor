@@ -1,0 +1,15 @@
+Test project /home/rklinkhammer/workspace/dmotor/build/atomic_protocol
+    Start  4: rtl_safety
+1/5 Test  #4: rtl_safety .......................   Passed    0.12 sec
+    Start  8: rtl_latency
+2/5 Test  #8: rtl_latency ......................   Passed    0.07 sec
+    Start 11: rtl_target_age
+3/5 Test #11: rtl_target_age ...................   Passed    0.08 sec
+    Start 12: rtl_shared_scheduler
+4/5 Test #12: rtl_shared_scheduler .............   Passed    0.15 sec
+    Start 30: rtl_mailbox_control
+5/5 Test #30: rtl_mailbox_control ..............   Passed    2.50 sec
+
+100% tests passed, 0 tests failed out of 5
+
+Total Test time (real) =   2.92 sec

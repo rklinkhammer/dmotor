@@ -1,0 +1,4 @@
+Time resolution is 1 ps
+mailbox_control PASS: generated HLS admission/retirement, host backpressure, atomic PWM, no-batch tick, cancellation, ownership/retirement races, timeout and session protection
+$finish called at time : 731276 ns : File "/home/rklinkhammer/workspace/dmotor/tests/mailbox_control_tb.sv" Line 156
+INFO: xsimkernel Simulation Memory Usage: 290752 KB (Peak: 348284 KB), Simulation CPU Usage: 1010 ms

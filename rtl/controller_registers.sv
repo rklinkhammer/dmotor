@@ -1,0 +1,21 @@
+package dmotor_controller_registers;
+localparam logic [31:0] PROFILE_ID = 32'd1145915697;
+localparam logic [31:0] IDENTITY = 32'd4096;
+localparam logic [31:0] STATUS = 32'd4100;
+localparam logic [31:0] SESSION = 32'd4104;
+localparam logic [31:0] ENABLE = 32'd4108;
+localparam logic [31:0] DISABLE = 32'd4112;
+localparam logic [31:0] STOP = 32'd4116;
+localparam logic [31:0] REFRESH_SESSION = 32'd4120;
+localparam logic [31:0] CORE_RESET = 32'd4128;
+localparam logic [31:0] ACKNOWLEDGE = 32'd4132;
+localparam logic [31:0] WATCHDOG_CYCLES = 32'd4136;
+localparam logic [31:0] TARGET_TIMEOUT_CYCLES = 32'd4140;
+localparam logic [31:0] SNAPSHOT = 32'd4144;
+localparam logic [31:0] REFRESH_BASE = 32'd4160;
+localparam logic [31:0] CONFIG_BASE = 32'd8192;
+localparam logic [31:0] CONFIG_STRIDE = 32'd256;
+localparam logic [31:0] CONFIG_COMMIT = 32'd128;
+localparam logic [31:0] TELEMETRY_BASE = 32'd12288;
+localparam logic [31:0] TELEMETRY_STRIDE = 32'd84;
+endpackage

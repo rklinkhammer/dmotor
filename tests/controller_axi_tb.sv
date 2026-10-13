@@ -1,0 +1,100 @@
+`timescale 1ns/1ps
+module controller_axi_tb;
+ reg clk=0;always #25 clk=~clk;
+ reg reset=1;
+ reg [15:0] awaddr=0,araddr=0;
+ reg awvalid=0,wvalid=0,bready=0,arvalid=0,rready=0;
+ reg [31:0] wdata=0;reg [3:0] wstrb=15;
+ wire awready,wready,bvalid,arready,rvalid;
+ wire [1:0] bresp,rresp;wire [31:0] rdata;
+ reg [3:0] qa=0,qb=0,physical_faults=0;reg halt_async=0;
+ wire [3:0] pwm,drive_enable,direction;wire shared_halt;
+ dmotor_controller_axi dut(.*);
+ task step;begin @(posedge clk);#1;end endtask
+ task write_word(input [15:0] a,input [31:0] d,input [1:0] expected);begin
+  @(negedge clk);awaddr=a;awvalid=1;wdata=d;wvalid=1;
+  fork
+   begin @(posedge clk);while(!awready)@(posedge clk);@(negedge clk);awvalid=0;end
+   begin @(posedge clk);while(!wready)@(posedge clk);@(negedge clk);wvalid=0;end
+  join
+  wait(bvalid);#1;if(bresp!=expected)$fatal(1,"write %h response %d expected %d",a,bresp,expected);
+  repeat(2)step();@(negedge clk);bready=1;step();@(negedge clk);bready=0;
+ end endtask
+ reg [31:0] value;
+ task read_word(input [15:0] a,input [1:0] expected=0);begin
+  @(negedge clk);araddr=a;arvalid=1;@(posedge clk);while(!arready)@(posedge clk);
+  @(negedge clk);arvalid=0;wait(rvalid);#1;
+  if(rresp!=expected)$fatal(1,"read failed %h",a);value=rdata;
+  repeat(2)step();if(rdata!=value)$fatal(1,"unstable read");
+  @(negedge clk);rready=1;step();@(negedge clk);rready=0;
+ end endtask
+ reg [31:0] cfg[0:19];integer i,m;
+ reg seen_fault=0;
+ always @(negedge clk)begin
+  if(reset)seen_fault=0;
+  else if(dut.fault && !seen_fault)begin
+   seen_fault=1;
+   $display("fault time=%t hls_fault=%h reject=%h core_fault=%b scheduler=%b stop=%h",$time,
+    dut.controller.controller.engine.reply[256 +:32],dut.controller.controller.engine.reply[288 +:32],
+    dut.controller.controller.engine.fault,dut.controller.controller.control.control.scheduler.fault,dut.stop);
+  end
+ end
+ initial begin
+  for(i=0;i<20;i=i+1)cfg[i]=0;
+  cfg[1]=200000;cfg[2]=1000000;cfg[3]=1000000;cfg[4]=10296;cfg[5]=5;
+  cfg[6]=1;cfg[7]=100;cfg[8]=2;cfg[9]=655;cfg[10]=65536;cfg[11]=65536;cfg[12]=65536;
+  cfg[13]=1000000;cfg[14]=40000;cfg[15]=20000;cfg[16]=128;
+  repeat(4)step();@(negedge clk);reset=0;
+  read_word('h1000);if(value!=32'h444d4931)$fatal(1,"identity");
+  write_word('h1008,7,0);
+  for(m=0;m<4;m=m+1)begin
+   cfg[0]=21+m;
+   for(i=0;i<20;i=i+1)write_word('h2000+m*256+i*4,cfg[i],0);
+   write_word('h2080+m*256,1,0);
+  end
+  write_word('h1020,0,0);repeat(100)step();write_word('h100c,15,0);
+  // A host cannot reconfigure an enabled context.
+  write_word('h2004,100000,2);
+  wait(dut.ready_mask==15);
+  write_word('h10,7,0);write_word('h14,1,0);write_word('h18,15,0);
+  for(m=0;m<4;m=m+1)begin write_word('h80+m*8,21+m,0);write_word('h84+m*8,(m+1)*1000,0);end
+  write_word('h1c,1,0);
+  value=0;while(value!=1)read_word('h2c);
+  repeat(1200)step();if(dut.fault || drive_enable!=15)$fatal(1,"four motor application");
+  write_word('h1030,1,0);read_word('h3008);if(value!=1)$fatal(1,"telemetry motor0 sequence");
+  // STOP accepted during computation takes effect at the next complete control
+  // boundary, without dropping a motor tick or publishing another target.
+  wait(dut.controller.controller.engine_start);
+  write_word('h1014,15,0);
+  value=0;while((value & 32'hf000)!=32'hf000)read_word('h1004);
+  repeat(1200)step();if(drive_enable || dut.fault)$fatal(1,"STOP lifecycle failed");
+  // Decoder capture is real: one Gray cycle, with independently synchronized pins.
+  @(negedge clk);qb=1;repeat(8)step();@(negedge clk);qa=1;repeat(8)step();
+  @(negedge clk);qb=0;repeat(8)step();@(negedge clk);qa=0;repeat(8)step();
+  write_word('h1030,1,0);read_word('h3040);if(value!=4)$fatal(1,"encoder position %d",value);
+  // Qualify a physical fault: all outputs inhibit, cause persists.
+  @(negedge clk);physical_faults=4;repeat(8)step();
+  if(!shared_halt || drive_enable)$fatal(1,"physical fault not shared");
+  @(negedge clk);physical_faults=0;repeat(8)step();if(!shared_halt)$fatal(1,"automatic recovery");
+  read_word('h1004);if(!value[17])$fatal(1,"HALT status");
+  // Reset only controller arithmetic/session while retaining the protective latch.
+  write_word('h1020,1,0);repeat(4)step();if(!shared_halt)$fatal(1,"core reset cleared protection");
+  // Explicit recovery order, then watchdog expiration with multiple motors enabled.
+  write_word('h1024,1,0);write_word('h1024,2,0);write_word('h1024,4,0);
+  if(shared_halt)$fatal(1,"acknowledgments did not clear inactive causes");
+  write_word('h1028,20000,0);write_word('h1020,0,0);repeat(100)step();
+  write_word('h100c,3,0);wait(shared_halt);repeat(4)step();
+  if(drive_enable || (dut.watchdog_faults[0]!==1'b1 && dut.watchdog_faults[32]!==1'b1))
+   $fatal(1,"watchdog did not halt all motors");
+  // External HALT blocks atomic traffic with SLVERR rather than hanging AXI.
+  @(negedge clk);reset=1;repeat(3)step();@(negedge clk);reset=0;
+  write_word('h1008,8,0);write_word('h1020,0,0);repeat(100)step();
+  @(negedge clk);halt_async=1;repeat(8)step();read_word(0,2);
+  if(drive_enable || shared_halt)$fatal(1,"external HALT echoed as local cause");
+  @(negedge clk);halt_async=0;repeat(8)step();read_word(0,2);
+  write_word('h1024,4,0);repeat(8)step();read_word(0);
+  if(value!=32'h444d4231)$fatal(1,"external HALT recovery");
+  $display("controller_axi PASS: real AXI, both HLS kernels, configuration, four-motor targets, encoder capture, telemetry shared physical fault, explicit recovery and watchdog expiration");$finish;
+ end
+ initial begin repeat(500000)step();$fatal(1,"timeout fault=%b ready=%h",dut.fault,dut.ready_mask);end
+endmodule

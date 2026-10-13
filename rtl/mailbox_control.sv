@@ -57,6 +57,11 @@ module dmotor_mailbox_control #(
     wire [31:0] batch_session, batch_sequence, retire_session, retire_sequence;
     wire [127:0] batch_generations, batch_targets;
     wire cancellation_pending;
+    reg frame_has_engine;
+    always @(posedge clk)begin
+        if(reset || !busy)frame_has_engine<=0;
+        else if(engine_start && engine_ready)frame_has_engine<=1;
+    end
     wire [351:0] live_admission={max_speeds,generations,28'd0,ready_mask,
                                 28'd0,(authorized & enabled),session};
     wire [3:0] protocol_invalidate=invalidate_mask |
@@ -71,6 +76,6 @@ module dmotor_mailbox_control #(
     dmotor_shared_control #(.SNAPSHOT_BITS(SNAPSHOT_BITS),.TICK_CYCLES(TICK_CYCLES),
         .DEADLINE_CYCLES(DEADLINE_CYCLES),.PWM_CYCLES(PWM_CYCLES)) control(
         .inhibit(inhibit || protocol_fault || !protocol_initialized),
-        .cancel_frame(cancel_frame || cancellation_pending || |invalidate_mask),
+        .cancel_frame(cancel_frame || (frame_has_engine && (cancellation_pending || |invalidate_mask))),
         .fault(control_fault),.halt_request(control_halt),.*);
 endmodule

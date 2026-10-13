@@ -73,7 +73,11 @@ module dmotor_shared_scheduler #(
         end
     endfunction
     wire [3:0] after_current=remaining & ~(4'b0001<<engine_motor);
-    wire transaction_accepted=issued || (engine_start && engine_ready);
+    // HLS completion is registered and follows a previously accepted start.
+    // Do not feed reset-qualified engine_ready into live fault detection:
+    // live_fault -> engine_reset -> engine_ready would close a feedback loop.
+    wire transaction_accepted=issued;
+    wire accepting_engine=engine_start && engine_ready;
     wire bad_result=result_motor!=engine_motor || result_tick!=frame_tick ||
                     result_session!=saved_session || result_generation!=engine_generation;
     wire result_failure=(state==RUN && engine_done && transaction_accepted && (engine_fault || bad_result)) ||
@@ -86,7 +90,12 @@ module dmotor_shared_scheduler #(
     assign busy=state!=IDLE;
     assign fault_inhibit=reset || inhibit || target_inhibit || fault || live_fault;
     assign engine_reset=fault_inhibit;
-    assign admission_request=state==ADMIT && !fault_inhibit && !cancellation;
+    // Requests must not depend on faults decoded from their own responses.
+    // Such a dependency makes request -> done -> live_fault -> request cyclic.
+    // Response failures still inhibit PWM immediately and win at the next edge.
+    wire request_blocked=reset || inhibit || target_inhibit || fault ||
+                         deadline || overrun || tags_changed || cancellation;
+    assign admission_request=state==ADMIT && !request_blocked;
     assign engine_session=saved_session;
     assign engine_generation=saved_generations[engine_motor*32 +:32];
     assign engine_snapshot=saved_snapshots[engine_motor*SNAPSHOT_BITS +:SNAPSHOT_BITS];
@@ -97,7 +106,7 @@ module dmotor_shared_scheduler #(
     assign target_apply=state==AGE && !reset && !inhibit && !fault &&
                         !deadline && !overrun && !tags_changed && !cancellation;
     assign target_mask=saved_mask;
-    assign retire_request=state==RETIRE && !fault_inhibit && !cancellation;
+    assign retire_request=state==RETIRE && !request_blocked;
     assign retire_session=saved_session;
     assign retire_sequence=saved_sequence;
     // Present the whole staged frame BEFORE the common PWM sampling edge. All
@@ -127,7 +136,7 @@ module dmotor_shared_scheduler #(
             end else if(cancellation && busy && state!=DRAIN) begin
                 frame_aborted<=1;engine_start<=0;staged_duties<=0;
                 // Accepted HLS calls are drained, not reset, preserving peer contexts.
-                if(state==RUN && transaction_accepted && !engine_done) state<=DRAIN;
+                if(state==RUN && (transaction_accepted || accepting_engine) && !engine_done) state<=DRAIN;
                 else state<=IDLE;
             end else begin
                 case(state)

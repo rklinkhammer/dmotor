@@ -66,7 +66,12 @@ module dmotor_atomic_mailbox_arbiter #(
     assign batch_generations=response_words[511:384];
     assign retire_done=active && owner==OWNER_RETIRE && response_valid && usable && retire_request;
     assign retire_success=retire_done && response_words[31:0]!=0;
-    assign cancellation_pending=dirty || (active && (owner==OWNER_INVALIDATE || poisoned));
+    // An inhibit edge blocks transactions immediately through usable/may_schedule,
+    // but must not feed combinational cancellation back into its own source
+    // (target-age validation). Its cleanup appears in pending_invalidate after
+    // the edge. Explicit invalidation/ownership changes still cancel immediately.
+    assign cancellation_pending=|pending_invalidate || |invalidate_mask || ownership_changed ||
+                                (active && (owner==OWNER_INVALIDATE || poisoned));
     assign quiescent=initialized && !active && !dirty && !fault && !transport_fault;
     wire may_schedule=initialized && !fault && !transport_fault && !session_changed && !inhibit && !dirty;
     wire accept_command=command_valid && command_ready;
@@ -134,7 +139,7 @@ module dmotor_atomic_mailbox_arbiter #(
                     // explicitly discarded before another begin is possible.
                     if(!usable || !admission_request ||
                        (response_words[31:0]!=0 && !batch_valid))
-                        pending_invalidate<=4'hf;
+                    begin pending_invalidate<=4'hf;begin_seen<=0;end
                 end
                 OWNER_RETIRE:begin
                     // HLS may have updated applied metadata before cancellation

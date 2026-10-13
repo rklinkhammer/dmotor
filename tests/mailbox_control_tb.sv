@@ -133,6 +133,16 @@ module mailbox_control_tb;
         @(negedge clk);cancel_frame=0;wait(protocol_fault);repeat(20)step();
         if(commits!=saved_commits || drive_enable || host_ready || !halt_request)
             $fatal(1,"retirement cancellation escaped");
+        // A prospectively invalid target timestamp must inhibit immediately without
+        // feeding protocol cleanup back into target_apply and oscillating.
+        setup();publish(1);wait(target_apply);#1;
+        force dut.control.target_age.applied_tick=64'h4000000000000000;
+        #1;
+        if(target_inhibit!==1 || fault_inhibit!==1 || target_apply!==1 || drive_enable!==0)
+            $fatal(1,"target-age cleanup feedback or late inhibit");
+        step();release dut.control.target_age.applied_tick;
+        if(!age_faults || !halt_request || committed_duties || frame_committed)
+            $fatal(1,"invalid target timestamp escaped protection");
         // Timeout in an ordinary host call is also a shared protection event.
         setup();force dut.protocol.transport.hls_done=0;
         request(0,IDENTITY,0);wait(host_response_valid);#1;

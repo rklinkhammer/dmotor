@@ -9,21 +9,13 @@
 **Vivado reference:** `~/workspace/dvrmc/dvrmc.xpr`; [integration notes](docs/vivado_reference.md)
 **Driver selection:** Pololu DRV8263H carrier #5238; electrical adapter validation remains open
 
-**Status:** Recommended implementation architecture, with the user decisions below
-approved. The shared calculation engine has scoped HLS evidence. The standalone atomic batch
-protocol now implements publication, tick reservation and retirement with a draft
-generated ABI; see [implementation status](docs/atomic_mailbox.md). Independent
-[target-age protection](docs/target_age.md) is also implemented and RTL-tested as
-a separate component. The [scheduler/protection/PWM boundary](docs/shared_control.md)
-now has RTL tests with behavioral engine/protocol responses. The
-[atomic HLS transport](docs/atomic_hls_adapter.md) is tested with generated mailbox
-RTL. [Mailbox arbitration and scheduler integration](docs/mailbox_control.md) now
-have generated-mailbox RTL tests through PWM release, with behavioral motor results.
-The [shared-engine transport](docs/shared_engine_transport.md) connects the measured
-motor kernel ports. Its scheduler/lifecycle adapter, host AXI interface and board
-integration remain to be implemented and measured.
-The active full-profile control sources and legacy ring ABI have not been replaced
-by this document update.
+**Status:** An [integrated AXI controller](docs/controller_axi.md) now connects the
+actual mailbox and shared motor HLS kernels, scheduler, encoder channels,
+watchdog/target-age protection and PWM. Priorities 1–4 have an executable initial
+implementation and generated-RTL tests. The host ABI remains provisional. Full
+lifecycle stress qualification, integrated place-and-route, clock crossing,
+electrical adapter and board testing remain outstanding. The legacy full-profile
+sources remain available; their measurements are not integrated-controller results.
 
 This revision supersedes the single-controller duplication, FPGA position/dwell
 execution, and command/completion-ring requirements of revision 0.17 for the new

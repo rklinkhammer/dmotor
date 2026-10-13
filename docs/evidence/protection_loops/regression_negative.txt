@@ -1,0 +1,1 @@
+Baseline scheduler with the strengthened handshake test timed out after 5 seconds (combinational feedback does not settle).

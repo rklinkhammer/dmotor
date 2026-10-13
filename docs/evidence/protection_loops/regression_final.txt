@@ -1,0 +1,9 @@
+Test project /home/rklinkhammer/workspace/dmotor/build/atomic_protocol
+    Start 12: rtl_shared_scheduler
+1/2 Test #12: rtl_shared_scheduler .............   Passed    0.12 sec
+    Start 30: rtl_mailbox_control
+2/2 Test #30: rtl_mailbox_control ..............   Passed    2.08 sec
+
+100% tests passed, 0 tests failed out of 2
+
+Total Test time (real) =   2.19 sec

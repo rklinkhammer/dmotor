@@ -3,22 +3,15 @@
 Portable FPGA motor control under development, following
 [DMOTOR_ARCH.md](DMOTOR_ARCH.md). Revision 0.18 recommends one shared four-motor
 velocity engine with processor-owned trajectories and independent protection.
-It is **not an integrated motor controller or a board-ready bitstream**.
+The [integrated controller implementation](docs/controller_axi.md) now connects
+AXI4-Lite, the real atomic-mailbox and shared motor HLS kernels, four encoder
+channels, watchdog/target-age protection and common PWM release. Both generated-RTL
+integration tests pass in XSim. It is **not a routed or board-qualified bitstream**.
 
-The [shared-engine experiment](docs/shared_mailbox.md) uses 25,894 LUT for four
-motor contexts by HLS estimate. The new [atomic batch protocol](docs/atomic_mailbox.md)
-implements the first integration milestone with its own provisional generated ABI
-and host reference interface. [Independent target-age protection](docs/target_age.md)
-is implemented and tested. The [shared scheduler/PWM boundary](docs/shared_control.md)
-now connects it to four phase-aligned outputs using normalized HLS handshakes.
-The [atomic HLS transport](docs/atomic_hls_adapter.md) is tested against generated
-mailbox RTL. [Mailbox arbitration and scheduler integration](docs/mailbox_control.md)
-now connect that IP to target-age acceptance and PWM retirement. The motor-engine
-scheduler adapter, host AXI interface and full physical integration remain pending.
-The [shared-engine transport](docs/shared_engine_transport.md) now connects the
-measured motor kernel ports for generated-RTL verification.
-Existing C++/RTL components and
-the legacy full-profile ring interface are retained and tested.
+The measured shared engine uses 25,894 LUT before integration. No integrated
+utilization estimate is yet claimed. Prior component experiments, the permanently
+inhibited DMD1 development endpoint and legacy ring implementation remain available.
+The new DMI1 integrated register contract is provisional.
 
 The active full profile uses exact 64-bit division with one restoring phase per
 bit; see the [measured before/after results](docs/evidence/onephase_main/README.md).

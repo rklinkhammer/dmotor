@@ -1,0 +1,5 @@
+Time resolution is 1 ps
+integrated_control: actual four-motor frame latency 1941 cycles
+integrated_control PASS: actual mailbox and motor HLS, warmup, atomic target acceptance, PWM, STOP and inhibit
+$finish called at time : 6100201 ns : File "/home/rklinkhammer/workspace/dmotor/tests/integrated_control_tb.sv" Line 88
+INFO: xsimkernel Simulation Memory Usage: 295956 KB (Peak: 352452 KB), Simulation CPU Usage: 2010 ms

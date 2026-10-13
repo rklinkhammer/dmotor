@@ -1464,3 +1464,31 @@ and routing reports 82 LUT/186 FF and setup/hold +37.867/+0.168 ns under assumed
 5 ns boundary delays. The Arty Z7-20 BD validates and generates, with the documented
 preset DDR-skew warnings. No board bitstream or powered motor test is claimed.
 Evidence: `docs/evidence/vivado_development/`.
+
+## Priorities 1–4 integrated implementation
+
+See [controller_axi.md](controller_axi.md). The real shared HLS motor engine now
+connects through its lifecycle adapter to the mailbox/scheduler/PWM path. The new
+AXI top adds four encoder channels, watchdogs, synchronized physical faults, shared
+HALT, disabled configuration staging and coherent telemetry, with generated ABI
+constants and host reference helpers.
+
+The 33-test regression passes. Final targeted mailbox/host/ABI checks pass after
+admission cleanup fixes. Two XSim integration tests pass with both actual HLS
+kernels; the four-motor target frame observed 1,941 cycles (97.05 us). Full AXI
+testing includes STOP during computation, encoder capture, shared physical fault,
+watchdog expiry, explicit recovery and external-HALT access without bus deadlock.
+An encoder burst/silence scenario triggered the existing acquisition fault; the
+stationary STOP test is separate and does not establish plant performance.
+
+`controller_axi.zip` exports the integrated preview. Evidence is retained in
+`docs/evidence/priority_integration/`. No integrated routed timing/resource or
+board/driver qualification is claimed. The ABI remains provisional.
+
+## Protection feedback repair (2026-10-12)
+
+See [protection_feedback.md](protection_feedback.md) for the scheduler and
+mailbox cleanup correction, adversarial handshake regressions, actual-HLS XSim,
+and fresh complete-controller synthesis with zero LUTLP-1 violations. Evidence:
+`docs/evidence/protection_loops/`. Exported controller/mailbox core revision is 2.
+Resource fit and routed timing remain unqualified.

@@ -11,13 +11,15 @@ module shared_scheduler_tb;
     reg [127:0] snapshots={32'd104,32'd103,32'd102,32'd101};
     wire [63:0] timestamp,frame_tick;
     wire admission_request;
-    reg admission_done=0,batch_valid=1;
+    reg admission_done_raw=0,batch_valid=1;
+    wire admission_done=admission_done_raw && admission_request;
     reg [3:0] batch_mask=15;
     reg [31:0] batch_session=7,batch_sequence=1;
     reg [127:0] batch_generations={32'd24,32'd23,32'd22,32'd21};
     reg [127:0] batch_targets={32'd4000,32'd3000,32'd2000,32'd1000};
     wire engine_start,engine_reset,engine_apply_target;
-    reg engine_ready=0,engine_done=0,engine_fault=0;
+    reg engine_ready_raw=0,engine_done=0,engine_fault=0;
+    wire engine_ready=engine_ready_raw && !engine_reset;
     wire [1:0] engine_motor;
     wire [31:0] engine_session,engine_generation,engine_snapshot,engine_target;
     reg [1:0] result_motor=0;
@@ -29,7 +31,8 @@ module shared_scheduler_tb;
     wire target_accepted,target_inhibit;
     wire retire_request;
     wire [31:0] retire_session,retire_sequence;
-    reg retire_done=0,retire_success=1;
+    reg retire_done_raw=0,retire_success=1;
+    wire retire_done=retire_done_raw && retire_request;
     wire frame_aborted,frame_committed,busy,fault_inhibit,fault;
     wire [127:0] committed_duties,pwm_duties;
     wire [31:0] last_latency,maximum_latency;
@@ -46,23 +49,23 @@ module shared_scheduler_tb;
     task setup;begin
         @(negedge clk);reset=1;inhibit=0;cancel_frame=0;enabled=0;session=7;
         generations={32'd24,32'd23,32'd22,32'd21};snapshots={32'd104,32'd103,32'd102,32'd101};
-        admission_done=0;batch_valid=1;batch_mask=15;batch_session=7;batch_sequence=1;
-        engine_ready=0;engine_done=0;engine_fault=0;retire_done=0;retire_success=1;
+        admission_done_raw=0;batch_valid=1;batch_mask=15;batch_session=7;batch_sequence=1;
+        engine_ready_raw=0;engine_done=0;engine_fault=0;retire_done_raw=0;retire_success=1;
         configure=0;stop_or_ready=0;
         step();@(negedge clk);reset=0;configure=15;step();
         @(negedge clk);configure=0;enabled=15;
     end endtask
     task admit;begin
-        wait(admission_request);@(negedge clk);admission_done=1;step();
-        @(negedge clk);admission_done=0;
+        wait(admission_request);@(negedge clk);admission_done_raw=1;step();
+        @(negedge clk);admission_done_raw=0;
     end endtask
     task finish_motor(input integer motor,input integer delay_cycles);begin
         if(!engine_start || engine_motor!=motor) $fatal(1,"selection/start");
         if(engine_snapshot!=101+motor || engine_generation!=21+motor || engine_session!=7)
             $fatal(1,"snapshot/tag capture");
         repeat(2)begin step();if(!engine_start)$fatal(1,"start not held");end
-        @(negedge clk);engine_ready=1;step();
-        @(negedge clk);engine_ready=0;
+        @(negedge clk);engine_ready_raw=1;step();
+        @(negedge clk);engine_ready_raw=0;
         repeat(delay_cycles)step();
         @(negedge clk);result_motor=motor;result_tick=frame_tick;
         result_session=7;result_generation=21+motor;result_duty=(motor+1)*10000;
@@ -75,7 +78,7 @@ module shared_scheduler_tb;
         end
         wait(retire_request);
         if(retire_session!=7 || retire_sequence!=1)$fatal(1,"retirement tags");
-        @(negedge clk);retire_done=1;step();@(negedge clk);retire_done=0;
+        @(negedge clk);retire_done_raw=1;step();@(negedge clk);retire_done_raw=0;
     end endtask
     integer j;
     initial begin
@@ -95,14 +98,14 @@ module shared_scheduler_tb;
         @(negedge clk);inhibit=1;#1;if(drive_enable)$fatal(1,"late external inhibit");step();
         if(committed_duties)$fatal(1,"stale committed duties");
         // Bad tagged result never reaches another motor.
-        setup();admit();@(negedge clk);engine_ready=1;step();
-        @(negedge clk);engine_ready=0;engine_done=1;result_motor=1;result_tick=frame_tick;
+        setup();admit();@(negedge clk);engine_ready_raw=1;step();
+        @(negedge clk);engine_ready_raw=0;engine_done=1;result_motor=1;result_tick=frame_tick;
         result_session=7;result_generation=21;result_duty=10000;#1;
         if(!fault_inhibit)$fatal(1,"tag fault not immediate");step();
         if(!fault || committed_duties)$fatal(1,"bad result applied");
         // Cancel an accepted call: drain without resetting peer HLS contexts.
-        setup();admit();@(negedge clk);engine_ready=1;step();
-        @(negedge clk);engine_ready=0;cancel_frame=1;step();
+        setup();admit();@(negedge clk);engine_ready_raw=1;step();
+        @(negedge clk);engine_ready_raw=0;cancel_frame=1;step();
         if(!frame_aborted || engine_reset)$fatal(1,"cancel reset contexts");
         @(negedge clk);cancel_frame=0;engine_done=1;step();
         @(negedge clk);engine_done=0;
@@ -111,13 +114,20 @@ module shared_scheduler_tb;
         setup();admit();wait(fault);#1;
         if(!fault_inhibit || !engine_reset || committed_duties)$fatal(1,"deadline");
         // A done on the deadline boundary loses.
-        setup();admit();@(negedge clk);engine_ready=1;step();@(negedge clk);engine_ready=0;
+        setup();admit();@(negedge clk);engine_ready_raw=1;step();@(negedge clk);engine_ready_raw=0;
         wait(dut.scheduler.age==DEADLINE-1);@(negedge clk);engine_done=1;result_motor=0;
         result_tick=frame_tick;result_session=7;result_generation=21;step();
         if(!fault || committed_duties)$fatal(1,"deadline completion won");
+        // Malformed admission must not withdraw its own response qualification.
+        setup();wait(admission_request);@(negedge clk);
+        batch_sequence=0;admission_done_raw=1;#1;
+        if(fault_inhibit!==1 || admission_request!==1)$fatal(1,"admission feedback");
+        step();if(!fault || engine_start || committed_duties)$fatal(1,"bad admission accepted");
         // Retirement rejection discards the entire calculated frame.
         setup();admit();for(j=0;j<4;j=j+1)finish_motor(j,1);
-        wait(retire_request);@(negedge clk);retire_success=0;retire_done=1;step();
+        wait(retire_request);@(negedge clk);retire_success=0;retire_done_raw=1;#1;
+        if(fault_inhibit!==1 || retire_request!==1)$fatal(1,"retirement feedback");
+        step();
         if(!fault || committed_duties)$fatal(1,"failed retirement");
         // Timer refusal cannot publish a partial/unauthorized frame.
         setup();admit();stop_or_ready=8;
