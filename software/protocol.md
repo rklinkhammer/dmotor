@@ -2,7 +2,8 @@
 
 `dmotor_sw::Protocol` is the first hardware-facing software layer. It uses a
 `Device` interface and the existing generated register definitions and controller
-host helpers. It has no Linux mapping implementation yet and never enables a
+host helpers. An opt-in inhibited [Linux mapping backend](linux/README.md) is available; the
+production backend is still pending. The protocol never enables a
 motor, acknowledges a fault or resets the controller automatically.
 
 ## Configuration

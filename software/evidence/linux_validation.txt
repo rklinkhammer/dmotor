@@ -1,0 +1,25 @@
+Inhibited Linux inspection increment — 2026-10-14
+
+Native commands:
+  cmake -S software -B build/software -DDMOTOR_SW_SANITIZE=ON
+  cmake --build build/software -j4
+  ctest --test-dir build/software --output-on-failure
+Result: 3/3 passed with UBSan.
+
+EDF command after restaging:
+  ./edf --target zc702 bitbake dmotor-semantic-tests
+Log: artifacts/logs/zc702/edf-dev-next-zc702-2735525c163f.log
+Target: Cortex-A9 hard-float ARM, QEMU user-mode, EDF 26.06.
+1034 tasks attempted, 1014 already current, all succeeded. Package QA passed.
+Confirmed packages-split/dmotor-inspect/usr/bin/dmotor-inspect exists.
+
+Captured log.do_semantics:
+DEBUG: Executing shell function do_semantics
+PASS: mailbox atomicity, replay/range checks, timeout precedence, ownership and HALT lifecycle
+PASS: typed configuration, ABI checks, telemetry decoding/coherence and transport failure propagation
+PASS: Linux mapping, cross-process ownership, inspection allowlists and cleanup
+DEBUG: Shell function do_semantics finished
+
+Linux tests use regular-file fixtures, not a UIO device. No FPGA access, kernel
+binding, overlay loading, mapping attributes, bus abort, hot removal, electrical
+inhibition or powered motor operation has been qualified by these tests.

@@ -6,6 +6,8 @@ namespace dmotor_sw {
 // All offsets are peripheral-relative, aligned 32-bit accesses. Throw IoError
 // for failed reads/writes/fences; never substitute zero for an unsuccessful read.
 // Linux implementations must enforce device-memory mapping and completion ordering.
+// Raw UIO bring-up mappings cannot recover every bus error: an AXI abort/removal
+// may terminate the process. They are not a production exception-safe backend.
 class IoError : public std::runtime_error {
 public:
     using std::runtime_error::runtime_error;

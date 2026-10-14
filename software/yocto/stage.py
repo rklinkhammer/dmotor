@@ -22,7 +22,9 @@ files = ["software/CMakeLists.txt", "software/include/dmotor_sw/model.hpp",
          "software/include/dmotor_sw/device.hpp", "software/include/dmotor_sw/protocol.hpp",
          "software/src/protocol.cpp", "software/tests/protocol_test.cpp",
          "include/dmotor/controller_host.hpp", "include/dmotor/controller_registers.hpp",
-         "include/dmotor/timing.hpp", "include/dmotor/registers.hpp", "include/dmotor/ring_config.hpp"]
+         "include/dmotor/timing.hpp", "include/dmotor/registers.hpp", "include/dmotor/ring_config.hpp",
+         "software/include/dmotor_sw/linux_inspection.hpp", "software/linux/inspection.cpp",
+         "software/apps/inspect.cpp", "software/tests/linux_inspection_test.cpp"]
 with tarfile.open(destination / "files/dmotor-software.tar.gz", "w:gz") as archive:
     for name in files:
         archive.add(root / name, arcname="dmotor-software/" + name)

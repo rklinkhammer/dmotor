@@ -3,7 +3,7 @@
 **Date:** 2026-10-14  
 **Architecture baseline:** [DMOTOR_ARCH.md](DMOTOR_ARCH.md), revision 0.18  
 **Initial platform:** Zynq-7000 ARM processor running EDF Linux on Arty Z7-20  
-**Status:** Phase 0 semantic model, typed configuration/telemetry protocol and backend contract implemented; Linux backend and production runtime remain pending.
+**Status:** Phase 0 semantic model, typed configuration/telemetry protocol and backend contract implemented; inhibited UIO inspection backend implemented; production ownership/driver and runtime remain pending.
 
 ## 1. Objective and scope
 
@@ -468,3 +468,28 @@ OS-enforced ownership, then service/client IPC and the separate maintenance UI.
 Validation for this increment: both native UBSan test suites and both ARM QEMU
 executables passed; EDF packaging/QA passed. See
 [protocol validation](software/evidence/protocol_validation.txt).
+
+
+### Inhibited Linux inspection increment
+
+Implemented `LinuxInspection` and the separate `dmotor-inspect` executable. The
+backend discovers map0 from UIO sysfs, validates the character device and DMI1,
+requires disabled motors, and restricts writes to telemetry capture. ARM uses
+DSB barriers plus same-device readback. A nonblocking flock excludes cooperating
+owners; this does **not** satisfy kernel-enforced exclusive-open or removal safety.
+
+Added optional kernel/overlay integration fragments and a separate EDF inspection
+package. The deployed matched overlay/image is unchanged. This is a partial
+Phase 1 implementation: target UIO binding, mapping attributes, AXI completion,
+physical inhibition and reset/removal behavior still require board qualification.
+See [Linux backend contract](software/linux/README.md).
+
+Recommend kernel mediation for production ownership and lifecycle, while retaining
+the inhibited UIO path for bring-up. Raw MMIO bus errors cannot always be delivered
+as recoverable C++ exceptions. The maintenance UI remains a separate future client
+of the sole-owner service, with mandatory shared HALT on exit/loss; this inspection
+tool neither authorizes motion nor replaces that lifecycle.
+
+Validation: 3/3 native UBSan suites and all three ARM QEMU executables passed;
+EDF packaging and package QA passed, including the separate inspection package.
+[Evidence](software/evidence/linux_validation.txt). Board qualification remains open.

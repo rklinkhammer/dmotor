@@ -1,0 +1,8 @@
+// Opt-in bring-up fragment for the MATCHED DVRMC full FPGA Manager overlay.
+// Include after controller_axi_0 is defined; do not replace firmware/clocks.
+// Requires uio_pdrv_genirq loaded with of_id=generic-uio before device creation.
+// Never reload/unbind the overlay while mapped. Outputs externally inhibited.
+&controller_axi_0 {
+    compatible = "generic-uio";
+    linux,uio-name = "dmotor-inspection";
+};

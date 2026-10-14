@@ -2,8 +2,8 @@
 
 This directory starts Phase 0 of [DMOTOR_SW.md](../DMOTOR_SW.md). It builds
 independently of Vitis/Vivado and the legacy controller code. It currently contains
-an **in-process semantic model, typed device protocol and automated tests**, not a deployable motion
-service, Linux device driver or maintenance application.
+an **in-process semantic model, typed protocol, inhibited Linux inspection tool
+and automated tests**, not a deployable motion service or maintenance application.
 
 ## Native validation
 
@@ -85,7 +85,8 @@ is enabled by this increment.
 
 The [typed protocol](protocol.md) now provides full configuration serialization,
 status/telemetry decoding and an explicit backend interface. Next: implement the
-inhibited Linux backend and sole-owner service. Bind and test
+production backend and sole-owner service. The opt-in [Linux inspection backend](linux/README.md)
+is now implemented for inhibited bring-up, with advisory ownership only. Bind and test
 shared HALT before enabling maintenance motion; add the separate terminal UI using
 that service rather than giving it direct MMIO access.
 
@@ -98,3 +99,14 @@ The next increment adds `dmotor-protocol-tests` to CTest and the same BitBake
 QEMU task. See [protocol details and transport contract](protocol.md).
 Both suites passed natively with UBSan and under EDF ARM QEMU; package QA passed.
 See [protocol validation](evidence/protocol_validation.txt).
+
+
+## Linux inspection increment
+
+`dmotor-linux-tests` joins native CTest and EDF ARM QEMU validation. The recipe
+produces a separate opt-in `dmotor-inspect` package; it is never added to the
+production image or started automatically. See [Linux integration and remaining
+qualification](linux/README.md). The separate maintenance application is unchanged
+in scope and still awaits the sole-owner service and HALT lifecycle.
+Native UBSan and EDF ARM QEMU passed all three suites; the separate inspection
+package passed QA. See [Linux validation](evidence/linux_validation.txt).

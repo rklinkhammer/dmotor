@@ -11,5 +11,10 @@ EXTRA_OECMAKE += "-DDMOTOR_SW_SANITIZE=OFF"
 do_semantics() {
     ${@qemu_wrapper_cmdline(d, d.getVar('RECIPE_SYSROOT'), [d.getVar('RECIPE_SYSROOT') + d.getVar('libdir'), d.getVar('RECIPE_SYSROOT') + d.getVar('base_libdir')])} ${B}/dmotor-semantic-tests
     ${@qemu_wrapper_cmdline(d, d.getVar('RECIPE_SYSROOT'), [d.getVar('RECIPE_SYSROOT') + d.getVar('libdir'), d.getVar('RECIPE_SYSROOT') + d.getVar('base_libdir')])} ${B}/dmotor-protocol-tests
+    ${@qemu_wrapper_cmdline(d, d.getVar('RECIPE_SYSROOT'), [d.getVar('RECIPE_SYSROOT') + d.getVar('libdir'), d.getVar('RECIPE_SYSROOT') + d.getVar('base_libdir')])} ${B}/dmotor-linux-tests
 }
 addtask semantics after do_compile before do_install
+
+# Inspection is opt-in, separate from test executables and never auto-started.
+PACKAGES =+ "dmotor-inspect"
+FILES:dmotor-inspect = "${bindir}/dmotor-inspect"
