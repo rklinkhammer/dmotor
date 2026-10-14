@@ -1,0 +1,32 @@
+DMOTOR software semantic validation — 2026-10-14
+
+Native:
+  cmake -S software -B build/software -DDMOTOR_SW_SANITIZE=ON
+  cmake --build build/software -j4
+  ctest --test-dir build/software --output-on-failure
+  GNU C++ 15.2.0; C++14; warnings treated as errors; UBSan enabled.
+  1/1 software_semantics passed.
+
+EDF:
+  python3 software/yocto/stage.py ../edf-dev
+  (cd ../edf-dev && ./edf --target zc702 bitbake dmotor-semantic-tests)
+  BitBake 2.8.1; EDF 26.06; TARGET_SYS=arm-amd-linux-gnueabi
+  MACHINE=amd-cortexa9thf-neon-common
+  TUNE_FEATURES=arm vfp cortexa9 neon thumb callconvention-hard
+  do_semantics: Succeeded; do_package_qa: Succeeded.
+  1034 tasks attempted, 1013 already current, all succeeded.
+  ELF 32-bit ARM EABI5, hard-float loader /usr/lib/ld-linux-armhf.so.3.
+
+Captured temp/log.do_semantics:
+DEBUG: Executing shell function do_semantics
+PASS: mailbox atomicity, replay/range checks, timeout precedence, ownership and HALT lifecycle
+DEBUG: Shell function do_semantics finished
+
+EDF build log:
+  artifacts/logs/zc702/edf-dev-next-zc702-2839e3dddfc5.log
+Recipe task log (within EDF build volume):
+  builds/zc702/tmp/work/cortexa9t2hf-neon-amd-linux-gnueabi/dmotor-semantic-tests/1.0/temp/log.do_semantics
+
+Scope: deterministic in-process semantic model under QEMU user emulation.
+No full-system guest boot, Linux MMIO, hardware/PL, electrical timing, plant,
+real-time scheduling or powered motor operation was validated.

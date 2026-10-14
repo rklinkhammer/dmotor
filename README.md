@@ -126,3 +126,10 @@ RTL projects must compile `rtl/timing.sv` before `scheduler.sv` and `pwm.sv`.
 
 Current architecture, priorities, integration milestones and revision 4 HALT update:
 [implementation status](docs/architecture_status.md).
+
+## Processor software
+
+The first host-software increment provides a deterministic semantic model and
+protocol/lifecycle tests, including an EDF BitBake/QEMU ARM validation recipe.
+See [software/README.md](software/README.md) and the [implementation plan](DMOTOR_SW.md).
+The Linux service, hardware backend and separate maintenance application remain pending.
