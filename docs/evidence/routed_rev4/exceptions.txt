@@ -1,0 +1,46 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2026.1 (lin64) Build 6511674 Tue Jun 16 11:01:26 MDT 2026
+| Date         : Tue Oct 13 00:04:23 2026
+| Host         : luna running 64-bit Ubuntu 26.04.1 LTS
+| Command      : report_exceptions -file build/routed_audit_rev4/exceptions.txt
+| Design       : design_1_wrapper
+| Device       : 7z020-clg400
+| Speed File   : -1  PRODUCTION 1.12 2019-11-22
+| Design State : Routed
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+Exceptions Report
+
+Position  From                            Through         To                                                                                Setup           Hold            Status           
+--------  ------------------------------  --------------  --------------------------------------------------------------------------------  --------------  --------------  -----------------
+5         *                               *               [get_pins -filter REF_PIN_NAME=~*CLR -of_objects [get_cells -hierarchical -filte  false           false           
+                                                          r {NAME =~ *M_AXI[4].mi*.m_cdc_inst/*_reg}]]                                                                      
+8         *                               *               [get_cells {syncstages_ff_reg[0][*]}]                                             false           false           
+10        *                               *               [get_cells {syncstages_ff_reg[0][*]}]                                             false           false           
+11        *                               *               [get_cells {syncstages_ff_reg[0][*]}]                                             false           false           
+12        *                               *               [get_cells {syncstages_ff_reg[0][*]}]                                             false           false           
+14        *                               *               [get_cells {syncstages_ff_reg[0][*]}]                                             false           false           
+15        *                               *               [get_cells {syncstages_ff_reg[0][*]}]                                             false           false           
+16        [get_cells src_hsdata_ff_reg*]  *               [get_cells dest_hsdata_ff_reg*]                                                   max_dpo=150     -               
+18        [get_cells src_hsdata_ff_reg*]  *               [get_cells dest_hsdata_ff_reg*]                                                   max_dpo=150     -               
+20        [get_cells src_hsdata_ff_reg*]  *               [get_cells dest_hsdata_ff_reg*]                                                   max_dpo=150     -               
+22        [get_cells src_hsdata_ff_reg*]  *               [get_cells dest_hsdata_ff_reg*]                                                   max_dpo=40      -               
+24        [get_cells src_hsdata_ff_reg*]  *               [get_cells dest_hsdata_ff_reg*]                                                   max_dpo=40      -               
+26        *                               *               [get_cells {syncstages_ff_reg[0]}]                                                false           false           
+27        *                               *               [get_cells {syncstages_ff_reg[0]}]                                                false           false           
+28        *                               *               [get_cells {syncstages_ff_reg[0]}]                                                false           false           
+30        *                               *               [get_cells {syncstages_ff_reg[0]}]                                                false           false           
+31        *                               *               [get_cells {syncstages_ff_reg[0]}]                                                false           false           
+32        *                               *               [get_cells {syncstages_ff_reg[0]}]                                                false           false           
+33        *                               *               [get_cells {syncstages_ff_reg[0]}]                                                false           false           
+34        *                               *               [get_cells {syncstages_ff_reg[0]}]                                                false           false           
+35        *                               *               [get_cells {syncstages_ff_reg[0]}]                                                false           false           
+36        *                               *               [get_cells {syncstages_ff_reg[0]}]                                                false           false           
+37        *                               *               [get_cells {syncstages_ff_reg[0]}]                                                false           false           
+38        *                               *               [get_cells {syncstages_ff_reg[0]}]                                                false           false           
+39        *                               *               [get_cells {syncstages_ff_reg[0]}]                                                false           false           
+44        *                               *               [get_cells {syncstages_ff_reg[0]}]                                                false           false           
+45        *                               *               [get_pins -of_objects [get_cells -hierarchical -filter {NAME =~ */halt_meta_reg}  false           false           
+                                                          ] -filter {REF_PIN_NAME == D}]                                                                                    
+

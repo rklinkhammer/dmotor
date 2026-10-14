@@ -102,3 +102,21 @@ and enabled for synthesis/implementation. Keep GPIO connected directly to
 `halt_async`; do not add external synchronizers. Refresh the catalog, upgrade the
 IP and regenerate outputs, then repeat board CDC and implementation. See the
 [architecture/milestone review](architecture_status.md).
+
+## Rebuilt revision 4 evidence — 2026-10-13
+
+The new routed checkpoint confirms the HALT repair: TIMING-6/TIMING-7 and all
+four CDC-11 violations are gone. HALT is one CDC-3 informational crossing with
+two ASYNC_REG stages and its first-stage false path. Setup slack is +2.713 ns
+(+12.072 ns in the controller domain), hold +0.025 ns, with no failing endpoints.
+Two CDC-6 SmartConnect bundled-data warnings and 94 external-I/O timing warnings
+remain; standard DRC contains only the 40 DSP pipeline warnings.
+
+The implementation log also exposed unsupported `if`/`unset` commands in the
+packaged HALT XDC. The false-path constraint itself applied, but the diagnostic
+Tcl commands produced critical parser warnings. Revision **5** removes those
+commands, retaining only the supported constraint. The corrected XDC parsed
+successfully against the routed checkpoint; the archive was re-exported and its
+mailbox simulation passed. There is no RTL change from revision 4. Original board
+files/checkpoint were not modified. Upgrade the IP and regenerate output products
+to consume this packaging correction. Evidence: `docs/evidence/routed_rev4/`.
