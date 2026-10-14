@@ -3,7 +3,7 @@
 **Date:** 2026-10-14  
 **Architecture baseline:** [DMOTOR_ARCH.md](DMOTOR_ARCH.md), revision 0.18  
 **Initial platform:** Zynq-7000 ARM processor running EDF Linux on Arty Z7-20  
-**Status:** Implementation started: Phase 0 semantic model and software tests; production runtime and hardware access remain pending.
+**Status:** Phase 0 semantic model, typed configuration/telemetry protocol and backend contract implemented; Linux backend and production runtime remain pending.
 
 ## 1. Objective and scope
 
@@ -432,8 +432,9 @@ later run inside a full-system QEMU guest. Neither approach emulates custom PL o
 establishes physical timing, MMIO ordering, motor behavior or Linux scheduling
 acceptance. No production image changes or automatic motion startup are introduced.
 
-Remaining immediate work: full typed hardware configuration/telemetry, explicit
-backend contract, inhibited Linux access and OS-enforced single ownership, then
+At the end of the first increment, remaining work included full typed hardware
+configuration/telemetry and the backend contract (addressed below), followed by
+inhibited Linux access and OS-enforced single ownership, then
 service/client IPC and the separate maintenance application. Model rearm and HALT
 are abstractions; hardware acknowledgment/recovery and the shared-HALT GPIO binding
 must be qualified before maintenance motion. See the software README for build
@@ -443,3 +444,27 @@ Validation: native CTest with UBSan passed; EDF Cortex-A9 cross-build, QEMU
 `do_semantics`, packaging and package QA passed. See
 [recorded results](software/evidence/validation.txt). Full-system guest boot and
 hardware validation remain pending.
+
+
+### Typed protocol increment
+
+Added the explicit `Device` read/write/fence error contract and `Protocol` adapter:
+full 20-word configuration serialization, conservative software validation,
+separate controller/mailbox identity checks, decoded live status, and coherent
+21-word telemetry records. Existing generated offsets and host helpers are reused.
+No automatic reset, fault acknowledgment, enable or retry is performed.
+
+Native/QEMU tests now include configuration word order, signed 32/64-bit decoding,
+ABI rejection, snapshot races and failure injection at every device access/fence.
+See [protocol contract](software/protocol.md). Core-reset preconditions remain
+caller-owned; readiness must still be observed after HLS validation.
+
+Implementation inspection identified two telemetry limits for future runtime work:
+engine frame ticks do not timestamp the separately captured encoder position, and
+word 0 is not a reliable requested-target observation on the adapter's error path.
+Neither is hidden by the typed decoder. Next: inhibited Linux device access and
+OS-enforced ownership, then service/client IPC and the separate maintenance UI.
+
+Validation for this increment: both native UBSan test suites and both ARM QEMU
+executables passed; EDF packaging/QA passed. See
+[protocol validation](software/evidence/protocol_validation.txt).

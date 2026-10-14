@@ -1,0 +1,23 @@
+Typed protocol increment — 2026-10-14
+
+Native:
+  cmake -S software -B build/software -DDMOTOR_SW_SANITIZE=ON
+  cmake --build build/software -j4
+  ctest --test-dir build/software --output-on-failure
+  2/2 passed: software_semantics, software_protocol. UBSan enabled.
+
+EDF ARM Cortex-A9 hard-float / BitBake QEMU user-mode:
+  python3 software/yocto/stage.py ../edf-dev
+  (cd ../edf-dev && ./edf --target zc702 bitbake dmotor-semantic-tests)
+  Build log: artifacts/logs/zc702/edf-dev-next-zc702-30728321c226.log
+  1034 tasks, 1014 already current, all succeeded; package QA passed.
+  The initial attempt caught a missing transitive ring_config.hpp packaging
+  dependency; it was added before this successful run.
+
+Captured temp/log.do_semantics:
+DEBUG: Executing shell function do_semantics
+PASS: mailbox atomicity, replay/range checks, timeout precedence, ownership and HALT lifecycle
+PASS: typed configuration, ABI checks, telemetry decoding/coherence and transport failure propagation
+DEBUG: Shell function do_semantics finished
+
+No board access, MMIO ordering, physical timing or powered operation tested.

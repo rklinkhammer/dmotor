@@ -2,7 +2,7 @@
 
 This directory starts Phase 0 of [DMOTOR_SW.md](../DMOTOR_SW.md). It builds
 independently of Vitis/Vivado and the legacy controller code. It currently contains
-an **in-process semantic model and automated tests**, not a deployable motion
+an **in-process semantic model, typed device protocol and automated tests**, not a deployable motion
 service, Linux device driver or maintenance application.
 
 ## Native validation
@@ -83,8 +83,9 @@ test harness. Its deployed version will use the sole-owner service, offer no moc
 motion mode, and HALT all motors on exit or ownership loss. No powered operation
 is enabled by this increment.
 
-Next: implement the typed full-configuration/telemetry protocol and backend
-interface, then the inhibited Linux backend and sole-owner service. Bind and test
+The [typed protocol](protocol.md) now provides full configuration serialization,
+status/telemetry decoding and an explicit backend interface. Next: implement the
+inhibited Linux backend and sole-owner service. Bind and test
 shared HALT before enabling maintenance motion; add the separate terminal UI using
 that service rather than giving it direct MMIO access.
 
@@ -92,3 +93,8 @@ that service rather than giving it direct MMIO access.
 
 Native UBSan tests and EDF Cortex-A9 QEMU execution passed on 2026-10-14;
 BitBake package QA also passed. See [evidence](evidence/validation.txt).
+
+The next increment adds `dmotor-protocol-tests` to CTest and the same BitBake
+QEMU task. See [protocol details and transport contract](protocol.md).
+Both suites passed natively with UBSan and under EDF ARM QEMU; package QA passed.
+See [protocol validation](evidence/protocol_validation.txt).

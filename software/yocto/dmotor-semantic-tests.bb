@@ -10,5 +10,6 @@ EXTRA_OECMAKE += "-DDMOTOR_SW_SANITIZE=OFF"
 # or board boot is implied by this user-mode emulation task.
 do_semantics() {
     ${@qemu_wrapper_cmdline(d, d.getVar('RECIPE_SYSROOT'), [d.getVar('RECIPE_SYSROOT') + d.getVar('libdir'), d.getVar('RECIPE_SYSROOT') + d.getVar('base_libdir')])} ${B}/dmotor-semantic-tests
+    ${@qemu_wrapper_cmdline(d, d.getVar('RECIPE_SYSROOT'), [d.getVar('RECIPE_SYSROOT') + d.getVar('libdir'), d.getVar('RECIPE_SYSROOT') + d.getVar('base_libdir')])} ${B}/dmotor-protocol-tests
 }
 addtask semantics after do_compile before do_install
