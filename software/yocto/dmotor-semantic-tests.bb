@@ -18,3 +18,7 @@ addtask semantics after do_compile before do_install
 # Inspection is opt-in, separate from test executables and never auto-started.
 PACKAGES =+ "dmotor-inspect"
 FILES:dmotor-inspect = "${bindir}/dmotor-inspect"
+PACKAGES =+ "dmotor-version"
+FILES:dmotor-version = "${datadir}/dmotor/source-version.json"
+RDEPENDS:${PN} += "dmotor-version"
+RDEPENDS:dmotor-inspect += "dmotor-version"

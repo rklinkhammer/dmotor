@@ -110,3 +110,15 @@ qualification](linux/README.md). The separate maintenance application is unchang
 in scope and still awaits the sole-owner service and HALT lifecycle.
 Native UBSan and EDF ARM QEMU passed all three suites; the separate inspection
 package passed QA. See [Linux validation](evidence/linux_validation.txt).
+
+## Source identity
+
+Every executable prints version, Git commit, dirty state, source SHA-256 and ABI at
+startup; `--version` exits before tests or hardware access. The same identity is
+installed at `/usr/share/dmotor/source-version.json`. The fingerprint covers the
+explicit `software/sources.json` list, including build/packaging inputs. Build-time
+provenance is regenerated on each native build; staged builds verify their source
+hash against preserved metadata. No compilation timestamp is used.
+
+EDF now normally stages automatically from its pinned `external/dmotor` submodule.
+Manual sibling staging is a development workflow, not the release source of truth.

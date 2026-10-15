@@ -4,7 +4,7 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 option(DMOTOR_SW_SANITIZE "Enable native undefined-behavior checks" OFF)
-add_library(dmotor_semantics src/model.cpp src/protocol.cpp ../src/atomic_mailbox.cpp)
+add_library(dmotor_semantics src/model.cpp src/protocol.cpp src/version.cpp ../src/atomic_mailbox.cpp)
 target_include_directories(dmotor_semantics PUBLIC include ../include)
 target_compile_options(dmotor_semantics PRIVATE -Wall -Wextra -Werror -Wconversion)
 add_executable(dmotor-semantic-tests tests/model_test.cpp)
@@ -37,3 +37,12 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
   add_test(NAME software_linux COMMAND dmotor-linux-tests)
   install(TARGETS dmotor-inspect dmotor-linux-tests RUNTIME DESTINATION bin)
 endif()
+
+find_package(Python3 REQUIRED COMPONENTS Interpreter)
+add_custom_target(dmotor_version ALL
+  COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/version.py ${CMAKE_CURRENT_BINARY_DIR}/generated
+  BYPRODUCTS ${CMAKE_CURRENT_BINARY_DIR}/generated/dmotor_version_generated.hpp
+             ${CMAKE_CURRENT_BINARY_DIR}/generated/source-version.json)
+add_dependencies(dmotor_semantics dmotor_version)
+target_include_directories(dmotor_semantics PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/generated)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/generated/source-version.json DESTINATION share/dmotor)

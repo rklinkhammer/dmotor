@@ -1,3 +1,4 @@
+#include "dmotor_sw/version.hpp"
 #include "dmotor_sw/linux_inspection.hpp"
 #include "dmotor_sw/protocol.hpp"
 #include "dmotor/controller_registers.hpp"
@@ -10,7 +11,8 @@
 namespace reg = dmotor::controller_reg;
 using namespace dmotor_sw;
 template<class F> bool fails(F operation) { try { operation(); } catch (const IoError&) { return true; } return false; }
-int main() {
+int main(int argc, char** argv) {
+    if (dmotor_sw::startup_version("dmotor-linux-tests", argc, argv)) return 0;
     char name[] = "/tmp/dmotor-inspection-XXXXXX";
     const int seed = mkstemp(name); CHECK(seed >= 0); CHECK(ftruncate(seed, 65536) == 0);
     auto put = [&](uint32_t address, uint32_t value) { CHECK(pwrite(seed, &value, 4, address) == 4); };

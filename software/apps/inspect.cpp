@@ -1,9 +1,11 @@
+#include "dmotor_sw/version.hpp"
 #include "dmotor_sw/linux_inspection.hpp"
 #include "dmotor_sw/protocol.hpp"
 #include <iostream>
 #include <limits>
 #include <string>
 int main(int argc, char** argv) {
+    if (dmotor_sw::startup_version("dmotor-inspect", argc, argv)) return 0;
     if (argc != 3 || std::string(argv[1]) != "--externally-inhibited") {
         std::cerr << "Usage: dmotor-inspect --externally-inhibited UIO_INDEX\n"
                      "Use only with externally inhibited outputs and no FPGA reload/unbind.\n";

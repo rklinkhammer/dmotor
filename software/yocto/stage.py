@@ -1,33 +1,35 @@
 #!/usr/bin/env python3
-"""Stage this checkout's semantic-test recipe in an EDF layer; no build mutation."""
+"""Stage deterministic sources and provenance; EDF normally calls this automatically."""
 import argparse
+import gzip
+import io
+import json
 from pathlib import Path
-import shutil
+import sys
 import tarfile
-
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument("edf", type=Path, help="edf-dev checkout")
+parser.add_argument('edf', type=Path)
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[2]
-layer = args.edf.resolve() / "meta-edf-dev"
-if not (layer / "conf/layer.conf").is_file():
-    parser.error("Not an EDF checkout with meta-edf-dev")
-destination = layer / "recipes-dmotor/dmotor-semantic-tests"
-(destination / "files").mkdir(parents=True, exist_ok=True)
-# Explicit source list: never archive build output, credentials or unrelated files.
-files = ["software/CMakeLists.txt", "software/include/dmotor_sw/model.hpp",
-         "software/src/model.cpp", "software/tests/model_test.cpp",
-         "src/atomic_mailbox.cpp", "include/dmotor/atomic_mailbox.hpp",
-         "include/dmotor/batch_host.hpp", "include/dmotor/batch_registers.hpp",
-         "software/include/dmotor_sw/device.hpp", "software/include/dmotor_sw/protocol.hpp",
-         "software/src/protocol.cpp", "software/tests/protocol_test.cpp",
-         "include/dmotor/controller_host.hpp", "include/dmotor/controller_registers.hpp",
-         "include/dmotor/timing.hpp", "include/dmotor/registers.hpp", "include/dmotor/ring_config.hpp",
-         "software/include/dmotor_sw/linux_inspection.hpp", "software/linux/inspection.cpp",
-         "software/apps/inspect.cpp", "software/tests/linux_inspection_test.cpp"]
-with tarfile.open(destination / "files/dmotor-software.tar.gz", "w:gz") as archive:
-    for name in files:
-        archive.add(root / name, arcname="dmotor-software/" + name)
-shutil.copyfile(root / "software/yocto/dmotor-semantic-tests.bb",
-                destination / "dmotor-semantic-tests.bb")
-print(destination)
+sys.path.insert(0, str(root / 'software'))
+from version import provenance, write
+info = provenance(root)
+layer = args.edf.resolve() / 'meta-edf-dev'
+if not (layer / 'conf/layer.conf').is_file():
+    parser.error('Not an EDF checkout')
+dest = layer / 'recipes-dmotor/dmotor-semantic-tests'
+(dest / 'files').mkdir(parents=True, exist_ok=True)
+raw = io.BytesIO()
+with tarfile.open(fileobj=raw, mode='w') as archive:
+    sources = {name: (root/name).read_bytes() for name in info['files']}
+    sources['software/source-version.json'] = (json.dumps(info, indent=2, sort_keys=True)+'\n').encode()
+    for name, content in sorted(sources.items()):
+        entry = tarfile.TarInfo('dmotor-software/'+name)
+        entry.size = len(content); entry.mode = 0o644
+        archive.addfile(entry, io.BytesIO(content))
+archive_path = dest/'files/dmotor-software.tar.gz'
+data = gzip.compress(raw.getvalue(), mtime=0)
+if not archive_path.exists() or archive_path.read_bytes() != data:
+    archive_path.write_bytes(data)
+write(dest/'dmotor-semantic-tests.bb', (root/'software/yocto/dmotor-semantic-tests.bb').read_text())
+print('DMOTOR staged: '+info['git_commit']+' source='+info['source_sha256'])

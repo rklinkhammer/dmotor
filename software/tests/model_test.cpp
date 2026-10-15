@@ -1,3 +1,4 @@
+#include "dmotor_sw/version.hpp"
 #include "dmotor_sw/model.hpp"
 #include <cstdlib>
 #include <iostream>
@@ -19,7 +20,8 @@ dmotor::VelocityBatch batch(uint32_t sequence, uint32_t mask = all_motors) {
     }
     return result;
 }
-int main() {
+int main(int argc, char** argv) {
+    if (dmotor_sw::startup_version("dmotor-semantic-tests", argc, argv)) return 0;
     {
         Model model({10, 5, 100});
         CHECK(model.snapshot().halted);

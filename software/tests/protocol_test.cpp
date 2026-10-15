@@ -1,3 +1,4 @@
+#include "dmotor_sw/version.hpp"
 #include "dmotor_sw/protocol.hpp"
 #include "dmotor/controller_registers.hpp"
 #include "dmotor/batch_registers.hpp"
@@ -36,7 +37,8 @@ MotorConfiguration configuration() {
     return {7, 200000, 1000000, 2000000, 10296, 5, 1, 100, 2,
             655, 65536, 32768, 16384, 1000000, 2000000, 1000000, 8192};
 }
-int main() {
+int main(int argc, char** argv) {
+    if (dmotor_sw::startup_version("dmotor-protocol-tests", argc, argv)) return 0;
     const uint32_t expected[20] = {7,200000,1000000,2000000,10296,5,1,100,2,
         655,65536,32768,16384,1000000,2000000,1000000,8192,0,0,0};
     {
