@@ -48,6 +48,18 @@ module controller_axi_tb;
   repeat(4)step();@(negedge clk);reset=0;
   read_word('h1000);if(value!=32'h444d4931)$fatal(1,"identity");
   write_word('h1008,7,0);
+  // Encoder-only utility lifecycle: no configuration, enable or watchdog writes.
+  write_word('h1020,1,0);write_word('h1020,0,0);repeat(8)step();
+  @(negedge clk);qb=1;repeat(8)step();@(negedge clk);qa=1;repeat(8)step();
+  @(negedge clk);qb=0;repeat(8)step();@(negedge clk);qa=0;repeat(8)step();
+  write_word('h1030,1,0);read_word('h3040);if(value!=4)$fatal(1,"disabled encoder count");
+  if(drive_enable || dut.enabled || dut.configured)$fatal(1,"encoder utility enabled motor");
+  @(negedge clk);qa=1;repeat(8)step();@(negedge clk);qb=1;repeat(8)step();
+  @(negedge clk);qa=0;repeat(8)step();@(negedge clk);qb=0;repeat(8)step();
+  write_word('h1030,1,0);read_word('h3040);if(value!=0)$fatal(1,"disabled reverse encoder count");
+  write_word('h1020,1,0);repeat(8)step();
+  write_word('h1030,1,0);read_word('h3040);if(value!=0)$fatal(1,"encoder cleanup reset");
+
   // Exercise every bank/word with distinct data before loading valid motor configs.
   for(m=0;m<4;m=m+1)begin
    write_word('h2080+m*256,1,2); // incomplete bank cannot commit

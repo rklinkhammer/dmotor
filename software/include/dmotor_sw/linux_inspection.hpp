@@ -7,10 +7,11 @@ namespace dmotor_sw {
 // exclusive-open driver. AXI aborts/removal can terminate the process (SIGBUS).
 class LinuxInspection final : public Device {
 public:
-    static std::unique_ptr<LinuxInspection> open_uio(unsigned index);
+    enum class Mode { inspection, encoder };
+    static std::unique_ptr<LinuxInspection> open_uio(unsigned index, Mode mode = Mode::inspection);
     // Takes ownership of fd, including on failure. Also permits regular-file
     // fixtures in tests. No regular-file/mock CLI mode is provided.
-    LinuxInspection(int fd, size_t map_size, size_t map_offset);
+    LinuxInspection(int fd, size_t map_size, size_t map_offset, Mode mode = Mode::inspection);
     ~LinuxInspection() override;
     LinuxInspection(const LinuxInspection&) = delete;
     LinuxInspection& operator=(const LinuxInspection&) = delete;
@@ -21,6 +22,7 @@ private:
     uint32_t load(uint32_t offset) const;
     void require_disabled() const;
     void cleanup();
+    Mode mode_;
     int fd_ = -1;
     void* mapping_ = nullptr;
     size_t size_ = 0, offset_ = 0;

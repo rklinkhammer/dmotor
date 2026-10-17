@@ -122,3 +122,31 @@ hash against preserved metadata. No compilation timestamp is used.
 
 EDF now normally stages automatically from its pinned `external/dmotor` submodule.
 Manual sibling staging is a development workflow, not the release source of truth.
+
+### Encoder-only board bring-up
+
+`dmotor-encoder` is a separate maintenance utility, never started by the test
+suite or a boot service. With motor drive power disconnected, encoder power and
+FPGA-safe A/B levels verified, run:
+
+```sh
+sudo dmotor-encoder --externally-inhibited 0
+```
+
+The controller must be disabled and unconfigured (fresh FPGA load). The utility
+holds the cooperative UIO lock, establishes/reuses a nonzero session and releases
+core reset so the quadrature decoders can run. It prints all four raw positions
+at 250 ms intervals. Rotate one shaft by hand: only its channel should change;
+reverse rotation should reverse the count direction. For the provisional 13
+pulse/channel, 30:1 motor expect 1560 counts per output revolution in 4x mode.
+Confirm the actual encoder ratio by measurement. RPM/valid telemetry is not a
+criterion here because the control engine is not configured or enabled.
+
+Ctrl-C/SIGTERM and normal exception unwinding restore core reset (position is
+reset). No configuration, enable, target, watchdog refresh or fault acknowledgment
+writes are allowed. SIGKILL, process crash, FPGA removal or AXI bus abort can
+prevent cleanup; external drive inhibition must remain in place throughout.
+Do not reload/unbind the FPGA while this utility is running. The lock is
+cooperative and cannot exclude unrelated raw MMIO users. Reset is write-only in
+DMI1, so software cannot read back proof of its assertion; position changes and
+board output measurements remain hardware acceptance checks.

@@ -1,4 +1,5 @@
 #include "dmotor_sw/version.hpp"
+#include "dmotor_sw/encoder_session.hpp"
 #include "dmotor_sw/linux_inspection.hpp"
 #include "dmotor_sw/protocol.hpp"
 #include "dmotor/controller_registers.hpp"
@@ -38,6 +39,30 @@ int main(int argc, char** argv) {
         CHECK(fails([&] { device.write32(reg::SNAPSHOT, 1); }));
         put(reg::STATUS, 0); put(reg::IDENTITY, 0); CHECK(fails([&] { device.fence(); }));
     }
+    put(reg::IDENTITY, reg::PROFILE_ID);
+    {
+        LinuxInspection device(open_file(), 65536, 0, LinuxInspection::Mode::encoder);
+        CHECK(fails([&] { device.write32(reg::ENABLE, 1); }));
+        CHECK(fails([&] { device.write32(reg::SESSION, 0); }));
+        CHECK(fails([&] { device.write32(reg::CORE_RESET, 2); }));
+        CHECK(fails([&] { device.write32(reg::ACKNOWLEDGE, 7); }));
+        { EncoderSession session(device);
+          uint32_t released = 1; CHECK(pread(seed, &released, 4, reg::CORE_RESET) == 4); CHECK(released == 0); }
+        uint32_t reset = 0;
+        CHECK(pread(seed, &reset, 4, reg::CORE_RESET) == 4); CHECK(reset == 1);
+        // Exception unwinding also restores reset; existing session is reused.
+        try { EncoderSession session(device); throw IoError("injected capture failure"); }
+        catch (const IoError&) {}
+        CHECK(pread(seed, &reset, 4, reg::CORE_RESET) == 4); CHECK(reset == 1);
+        put(reg::STATUS, 16);
+        CHECK(fails([&] { device.write32(reg::CORE_RESET, 0); }));
+        CHECK(fails([&] { EncoderSession session(device);
+          uint32_t released = 1; CHECK(pread(seed, &released, 4, reg::CORE_RESET) == 4); CHECK(released == 0); }));
+        put(reg::STATUS, 0);
+    }
+    put(reg::STATUS, 16);
+    CHECK(fails([&] { LinuxInspection configured(open_file(), 65536, 0, LinuxInspection::Mode::encoder); }));
+    put(reg::STATUS, 0); put(reg::IDENTITY, 0);
     // Constructor rejection releases the lock and descriptor.
     CHECK(fails([&] { LinuxInspection wrong(open_file(), 65536, 0); }));
     put(reg::IDENTITY, reg::PROFILE_ID);

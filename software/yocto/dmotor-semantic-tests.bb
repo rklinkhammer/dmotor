@@ -22,3 +22,7 @@ PACKAGES =+ "dmotor-version"
 FILES:dmotor-version = "${datadir}/dmotor/source-version.json"
 RDEPENDS:${PN} += "dmotor-version"
 RDEPENDS:dmotor-inspect += "dmotor-version"
+
+PACKAGES =+ "dmotor-encoder"
+FILES:dmotor-encoder = "${bindir}/dmotor-encoder"
+RDEPENDS:dmotor-encoder += "dmotor-version"

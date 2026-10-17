@@ -28,5 +28,7 @@
   "software/yocto/stage.py",
   "software/yocto/dmotor-semantic-tests.bb",
   "software/linux/uio-inspection.dtsi",
-  "include/dmotor/capabilities.hpp"
+  "include/dmotor/capabilities.hpp",
+  "software/apps/encoder.cpp",
+  "software/include/dmotor_sw/encoder_session.hpp"
 ]

@@ -125,3 +125,26 @@ to consume this packaging correction. Evidence: `docs/evidence/routed_rev4/`.
 Use `DMOTOR_ENGINE_PROFILE` to select the newly synthesized shared engine when
 exporting or running the complete AXI simulation. Rebuild the IP and board image;
 previously generated artifacts retain their original capability.
+
+### Explicit 400 RPM upgrade and encoder-utility image
+
+The normal EDF hardware workflow preserves saved IP revisions. To intentionally
+upgrade, export the measured profile and upgrade a separate project copy:
+
+```sh
+# From dmotor (requires the validated generated rpm400_verified tree):
+DMOTOR_ENGINE_PROFILE=build/rpm400_verified /opt/vitis/2026.1/Vivado/bin/vivado \
+  -mode batch -source platforms/vivado/export_current.tcl
+/opt/vitis/2026.1/Vivado/bin/vivado -mode batch \
+  -source platforms/vivado/prepare_dvrmc_integration.tcl \
+  -tclargs ../dvrmc/dvrmc.xpr ../dvrmc/build/rpm400-integration-new
+# From edf-dev:
+EDF_DMOTOR_SOURCE=../dmotor ./edf --target arty-z7-20 hardware \
+  --project ../dvrmc/build/rpm400-integration-new/dvrmc.xpr --export-image
+```
+
+Use a fresh copy directory. The explicit software-source override stages the
+working checkout (including uncommitted changes) with its source fingerprint;
+it does not update the pinned EDF submodule. The image includes `dmotor-encoder`
+0.5.0 for inhibited encoder-only bring-up. See `software/README.md` for the board
+procedure. The main DVRMC project is not saved by this workflow.

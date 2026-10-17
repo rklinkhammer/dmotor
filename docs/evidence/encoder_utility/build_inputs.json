@@ -1,0 +1,14 @@
+{
+  "engine_profile": "/home/rklinkhammer/workspace/dmotor/build/rpm400_verified/build/vitis_dispatcher/hls/syn/verilog",
+  "controller_ip_revision": 6,
+  "engine_top_sha256": "8aa8b2ccd957732b554918e866f1a9448c4c2f07c7a2bd80307f807fad0dbc49",
+  "hardware_build": "artifacts/arty-hardware/20261017T030437Z-a3444ef7",
+  "source_project": "dvrmc/build/rpm400-integration/dvrmc.xpr",
+  "software_override": "/home/rklinkhammer/workspace/dmotor",
+  "bitstream_sha256": "3c8ff4dc5a066255f3194cf91e2eff424b1e1c8ecb91841aa115386dab967f82",
+  "software_sha256": "cc6ff659d6afc90a1e5ba6ab23bbe177e19711ac16b0f07901a92a736769e757",
+  "setup_slack_ns": 2.783,
+  "hold_slack_ns": 0.012,
+  "drc_errors": 0,
+  "drc_warnings": 40
+}

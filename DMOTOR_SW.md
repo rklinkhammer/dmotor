@@ -493,3 +493,13 @@ tool neither authorizes motion nor replaces that lifecycle.
 Validation: 3/3 native UBSan suites and all three ARM QEMU executables passed;
 EDF packaging and package QA passed, including the separate inspection package.
 [Evidence](software/evidence/linux_validation.txt). Board qualification remains open.
+
+### Encoder-only maintenance milestone (0.5.0)
+
+Implemented `dmotor-encoder --externally-inhibited UIO_INDEX` for disabled,
+unconfigured hardware. It releases encoder core reset, samples raw positions,
+and restores reset on handled exit. It does not enable motion or run as part of
+tests. Native mapping/ownership/allowlist and cleanup checks are in
+`software/tests/linux_inspection_test.cpp`; the Yocto recipe runs these under
+user-mode ARM QEMU. Physical encoder wiring/count verification remains a board
+step; see `software/README.md`.

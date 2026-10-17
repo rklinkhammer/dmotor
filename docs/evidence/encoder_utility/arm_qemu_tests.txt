@@ -1,0 +1,8 @@
+DEBUG: Executing shell function do_semantics
+dmotor-semantic-tests: DMOTOR 0.5.0 commit=14390a1b486306cebdbc26bebdd889fd7d7c73cd dirty=true source=cc6ff659d6afc90a1e5ba6ab23bbe177e19711ac16b0f07901a92a736769e757 ABI=DMI1/DMB1-schema1
+PASS: mailbox atomicity, replay/range checks, timeout precedence, ownership and HALT lifecycle
+dmotor-protocol-tests: DMOTOR 0.5.0 commit=14390a1b486306cebdbc26bebdd889fd7d7c73cd dirty=true source=cc6ff659d6afc90a1e5ba6ab23bbe177e19711ac16b0f07901a92a736769e757 ABI=DMI1/DMB1-schema1
+PASS: typed configuration, ABI checks, telemetry decoding/coherence and transport failure propagation
+dmotor-linux-tests: DMOTOR 0.5.0 commit=14390a1b486306cebdbc26bebdd889fd7d7c73cd dirty=true source=cc6ff659d6afc90a1e5ba6ab23bbe177e19711ac16b0f07901a92a736769e757 ABI=DMI1/DMB1-schema1
+PASS: Linux mapping, cross-process ownership, inspection allowlists and cleanup
+DEBUG: Shell function do_semantics finished

@@ -40,7 +40,7 @@ size_t number(const std::string& text) {
     } catch (const std::logic_error&) { throw IoError("Invalid UIO map number"); }
 }
 }
-std::unique_ptr<LinuxInspection> LinuxInspection::open_uio(unsigned index) {
+std::unique_ptr<LinuxInspection> LinuxInspection::open_uio(unsigned index, Mode mode) {
 #if !defined(__arm__) && !defined(__aarch64__)
     (void)index;
     throw IoError("Hardware UIO inspection requires an ARM Linux target");
@@ -59,10 +59,10 @@ std::unique_ptr<LinuxInspection> LinuxInspection::open_uio(unsigned index) {
         close(fd); throw IoError("UIO device node does not match sysfs");
     }
     // Constructor consumes fd on both success and failure.
-    return std::unique_ptr<LinuxInspection>(new LinuxInspection(fd, size, offset));
+    return std::unique_ptr<LinuxInspection>(new LinuxInspection(fd, size, offset, mode));
 }
-LinuxInspection::LinuxInspection(int fd, size_t size, size_t offset)
-    : fd_(fd), size_(size), offset_(offset) {
+LinuxInspection::LinuxInspection(int fd, size_t size, size_t offset, Mode mode)
+    : mode_(mode), fd_(fd), size_(size), offset_(offset) {
     try {
         const long page = sysconf(_SC_PAGESIZE);
         if (fd < 0 || page <= 0 || !size || size > 1024 * 1024 ||
@@ -94,7 +94,7 @@ uint32_t LinuxInspection::load(uint32_t offset) const {
     return value;
 }
 void LinuxInspection::require_disabled() const {
-    if (load(reg::STATUS) & 15U) throw IoError("Inspection requires all motors disabled");
+    if (load(reg::STATUS) & (mode_ == Mode::encoder ? 255U : 15U)) throw IoError("Access requires all motors disabled (and unconfigured for encoder mode)");
 }
 uint32_t LinuxInspection::read32(uint32_t offset) {
     const bool local = offset == reg::IDENTITY || offset == reg::STATUS || offset == reg::SESSION || offset == reg::SNAPSHOT;
@@ -106,7 +106,10 @@ uint32_t LinuxInspection::read32(uint32_t offset) {
     return value;
 }
 void LinuxInspection::write32(uint32_t offset, uint32_t value) {
-    if (offset != reg::SNAPSHOT || value != 1) throw IoError("Inspection permits only snapshot capture writes");
+    const bool snapshot = offset == reg::SNAPSHOT && value == 1;
+    const bool encoder = mode_ == Mode::encoder &&
+        ((offset == reg::SESSION && value != 0) || (offset == reg::CORE_RESET && value <= 1));
+    if (!snapshot && !encoder) throw IoError("Write outside bring-up allowlist");
     require_disabled(); barrier();
     *reinterpret_cast<volatile uint32_t*>(static_cast<char*>(mapping_) + offset_ + offset) = value;
     fence();

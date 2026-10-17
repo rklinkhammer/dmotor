@@ -1518,3 +1518,17 @@ synthesis and RTL co-simulation, real-engine transport and complete AXI XSim pas
 Paired complete-controller OOC routing: 33830 -> 33691 LUT, 50405 -> 50402 FF,
 16 DSP and 2 BRAM36 unchanged; 400 RPM setup/hold slack +12.757/+0.039 ns.
 External board timing and deployment are not included in this result.
+
+### Encoder-only utility, 0.5.0
+
+Native software CTest: 3/3 passed with UBSan (`build/software-encoder`). Tests
+cover default snapshot-only access, encoder-mode write restrictions, refusal of
+enabled/configured contexts, reset release/restoration and exception cleanup.
+The complete AXI/HLS XSim bench also passed after adding an unconfigured,
+disabled encoder-only lifecycle: forward Gray cycle = +4 counts, reverse cycle
+returns to zero, no motor enable, reset restored. Evidence is under
+`docs/evidence/encoder_utility/`. This is simulation evidence, not physical
+encoder or motor validation. The image build uses the measured 400 RPM profile
+and controller IP revision 6; board results are recorded separately.
+
+The 0.5.0 Arty platform build completed: native 3/3, ARM QEMU 3/3, full AXI/HLS XSim, and routed board timing passed (+2.783 ns setup, +0.012 ns hold). DRC has no errors; 40 DSP pipeline warnings remain. Image `edf-dev/artifacts/arty-z7-20/20261017T033255Z-0b4f36f6` contains the verified ARM utility and matching firmware identity. Export checksums passed; physical board validation is pending. See `edf-dev/docs/encoder-platform-validation.md` for provenance and reproduction.
