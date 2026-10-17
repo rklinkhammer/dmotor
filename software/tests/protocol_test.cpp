@@ -62,7 +62,9 @@ int main(int argc, char** argv) {
         CHECK(caught); CHECK(io.writes.size() == count);
     }
     {
-        auto c = configuration(); c.maximum_mrpm = 200001; CHECK(!valid_configuration(c));
+        auto c = configuration(); c.maximum_mrpm = 400000; CHECK(valid_configuration(c));
+        c.counts_numerator = 1560; c.counts_denominator = 1; CHECK(valid_configuration(c));
+        c.maximum_mrpm = 400001; CHECK(!valid_configuration(c));
         c = configuration(); c.counts_denominator = 0; CHECK(!valid_configuration(c));
         c = configuration(); c.acquisition_timeout_cycles = c.zero_timeout_cycles; CHECK(!valid_configuration(c));
         c = configuration(); c.kp_q16 = -1; CHECK(!valid_configuration(c));

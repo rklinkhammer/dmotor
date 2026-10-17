@@ -1,5 +1,9 @@
 # Package the current real blocks, separately; no diagnostic endpoint substitution.
 set root [file normalize [file join [file dirname [info script]] ../..]]
+set engine_profile [file join $root build shared_mailbox_copy]
+if {[info exists ::env(DMOTOR_ENGINE_PROFILE)]} {
+    set engine_profile [file normalize $::env(DMOTOR_ENGINE_PROFILE)]
+}
 set out [file join $root build current_ip]
 file mkdir $out
 proc export_block {root out name top generated sources} {
@@ -35,7 +39,7 @@ proc export_block {root out name top generated sources} {
     set_property version 0.18 $core
     # Scheduler feedback-loop repair: advertise a new revision to existing BDs.
     if {$name in {mailbox_control controller_axi}} {set_property core_revision 2 $core}
-    if {$name eq "controller_axi"} {set_property core_revision 5 $core}
+    if {$name eq "controller_axi"} {set_property core_revision 6 $core}
     set_property display_name "DMOTOR current $name (integration preview)" $core
     set_property description "Current tested component. Not a complete motor controller; see docs/current_ip_export.md." $core
     ipx::infer_bus_interfaces xilinx.com:signal:clock_rtl:1.0 $core
@@ -83,10 +87,10 @@ export_block $root $out mailbox_control dmotor_mailbox_control \
     [file join $root build vitis_atomic hls syn verilog] \
     {timing.sv batch_registers.sv atomic_hls_adapter.sv atomic_mailbox_arbiter.sv shared_scheduler.sv target_age.sv pwm.sv shared_control.sv mailbox_control.sv}
 export_block $root $out shared_engine dmotor_shared_engine_transport \
-    [file join $root build shared_mailbox_copy build vitis_dispatcher hls syn verilog] \
+    [file join $engine_profile build vitis_dispatcher hls syn verilog] \
     {timing.sv shared_engine_transport.sv}
 export_block $root $out controller_axi dmotor_controller_axi \
-    [list [file join $root build vitis_atomic hls syn verilog] [file join $root build shared_mailbox_copy build vitis_dispatcher hls syn verilog]] \
+    [list [file join $root build vitis_atomic hls syn verilog] [file join $engine_profile build vitis_dispatcher hls syn verilog]] \
     {timing.sv controller_registers.sv batch_registers.sv atomic_hls_adapter.sv atomic_mailbox_arbiter.sv shared_scheduler.sv target_age.sv pwm.sv shared_control.sv mailbox_control.sv shared_engine_transport.sv motor_engine_adapter.sv integrated_control.sv safety.sv qcencoder.sv encoder_snapshot.sv motor_io.sv axi_host.sv controller_axi.sv}
 # Simulation uses actual mailbox HLS RTL; motor results are behavioral in this bench.
 open_project [file join $out mailbox_control project mailbox_control.xpr]

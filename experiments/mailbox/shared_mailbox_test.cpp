@@ -1,5 +1,6 @@
 #include "dmotor/shared_mailbox.hpp"
 #include "dmotor/timing.hpp"
+#include "dmotor/capabilities.hpp"
 #include <cstdlib>
 #include <iostream>
 #define CHECK(x) do { if (!(x)) { std::cerr << __LINE__ << ": " #x "\n"; std::exit(1); } } while(false)
@@ -80,6 +81,41 @@ int main() {
     channels[1].authorized=false;service(1);CHECK(channels[1].reply[4]==0);
     service(3,0,0,0,false,false,false,true);CHECK(channels[3].reply[4]==0);
     for(unsigned m=0;m<4;++m){channels[m].authorized=false;tick(m);CHECK(channels[m].reply[4]==0);}
+    // Capability boundaries, both encoder ratios and both signs. Channels 0/1
+    // use the reference gearbox, channels 2/3 the provisional 30:1 motor.
+    for (unsigned m=0; m<4; ++m) {
+        auto& c=channels[m]; c=Channel{}; c.session=50+m;
+        c.config[1]=dmotor::capability::maximum_speed_mrpm;
+        c.config[2]=10000000; c.config[3]=10000000;
+        if(m>=2){c.config[4]=1560;c.config[5]=1;}
+        c.negative=(m&1)!=0;
+        service(m,0,0,0,false,true);
+    }
+    for(unsigned t=0;t<110;++t)for(unsigned m=0;m<4;++m)tick(m);
+    for(unsigned m=0;m<4;++m) {
+        const int sign=(m&1)?-1:1;
+        publish(m,1,sign*dmotor::capability::maximum_speed_mrpm);
+        CHECK(channels[m].reply[0]==1);
+        publish(m,2,sign*(dmotor::capability::maximum_speed_mrpm+1));
+        CHECK(channels[m].reply[0]==0 && channels[m].reply[3]==1);
+    }
+    // Feed 390 RPM encoder events with exact rational timestamp construction.
+    uint64_t origin[4];for(unsigned m=0;m<4;++m)origin[m]=channels[m].now;
+    for(unsigned t=0;t<70;++t)for(unsigned m=0;m<4;++m) {
+        auto& c=channels[m];
+        const uint64_t rate=uint64_t{390000}*c.config[4];
+        const uint64_t scale=60000ULL*dmotor::timing::fabric_hz*c.config[5];
+        const uint64_t elapsed=c.now+dmotor::timing::control_tick_cycles-origin[m];
+        c.count=elapsed*rate/scale;
+        c.edge=origin[m]+c.count*scale/rate;
+        tick(m);
+        CHECK(c.reply[8]==0);
+    }
+    for(unsigned m=0;m<4;++m){
+        CHECK(channels[m].reply[2]==1);
+        CHECK(dmotor::signed_word(channels[m].reply[5])==((m&1)?-1:1)*dmotor::capability::maximum_speed_mrpm);
+        CHECK(channels[m].reply[7]&1);
+    }
     // Invalid selectors cannot alias a real motor, including a reset request.
     uint32_t request[4]={}, reply[16]={};
     for(uint32_t bad : {4U,UINT32_MAX}) {

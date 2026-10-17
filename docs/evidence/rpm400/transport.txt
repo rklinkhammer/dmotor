@@ -1,0 +1,13 @@
+[100%] Built target dmotor
+shared mailbox: 2437 interleaved transactions, all 16 reply words match four independent contexts
+shared engine compared 256 transactions
+shared engine compared 512 transactions
+shared engine compared 768 transactions
+shared engine compared 1024 transactions
+shared engine compared 1280 transactions
+shared engine compared 1536 transactions
+shared engine compared 1792 transactions
+shared engine compared 2048 transactions
+shared engine compared 2304 transactions
+shared_engine_transport PASS: 2437 C++ reference transactions, all 16 reply words, immutable input, backpressure, timeout/reset; max invocation latency 318 cycles
+/home/rklinkhammer/workspace/dmotor/tests/shared_engine_transport_tb.sv:64: $finish called at 21333826000 (1ps)

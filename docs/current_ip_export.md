@@ -120,3 +120,8 @@ successfully against the routed checkpoint; the archive was re-exported and its
 mailbox simulation passed. There is no RTL change from revision 4. Original board
 files/checkpoint were not modified. Upgrade the IP and regenerate output products
 to consume this packaging correction. Evidence: `docs/evidence/routed_rev4/`.
+
+400 RPM capability update: see [arithmetic changes and reproduction](velocity_capability.md).
+Use `DMOTOR_ENGINE_PROFILE` to select the newly synthesized shared engine when
+exporting or running the complete AXI simulation. Rebuild the IP and board image;
+previously generated artifacts retain their original capability.

@@ -23,6 +23,19 @@ dmotor::VelocityBatch batch(uint32_t sequence, uint32_t mask = all_motors) {
 int main(int argc, char** argv) {
     if (dmotor_sw::startup_version("dmotor-semantic-tests", argc, argv)) return 0;
     {
+        Model model({10, 5, 100}); const auto owner=model.acquire();
+        auto configured=limits();
+        configured[0].maximum_mrpm=400000; configured[1].maximum_mrpm=400000;
+        CHECK(model.rearm(owner,1,configured)); CHECK(model.enable(owner,all_motors));
+        auto target=batch(1); target.velocity_mrpm[0]=400000; target.velocity_mrpm[1]=-400000;
+        CHECK(model.publish(owner,target));
+        target.sequence=2; target.velocity_mrpm[0]=400001; CHECK(!model.publish(owner,target));
+        target.velocity_mrpm[0]=400000; target.velocity_mrpm[1]=-400001; CHECK(!model.publish(owner,target));
+        target.velocity_mrpm[1]=-400000; target.velocity_mrpm[2]=200001; CHECK(!model.publish(owner,target));
+        model.advance(); CHECK(model.snapshot().requested_mrpm[0]==400000);
+        CHECK(model.snapshot().requested_mrpm[1]==-400000);
+    }
+    {
         Model model({10, 5, 100});
         CHECK(model.snapshot().halted);
         MaintenanceSession owner(model);

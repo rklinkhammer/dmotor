@@ -27,5 +27,6 @@
   "software/src/version.cpp",
   "software/yocto/stage.py",
   "software/yocto/dmotor-semantic-tests.bb",
-  "software/linux/uio-inspection.dtsi"
+  "software/linux/uio-inspection.dtsi",
+  "include/dmotor/capabilities.hpp"
 ]

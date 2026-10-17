@@ -1507,3 +1507,14 @@ a single two-stage HALT chain and no LUTLP-1 violations. The IP includes a scope
 first-stage XDC; generated-IP consumption confirms synthesis/implementation use.
 Evidence: `docs/evidence/shared_halt/`. Full architecture and milestone assessment:
 [architecture_status.md](architecture_status.md). Board CDC/routing must be repeated.
+
+
+## 400 RPM capability — 2026-10-16
+
+Implemented shared named capability and 40/20-bit exact PI division, preserving
+per-motor limits and the 20 MHz clock. See [the full audit and measured comparison](velocity_capability.md).
+Native reference/profile/software checks, shared/motion/velocity HLS C simulation,
+synthesis and RTL co-simulation, real-engine transport and complete AXI XSim passed.
+Paired complete-controller OOC routing: 33830 -> 33691 LUT, 50405 -> 50402 FF,
+16 DSP and 2 BRAM36 unchanged; 400 RPM setup/hold slack +12.757/+0.039 ns.
+External board timing and deployment are not included in this result.

@@ -1,4 +1,5 @@
 #pragma once
+#include "dmotor/capabilities.hpp"
 #include "dmotor/batch_host.hpp"
 #include <array>
 #include <cstdint>
@@ -8,7 +9,7 @@ constexpr unsigned motor_count = dmotor::batch_reg::CHANNELS;
 constexpr uint32_t all_motors = (1U << motor_count) - 1U;
 constexpr uint32_t control_period_us = 1000;
 constexpr uint32_t initial_target_timeout_ticks = 100;
-constexpr int32_t maximum_velocity_mrpm = 200000;
+constexpr int32_t maximum_velocity_mrpm = dmotor::capability::maximum_speed_mrpm;
 
 // Semantic admission subset, NOT the hardware's complete 20-word configuration.
 struct MotorLimits {

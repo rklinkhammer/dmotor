@@ -15,7 +15,7 @@ struct MotorConfiguration {
     uint32_t stop_timeout_us = 0, zero_timeout_cycles = 0, acquisition_timeout_cycles = 0;
     int32_t acquisition_duty_limit_q16 = 0;
 };
-// Conservative 200 RPM software profile. HLS remains the authoritative validator.
+// 400 RPM capability with per-motor limits. HLS remains the authoritative validator.
 bool valid_configuration(const MotorConfiguration& config);
 std::array<uint32_t, configuration_words> encode_configuration(const MotorConfiguration& config);
 struct ControllerStatus {

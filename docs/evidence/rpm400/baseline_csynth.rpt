@@ -1,0 +1,906 @@
+
+
+================================================================
+== Vitis HLS Report for 'dmotor_mailbox_shared'
+================================================================
+* Date:           Thu Oct 15 23:46:56 2026
+
+* Version:        2026.1 (Build 6493734 on Jun 16 2026)
+* Project:        vitis_dispatcher
+* Solution:       hls
+* Product family: zynq
+* Target device:  xc7z020-clg400-1
+
+
+================================================================
+== Performance Estimates
+================================================================
++ Timing: 
+    * Summary: 
+    +--------+----------+-----------+------------+
+    |  Clock |  Target  | Estimated | Uncertainty|
+    +--------+----------+-----------+------------+
+    |ap_clk  |  50.00 ns|  35.578 ns|    13.50 ns|
+    +--------+----------+-----------+------------+
+
++ Latency: 
+    * Summary: 
+    +---------+---------+----------+-----------+-----+-----+---------+
+    |  Latency (cycles) |  Latency (absolute)  |  Interval | Pipeline|
+    |   min   |   max   |    min   |    max    | min | max |   Type  |
+    +---------+---------+----------+-----------+-----+-----+---------+
+    |       21|      333|  1.050 us|  16.650 us|   22|  334|       no|
+    +---------+---------+----------+-----------+-----+-----+---------+
+
+    + Detail: 
+        * Instance: 
+        +------------------------------------------------------------+------------------------------------------------+---------+---------+----------+-----------+-----+-----+-------------------+
+        |                                                            |                                                |  Latency (cycles) |  Latency (absolute)  |  Interval |      Pipeline     |
+        |                          Instance                          |                     Module                     |   min   |   max   |    min   |    max    | min | max |        Type       |
+        +------------------------------------------------------------+------------------------------------------------+---------+---------+----------+-----------+-----+-----+-------------------+
+        |grp_dmotor_mailbox_shared_Pipeline_VITIS_LOOP_12_1_fu_1610  |dmotor_mailbox_shared_Pipeline_VITIS_LOOP_12_1  |       18|       18|  0.900 us|   0.900 us|    0|    0|  loop pipeline stp|
+        |grp_service_fu_1616                                         |service                                         |       16|      312|  0.800 us|  15.600 us|   16|  312|                 no|
+        +------------------------------------------------------------+------------------------------------------------+---------+---------+----------+-----------+-----+-----+-------------------+
+
+        * Loop: 
+        N/A
+
+
+
+================================================================
+== Utilization Estimates
+================================================================
+* Summary: 
++-----------------+---------+-----+--------+-------+-----+
+|       Name      | BRAM_18K| DSP |   FF   |  LUT  | URAM|
++-----------------+---------+-----+--------+-------+-----+
+|DSP              |        -|    -|       -|      -|    -|
+|Expression       |        -|    -|       0|    178|    -|
+|FIFO             |        -|    -|       -|      -|    -|
+|Instance         |        0|   20|   16821|  24915|    0|
+|Memory           |        0|    -|     820|    135|    0|
+|Multiplexer      |        -|    -|       0|    666|    -|
+|Register         |        -|    -|   14775|      -|    -|
++-----------------+---------+-----+--------+-------+-----+
+|Total            |        0|   20|   32416|  25894|    0|
++-----------------+---------+-----+--------+-------+-----+
+|Available        |      280|  220|  106400|  53200|    0|
++-----------------+---------+-----+--------+-------+-----+
+|Utilization (%)  |        0|    9|      30|     48|    0|
++-----------------+---------+-----+--------+-------+-----+
+
++ Detail: 
+    * Instance: 
+    +------------------------------------------------------------+------------------------------------------------+---------+----+-------+-------+-----+
+    |                          Instance                          |                     Module                     | BRAM_18K| DSP|   FF  |  LUT  | URAM|
+    +------------------------------------------------------------+------------------------------------------------+---------+----+-------+-------+-----+
+    |grp_dmotor_mailbox_shared_Pipeline_VITIS_LOOP_12_1_fu_1610  |dmotor_mailbox_shared_Pipeline_VITIS_LOOP_12_1  |        0|   0|      7|     54|    0|
+    |grp_service_fu_1616                                         |service                                         |        0|  20|  16814|  23081|    0|
+    |sparsemux_9_2_16_1_1_U386                                   |sparsemux_9_2_16_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_1_1_1_U361                                    |sparsemux_9_2_1_1_1                             |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_1_1_1_U363                                    |sparsemux_9_2_1_1_1                             |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_1_1_1_U364                                    |sparsemux_9_2_1_1_1                             |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_1_1_1_U367                                    |sparsemux_9_2_1_1_1                             |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_1_1_1_U368                                    |sparsemux_9_2_1_1_1                             |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_1_1_1_U369                                    |sparsemux_9_2_1_1_1                             |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_1_1_1_U370                                    |sparsemux_9_2_1_1_1                             |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_1_1_1_U387                                    |sparsemux_9_2_1_1_1                             |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_1_1_1_U388                                    |sparsemux_9_2_1_1_1                             |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_1_1_1_U395                                    |sparsemux_9_2_1_1_1                             |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_1_1_1_U398                                    |sparsemux_9_2_1_1_1                             |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_1_1_1_U399                                    |sparsemux_9_2_1_1_1                             |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_1_1_1_U400                                    |sparsemux_9_2_1_1_1                             |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_1_1_1_U402                                    |sparsemux_9_2_1_1_1                             |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_1_1_1_U403                                    |sparsemux_9_2_1_1_1                             |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_1_1_1_U410                                    |sparsemux_9_2_1_1_1                             |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_1_1_1_U411                                    |sparsemux_9_2_1_1_1                             |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_1_1_1_U412                                    |sparsemux_9_2_1_1_1                             |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_1_1_1_U418                                    |sparsemux_9_2_1_1_1                             |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_1_1_1_U419                                    |sparsemux_9_2_1_1_1                             |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_1_1_1_U420                                    |sparsemux_9_2_1_1_1                             |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_1_1_1_U421                                    |sparsemux_9_2_1_1_1                             |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_1_1_1_U431                                    |sparsemux_9_2_1_1_1                             |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_1_1_1_U432                                    |sparsemux_9_2_1_1_1                             |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_1_1_1_U433                                    |sparsemux_9_2_1_1_1                             |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_1_1_1_U436                                    |sparsemux_9_2_1_1_1                             |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_1_1_1_U437                                    |sparsemux_9_2_1_1_1                             |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_1_1_1_U446                                    |sparsemux_9_2_1_1_1                             |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_1_1_1_U447                                    |sparsemux_9_2_1_1_1                             |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_1_1_1_U448                                    |sparsemux_9_2_1_1_1                             |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_1_1_1_U449                                    |sparsemux_9_2_1_1_1                             |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_32_1_1_U365                                   |sparsemux_9_2_32_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_32_1_1_U366                                   |sparsemux_9_2_32_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_32_1_1_U371                                   |sparsemux_9_2_32_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_32_1_1_U372                                   |sparsemux_9_2_32_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_32_1_1_U373                                   |sparsemux_9_2_32_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_32_1_1_U374                                   |sparsemux_9_2_32_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_32_1_1_U375                                   |sparsemux_9_2_32_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_32_1_1_U379                                   |sparsemux_9_2_32_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_32_1_1_U380                                   |sparsemux_9_2_32_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_32_1_1_U382                                   |sparsemux_9_2_32_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_32_1_1_U389                                   |sparsemux_9_2_32_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_32_1_1_U390                                   |sparsemux_9_2_32_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_32_1_1_U393                                   |sparsemux_9_2_32_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_32_1_1_U394                                   |sparsemux_9_2_32_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_32_1_1_U396                                   |sparsemux_9_2_32_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_32_1_1_U401                                   |sparsemux_9_2_32_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_32_1_1_U406                                   |sparsemux_9_2_32_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_32_1_1_U407                                   |sparsemux_9_2_32_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_32_1_1_U408                                   |sparsemux_9_2_32_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_32_1_1_U409                                   |sparsemux_9_2_32_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_32_1_1_U414                                   |sparsemux_9_2_32_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_32_1_1_U415                                   |sparsemux_9_2_32_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_32_1_1_U416                                   |sparsemux_9_2_32_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_32_1_1_U417                                   |sparsemux_9_2_32_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_32_1_1_U422                                   |sparsemux_9_2_32_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_32_1_1_U423                                   |sparsemux_9_2_32_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_32_1_1_U424                                   |sparsemux_9_2_32_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_32_1_1_U425                                   |sparsemux_9_2_32_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_32_1_1_U426                                   |sparsemux_9_2_32_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_32_1_1_U429                                   |sparsemux_9_2_32_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_32_1_1_U434                                   |sparsemux_9_2_32_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_32_1_1_U435                                   |sparsemux_9_2_32_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_32_1_1_U438                                   |sparsemux_9_2_32_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_32_1_1_U439                                   |sparsemux_9_2_32_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_32_1_1_U440                                   |sparsemux_9_2_32_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_32_1_1_U441                                   |sparsemux_9_2_32_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_32_1_1_U442                                   |sparsemux_9_2_32_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_32_1_1_U443                                   |sparsemux_9_2_32_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_32_1_1_U444                                   |sparsemux_9_2_32_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_64_1_1_U362                                   |sparsemux_9_2_64_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_64_1_1_U376                                   |sparsemux_9_2_64_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_64_1_1_U377                                   |sparsemux_9_2_64_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_64_1_1_U383                                   |sparsemux_9_2_64_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_64_1_1_U384                                   |sparsemux_9_2_64_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_64_1_1_U385                                   |sparsemux_9_2_64_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_64_1_1_U391                                   |sparsemux_9_2_64_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_64_1_1_U392                                   |sparsemux_9_2_64_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_64_1_1_U397                                   |sparsemux_9_2_64_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_64_1_1_U404                                   |sparsemux_9_2_64_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_64_1_1_U405                                   |sparsemux_9_2_64_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_64_1_1_U413                                   |sparsemux_9_2_64_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_64_1_1_U427                                   |sparsemux_9_2_64_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_64_1_1_U428                                   |sparsemux_9_2_64_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_64_1_1_U430                                   |sparsemux_9_2_64_1_1                            |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_8_1_1_U378                                    |sparsemux_9_2_8_1_1                             |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_8_1_1_U381                                    |sparsemux_9_2_8_1_1                             |        0|   0|      0|     20|    0|
+    |sparsemux_9_2_8_1_1_U445                                    |sparsemux_9_2_8_1_1                             |        0|   0|      0|     20|    0|
+    +------------------------------------------------------------+------------------------------------------------+---------+----+-------+-------+-----+
+    |Total                                                       |                                                |        0|  20|  16821|  24915|    0|
+    +------------------------------------------------------------+------------------------------------------------+---------+----+-------+-------+-----+
+
+    * DSP: 
+    N/A
+
+    * Memory: 
+    +-----------------------------------------+----------------------------------------------------+---------+----+----+-----+------+-----+------+-------------+
+    |                  Memory                 |                       Module                       | BRAM_18K| FF | LUT| URAM| Words| Bits| Banks| W*Bits*Banks|
+    +-----------------------------------------+----------------------------------------------------+---------+----+----+-----+------+-----+------+-------------+
+    |contexts_controller_prepared_words_0_U   |contexts_controller_prepared_words_0_RAM_AUTO_1R1W  |        0|  36|   6|    0|     4|   32|     1|          128|
+    |contexts_controller_prepared_words_1_U   |contexts_controller_prepared_words_0_RAM_AUTO_1R1W  |        0|  36|   6|    0|     4|   32|     1|          128|
+    |contexts_controller_prepared_words_2_U   |contexts_controller_prepared_words_0_RAM_AUTO_1R1W  |        0|  36|   6|    0|     4|   32|     1|          128|
+    |contexts_controller_prepared_words_3_U   |contexts_controller_prepared_words_0_RAM_AUTO_1R1W  |        0|  36|   6|    0|     4|   32|     1|          128|
+    |contexts_controller_prepared_words_4_U   |contexts_controller_prepared_words_0_RAM_AUTO_1R1W  |        0|  36|   6|    0|     4|   32|     1|          128|
+    |contexts_controller_prepared_words_5_U   |contexts_controller_prepared_words_0_RAM_AUTO_1R1W  |        0|  36|   6|    0|     4|   32|     1|          128|
+    |contexts_controller_prepared_words_6_U   |contexts_controller_prepared_words_0_RAM_AUTO_1R1W  |        0|  36|   6|    0|     4|   32|     1|          128|
+    |contexts_controller_prepared_words_7_U   |contexts_controller_prepared_words_0_RAM_AUTO_1R1W  |        0|  36|   6|    0|     4|   32|     1|          128|
+    |contexts_controller_prepared_words_8_U   |contexts_controller_prepared_words_0_RAM_AUTO_1R1W  |        0|  36|   6|    0|     4|   32|     1|          128|
+    |contexts_controller_prepared_words_9_U   |contexts_controller_prepared_words_0_RAM_AUTO_1R1W  |        0|  36|   6|    0|     4|   32|     1|          128|
+    |contexts_controller_prepared_words_10_U  |contexts_controller_prepared_words_0_RAM_AUTO_1R1W  |        0|  36|   6|    0|     4|   32|     1|          128|
+    |contexts_controller_prepared_words_11_U  |contexts_controller_prepared_words_0_RAM_AUTO_1R1W  |        0|  36|   6|    0|     4|   32|     1|          128|
+    |contexts_controller_prepared_words_12_U  |contexts_controller_prepared_words_0_RAM_AUTO_1R1W  |        0|  36|   6|    0|     4|   32|     1|          128|
+    |contexts_controller_prepared_words_13_U  |contexts_controller_prepared_words_0_RAM_AUTO_1R1W  |        0|  36|   6|    0|     4|   32|     1|          128|
+    |contexts_controller_prepared_words_14_U  |contexts_controller_prepared_words_0_RAM_AUTO_1R1W  |        0|  36|   6|    0|     4|   32|     1|          128|
+    |contexts_controller_prepared_words_15_U  |contexts_controller_prepared_words_0_RAM_AUTO_1R1W  |        0|  36|   6|    0|     4|   32|     1|          128|
+    |contexts_controller_prepared_words_16_U  |contexts_controller_prepared_words_0_RAM_AUTO_1R1W  |        0|  36|   6|    0|     4|   32|     1|          128|
+    |contexts_staged_0_U                      |contexts_controller_prepared_words_0_RAM_AUTO_1R1W  |        0|  36|   6|    0|     4|   32|     1|          128|
+    |contexts_staged_1_U                      |contexts_controller_prepared_words_0_RAM_AUTO_1R1W  |        0|  36|   6|    0|     4|   32|     1|          128|
+    |contexts_staged_2_U                      |contexts_controller_prepared_words_0_RAM_AUTO_1R1W  |        0|  36|   6|    0|     4|   32|     1|          128|
+    |contexts_staged_3_U                      |contexts_controller_prepared_words_0_RAM_AUTO_1R1W  |        0|  36|   6|    0|     4|   32|     1|          128|
+    |working_controller_prepared_words_s_U    |working_controller_prepared_words_s_RAM_AUTO_1R1W   |        0|  64|   9|    0|    17|   32|     1|          544|
+    +-----------------------------------------+----------------------------------------------------+---------+----+----+-----+------+-----+------+-------------+
+    |Total                                    |                                                    |        0| 820| 135|    0|   101|  704|    22|         3232|
+    +-----------------------------------------+----------------------------------------------------+---------+----+----+-----+------+-----+------+-------------+
+
+    * FIFO: 
+    N/A
+
+    * Expression: 
+    +-----------------------------------------+----------+----+---+----+------------+------------+
+    |              Variable Name              | Operation| DSP| FF| LUT| Bitwidth P0| Bitwidth P1|
+    +-----------------------------------------+----------+----+---+----+------------+------------+
+    |icmp_ln11_fu_1761_p2                     |      icmp|   0|  0|  37|          30|           1|
+    |icmp_ln187_fu_5367_p2                    |      icmp|   0|  0|  39|          32|           1|
+    |or_ln187_1_fu_5362_p2                    |        or|   0|  0|  32|          32|          32|
+    |or_ln187_fu_5356_p2                      |        or|   0|  0|  32|          32|          32|
+    |reply_we0                                |        or|   0|  0|   2|           1|           1|
+    |working_controller_prepared_words_s_we0  |        or|   0|  0|   2|           1|           1|
+    |working_controller_prepared_words_s_we1  |        or|   0|  0|   2|           1|           1|
+    |c_motion_generation_1_fu_5373_p3         |    select|   0|  0|  32|           1|          32|
+    +-----------------------------------------+----------+----+---+----+------------+------------+
+    |Total                                    |          |   0|  0| 178|         130|         101|
+    +-----------------------------------------+----------+----+---+----+------------+------------+
+
+    * Multiplexer: 
+    +-----------------------------------------------------+-----+-----------+-----+-----------+
+    |                         Name                        | LUT | Input Size| Bits| Total Bits|
+    +-----------------------------------------------------+-----+-----------+-----+-----------+
+    |ap_NS_fsm                                            |  113|         25|    1|         25|
+    |configuration_r_address0_local                       |   59|         11|    5|         55|
+    |configuration_r_address1_local                       |   59|         11|    5|         55|
+    |contexts_controller_prepared_words_0_address0_local  |   14|          3|    2|          6|
+    |reply_address0                                       |   14|          3|    4|         12|
+    |reply_ce0                                            |   14|          3|    1|          3|
+    |reply_ce1                                            |    9|          2|    1|          2|
+    |reply_d0                                             |   14|          3|   32|         96|
+    |reply_we0                                            |   14|          3|    1|          3|
+    |reply_we1                                            |    9|          2|    1|          2|
+    |working_controller_prepared_words_s_address0         |    9|          2|    5|         10|
+    |working_controller_prepared_words_s_address0_local   |   87|         18|    5|         90|
+    |working_controller_prepared_words_s_address1         |    9|          2|    5|         10|
+    |working_controller_prepared_words_s_address1_local   |   87|         18|    5|         90|
+    |working_controller_prepared_words_s_ce0              |    9|          2|    1|          2|
+    |working_controller_prepared_words_s_ce1              |    9|          2|    1|          2|
+    |working_controller_prepared_words_s_d0               |    9|          2|   32|         64|
+    |working_controller_prepared_words_s_d0_local         |   53|         10|   32|        320|
+    |working_controller_prepared_words_s_d1               |    9|          2|   32|         64|
+    |working_controller_prepared_words_s_d1_local         |   48|          9|   32|        288|
+    |working_controller_prepared_words_s_we0              |    9|          2|    1|          2|
+    |working_controller_prepared_words_s_we1              |    9|          2|    1|          2|
+    +-----------------------------------------------------+-----+-----------+-----+-----------+
+    |Total                                                |  666|        137|  205|       1203|
+    +-----------------------------------------------------+-----+-----------+-----+-----------+
+
+    * Register: 
+    +-------------------------------------------------------------------------+-----+----+-----+-----------+
+    |                                   Name                                  |  FF | LUT| Bits| Const Bits|
+    +-------------------------------------------------------------------------+-----+----+-----+-----------+
+    |ap_CS_fsm                                                                |   24|   0|   24|          0|
+    |authorized_read_reg_7591                                                 |    1|   0|    1|          0|
+    |c_acquisition_duty_limit_q16_reg_8064                                    |   32|   0|   32|          0|
+    |c_acquisition_timeout_cycles_reg_8039                                    |   32|   0|   32|          0|
+    |c_motion_acceleration_mrpm_s_reg_7854                                    |   32|   0|   32|          0|
+    |c_motion_counts_den_reg_7889                                             |   32|   0|   32|          0|
+    |c_motion_counts_num_reg_7884                                             |   32|   0|   32|          0|
+    |c_motion_deceleration_mrpm_s_reg_7859                                    |   32|   0|   32|          0|
+    |c_motion_duty_limit_q16_reg_7979                                         |   32|   0|   32|          0|
+    |c_motion_generation_1_reg_8549                                           |   32|   0|   32|          0|
+    |c_motion_generation_reg_7824                                             |   32|   0|   32|          0|
+    |c_motion_integral_limit_q16_reg_8004                                     |   32|   0|   32|          0|
+    |c_motion_ki_q16_reg_7974                                                 |   32|   0|   32|          0|
+    |c_motion_kp_q16_reg_7949                                                 |   32|   0|   32|          0|
+    |c_motion_max_speed_mrpm_reg_7829                                         |   32|   0|   32|          0|
+    |c_motion_position_tolerance_reg_7914                                     |   32|   0|   32|          0|
+    |c_motion_settle_ticks_reg_7944                                           |   32|   0|   32|          0|
+    |c_motion_stop_timeout_us_reg_8009                                        |   32|   0|   32|          0|
+    |c_motion_velocity_tolerance_mrpm_reg_7919                                |   32|   0|   32|          0|
+    |c_zero_timeout_cycles_reg_8034                                           |   32|   0|   32|          0|
+    |capture_fault_read_reg_7581                                              |    1|   0|    1|          0|
+    |configuration_r_load_reg_8069                                            |   32|   0|   32|          0|
+    |contexts_applied_sequence_0                                              |   32|   0|   32|          0|
+    |contexts_applied_sequence_1                                              |   32|   0|   32|          0|
+    |contexts_applied_sequence_2                                              |   32|   0|   32|          0|
+    |contexts_applied_sequence_3                                              |   32|   0|   32|          0|
+    |contexts_capture_pending_0                                               |    1|   0|    1|          0|
+    |contexts_capture_pending_1                                               |    1|   0|    1|          0|
+    |contexts_capture_pending_2                                               |    1|   0|    1|          0|
+    |contexts_capture_pending_3                                               |    1|   0|    1|          0|
+    |contexts_controller_acquiring_0                                          |    1|   0|    1|          0|
+    |contexts_controller_acquiring_1                                          |    1|   0|    1|          0|
+    |contexts_controller_acquiring_2                                          |    1|   0|    1|          0|
+    |contexts_controller_acquiring_3                                          |    1|   0|    1|          0|
+    |contexts_controller_acquisition_start_0                                  |   64|   0|   64|          0|
+    |contexts_controller_acquisition_start_1                                  |   64|   0|   64|          0|
+    |contexts_controller_acquisition_start_2                                  |   64|   0|   64|          0|
+    |contexts_controller_acquisition_start_3                                  |   64|   0|   64|          0|
+    |contexts_controller_faults_0                                             |   32|   0|   32|          0|
+    |contexts_controller_faults_1                                             |   32|   0|   32|          0|
+    |contexts_controller_faults_2                                             |   32|   0|   32|          0|
+    |contexts_controller_faults_3                                             |   32|   0|   32|          0|
+    |contexts_controller_invalid_0                                            |   32|   0|   32|          0|
+    |contexts_controller_invalid_1                                            |   32|   0|   32|          0|
+    |contexts_controller_invalid_2                                            |   32|   0|   32|          0|
+    |contexts_controller_invalid_3                                            |   32|   0|   32|          0|
+    |contexts_controller_motion_generation_0                                  |   32|   0|   32|          0|
+    |contexts_controller_motion_generation_1                                  |   32|   0|   32|          0|
+    |contexts_controller_motion_generation_2                                  |   32|   0|   32|          0|
+    |contexts_controller_motion_generation_3                                  |   32|   0|   32|          0|
+    |contexts_controller_motion_integral_nano_0                               |   64|   0|   64|          0|
+    |contexts_controller_motion_integral_nano_1                               |   64|   0|   64|          0|
+    |contexts_controller_motion_integral_nano_2                               |   64|   0|   64|          0|
+    |contexts_controller_motion_integral_nano_3                               |   64|   0|   64|          0|
+    |contexts_controller_motion_motion_mode_0                                 |    8|   0|    8|          0|
+    |contexts_controller_motion_motion_mode_1                                 |    8|   0|    8|          0|
+    |contexts_controller_motion_motion_mode_2                                 |    8|   0|    8|          0|
+    |contexts_controller_motion_motion_mode_3                                 |    8|   0|    8|          0|
+    |contexts_controller_motion_opcode_0                                      |    8|   0|    8|          0|
+    |contexts_controller_motion_opcode_1                                      |    8|   0|    8|          0|
+    |contexts_controller_motion_opcode_2                                      |    8|   0|    8|          0|
+    |contexts_controller_motion_opcode_3                                      |    8|   0|    8|          0|
+    |contexts_controller_motion_previous_tick_0                               |   64|   0|   64|          0|
+    |contexts_controller_motion_previous_tick_1                               |   64|   0|   64|          0|
+    |contexts_controller_motion_previous_tick_2                               |   64|   0|   64|          0|
+    |contexts_controller_motion_previous_tick_3                               |   64|   0|   64|          0|
+    |contexts_controller_motion_ramp_remainder_0                              |   16|   0|   16|          0|
+    |contexts_controller_motion_ramp_remainder_1                              |   16|   0|   16|          0|
+    |contexts_controller_motion_ramp_remainder_2                              |   16|   0|   16|          0|
+    |contexts_controller_motion_ramp_remainder_3                              |   16|   0|   16|          0|
+    |contexts_controller_motion_result_accepted_0                             |    1|   0|    1|          0|
+    |contexts_controller_motion_result_accepted_1                             |    1|   0|    1|          0|
+    |contexts_controller_motion_result_accepted_2                             |    1|   0|    1|          0|
+    |contexts_controller_motion_result_accepted_3                             |    1|   0|    1|          0|
+    |contexts_controller_motion_result_activation_0                           |   64|   0|   64|          0|
+    |contexts_controller_motion_result_activation_1                           |   64|   0|   64|          0|
+    |contexts_controller_motion_result_activation_2                           |   64|   0|   64|          0|
+    |contexts_controller_motion_result_activation_3                           |   64|   0|   64|          0|
+    |contexts_controller_motion_result_busy_0                                 |    1|   0|    1|          0|
+    |contexts_controller_motion_result_busy_1                                 |    1|   0|    1|          0|
+    |contexts_controller_motion_result_busy_2                                 |    1|   0|    1|          0|
+    |contexts_controller_motion_result_busy_3                                 |    1|   0|    1|          0|
+    |contexts_controller_motion_result_completion_valid_0                     |    1|   0|    1|          0|
+    |contexts_controller_motion_result_completion_valid_1                     |    1|   0|    1|          0|
+    |contexts_controller_motion_result_completion_valid_2                     |    1|   0|    1|          0|
+    |contexts_controller_motion_result_completion_valid_3                     |    1|   0|    1|          0|
+    |contexts_controller_motion_result_detail_0                               |   32|   0|   32|          0|
+    |contexts_controller_motion_result_detail_1                               |   32|   0|   32|          0|
+    |contexts_controller_motion_result_detail_2                               |   32|   0|   32|          0|
+    |contexts_controller_motion_result_detail_3                               |   32|   0|   32|          0|
+    |contexts_controller_motion_result_duty_q16_0                             |   32|   0|   32|          0|
+    |contexts_controller_motion_result_duty_q16_1                             |   32|   0|   32|          0|
+    |contexts_controller_motion_result_duty_q16_2                             |   32|   0|   32|          0|
+    |contexts_controller_motion_result_duty_q16_3                             |   32|   0|   32|          0|
+    |contexts_controller_motion_result_epoch_0                                |   32|   0|   32|          0|
+    |contexts_controller_motion_result_epoch_1                                |   32|   0|   32|          0|
+    |contexts_controller_motion_result_epoch_2                                |   32|   0|   32|          0|
+    |contexts_controller_motion_result_epoch_3                                |   32|   0|   32|          0|
+    |contexts_controller_motion_result_faults_0                               |   32|   0|   32|          0|
+    |contexts_controller_motion_result_faults_1                               |   32|   0|   32|          0|
+    |contexts_controller_motion_result_faults_2                               |   32|   0|   32|          0|
+    |contexts_controller_motion_result_faults_3                               |   32|   0|   32|          0|
+    |contexts_controller_motion_result_outcome_0                              |   32|   0|   32|          0|
+    |contexts_controller_motion_result_outcome_1                              |   32|   0|   32|          0|
+    |contexts_controller_motion_result_outcome_2                              |   32|   0|   32|          0|
+    |contexts_controller_motion_result_outcome_3                              |   32|   0|   32|          0|
+    |contexts_controller_motion_result_ramp_mrpm_0                            |   32|   0|   32|          0|
+    |contexts_controller_motion_result_ramp_mrpm_1                            |   32|   0|   32|          0|
+    |contexts_controller_motion_result_ramp_mrpm_2                            |   32|   0|   32|          0|
+    |contexts_controller_motion_result_ramp_mrpm_3                            |   32|   0|   32|          0|
+    |contexts_controller_motion_result_ready_0                                |    1|   0|    1|          0|
+    |contexts_controller_motion_result_ready_1                                |    1|   0|    1|          0|
+    |contexts_controller_motion_result_ready_2                                |    1|   0|    1|          0|
+    |contexts_controller_motion_result_ready_3                                |    1|   0|    1|          0|
+    |contexts_controller_motion_result_sequence_0                             |   32|   0|   32|          0|
+    |contexts_controller_motion_result_sequence_1                             |   32|   0|   32|          0|
+    |contexts_controller_motion_result_sequence_2                             |   32|   0|   32|          0|
+    |contexts_controller_motion_result_sequence_3                             |   32|   0|   32|          0|
+    |contexts_controller_motion_result_terminal_0                             |   64|   0|   64|          0|
+    |contexts_controller_motion_result_terminal_1                             |   64|   0|   64|          0|
+    |contexts_controller_motion_result_terminal_2                             |   64|   0|   64|          0|
+    |contexts_controller_motion_result_terminal_3                             |   64|   0|   64|          0|
+    |contexts_controller_motion_session_0                                     |   32|   0|   32|          0|
+    |contexts_controller_motion_session_1                                     |   32|   0|   32|          0|
+    |contexts_controller_motion_session_2                                     |   32|   0|   32|          0|
+    |contexts_controller_motion_session_3                                     |   32|   0|   32|          0|
+    |contexts_controller_motion_settling_0                                    |   32|   0|   32|          0|
+    |contexts_controller_motion_settling_1                                    |   32|   0|   32|          0|
+    |contexts_controller_motion_settling_2                                    |   32|   0|   32|          0|
+    |contexts_controller_motion_settling_3                                    |   32|   0|   32|          0|
+    |contexts_controller_motion_started_0                                     |   64|   0|   64|          0|
+    |contexts_controller_motion_started_1                                     |   64|   0|   64|          0|
+    |contexts_controller_motion_started_2                                     |   64|   0|   64|          0|
+    |contexts_controller_motion_started_3                                     |   64|   0|   64|          0|
+    |contexts_controller_motion_stopping_0                                    |    1|   0|    1|          0|
+    |contexts_controller_motion_stopping_1                                    |    1|   0|    1|          0|
+    |contexts_controller_motion_stopping_2                                    |    1|   0|    1|          0|
+    |contexts_controller_motion_stopping_3                                    |    1|   0|    1|          0|
+    |contexts_controller_motion_target_mrpm_0                                 |   32|   0|   32|          0|
+    |contexts_controller_motion_target_mrpm_1                                 |   32|   0|   32|          0|
+    |contexts_controller_motion_target_mrpm_2                                 |   32|   0|   32|          0|
+    |contexts_controller_motion_target_mrpm_3                                 |   32|   0|   32|          0|
+    |contexts_controller_motion_tick_primed_0                                 |    1|   0|    1|          0|
+    |contexts_controller_motion_tick_primed_1                                 |    1|   0|    1|          0|
+    |contexts_controller_motion_tick_primed_2                                 |    1|   0|    1|          0|
+    |contexts_controller_motion_tick_primed_3                                 |    1|   0|    1|          0|
+    |contexts_controller_motion_timeout_us_0                                  |   32|   0|   32|          0|
+    |contexts_controller_motion_timeout_us_1                                  |   32|   0|   32|          0|
+    |contexts_controller_motion_timeout_us_2                                  |   32|   0|   32|          0|
+    |contexts_controller_motion_timeout_us_3                                  |   32|   0|   32|          0|
+    |contexts_controller_prepared_0                                           |    1|   0|    1|          0|
+    |contexts_controller_prepared_1                                           |    1|   0|    1|          0|
+    |contexts_controller_prepared_2                                           |    1|   0|    1|          0|
+    |contexts_controller_prepared_3                                           |    1|   0|    1|          0|
+    |contexts_controller_prepared_acquisition_valid_0                         |    1|   0|    1|          0|
+    |contexts_controller_prepared_acquisition_valid_1                         |    1|   0|    1|          0|
+    |contexts_controller_prepared_acquisition_valid_2                         |    1|   0|    1|          0|
+    |contexts_controller_prepared_acquisition_valid_3                         |    1|   0|    1|          0|
+    |contexts_controller_prepared_motion_integral_limit_0                     |   64|   0|   64|          0|
+    |contexts_controller_prepared_motion_integral_limit_1                     |   64|   0|   64|          0|
+    |contexts_controller_prepared_motion_integral_limit_2                     |   64|   0|   64|          0|
+    |contexts_controller_prepared_motion_integral_limit_3                     |   64|   0|   64|          0|
+    |contexts_controller_prepared_motion_valid_0                              |    1|   0|    1|          0|
+    |contexts_controller_prepared_motion_valid_1                              |    1|   0|    1|          0|
+    |contexts_controller_prepared_motion_valid_2                              |    1|   0|    1|          0|
+    |contexts_controller_prepared_motion_valid_3                              |    1|   0|    1|          0|
+    |contexts_controller_prepared_words_0_addr_reg_7704                       |    2|   0|    2|          0|
+    |contexts_controller_prepared_words_10_addr_reg_7754                      |    2|   0|    2|          0|
+    |contexts_controller_prepared_words_11_addr_reg_7759                      |    2|   0|    2|          0|
+    |contexts_controller_prepared_words_12_addr_reg_7764                      |    2|   0|    2|          0|
+    |contexts_controller_prepared_words_13_addr_reg_7769                      |    2|   0|    2|          0|
+    |contexts_controller_prepared_words_14_addr_reg_7774                      |    2|   0|    2|          0|
+    |contexts_controller_prepared_words_15_addr_reg_7779                      |    2|   0|    2|          0|
+    |contexts_controller_prepared_words_16_addr_reg_7784                      |    2|   0|    2|          0|
+    |contexts_controller_prepared_words_1_addr_reg_7709                       |    2|   0|    2|          0|
+    |contexts_controller_prepared_words_2_addr_reg_7714                       |    2|   0|    2|          0|
+    |contexts_controller_prepared_words_3_addr_reg_7719                       |    2|   0|    2|          0|
+    |contexts_controller_prepared_words_4_addr_reg_7724                       |    2|   0|    2|          0|
+    |contexts_controller_prepared_words_5_addr_reg_7729                       |    2|   0|    2|          0|
+    |contexts_controller_prepared_words_6_addr_reg_7734                       |    2|   0|    2|          0|
+    |contexts_controller_prepared_words_7_addr_reg_7739                       |    2|   0|    2|          0|
+    |contexts_controller_prepared_words_8_addr_reg_7744                       |    2|   0|    2|          0|
+    |contexts_controller_prepared_words_9_addr_reg_7749                       |    2|   0|    2|          0|
+    |contexts_controller_primed_0                                             |    1|   0|    1|          0|
+    |contexts_controller_primed_1                                             |    1|   0|    1|          0|
+    |contexts_controller_primed_2                                             |    1|   0|    1|          0|
+    |contexts_controller_primed_3                                             |    1|   0|    1|          0|
+    |contexts_controller_qualified_0                                          |    1|   0|    1|          0|
+    |contexts_controller_qualified_1                                          |    1|   0|    1|          0|
+    |contexts_controller_qualified_2                                          |    1|   0|    1|          0|
+    |contexts_controller_qualified_3                                          |    1|   0|    1|          0|
+    |contexts_controller_velocity_den_0                                       |   32|   0|   32|          0|
+    |contexts_controller_velocity_den_1                                       |   32|   0|   32|          0|
+    |contexts_controller_velocity_den_2                                       |   32|   0|   32|          0|
+    |contexts_controller_velocity_den_3                                       |   32|   0|   32|          0|
+    |contexts_controller_velocity_generation_0                                |   32|   0|   32|          0|
+    |contexts_controller_velocity_generation_1                                |   32|   0|   32|          0|
+    |contexts_controller_velocity_generation_2                                |   32|   0|   32|          0|
+    |contexts_controller_velocity_generation_3                                |   32|   0|   32|          0|
+    |contexts_controller_velocity_have_edge_0                                 |    1|   0|    1|          0|
+    |contexts_controller_velocity_have_edge_1                                 |    1|   0|    1|          0|
+    |contexts_controller_velocity_have_edge_2                                 |    1|   0|    1|          0|
+    |contexts_controller_velocity_have_edge_3                                 |    1|   0|    1|          0|
+    |contexts_controller_velocity_initialized_0                               |    1|   0|    1|          0|
+    |contexts_controller_velocity_initialized_1                               |    1|   0|    1|          0|
+    |contexts_controller_velocity_initialized_2                               |    1|   0|    1|          0|
+    |contexts_controller_velocity_initialized_3                               |    1|   0|    1|          0|
+    |contexts_controller_velocity_num_0                                       |   32|   0|   32|          0|
+    |contexts_controller_velocity_num_1                                       |   32|   0|   32|          0|
+    |contexts_controller_velocity_num_2                                       |   32|   0|   32|          0|
+    |contexts_controller_velocity_num_3                                       |   32|   0|   32|          0|
+    |contexts_controller_velocity_previous_count_0                            |   64|   0|   64|          0|
+    |contexts_controller_velocity_previous_count_1                            |   64|   0|   64|          0|
+    |contexts_controller_velocity_previous_count_2                            |   64|   0|   64|          0|
+    |contexts_controller_velocity_previous_count_3                            |   64|   0|   64|          0|
+    |contexts_controller_velocity_previous_direction_epoch_0                  |   32|   0|   32|          0|
+    |contexts_controller_velocity_previous_direction_epoch_1                  |   32|   0|   32|          0|
+    |contexts_controller_velocity_previous_direction_epoch_2                  |   32|   0|   32|          0|
+    |contexts_controller_velocity_previous_direction_epoch_3                  |   32|   0|   32|          0|
+    |contexts_controller_velocity_previous_invalid_transitions_0              |   32|   0|   32|          0|
+    |contexts_controller_velocity_previous_invalid_transitions_1              |   32|   0|   32|          0|
+    |contexts_controller_velocity_previous_invalid_transitions_2              |   32|   0|   32|          0|
+    |contexts_controller_velocity_previous_invalid_transitions_3              |   32|   0|   32|          0|
+    |contexts_controller_velocity_previous_last_edge_0                        |   64|   0|   64|          0|
+    |contexts_controller_velocity_previous_last_edge_1                        |   64|   0|   64|          0|
+    |contexts_controller_velocity_previous_last_edge_2                        |   64|   0|   64|          0|
+    |contexts_controller_velocity_previous_last_edge_3                        |   64|   0|   64|          0|
+    |contexts_controller_velocity_previous_negative_0                         |    1|   0|    1|          0|
+    |contexts_controller_velocity_previous_negative_1                         |    1|   0|    1|          0|
+    |contexts_controller_velocity_previous_negative_2                         |    1|   0|    1|          0|
+    |contexts_controller_velocity_previous_negative_3                         |    1|   0|    1|          0|
+    |contexts_controller_velocity_previous_now_0                              |   64|   0|   64|          0|
+    |contexts_controller_velocity_previous_now_1                              |   64|   0|   64|          0|
+    |contexts_controller_velocity_previous_now_2                              |   64|   0|   64|          0|
+    |contexts_controller_velocity_previous_now_3                              |   64|   0|   64|          0|
+    |contexts_controller_velocity_result_age_0                                |   64|   0|   64|          0|
+    |contexts_controller_velocity_result_age_1                                |   64|   0|   64|          0|
+    |contexts_controller_velocity_result_age_2                                |   64|   0|   64|          0|
+    |contexts_controller_velocity_result_age_3                                |   64|   0|   64|          0|
+    |contexts_controller_velocity_result_averaged_0                           |    1|   0|    1|          0|
+    |contexts_controller_velocity_result_averaged_1                           |    1|   0|    1|          0|
+    |contexts_controller_velocity_result_averaged_2                           |    1|   0|    1|          0|
+    |contexts_controller_velocity_result_averaged_3                           |    1|   0|    1|          0|
+    |contexts_controller_velocity_result_fault_0                              |   32|   0|   32|          0|
+    |contexts_controller_velocity_result_fault_1                              |   32|   0|   32|          0|
+    |contexts_controller_velocity_result_fault_2                              |   32|   0|   32|          0|
+    |contexts_controller_velocity_result_fault_3                              |   32|   0|   32|          0|
+    |contexts_controller_velocity_result_mrpm_0                               |   32|   0|   32|          0|
+    |contexts_controller_velocity_result_mrpm_1                               |   32|   0|   32|          0|
+    |contexts_controller_velocity_result_mrpm_2                               |   32|   0|   32|          0|
+    |contexts_controller_velocity_result_mrpm_3                               |   32|   0|   32|          0|
+    |contexts_controller_velocity_result_timed_out_0                          |    1|   0|    1|          0|
+    |contexts_controller_velocity_result_timed_out_1                          |    1|   0|    1|          0|
+    |contexts_controller_velocity_result_timed_out_2                          |    1|   0|    1|          0|
+    |contexts_controller_velocity_result_timed_out_3                          |    1|   0|    1|          0|
+    |contexts_controller_velocity_result_valid_0                              |    1|   0|    1|          0|
+    |contexts_controller_velocity_result_valid_1                              |    1|   0|    1|          0|
+    |contexts_controller_velocity_result_valid_2                              |    1|   0|    1|          0|
+    |contexts_controller_velocity_result_valid_3                              |    1|   0|    1|          0|
+    |contexts_controller_velocity_started_0                                   |   64|   0|   64|          0|
+    |contexts_controller_velocity_started_1                                   |   64|   0|   64|          0|
+    |contexts_controller_velocity_started_2                                   |   64|   0|   64|          0|
+    |contexts_controller_velocity_started_3                                   |   64|   0|   64|          0|
+    |contexts_controller_velocity_timeout_0                                   |   32|   0|   32|          0|
+    |contexts_controller_velocity_timeout_1                                   |   32|   0|   32|          0|
+    |contexts_controller_velocity_timeout_2                                   |   32|   0|   32|          0|
+    |contexts_controller_velocity_timeout_3                                   |   32|   0|   32|          0|
+    |contexts_last_acquiring_0                                                |    1|   0|    1|          0|
+    |contexts_last_acquiring_1                                                |    1|   0|    1|          0|
+    |contexts_last_acquiring_2                                                |    1|   0|    1|          0|
+    |contexts_last_acquiring_3                                                |    1|   0|    1|          0|
+    |contexts_last_faults_0                                                   |   32|   0|   32|          0|
+    |contexts_last_faults_1                                                   |   32|   0|   32|          0|
+    |contexts_last_faults_2                                                   |   32|   0|   32|          0|
+    |contexts_last_faults_3                                                   |   32|   0|   32|          0|
+    |contexts_last_motion_accepted_0                                          |    1|   0|    1|          0|
+    |contexts_last_motion_accepted_1                                          |    1|   0|    1|          0|
+    |contexts_last_motion_accepted_2                                          |    1|   0|    1|          0|
+    |contexts_last_motion_accepted_3                                          |    1|   0|    1|          0|
+    |contexts_last_motion_activation_0                                        |   64|   0|   64|          0|
+    |contexts_last_motion_activation_1                                        |   64|   0|   64|          0|
+    |contexts_last_motion_activation_2                                        |   64|   0|   64|          0|
+    |contexts_last_motion_activation_3                                        |   64|   0|   64|          0|
+    |contexts_last_motion_busy_0                                              |    1|   0|    1|          0|
+    |contexts_last_motion_busy_1                                              |    1|   0|    1|          0|
+    |contexts_last_motion_busy_2                                              |    1|   0|    1|          0|
+    |contexts_last_motion_busy_3                                              |    1|   0|    1|          0|
+    |contexts_last_motion_completion_valid_0                                  |    1|   0|    1|          0|
+    |contexts_last_motion_completion_valid_1                                  |    1|   0|    1|          0|
+    |contexts_last_motion_completion_valid_2                                  |    1|   0|    1|          0|
+    |contexts_last_motion_completion_valid_3                                  |    1|   0|    1|          0|
+    |contexts_last_motion_detail_0                                            |   32|   0|   32|          0|
+    |contexts_last_motion_detail_1                                            |   32|   0|   32|          0|
+    |contexts_last_motion_detail_2                                            |   32|   0|   32|          0|
+    |contexts_last_motion_detail_3                                            |   32|   0|   32|          0|
+    |contexts_last_motion_duty_q16_0                                          |   32|   0|   32|          0|
+    |contexts_last_motion_duty_q16_1                                          |   32|   0|   32|          0|
+    |contexts_last_motion_duty_q16_2                                          |   32|   0|   32|          0|
+    |contexts_last_motion_duty_q16_3                                          |   32|   0|   32|          0|
+    |contexts_last_motion_epoch_0                                             |   32|   0|   32|          0|
+    |contexts_last_motion_epoch_1                                             |   32|   0|   32|          0|
+    |contexts_last_motion_epoch_2                                             |   32|   0|   32|          0|
+    |contexts_last_motion_epoch_3                                             |   32|   0|   32|          0|
+    |contexts_last_motion_faults_0                                            |   32|   0|   32|          0|
+    |contexts_last_motion_faults_1                                            |   32|   0|   32|          0|
+    |contexts_last_motion_faults_2                                            |   32|   0|   32|          0|
+    |contexts_last_motion_faults_3                                            |   32|   0|   32|          0|
+    |contexts_last_motion_outcome_0                                           |   32|   0|   32|          0|
+    |contexts_last_motion_outcome_1                                           |   32|   0|   32|          0|
+    |contexts_last_motion_outcome_2                                           |   32|   0|   32|          0|
+    |contexts_last_motion_outcome_3                                           |   32|   0|   32|          0|
+    |contexts_last_motion_ramp_mrpm_0                                         |   32|   0|   32|          0|
+    |contexts_last_motion_ramp_mrpm_1                                         |   32|   0|   32|          0|
+    |contexts_last_motion_ramp_mrpm_2                                         |   32|   0|   32|          0|
+    |contexts_last_motion_ramp_mrpm_3                                         |   32|   0|   32|          0|
+    |contexts_last_motion_ready_0                                             |    1|   0|    1|          0|
+    |contexts_last_motion_ready_1                                             |    1|   0|    1|          0|
+    |contexts_last_motion_ready_2                                             |    1|   0|    1|          0|
+    |contexts_last_motion_ready_3                                             |    1|   0|    1|          0|
+    |contexts_last_motion_sequence_0                                          |   32|   0|   32|          0|
+    |contexts_last_motion_sequence_1                                          |   32|   0|   32|          0|
+    |contexts_last_motion_sequence_2                                          |   32|   0|   32|          0|
+    |contexts_last_motion_sequence_3                                          |   32|   0|   32|          0|
+    |contexts_last_motion_terminal_0                                          |   64|   0|   64|          0|
+    |contexts_last_motion_terminal_1                                          |   64|   0|   64|          0|
+    |contexts_last_motion_terminal_2                                          |   64|   0|   64|          0|
+    |contexts_last_motion_terminal_3                                          |   64|   0|   64|          0|
+    |contexts_last_velocity_age_0                                             |   64|   0|   64|          0|
+    |contexts_last_velocity_age_1                                             |   64|   0|   64|          0|
+    |contexts_last_velocity_age_2                                             |   64|   0|   64|          0|
+    |contexts_last_velocity_age_3                                             |   64|   0|   64|          0|
+    |contexts_last_velocity_averaged_0                                        |    1|   0|    1|          0|
+    |contexts_last_velocity_averaged_1                                        |    1|   0|    1|          0|
+    |contexts_last_velocity_averaged_2                                        |    1|   0|    1|          0|
+    |contexts_last_velocity_averaged_3                                        |    1|   0|    1|          0|
+    |contexts_last_velocity_fault_0                                           |   32|   0|   32|          0|
+    |contexts_last_velocity_fault_1                                           |   32|   0|   32|          0|
+    |contexts_last_velocity_fault_2                                           |   32|   0|   32|          0|
+    |contexts_last_velocity_fault_3                                           |   32|   0|   32|          0|
+    |contexts_last_velocity_mrpm_0                                            |   32|   0|   32|          0|
+    |contexts_last_velocity_mrpm_1                                            |   32|   0|   32|          0|
+    |contexts_last_velocity_mrpm_2                                            |   32|   0|   32|          0|
+    |contexts_last_velocity_mrpm_3                                            |   32|   0|   32|          0|
+    |contexts_last_velocity_timed_out_0                                       |    1|   0|    1|          0|
+    |contexts_last_velocity_timed_out_1                                       |    1|   0|    1|          0|
+    |contexts_last_velocity_timed_out_2                                       |    1|   0|    1|          0|
+    |contexts_last_velocity_timed_out_3                                       |    1|   0|    1|          0|
+    |contexts_last_velocity_valid_0                                           |    1|   0|    1|          0|
+    |contexts_last_velocity_valid_1                                           |    1|   0|    1|          0|
+    |contexts_last_velocity_valid_2                                           |    1|   0|    1|          0|
+    |contexts_last_velocity_valid_3                                           |    1|   0|    1|          0|
+    |contexts_last_warming_up_0                                               |    1|   0|    1|          0|
+    |contexts_last_warming_up_1                                               |    1|   0|    1|          0|
+    |contexts_last_warming_up_2                                               |    1|   0|    1|          0|
+    |contexts_last_warming_up_3                                               |    1|   0|    1|          0|
+    |contexts_pending_0                                                       |    1|   0|    1|          0|
+    |contexts_pending_1                                                       |    1|   0|    1|          0|
+    |contexts_pending_2                                                       |    1|   0|    1|          0|
+    |contexts_pending_3                                                       |    1|   0|    1|          0|
+    |contexts_pending_generation_0                                            |   32|   0|   32|          0|
+    |contexts_pending_generation_1                                            |   32|   0|   32|          0|
+    |contexts_pending_generation_2                                            |   32|   0|   32|          0|
+    |contexts_pending_generation_3                                            |   32|   0|   32|          0|
+    |contexts_pending_sequence_0                                              |   32|   0|   32|          0|
+    |contexts_pending_sequence_1                                              |   32|   0|   32|          0|
+    |contexts_pending_sequence_2                                              |   32|   0|   32|          0|
+    |contexts_pending_sequence_3                                              |   32|   0|   32|          0|
+    |contexts_pending_session_0                                               |   32|   0|   32|          0|
+    |contexts_pending_session_1                                               |   32|   0|   32|          0|
+    |contexts_pending_session_2                                               |   32|   0|   32|          0|
+    |contexts_pending_session_3                                               |   32|   0|   32|          0|
+    |contexts_pending_speed_0                                                 |   32|   0|   32|          0|
+    |contexts_pending_speed_1                                                 |   32|   0|   32|          0|
+    |contexts_pending_speed_2                                                 |   32|   0|   32|          0|
+    |contexts_pending_speed_3                                                 |   32|   0|   32|          0|
+    |contexts_published_sequence_0                                            |   32|   0|   32|          0|
+    |contexts_published_sequence_1                                            |   32|   0|   32|          0|
+    |contexts_published_sequence_2                                            |   32|   0|   32|          0|
+    |contexts_published_sequence_3                                            |   32|   0|   32|          0|
+    |contexts_rejects_0                                                       |   32|   0|   32|          0|
+    |contexts_rejects_1                                                       |   32|   0|   32|          0|
+    |contexts_rejects_2                                                       |   32|   0|   32|          0|
+    |contexts_rejects_3                                                       |   32|   0|   32|          0|
+    |contexts_staged_0_addr_reg_7789                                          |    2|   0|    2|          0|
+    |contexts_staged_1_addr_reg_7794                                          |    2|   0|    2|          0|
+    |contexts_staged_2_addr_reg_7799                                          |    2|   0|    2|          0|
+    |contexts_staged_3_addr_reg_7804                                          |    2|   0|    2|          0|
+    |contexts_stop_pending_0                                                  |    1|   0|    1|          0|
+    |contexts_stop_pending_1                                                  |    1|   0|    1|          0|
+    |contexts_stop_pending_2                                                  |    1|   0|    1|          0|
+    |contexts_stop_pending_3                                                  |    1|   0|    1|          0|
+    |contexts_stopping_0                                                      |    1|   0|    1|          0|
+    |contexts_stopping_1                                                      |    1|   0|    1|          0|
+    |contexts_stopping_2                                                      |    1|   0|    1|          0|
+    |contexts_stopping_3                                                      |    1|   0|    1|          0|
+    |contexts_written_0                                                       |    8|   0|    8|          0|
+    |contexts_written_1                                                       |    8|   0|    8|          0|
+    |contexts_written_2                                                       |    8|   0|    8|          0|
+    |contexts_written_3                                                       |    8|   0|    8|          0|
+    |count_read_reg_7566                                                      |   64|   0|   64|          0|
+    |direction_epoch_read_reg_7556                                            |   32|   0|   32|          0|
+    |grp_dmotor_mailbox_shared_Pipeline_VITIS_LOOP_12_1_fu_1610_ap_start_reg  |    1|   0|    1|          0|
+    |grp_service_fu_1616_ap_start_reg                                         |    1|   0|    1|          0|
+    |icmp_ln11_reg_7606                                                       |    1|   0|    1|          0|
+    |invalid_transitions_read_reg_7551                                        |   32|   0|   32|          0|
+    |last_edge_read_reg_7561                                                  |   64|   0|   64|          0|
+    |negative_read_reg_7546                                                   |    1|   0|    1|          0|
+    |now_read_reg_7571                                                        |   64|   0|   64|          0|
+    |reset_read_reg_7601                                                      |    1|   0|    1|          0|
+    |selected_reg_7610                                                        |    2|   0|    2|          0|
+    |session_read_reg_7576                                                    |   32|   0|   32|          0|
+    |stop_read_reg_7586                                                       |    1|   0|    1|          0|
+    |tick_read_reg_7596                                                       |    1|   0|    1|          0|
+    |working_applied_sequence_1_reg_8994                                      |   32|   0|   32|          0|
+    |working_applied_sequence_s_reg_8514                                      |   32|   0|   32|          0|
+    |working_capture_pending_1_reg_9042                                       |    1|   0|    1|          0|
+    |working_capture_pending_s_reg_8544                                       |    1|   0|    1|          0|
+    |working_controller_acquiring_1_reg_9058                                  |    1|   0|    1|          0|
+    |working_controller_acquiring_s_reg_8334                                  |    1|   0|    1|          0|
+    |working_controller_acquisition_start_1_reg_9066                          |   64|   0|   64|          0|
+    |working_controller_acquisition_start_s_reg_8344                          |   64|   0|   64|          0|
+    |working_controller_faults_1_reg_9074                                     |   32|   0|   32|          0|
+    |working_controller_faults_s_reg_8349                                     |   32|   0|   32|          0|
+    |working_controller_invalid_1_reg_8554                                    |   32|   0|   32|          0|
+    |working_controller_invalid_s_reg_8354                                    |   32|   0|   32|          0|
+    |working_controller_motion_generation_1_reg_9138                          |   32|   0|   32|          0|
+    |working_controller_motion_generation_s_reg_8229                          |   32|   0|   32|          0|
+    |working_controller_motion_integral_nano_1_reg_8626                       |   64|   0|   64|          0|
+    |working_controller_motion_integral_nano_s_reg_8194                       |   64|   0|   64|          0|
+    |working_controller_motion_motion_mode_1_reg_8642                         |    8|   0|    8|          0|
+    |working_controller_motion_motion_mode_s_reg_8184                         |    8|   0|    8|          0|
+    |working_controller_motion_opcode_1_reg_8666                              |    8|   0|    8|          0|
+    |working_controller_motion_opcode_s_reg_8169                              |    8|   0|    8|          0|
+    |working_controller_motion_previous_tick_1_reg_9114                       |   64|   0|   64|          0|
+    |working_controller_motion_previous_tick_s_reg_8204                       |   64|   0|   64|          0|
+    |working_controller_motion_ramp_remainder_1_reg_8610                      |   16|   0|   16|          0|
+    |working_controller_motion_ramp_remainder_s_reg_8209                      |   16|   0|   16|          0|
+    |working_controller_motion_result_accepted_1_reg_8730                     |    1|   0|    1|          0|
+    |working_controller_motion_result_accepted_reg_8129                       |    1|   0|    1|          0|
+    |working_controller_motion_result_activation_1_reg_8682                   |   64|   0|   64|          0|
+    |working_controller_motion_result_activation_reg_8159                     |   64|   0|   64|          0|
+    |working_controller_motion_result_busy_1_reg_8746                         |    1|   0|    1|          0|
+    |working_controller_motion_result_busy_reg_8119                           |    1|   0|    1|          0|
+    |working_controller_motion_result_completion_valid_1_reg_8738             |    1|   0|    1|          0|
+    |working_controller_motion_result_completion_valid_reg_8124               |    1|   0|    1|          0|
+    |working_controller_motion_result_detail_1_reg_8698                       |   32|   0|   32|          0|
+    |working_controller_motion_result_detail_reg_8149                         |   32|   0|   32|          0|
+    |working_controller_motion_result_duty_q16_1_reg_8770                     |   32|   0|   32|          0|
+    |working_controller_motion_result_duty_q16_reg_8104                       |   32|   0|   32|          0|
+    |working_controller_motion_result_epoch_1_reg_8714                        |   32|   0|   32|          0|
+    |working_controller_motion_result_epoch_reg_8139                          |   32|   0|   32|          0|
+    |working_controller_motion_result_faults_1_reg_8690                       |   32|   0|   32|          0|
+    |working_controller_motion_result_faults_reg_8154                         |   32|   0|   32|          0|
+    |working_controller_motion_result_outcome_1_reg_8706                      |   32|   0|   32|          0|
+    |working_controller_motion_result_outcome_reg_8144                        |   32|   0|   32|          0|
+    |working_controller_motion_result_ramp_mrpm_1_reg_8762                    |   32|   0|   32|          0|
+    |working_controller_motion_result_ramp_mrpm_reg_8109                      |   32|   0|   32|          0|
+    |working_controller_motion_result_ready_1_reg_8754                        |    1|   0|    1|          0|
+    |working_controller_motion_result_ready_reg_8114                          |    1|   0|    1|          0|
+    |working_controller_motion_result_sequence_1_reg_8722                     |   32|   0|   32|          0|
+    |working_controller_motion_result_sequence_reg_8134                       |   32|   0|   32|          0|
+    |working_controller_motion_result_terminal_1_reg_8674                     |   64|   0|   64|          0|
+    |working_controller_motion_result_terminal_reg_8164                       |   64|   0|   64|          0|
+    |working_controller_motion_session_1_reg_9130                             |   32|   0|   32|          0|
+    |working_controller_motion_session_s_reg_8224                             |   32|   0|   32|          0|
+    |working_controller_motion_settling_1_reg_8658                            |   32|   0|   32|          0|
+    |working_controller_motion_settling_s_reg_8174                            |   32|   0|   32|          0|
+    |working_controller_motion_started_1_reg_8618                             |   64|   0|   64|          0|
+    |working_controller_motion_started_s_reg_8199                             |   64|   0|   64|          0|
+    |working_controller_motion_stopping_1_reg_8602                            |    1|   0|    1|          0|
+    |working_controller_motion_stopping_s_reg_8219                            |    1|   0|    1|          0|
+    |working_controller_motion_target_mrpm_1_reg_8634                         |   32|   0|   32|          0|
+    |working_controller_motion_target_mrpm_s_reg_8189                         |   32|   0|   32|          0|
+    |working_controller_motion_tick_primed_1_reg_9122                         |    1|   0|    1|          0|
+    |working_controller_motion_tick_primed_s_reg_8214                         |    1|   0|    1|          0|
+    |working_controller_motion_timeout_us_1_reg_8650                          |   32|   0|   32|          0|
+    |working_controller_motion_timeout_us_s_reg_8179                          |   32|   0|   32|          0|
+    |working_controller_prepared_1_reg_9098                                   |    1|   0|    1|          0|
+    |working_controller_prepared_acquisition_valid_1_reg_9106                 |    1|   0|    1|          0|
+    |working_controller_prepared_acquisition_valid_s_reg_8099                 |    1|   0|    1|          0|
+    |working_controller_prepared_motion_integral_limit_1_reg_9090             |   64|   0|   64|          0|
+    |working_controller_prepared_motion_integral_limit_reg_8089               |   64|   0|   64|          0|
+    |working_controller_prepared_motion_valid_1_reg_9082                      |    1|   0|    1|          0|
+    |working_controller_prepared_motion_valid_reg_8084                        |    1|   0|    1|          0|
+    |working_controller_prepared_s_reg_8094                                   |    1|   0|    1|          0|
+    |working_controller_primed_1_reg_8562                                     |    1|   0|    1|          0|
+    |working_controller_primed_s_reg_8339                                     |    1|   0|    1|          0|
+    |working_controller_qualified_1_reg_9050                                  |    1|   0|    1|          0|
+    |working_controller_qualified_s_reg_8329                                  |    1|   0|    1|          0|
+    |working_controller_velocity_den_1_reg_9250                               |   32|   0|   32|          0|
+    |working_controller_velocity_den_s_reg_8319                               |   32|   0|   32|          0|
+    |working_controller_velocity_generation_1_reg_9234                        |   32|   0|   32|          0|
+    |working_controller_velocity_generation_s_reg_8309                        |   32|   0|   32|          0|
+    |working_controller_velocity_have_edge_1_reg_9210                         |    1|   0|    1|          0|
+    |working_controller_velocity_have_edge_s_reg_8294                         |    1|   0|    1|          0|
+    |working_controller_velocity_initialized_1_reg_9202                       |    1|   0|    1|          0|
+    |working_controller_velocity_initialized_s_reg_8289                       |    1|   0|    1|          0|
+    |working_controller_velocity_num_1_reg_9242                               |   32|   0|   32|          0|
+    |working_controller_velocity_num_s_reg_8314                               |   32|   0|   32|          0|
+    |working_controller_velocity_previous_count_1_reg_9146                    |   64|   0|   64|          0|
+    |working_controller_velocity_previous_count_reg_8234                      |   64|   0|   64|          0|
+    |working_controller_velocity_previous_direction_epoch_1_reg_9162          |   32|   0|   32|          0|
+    |working_controller_velocity_previous_direction_epoch_reg_8244            |   32|   0|   32|          0|
+    |working_controller_velocity_previous_invalid_transitions_1_reg_9170      |   32|   0|   32|          0|
+    |working_controller_velocity_previous_invalid_transitions_reg_8249        |   32|   0|   32|          0|
+    |working_controller_velocity_previous_last_edge_1_reg_9154                |   64|   0|   64|          0|
+    |working_controller_velocity_previous_last_edge_reg_8239                  |   64|   0|   64|          0|
+    |working_controller_velocity_previous_negative_1_reg_9178                 |    1|   0|    1|          0|
+    |working_controller_velocity_previous_negative_reg_8254                   |    1|   0|    1|          0|
+    |working_controller_velocity_previous_now_1_reg_9226                      |   64|   0|   64|          0|
+    |working_controller_velocity_previous_now_s_reg_8304                      |   64|   0|   64|          0|
+    |working_controller_velocity_result_age_1_reg_9186                        |   64|   0|   64|          0|
+    |working_controller_velocity_result_age_reg_8264                          |   64|   0|   64|          0|
+    |working_controller_velocity_result_averaged_1_reg_8578                   |    1|   0|    1|          0|
+    |working_controller_velocity_result_averaged_reg_8279                     |    1|   0|    1|          0|
+    |working_controller_velocity_result_fault_1_reg_8570                      |   32|   0|   32|          0|
+    |working_controller_velocity_result_fault_reg_8284                        |   32|   0|   32|          0|
+    |working_controller_velocity_result_mrpm_1_reg_8594                       |   32|   0|   32|          0|
+    |working_controller_velocity_result_mrpm_reg_8259                         |   32|   0|   32|          0|
+    |working_controller_velocity_result_timed_out_1_reg_9194                  |    1|   0|    1|          0|
+    |working_controller_velocity_result_timed_out_reg_8274                    |    1|   0|    1|          0|
+    |working_controller_velocity_result_valid_1_reg_8586                      |    1|   0|    1|          0|
+    |working_controller_velocity_result_valid_reg_8269                        |    1|   0|    1|          0|
+    |working_controller_velocity_started_1_reg_9218                           |   64|   0|   64|          0|
+    |working_controller_velocity_started_s_reg_8299                           |   64|   0|   64|          0|
+    |working_controller_velocity_timeout_1_reg_9258                           |   32|   0|   32|          0|
+    |working_controller_velocity_timeout_s_reg_8324                           |   32|   0|   32|          0|
+    |working_last_acquiring_1_reg_8938                                        |    1|   0|    1|          0|
+    |working_last_acquiring_reg_8459                                          |    1|   0|    1|          0|
+    |working_last_faults_1_reg_8778                                           |   32|   0|   32|          0|
+    |working_last_faults_reg_8454                                             |   32|   0|   32|          0|
+    |working_last_motion_accepted_1_reg_8826                                  |    1|   0|    1|          0|
+    |working_last_motion_accepted_reg_8384                                    |    1|   0|    1|          0|
+    |working_last_motion_activation_1_reg_8874                                |   64|   0|   64|          0|
+    |working_last_motion_activation_reg_8414                                  |   64|   0|   64|          0|
+    |working_last_motion_busy_1_reg_8810                                      |    1|   0|    1|          0|
+    |working_last_motion_busy_reg_8374                                        |    1|   0|    1|          0|
+    |working_last_motion_completion_valid_1_reg_8818                          |    1|   0|    1|          0|
+    |working_last_motion_completion_valid_reg_8379                            |    1|   0|    1|          0|
+    |working_last_motion_detail_1_reg_8858                                    |   32|   0|   32|          0|
+    |working_last_motion_detail_reg_8404                                      |   32|   0|   32|          0|
+    |working_last_motion_duty_q16_1_reg_8786                                  |   32|   0|   32|          0|
+    |working_last_motion_duty_q16_reg_8359                                    |   32|   0|   32|          0|
+    |working_last_motion_epoch_1_reg_8842                                     |   32|   0|   32|          0|
+    |working_last_motion_epoch_reg_8394                                       |   32|   0|   32|          0|
+    |working_last_motion_faults_1_reg_8866                                    |   32|   0|   32|          0|
+    |working_last_motion_faults_reg_8409                                      |   32|   0|   32|          0|
+    |working_last_motion_outcome_1_reg_8850                                   |   32|   0|   32|          0|
+    |working_last_motion_outcome_reg_8399                                     |   32|   0|   32|          0|
+    |working_last_motion_ramp_mrpm_1_reg_8794                                 |   32|   0|   32|          0|
+    |working_last_motion_ramp_mrpm_reg_8364                                   |   32|   0|   32|          0|
+    |working_last_motion_ready_1_reg_8802                                     |    1|   0|    1|          0|
+    |working_last_motion_ready_reg_8369                                       |    1|   0|    1|          0|
+    |working_last_motion_sequence_1_reg_8834                                  |   32|   0|   32|          0|
+    |working_last_motion_sequence_reg_8389                                    |   32|   0|   32|          0|
+    |working_last_motion_terminal_1_reg_8882                                  |   64|   0|   64|          0|
+    |working_last_motion_terminal_reg_8419                                    |   64|   0|   64|          0|
+    |working_last_velocity_age_1_reg_8898                                     |   64|   0|   64|          0|
+    |working_last_velocity_age_reg_8429                                       |   64|   0|   64|          0|
+    |working_last_velocity_averaged_1_reg_8922                                |    1|   0|    1|          0|
+    |working_last_velocity_averaged_reg_8444                                  |    1|   0|    1|          0|
+    |working_last_velocity_fault_1_reg_8930                                   |   32|   0|   32|          0|
+    |working_last_velocity_fault_reg_8449                                     |   32|   0|   32|          0|
+    |working_last_velocity_mrpm_1_reg_8890                                    |   32|   0|   32|          0|
+    |working_last_velocity_mrpm_reg_8424                                      |   32|   0|   32|          0|
+    |working_last_velocity_timed_out_1_reg_8914                               |    1|   0|    1|          0|
+    |working_last_velocity_timed_out_reg_8439                                 |    1|   0|    1|          0|
+    |working_last_velocity_valid_1_reg_8906                                   |    1|   0|    1|          0|
+    |working_last_velocity_valid_reg_8434                                     |    1|   0|    1|          0|
+    |working_last_warming_up_1_reg_8946                                       |    1|   0|    1|          0|
+    |working_last_warming_up_reg_8464                                         |    1|   0|    1|          0|
+    |working_pending_1_reg_9018                                               |    1|   0|    1|          0|
+    |working_pending_generation_1_reg_8962                                    |   32|   0|   32|          0|
+    |working_pending_generation_s_reg_8494                                    |   32|   0|   32|          0|
+    |working_pending_s_reg_8529                                               |    1|   0|    1|          0|
+    |working_pending_sequence_1_reg_8954                                      |   32|   0|   32|          0|
+    |working_pending_sequence_s_reg_8489                                      |   32|   0|   32|          0|
+    |working_pending_session_1_reg_8970                                       |   32|   0|   32|          0|
+    |working_pending_session_s_reg_8499                                       |   32|   0|   32|          0|
+    |working_pending_speed_1_reg_8978                                         |   32|   0|   32|          0|
+    |working_pending_speed_s_reg_8504                                         |   32|   0|   32|          0|
+    |working_published_sequence_1_reg_8986                                    |   32|   0|   32|          0|
+    |working_published_sequence_s_reg_8509                                    |   32|   0|   32|          0|
+    |working_rejects_1_reg_9002                                               |   32|   0|   32|          0|
+    |working_rejects_s_reg_8519                                               |   32|   0|   32|          0|
+    |working_staged_1_reg_8474                                                |   32|   0|   32|          0|
+    |working_staged_2_reg_8479                                                |   32|   0|   32|          0|
+    |working_staged_3_reg_8484                                                |   32|   0|   32|          0|
+    |working_staged_s_reg_8469                                                |   32|   0|   32|          0|
+    |working_stop_pending_1_reg_9034                                          |    1|   0|    1|          0|
+    |working_stop_pending_s_reg_8539                                          |    1|   0|    1|          0|
+    |working_stopping_1_reg_9026                                              |    1|   0|    1|          0|
+    |working_stopping_s_reg_8534                                              |    1|   0|    1|          0|
+    |working_written_1_reg_9010                                               |    8|   0|    8|          0|
+    |working_written_s_reg_8524                                               |    8|   0|    8|          0|
+    +-------------------------------------------------------------------------+-----+----+-----+-----------+
+    |Total                                                                    |14775|   0|14775|          0|
+    +-------------------------------------------------------------------------+-----+----+-----+-----------+
+
+
+
+================================================================
+== Interface
+================================================================
+* Summary: 
++--------------------------+-----+-----+------------+-----------------------+--------------+
+|         RTL Ports        | Dir | Bits|  Protocol  |     Source Object     |    C Type    |
++--------------------------+-----+-----+------------+-----------------------+--------------+
+|ap_clk                    |   in|    1|  ap_ctrl_hs|  dmotor_mailbox_shared|  return value|
+|ap_rst                    |   in|    1|  ap_ctrl_hs|  dmotor_mailbox_shared|  return value|
+|ap_start                  |   in|    1|  ap_ctrl_hs|  dmotor_mailbox_shared|  return value|
+|ap_done                   |  out|    1|  ap_ctrl_hs|  dmotor_mailbox_shared|  return value|
+|ap_idle                   |  out|    1|  ap_ctrl_hs|  dmotor_mailbox_shared|  return value|
+|ap_ready                  |  out|    1|  ap_ctrl_hs|  dmotor_mailbox_shared|  return value|
+|motor                     |   in|   32|     ap_none|                  motor|        scalar|
+|reset                     |   in|    1|     ap_none|                  reset|        scalar|
+|request_address0          |  out|    2|   ap_memory|                request|         array|
+|request_ce0               |  out|    1|   ap_memory|                request|         array|
+|request_q0                |   in|   32|   ap_memory|                request|         array|
+|request_address1          |  out|    2|   ap_memory|                request|         array|
+|request_ce1               |  out|    1|   ap_memory|                request|         array|
+|request_q1                |   in|   32|   ap_memory|                request|         array|
+|tick                      |   in|    1|     ap_none|                   tick|        scalar|
+|authorized                |   in|    1|     ap_none|             authorized|        scalar|
+|stop                      |   in|    1|     ap_none|                   stop|        scalar|
+|capture_fault             |   in|    1|     ap_none|          capture_fault|        scalar|
+|session                   |   in|   32|     ap_none|                session|        scalar|
+|now                       |   in|   64|     ap_none|                    now|        scalar|
+|count                     |   in|   64|     ap_none|                  count|        scalar|
+|last_edge                 |   in|   64|     ap_none|              last_edge|        scalar|
+|direction_epoch           |   in|   32|     ap_none|        direction_epoch|        scalar|
+|invalid_transitions       |   in|   32|     ap_none|    invalid_transitions|        scalar|
+|negative                  |   in|    1|     ap_none|               negative|        scalar|
+|configuration_r_address0  |  out|    5|   ap_memory|        configuration_r|         array|
+|configuration_r_ce0       |  out|    1|   ap_memory|        configuration_r|         array|
+|configuration_r_q0        |   in|   32|   ap_memory|        configuration_r|         array|
+|configuration_r_address1  |  out|    5|   ap_memory|        configuration_r|         array|
+|configuration_r_ce1       |  out|    1|   ap_memory|        configuration_r|         array|
+|configuration_r_q1        |   in|   32|   ap_memory|        configuration_r|         array|
+|reply_address0            |  out|    4|   ap_memory|                  reply|         array|
+|reply_ce0                 |  out|    1|   ap_memory|                  reply|         array|
+|reply_we0                 |  out|    1|   ap_memory|                  reply|         array|
+|reply_d0                  |  out|   32|   ap_memory|                  reply|         array|
+|reply_address1            |  out|    4|   ap_memory|                  reply|         array|
+|reply_ce1                 |  out|    1|   ap_memory|                  reply|         array|
+|reply_we1                 |  out|    1|   ap_memory|                  reply|         array|
+|reply_d1                  |  out|   32|   ap_memory|                  reply|         array|
++--------------------------+-----+-----+------------+-----------------------+--------------+
+

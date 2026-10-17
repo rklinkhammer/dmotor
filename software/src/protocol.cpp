@@ -1,4 +1,5 @@
 #include "dmotor_sw/protocol.hpp"
+#include "dmotor/capabilities.hpp"
 #include "dmotor/controller_host.hpp"
 #include "dmotor/timing.hpp"
 #include <limits>
@@ -23,7 +24,7 @@ int64_t signed64(uint64_t value) {
 }
 bool valid_configuration(const MotorConfiguration& c) {
     using namespace dmotor::timing;
-    if (!c.generation || c.maximum_mrpm < 1000 || c.maximum_mrpm > 200000 ||
+    if (!c.generation || c.maximum_mrpm < 1000 || c.maximum_mrpm > dmotor::capability::maximum_speed_mrpm ||
         !c.acceleration_mrpm_s || c.acceleration_mrpm_s > 10000000 ||
         !c.deceleration_mrpm_s || c.deceleration_mrpm_s > 10000000 ||
         !c.counts_numerator || c.counts_numerator > 1000000 ||

@@ -1,0 +1,39 @@
+[ 30%] Built target dmotor
+[ 38%] Built target protocol_test
+[ 38%] Built target arithmetic_test
+[ 42%] Built target command_engine_test
+[ 46%] Built target control_test
+[ 51%] Built target configuration_test
+[ 55%] Built target peripheral_test
+[ 59%] Built target motion_test
+[ 63%] Built target motion_queue_test
+[ 65%] Building CXX object CMakeFiles/velocity_test.dir/tests/velocity_test.cpp.o
+[ 69%] Built target controller_test
+[ 73%] Built target dispatcher_test
+[ 77%] Built target position_error_test
+[ 81%] Built target atomic_mailbox_test
+[ 85%] Built target atomic_mailbox_top_test
+[ 89%] Built target controller_host_test
+[ 93%] Built target mailbox_test
+[ 97%] Built target shared_mailbox_test
+[100%] Linking CXX executable velocity_test
+[100%] Built target velocity_test
+Test project /home/rklinkhammer/workspace/dmotor/build/rpm400_verified/build
+    Start  1: arithmetic
+1/7 Test  #1: arithmetic .......................   Passed    0.06 sec
+    Start  8: motion
+2/7 Test  #8: motion ...........................   Passed    0.02 sec
+    Start 10: velocity
+3/7 Test #10: velocity .........................   Passed    0.00 sec
+    Start 11: controller
+4/7 Test #11: controller .......................   Passed    0.00 sec
+    Start 12: dispatcher
+5/7 Test #12: dispatcher .......................   Passed    0.00 sec
+    Start 19: mailbox
+6/7 Test #19: mailbox ..........................   Passed    0.00 sec
+    Start 20: shared_mailbox
+7/7 Test #20: shared_mailbox ...................   Passed    0.01 sec
+
+100% tests passed, 0 tests failed out of 7
+
+Total Test time (real) =   0.10 sec

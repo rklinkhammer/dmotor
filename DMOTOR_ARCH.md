@@ -126,16 +126,40 @@ QA/QB provide 11 pulses per channel per motor-shaft revolution; X4 decoding give
 Never round this to an integer counts-per-revolution parameter. Position counters
 are integer encoder counts; host conversion preserves fractional residuals.
 
-The initial bounded profile supports up to 200 RPM output-shaft speed and up to
+Additional candidate motor: 37GB-520-30F, 12 V. User-supplied specifications are
+330 RPM / 0.12 A no-load, 250 RPM / 1 A rated, maximum torque 5 kgf·cm and
+2.3 A "stop current" (provisionally interpreted as stall current). The earlier
+physical-label report of 360 RPM ±10% remains a specification discrepancy.
+
+For this candidate, adopt the user-approved provisional assumption (2026-10-15)
+of **13 complete pulses per channel per motor-shaft revolution and exactly 30:1
+reduction**. X4 decoding gives **52 counts per motor revolution and 1560/1 counts
+per output revolution**; each channel produces 390 pulses per output revolution.
+At 330 RPM output speed this is 2145 pulses/s per channel and 8580 decoded counts/s.
+Validate the conversion by measuring counts over multiple output revolutions
+(ten revolutions should give a magnitude of approximately 15600 counts).
+
+The candidate encoder is specified as AB incremental with a 5 V supply and PH2.0
+connector. Signal voltage, output type and connector pinout still require
+confirmation before FPGA connection. These assumptions do not replace the
+JGA25-370 reference profile or change implementation limits: supporting the
+candidate's full-speed operation still requires motor-specific qualification.
+
+The shared capability ceiling is 400 RPM output-shaft speed, defined in
+`include/dmotor/capabilities.hpp`; per-motor configured limits can be lower. This
+is controller capability, not a claim that either motor can reach 400 RPM.
+The profile supports up to
 100 mm wheel diameter. Diameter is host geometry metadata, not a required FPGA
 register. Supported minimum nonzero steady-state speed is 1 RPM in both directions;
 startup/stopping may pass through lower speeds. Loaded performance requires testing.
 
 Retain public signed milliRPM units. Validate range before narrowing: the measured
-exact candidate uses a 19-bit velocity envelope, 20-bit PI error and 37-bit integral
+exact profile uses a 20-bit velocity envelope, 21-bit PI error and 37-bit integral
 at 1 kHz. Keep sufficient intermediate widths and explicit rounding/saturation;
-not every register becomes 19 bits. Preserve the shared exact one-phase divider,
-including the specialized PI division and wider estimator arithmetic where needed.
+not every register becomes 20 bits. Preserve the shared exact one-phase divider,
+including the 40/20-bit PI divider and wider estimator arithmetic where needed.
+The maximum rounded proportional dividend is 838860800500; the clamped integral
+dividend remains at most 65536500000. Divisors remain 1000 and 1000000.
 Changing rate, gains or operating bounds requires re-derived widths and tests.
 
 Retain 64-bit cumulative position, event counts and timestamps for host odometry
@@ -365,7 +389,7 @@ when implemented. Do not scatter cycle literals through step functions or tests.
 | Processor target publication | 100 Hz / 10 ms, initially; configurable host policy |
 | Per-motor tracking target timeout | 100 ms / 2,000,000 clocks initially; configurable while disabled |
 | Complete shared control-frame deadline | Before 800 us / 16,000 clocks from tick; equality loses |
-| Measured shared engine reservation | 4 × 334 = 1,336 clocks / 66.8 us, excludes integration overhead |
+| Measured shared engine reservation | 4 × 337 = 1,348 clocks / 67.4 us, excludes integration overhead |
 | Complete-frame duty release | First common PWM boundary after all validated results; at most one PWM period later |
 | External HALT to FPGA logical inhibit | At most 10 us / 200 clocks; act immediately, no intentional delay |
 | Synchronized HALT to logical inhibit | Existing target at most 2 clocks; independent of arithmetic/bus/PWM |

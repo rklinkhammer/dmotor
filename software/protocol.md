@@ -15,7 +15,7 @@ retains numerator/denominator precision (the reference motor uses 10296/5).
 Position tolerance remains in the wire layout for compatibility; this does not
 restore FPGA position commands to the velocity profile.
 
-Validation checks generation, the software profile's 1–200 RPM maximum-speed
+Validation checks generation, the software profile's 1–400 RPM maximum-speed
 range, acceleration/deceleration, CPR and event-rate bounds, gains, duty limits,
 settling and acquisition/zero-timeout relationships. It is conservative admission
 validation, not evidence that gains or electrical limits suit the physical motor.

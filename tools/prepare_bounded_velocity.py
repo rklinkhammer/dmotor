@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prepare the isolated 200 RPM fixed-point velocity evaluation at 20 MHz."""
+"""Prepare the isolated fixed-point velocity evaluation at 20 MHz."""
 import argparse
 from pathlib import Path
 import subprocess
@@ -24,4 +24,7 @@ if args.variant in ('exact-shared', 'exact-onephase'):
 if args.variant == 'exact-onephase':
     subprocess.run(['patch', '--batch', '-p1', '--directory', str(output), '--input',
                     str(root / 'docs/evidence/velocity_exact_onephase/integration.patch')], check=True)
+if args.variant in ('exact', 'exact-shared', 'exact-onephase'):
+    from apply_velocity_capability import apply
+    apply(output)
 print(f'Prepared bounded velocity evaluation at {output}; validation still required')

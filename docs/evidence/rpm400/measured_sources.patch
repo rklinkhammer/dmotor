@@ -1,0 +1,110 @@
+--- a/src/arithmetic.cpp
++++ b/src/arithmetic.cpp
+@@ -1,4 +1,5 @@
+ #include "dmotor/detail/arithmetic.hpp"
++#include "dmotor/capabilities.hpp"
+ #if defined(__SYNTHESIS__) || defined(DMOTOR_USE_AP_INT)
+ #include <ap_int.h>
+ #endif
+@@ -24,8 +25,8 @@
+ }
+ 
+ uint64_t divide_pi(uint64_t numerator, uint32_t denominator) {
+-    constexpr unsigned numerator_bits = 39;
+-    constexpr unsigned denominator_bits = 20;
++    constexpr unsigned numerator_bits = capability::pi_numerator_bits;
++    constexpr unsigned denominator_bits = capability::pi_denominator_bits;
+     constexpr uint64_t numerator_mask = (uint64_t{1} << numerator_bits) - 1;
+     constexpr uint32_t denominator_mask = (uint32_t{1} << denominator_bits) - 1;
+ #if defined(__SYNTHESIS__) || defined(DMOTOR_USE_AP_INT)
+--- a/src/motion.cpp
++++ b/src/motion.cpp
+@@ -14,9 +14,9 @@
+     const uint64_t absolute =
+         negative ? uint64_t{0} - static_cast<uint64_t>(value) : static_cast<uint64_t>(value);
+     const uint64_t divisor = static_cast<uint64_t>(denominator);
+-    // Bounded exact milliRPM: |error| <= 400000, gain <= 1048576.
+-    // P rounded numerator <= 419430400500; clamped I <= 65536500000.
+-    // Divisors are 1000 and 1000000. Both calls fit the shared 39/20 core.
++    // Bounded exact milliRPM: |error| <= 800000, gain <= 1048576.
++    // P rounded numerator <= 838860800500; clamped I <= 65536500000.
++    // Divisors are 1000 and 1000000. Both calls fit the shared 40/20 core.
+     const int64_t quotient = static_cast<int64_t>(
+         divide_pi(absolute + divisor / 2, static_cast<uint32_t>(divisor)));
+     return negative ? -quotient : quotient;
+@@ -184,7 +184,7 @@
+             timeout_us_ = command[11];
+             if (opcode_ == 1) {
+                 target_mrpm_ =
+-                    static_cast<int32_t>(detail::narrow_signed<19>(signed_word(command[5])));
++                    static_cast<int32_t>(detail::narrow_signed<operating::velocity_bits>(signed_word(command[5])));
+                 motion_mode_ = 1;
+                 finish(now, 0, 0);
+             } else if (opcode_ == 6) {
+--- a/include/dmotor/capabilities.hpp
++++ b/include/dmotor/capabilities.hpp
+@@ -0,0 +1,21 @@
++#pragma once
++#include <cstdint>
++namespace dmotor {
++namespace capability {
++// Controller envelope; each motor keeps an independently configured lower limit.
++constexpr int32_t maximum_speed_rpm = 400;
++constexpr int32_t millirpm_per_rpm = 1000;
++constexpr int32_t maximum_speed_mrpm = maximum_speed_rpm * millirpm_per_rpm;
++constexpr unsigned velocity_bits = 20;
++constexpr unsigned velocity_error_bits = 21;
++constexpr unsigned pi_numerator_bits = 40;
++constexpr unsigned pi_denominator_bits = 20;
++constexpr int64_t maximum_gain_q16 = 1048576;
++constexpr uint64_t maximum_pi_numerator =
++    uint64_t{2} * maximum_speed_mrpm * maximum_gain_q16 + 500;
++static_assert(maximum_speed_mrpm < (int64_t{1} << (velocity_bits - 1)), "velocity width");
++static_assert(2LL * maximum_speed_mrpm < (int64_t{1} << (velocity_error_bits - 1)), "error width");
++static_assert(maximum_pi_numerator < (uint64_t{1} << pi_numerator_bits), "PI dividend width");
++static_assert(1000000 < (uint32_t{1} << pi_denominator_bits), "PI divisor width");
++} // namespace capability
++} // namespace dmotor
+--- a/include/dmotor/detail/arithmetic.hpp
++++ b/include/dmotor/detail/arithmetic.hpp
+@@ -5,7 +5,7 @@
+ // Exact unsigned division; denominator must be nonzero. One restoring step
+ // per bit combines comparison and subtraction; preserves all 64 input bits.
+ uint64_t divide(uint64_t numerator, uint64_t denominator);
+-// Bounded PI only: numerator < 2^39, 0 < denominator < 2^20.
++// Bounded PI only: numerator < 2^40, 0 < denominator < 2^20.
+ // Callers include rounding offsets before entry and prove these bounds.
+ uint64_t divide_pi(uint64_t numerator, uint32_t denominator);
+ } // namespace detail
+--- a/include/dmotor/motion.hpp
++++ b/include/dmotor/motion.hpp
+@@ -46,7 +46,7 @@
+     uint32_t settling_ = 0; // Stops incrementing at settle_ticks <= 1000000.
+     uint32_t timeout_us_ = 0;
+     uint8_t motion_mode_ = 0; // 0 coast, 1 velocity PI.
+-    int32_t target_mrpm_ = 0; // Validated +/-200000 milliRPM.
++    int32_t target_mrpm_ = 0; // Validated against capability::maximum_speed_mrpm.
+     int64_t integral_nano_ = 0; // Clamped to +/-65536 * 1000000.
+     uint64_t started_ = 0, previous_tick_ = 0;
+     uint16_t ramp_remainder_ = 0; // Modulo 1000, always 0..999.
+--- a/include/dmotor/operating_limits.hpp
++++ b/include/dmotor/operating_limits.hpp
+@@ -1,15 +1,16 @@
+ #pragma once
+ #include <cstdint>
++#include "dmotor/capabilities.hpp"
+ #include "dmotor/timing.hpp"
+ #include "dmotor/detail/bounded.hpp"
+ namespace dmotor {
+ namespace operating {
+ constexpr unsigned max_wheel_diameter_mm = 100; // Host geometry; no FPGA conversion.
+-constexpr int32_t max_shaft_speed_rpm = 200;
++constexpr int32_t max_shaft_speed_rpm = capability::maximum_speed_rpm;
+ constexpr int32_t millirpm_per_rpm = 1000;
+ constexpr int32_t max_speed_mrpm = max_shaft_speed_rpm * millirpm_per_rpm;
+ constexpr unsigned velocity_fractional_bits = 0;
+-constexpr unsigned velocity_bits = 19;
++constexpr unsigned velocity_bits = capability::velocity_bits;
+ constexpr unsigned velocity_error_bits = velocity_bits + 1;
+ constexpr int32_t velocity_scale = millirpm_per_rpm;
+ constexpr int64_t integral_scale = int64_t{velocity_scale} * timing::control_hz;

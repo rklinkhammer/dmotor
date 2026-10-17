@@ -133,3 +133,7 @@ The first host-software increment provides a deterministic semantic model and
 protocol/lifecycle tests, including an EDF BitBake/QEMU ARM validation recipe.
 See [software/README.md](software/README.md) and the [implementation plan](DMOTOR_SW.md).
 The Linux service, hardware backend and separate maintenance application remain pending.
+
+Current velocity capability: **400 RPM**, with independent per-motor limits.
+See [the numeric audit, verification and measured resources](docs/velocity_capability.md)
+for rebuilding the optimized engine and selecting it for IP export.
