@@ -30,5 +30,21 @@
   "software/linux/uio-inspection.dtsi",
   "include/dmotor/capabilities.hpp",
   "software/apps/encoder.cpp",
-  "software/include/dmotor_sw/encoder_session.hpp"
+  "software/include/dmotor_sw/encoder_session.hpp",
+  "software/include/dmotor_sw/runtime.hpp",
+  "software/src/runtime.cpp",
+  "software/include/dmotor_sw/kernel_device.hpp",
+  "software/linux/kernel_device.cpp",
+  "software/include/dmotor_sw/service_protocol.hpp",
+  "software/apps/daemon.cpp",
+  "software/apps/maintenance.cpp",
+  "software/tests/runtime_test.cpp",
+  "software/tests/fake_kernel.cpp",
+  "software/tests/service_test.py",
+  "software/linux/driver/dmotor_access.c",
+  "software/linux/driver/dmotor_ioctl.h",
+  "software/linux/driver/Makefile",
+  "software/yocto/dmotor-access.bb",
+  "software/config/inhibited-example.conf",
+  "software/linux/driver/dmotor_regs.h"
 ]

@@ -1,9 +1,14 @@
 # DMOTOR processor software implementation plan
 
-**Date:** 2026-10-14  
+**Date:** 2026-10-17
 **Architecture baseline:** [DMOTOR_ARCH.md](DMOTOR_ARCH.md), revision 0.18  
 **Initial platform:** Zynq-7000 ARM processor running EDF Linux on Arty Z7-20  
-**Status:** Phase 0 semantic model, typed configuration/telemetry protocol and backend contract implemented; inhibited UIO inspection backend implemented; production ownership/driver and runtime remain pending.
+**Status:** Semantic model, typed protocol, UIO inspection and encoder utilities are
+implemented. User-observed encoder movement confirms the initial board readout
+path. Version 0.6.0 adds an exclusive kernel-access foundation, lifecycle/velocity
+service and separate maintenance menu for inhibited commissioning. Production
+hardware qualification, richer maintenance configuration/diagnostics, processor
+motion planning and release qualification remain pending.
 
 ## 1. Objective and scope
 
@@ -33,7 +38,7 @@ a later backend and qualification effort, not established by native C++ tests.
 | [controller_host_test.cpp](tests/controller_host_test.cpp) and existing protocol/RTL tests | Extend the mock-I/O tests and reuse hardware protocol evidence. They do not establish Linux scheduling or device-memory ordering. |
 | [controller_axi.md](docs/controller_axi.md) | Current lifecycle, register and telemetry contract. Reconcile discrepancies with the architecture before implementation. |
 | [dev_probe.py](tools/dev_probe.py) | DMD1 permanently inhibited diagnostic endpoint only. It is not a driver or probe for the integrated DMI1 controller. |
-| EDF Arty FPGA Manager integration | Provides the bitstream/overlay loading path. A Linux MMIO driver/backend and motion runtime still need development. |
+| EDF Arty FPGA Manager integration | Provides the bitstream/overlay loading path. UIO bring-up is deployed; the exclusive driver and minimal velocity service now require board commissioning. |
 
 Important current limitations must be represented explicitly in software:
 
@@ -213,8 +218,8 @@ qualification tests of the application, not features of a deployed test harness.
 | Atomic publication | Stage all selected fields, complete device-write ordering, then commit. Use a nonzero session, increasing sequence and current per-motor configuration generations. |
 | Pending slot | Replace a pending batch only with the same motor mask. Different masks, including disjoint masks, must wait or be combined before publication. Do not partially merge batches. |
 | Application | Track accepted, pending, rejected and applied states separately. Only actual application renews target age; application does not mean achieved speed or position. |
-| Units | Public velocity is signed milliRPM. Validate before narrowing; initial maximum is 200 output RPM and minimum supported nonzero steady speed is 1 RPM. |
-| Geometry | Wheel diameter is host metadata, initially bounded at 100 mm. Use exact rational encoder conversion: 44 motor-shaft counts/revolution × 46.8 = 10296/5 output counts/revolution. Preserve fractional residuals. |
+| Units | Public velocity is signed milliRPM. Validate before narrowing; shared capability is 400 output RPM with per-motor limits and minimum supported nonzero steady speed is 1 RPM. |
+| Geometry | Wheel diameter is host metadata, initially bounded at 100 mm. Use exact rational encoder conversion: 44 motor-shaft counts/revolution × 46.8 = 10296/5 output counts/revolution. Preserve fractional residuals; the provisional 13-pulse, 30:1 motor uses 1560/1 counts per output revolution. |
 | Completion | Use final-system position tolerance and pose information, issue controlled STOP, then confirm READY/zero drive. Zero velocity alone is not zero drive or mechanical standstill. |
 | Protection | HALT/fault/expiration outranks disable, controlled STOP and target activation. No target, refresh, process restart or reconnect automatically resumes motion. |
 | Reset | Drain/isolate outstanding bus activity before session reuse. Changing a software token alone does not prove reset isolation. Record encoder/time epoch changes. |
@@ -243,8 +248,9 @@ current-ABI sequence or a documented hardware dependency.
 **Deliverables:** Linux `Io` backend; exclusive device ownership; integrated
 controller identification/status/telemetry tool; and device-tree/driver integration.
 
-Evaluate a small kernel driver against UIO for the actual ordering, access-error,
-ownership and FPGA-removal requirements. UIO is a candidate, not an assumption.
+The initial production backend now uses the exclusive `dmotor_access` kernel
+driver; UIO remains the separate inspection/encoder backend. Qualify ordering,
+access-error, ownership and FPGA-removal behavior on the target.
 Document device-memory mapping attributes, aligned full-word access, the required
 ARM device-ordering/completion mechanism and AXI error handling. A compiler fence
 or ordinary cached pointer is insufficient. Do not make unrestricted `/dev/mem`
@@ -384,17 +390,16 @@ configuration, bitstream/software versions and unresolved limitations.
 
 ## 6. Decisions and dependencies
 
-These choices remain open; this plan does not silently approve motion behavior.
-They need resolution before the dependent acceptance gate, not before beginning
-the mock backend and typed protocol work.
+The table distinguishes remaining qualification from user-approved initial policy.
+Initial timings apply to inhibited commissioning; measured adjustment remains possible.
 
 | Decision or dependency | Required by |
 | --- | --- |
-| Linux driver/UIO choice, MMIO completion and reset isolation contract | Phase 1 board access |
-| Authorization timeout and refresh interval; stop deadline and settling parameters | Phases 2–3 enabled operation |
+| Kernel driver selected; qualify MMIO completion and reset isolation | Phase 1 board access |
+| 100 ms authorization / 20 ms refresh approved; qualify STOP deadlines and settling | Phases 2–3 enabled operation |
 | Normal-runtime client ownership/lease, planner-stall and localization-loss behavior | Phases 3 and 5 |
-| Maintenance lease detection budget, shared-HALT platform binding and acknowledgment deadline; HALT-on-exit/loss behavior is decided | Before Phase 3 maintenance motion |
-| Need for one motor to stop/rearm without interrupting peers | Phase 2 lifecycle API; may require FPGA changes |
+| 500 ms maintenance lease and GPIO HALT binding implemented; qualify physical response | Before Phase 3 maintenance motion |
+| Global reset/rearm after STOP approved; no independent peer-preserving rearm | Phase 2 board qualification |
 | Initial trajectory law, command coordinate frames and queue policy | Phase 5 |
 | Wheel geometry, direction mapping, effective track width and external pose interface | Phase 5 vehicle integration |
 | Position tolerance, acceptable overshoot/drift and localization freshness | Phase 5 measured vehicle acceptance |
@@ -462,8 +467,7 @@ caller-owned; readiness must still be observed after HLS validation.
 Implementation inspection identified two telemetry limits for future runtime work:
 engine frame ticks do not timestamp the separately captured encoder position, and
 word 0 is not a reliable requested-target observation on the adapter's error path.
-Neither is hidden by the typed decoder. Next: inhibited Linux device access and
-OS-enforced ownership, then service/client IPC and the separate maintenance UI.
+Neither is hidden by the typed decoder. These were the next steps at that increment; section 9 records their initial implementation.
 
 Validation for this increment: both native UBSan test suites and both ARM QEMU
 executables passed; EDF packaging/QA passed. See
@@ -503,3 +507,41 @@ tests. Native mapping/ownership/allowlist and cleanup checks are in
 `software/tests/linux_inspection_test.cpp`; the Yocto recipe runs these under
 user-mode ARM QEMU. Physical encoder wiring/count verification remains a board
 step; see `software/README.md`.
+
+
+## 9. Lifecycle and velocity commissioning implementation — 2026-10-17
+
+`software/linux/driver/dmotor_access.c` provides exclusive open, restricted
+serialized ioctls, owned HALT GPIO, HALT on close and overlay-removal veto while
+opened. `KernelDevice` uses this interface without mmap. This is implemented
+kernel mediation, not a claim that bus aborts, arbitrary privileged reconfiguration
+or clock loss are recoverable. Production overlay is opt-in; UIO remains default.
+
+`Runtime` provides explicit global configuration/recovery with readback, nonzero
+sessions, readiness deadlines, enable, watchdog refresh, atomic periodic targets,
+STOP/disable and fail-closed recovery. `dmotord` is the sole MMIO owner and accepts
+one maintenance client. `dmotor-maint` provides selection, status, global
+configure/recovery, enable, signed-RPM group targets, STOP, disable and priority
+HALT. Client lease, disconnect and quit clear intent and require explicit rearm.
+No service auto-starts. Initial commands are for drive-disconnected commissioning.
+
+User-approved initial policy: 100 ms authorization timeout, 20 ms refresh, 500 ms
+maintenance lease and global reset/rearm after STOP. Existing 100 Hz target
+publication and 100 ms target-age timeout remain. The service uses absolute
+monotonic 5 ms ticks with missed-tick skipping. Readiness initially has a named
+500 ms deadline; STOP uses each motor's configured timeout.
+
+Phases 1–4 now have an initial executable foundation. Target-kernel build and package QA passed. Still open: physical access
+qualification; load/jitter measurements; complete fault
+history/diagnostic displays; in-menu configuration editing (configuration file
+plus explicit rearm is implemented); broader application API and lifecycle stress.
+Phase 5 motion/vehicle planning is not implemented. Phase 6 has opt-in EDF recipe
+integration, but release qualification and automatic service lifecycle are pending.
+The encoder-only tool is separate and does not stand in for the maintenance
+HALT-on-exit contract. See [commissioning instructions](software/linux/production.md).
+
+The historical progress sections above describe their original increments;
+statements that UIO was not deployed or that revision 4 had not been routed are
+superseded by the revision-6 image and user-reported encoder observation.
+
+Validation of the initial implementation: [runtime evidence](software/evidence/runtime_validation.md).

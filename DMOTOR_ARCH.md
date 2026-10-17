@@ -1,7 +1,7 @@
 # Engineering Design Prompt
 ## DMOTOR — Shared Four-Motor FPGA Velocity Controller
 **Revision 0.18 — Shared Velocity Engine and Processor-Owned Motion**
-**Updated:** 2026-10-12
+**Updated:** 2026-10-17
 **Workspace:** `~/workspace/dmotor`
 
 **Primary target:** AMD Zynq-7000 `xc7z020clg400-1`, Vitis HLS, 20 MHz
@@ -9,14 +9,17 @@
 **Vivado reference:** `~/workspace/dvrmc/dvrmc.xpr`; [integration notes](docs/vivado_reference.md)
 **Driver selection:** Pololu DRV8263H carrier #5238; electrical adapter validation remains open
 
-**Status:** An [integrated AXI controller](docs/controller_axi.md) now connects the
-actual mailbox and shared motor HLS kernels, scheduler, encoder channels,
-watchdog/target-age protection and PWM. Priorities 1–4 have an executable initial
-implementation and generated-RTL tests. The host ABI remains provisional. Revision 3 has integrated place-and-route evidence with passing specified timing.
-Lifecycle stress qualification, CDC/external-I/O closure, electrical adapter and
-board testing remain outstanding. Revision 4 consolidates HALT synchronization;
-its board routing must be repeated. See the [architecture status review](docs/architecture_status.md). The legacy full-profile
-sources remain available; their measurements are not integrated-controller results.
+**Status:** The integrated four-motor AXI controller connects the actual HLS
+mailbox/velocity kernels, scheduler, encoders, watchdog/target-age protection and
+PWM. The 400 RPM revision-6 IP passed complete Arty routing (+2.783 ns setup,
++0.012 ns hold) and is integrated into EDF. Linux FPGA Manager/UIO inspection
+works; the user has observed changing encoder positions on the board. Direction,
+counts/revolution, powered control and electrical protection are not thereby
+qualified. Software 0.6.0 adds an exclusive-access kernel-driver foundation,
+lifecycle/velocity service and separate maintenance menu for inhibited
+commissioning. See [production commissioning](software/linux/production.md).
+The ABI remains provisional; lifecycle stress, external-I/O/CDC review and
+physical acceptance remain open. Older reports below retain their original scope.
 
 This revision supersedes the single-controller duplication, FPGA position/dwell
 execution, and command/completion-ring requirements of revision 0.17 for the new
@@ -453,20 +456,20 @@ HLS simulation.
    tests and integration requirements pass.
 
 Current evidence includes native/RTL regressions, shared-engine HLS co-simulation,
-actual atomic-mailbox and four-context engine integration, expanded AXI simulation,
-and revision 3 full-board placement/routing. The old 1,673-transaction shared-kernel
-comparison remains valid for its original scope. These are not evidence of complete
-lifecycle, processor-runtime or physical-system qualification. See the
-[implementation/milestone review](docs/architecture_status.md) for remaining
-requirements and the distinction between routed revision 3 and the revision 4
-HALT synchronization update.
+actual atomic-mailbox/four-context integration, full AXI simulation, and revision-6
+Arty routing/deployment. See [verification](docs/verification.md). The old shared-
+kernel comparisons and revision-3/4 reports are historical evidence, not the
+current deployment status. UIO encoder movement has been observed by the user;
+physical loop/protection qualification and production-driver commissioning remain
+outstanding. The software runtime does not change the FPGA's global reset/rearm
+restriction or move numeric preparation entirely before enable.
 
 ### 14. Remaining engineering decisions
 
 The user decisions A02–A07 above are resolved. No unanswered preference is silently
-adopted as authorization. Remaining design work includes the processor runtime and
-measured scheduling envelope; authorization watchdog and controlled-stop deadline
-values; host trajectory law and completion tolerances; numerical gain/filter and
+adopted as authorization. Remaining design work includes qualification of the initial processor runtime and
+measured scheduling envelope; measured adjustment of the initial authorization
+watchdog policy in section 15 and per-motor controlled-stop deadlines; host trajectory law and completion tolerances; numerical gain/filter and
 acquisition parameters; exact ABI layout; electrical adapter qualification; and
 SmartHLS platform constraints. Use existing validated algorithm bounds initially,
 and ask the user when a choice changes external behavior or the supported envelope.
@@ -476,3 +479,19 @@ that its state layout is optimal. BRAM-backed cold state, prepared configuration
 banks and unused completion metadata removal remain later measurement candidates.
 Do not delay the new scheduler/protection integration for speculative arithmetic
 changes already shown to have smaller benefit.
+
+
+### 15. Processor commissioning foundation (2026-10-17)
+
+The initial exclusive-access service uses the existing axi_gpio_3 bit 0 to
+halt_async connection. Kernel probe/open/close and explicit requests assert HALT;
+no new FPGA software-HALT register is assumed. Production and UIO bindings are
+mutually exclusive. The Linux owner provides a 100 ms authorization timeout,
+20 ms refresh, 100 Hz publication, 100 ms target timeout and a 500 ms maintenance
+lease. These starting values and global reset/rearm after STOP were approved by
+the user for inhibited testing. Hardware timeouts remain independent of software.
+
+Actual GPIO-to-output timing, ownership-loss behavior, device removal/reset and
+Linux scheduling under load require board acceptance. The separate menu is a
+maintenance client, not a test runner. Driver/current-sense/stall-classification
+extensions discussed separately have not been implemented by this increment.

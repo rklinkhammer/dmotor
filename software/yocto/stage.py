@@ -33,3 +33,7 @@ if not archive_path.exists() or archive_path.read_bytes() != data:
     archive_path.write_bytes(data)
 write(dest/'dmotor-semantic-tests.bb', (root/'software/yocto/dmotor-semantic-tests.bb').read_text())
 print('DMOTOR staged: '+info['git_commit']+' source='+info['source_sha256'])
+
+driver_dest = layer / "recipes-dmotor/dmotor-access"
+driver_dest.mkdir(parents=True, exist_ok=True)
+write(driver_dest / "dmotor-access.bb", (root / "software/yocto/dmotor-access.bb").read_text())

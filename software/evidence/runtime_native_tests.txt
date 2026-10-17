@@ -1,0 +1,87 @@
+Start testing: Oct 17 00:54 EDT
+----------------------------------------------------------
+1/5 Testing: software_semantics
+1/5 Test: software_semantics
+Command: "/home/rklinkhammer/workspace/dmotor/build/software-runtime/dmotor-semantic-tests"
+Directory: /home/rklinkhammer/workspace/dmotor/build/software-runtime
+"software_semantics" start time: Oct 17 00:54 EDT
+Output:
+----------------------------------------------------------
+dmotor-semantic-tests: DMOTOR 0.6.0 commit=8ee5114d90f7ee17999223f9fd0ede081f991baa dirty=true source=38ee912ca7e754b59efc7134cb4c4b9290c5f3939201aba33e4b5759bdaf0ecd ABI=DMI1/DMB1-schema1
+PASS: mailbox atomicity, replay/range checks, timeout precedence, ownership and HALT lifecycle
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"software_semantics" end time: Oct 17 00:54 EDT
+"software_semantics" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/5 Testing: software_protocol
+2/5 Test: software_protocol
+Command: "/home/rklinkhammer/workspace/dmotor/build/software-runtime/dmotor-protocol-tests"
+Directory: /home/rklinkhammer/workspace/dmotor/build/software-runtime
+"software_protocol" start time: Oct 17 00:54 EDT
+Output:
+----------------------------------------------------------
+dmotor-protocol-tests: DMOTOR 0.6.0 commit=8ee5114d90f7ee17999223f9fd0ede081f991baa dirty=true source=38ee912ca7e754b59efc7134cb4c4b9290c5f3939201aba33e4b5759bdaf0ecd ABI=DMI1/DMB1-schema1
+PASS: typed configuration, ABI checks, telemetry decoding/coherence and transport failure propagation
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"software_protocol" end time: Oct 17 00:54 EDT
+"software_protocol" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/5 Testing: software_linux
+3/5 Test: software_linux
+Command: "/home/rklinkhammer/workspace/dmotor/build/software-runtime/dmotor-linux-tests"
+Directory: /home/rklinkhammer/workspace/dmotor/build/software-runtime
+"software_linux" start time: Oct 17 00:54 EDT
+Output:
+----------------------------------------------------------
+dmotor-linux-tests: DMOTOR 0.6.0 commit=8ee5114d90f7ee17999223f9fd0ede081f991baa dirty=true source=38ee912ca7e754b59efc7134cb4c4b9290c5f3939201aba33e4b5759bdaf0ecd ABI=DMI1/DMB1-schema1
+PASS: Linux mapping, cross-process ownership, inspection allowlists and cleanup
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"software_linux" end time: Oct 17 00:54 EDT
+"software_linux" time elapsed: 00:00:00
+----------------------------------------------------------
+
+4/5 Testing: software_runtime
+4/5 Test: software_runtime
+Command: "/home/rklinkhammer/workspace/dmotor/build/software-runtime/dmotor-runtime-tests"
+Directory: /home/rklinkhammer/workspace/dmotor/build/software-runtime
+"software_runtime" start time: Oct 17 00:54 EDT
+Output:
+----------------------------------------------------------
+dmotor-runtime-tests: DMOTOR 0.6.0 commit=8ee5114d90f7ee17999223f9fd0ede081f991baa dirty=true source=38ee912ca7e754b59efc7134cb4c4b9290c5f3939201aba33e4b5759bdaf0ecd ABI=DMI1/DMB1-schema1
+PASS: lifecycle, 400RPM limits, atomic masks, STOP/rearm, watchdog refresh, lease/fault/access loss and readiness deadlines
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"software_runtime" end time: Oct 17 00:54 EDT
+"software_runtime" time elapsed: 00:00:00
+----------------------------------------------------------
+
+5/5 Testing: software_service
+5/5 Test: software_service
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/software/tests/service_test.py" "/home/rklinkhammer/workspace/dmotor/build/software-runtime/dmotord-fixture" "/home/rklinkhammer/workspace/dmotor/build/software-runtime/dmotor-maint-fixture"
+Directory: /home/rklinkhammer/workspace/dmotor/build/software-runtime
+"software_service" start time: Oct 17 00:54 EDT
+Output:
+----------------------------------------------------------
+PASS: exclusive client, lease expiry, disconnect, stale enable rejection, idle menu lease, partial-input HALT, quit, EOF and killed client
+<end of output>
+Test time =   1.59 sec
+----------------------------------------------------------
+Test Passed.
+"software_service" end time: Oct 17 00:54 EDT
+"software_service" time elapsed: 00:00:01
+----------------------------------------------------------
+
+End testing: Oct 17 00:54 EDT

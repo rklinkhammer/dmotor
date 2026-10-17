@@ -1,5 +1,13 @@
 # Architecture, priorities and integration status — 2026-10-12
 
+**Current update — 2026-10-17:** This review's revision-3/4 tables are historical.
+Revision 6 (400 RPM) has passed full Arty routing and EDF integration. UIO and
+encoder movement have been observed on the board. Version 0.6.0 now implements
+the first exclusive kernel-access/lifecycle/velocity service and separate
+maintenance menu; physical qualification remains pending. See
+[commissioning](../software/linux/production.md) and [verification](verification.md).
+
+
 The revision 0.18 shared-velocity architecture is implemented as an executable
 FPGA controller, not yet as a qualified motor/vehicle system. Revision 3 has
 complete-board routed timing evidence. Revision 4 consolidates HALT CDC and must

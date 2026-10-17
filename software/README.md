@@ -150,3 +150,10 @@ Do not reload/unbind the FPGA while this utility is running. The lock is
 cooperative and cannot exclude unrelated raw MMIO users. Reset is write-only in
 DMI1, so software cannot read back proof of its assertion; position changes and
 board output measurements remain hardware acceptance checks.
+
+### Version 0.6.0 lifecycle/velocity foundation
+
+See [production-access commissioning](linux/production.md) for the exclusive
+kernel driver, `dmotord`, separate `dmotor-maint` menu and opt-in EDF binding.
+These additions require inhibited board qualification before powered operation.
+The existing UIO/encoder workflow remains the default image configuration.
