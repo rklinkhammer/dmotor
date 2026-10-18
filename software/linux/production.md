@@ -1,6 +1,6 @@
 # Exclusive-access and velocity-runtime commissioning
 
-Version 0.6.0 implements the first production-access/lifecycle foundation. It is
+Version 0.7.0 implements the first production-access/lifecycle foundation. It is
 not yet qualified for powered motor operation. The target configuration selects inspection or production; the current EDF
 checkout selects production commissioning. No service is started at boot and no driver is loaded by these tools.
 
@@ -79,7 +79,7 @@ selection are centralized there; the commands below are board runtime operations
 
 
 The firmware recipe changes only the controller binding and adds halt-gpios. The
-image includes dmotor-runtime and kernel-module-dmotor-access. The matching
+image includes dmotor-runtime and dmotor-access, which pulls in the versioned kernel module. The matching
 revision-6 FPGA already has the required HALT connection; no RTL change is needed.
 Use a freshly booted image/full overlay, not a live UIO-to-driver rebinding.
 After the usual FPGA Manager load, on the board with drive power disconnected:
@@ -114,3 +114,9 @@ Neither executes the kernel driver against real PL. Kernel compilation and sourc
 review do not establish board removal safety, MMIO latency or electrical response.
 
 Validation of the initial implementation: [runtime evidence](../evidence/runtime_validation.md).
+
+## Next commissioning gate
+
+Follow [drive-disconnected output validation](output-validation.md) for the bounded
+nonzero-duty profile, opt-in timeout injection (`x`/`w`) and scope acceptance record.
+The maintenance client remains a manual debug application; no powered mode is provided.

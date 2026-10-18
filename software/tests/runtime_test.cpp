@@ -88,5 +88,28 @@ int main(int argc,char** argv) {
         CHECK(rejects([&]{r.enable(1);})); // Never report/reuse unconfirmed inhibition.
         io.halt_failure=false;r.halt();CHECK(io.source);
     }
+    {
+        Fake io;Runtime r(io);r.prepare(config(),1);r.enable(1);
+        r.velocity(1,{{1000,0,0,0}});r.tick();
+        CHECK(rejects([&]{r.inject_timeout(TimeoutInjection::target);}));
+    }
+    for(auto injection:{TimeoutInjection::target,TimeoutInjection::watchdog}) {
+        Fake io;RuntimePolicy policy;policy.commissioning=true;Runtime r(io,policy);
+        CHECK(rejects([&]{r.inject_timeout(injection);}));
+        r.prepare(config(),1);r.enable(1);r.velocity(1,{{1000,0,0,0}});r.tick();
+        const auto refresh=io.words[reg::REFRESH_BASE];
+        const auto published=io.words[b::PUBLISHED_SEQUENCE];
+        r.inject_timeout(injection);
+        CHECK(rejects([&]{r.inject_timeout(injection);}));
+        for(int i=0;i<5;++i) { io.time+=20000;r.heartbeat();r.tick(); }
+        CHECK((io.words[reg::REFRESH_BASE]==refresh)==(injection==TimeoutInjection::watchdog));
+        CHECK((io.words[b::PUBLISHED_SEQUENCE]==published)==(injection==TimeoutInjection::target));
+        io.time+=20000;CHECK(rejects([&]{r.tick();}));CHECK(io.source);
+        // A fake without FPGA timers must hit the host fallback; never auto-resume.
+        r.tick();CHECK(io.source);r.prepare(config(),1);r.enable(1);
+        r.velocity(1,{{1000,0,0,0}});r.tick();CHECK(!io.source);
+        r.inject_timeout(injection);io.words[reg::STATUS]|=1U<<16;
+        CHECK(rejects([&]{r.tick();}));CHECK(io.source);
+    }
     std::cout<<"PASS: lifecycle, 400RPM limits, atomic masks, STOP/rearm, watchdog refresh, lease/fault/access loss and readiness deadlines\n";
 }

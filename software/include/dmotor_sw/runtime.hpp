@@ -7,7 +7,9 @@ struct Platform : Device {
     virtual uint64_t now_us() const = 0;
     virtual void sleep_us(uint32_t duration) = 0;
 };
+enum class TimeoutInjection { none, target, watchdog };
 struct RuntimePolicy {
+    bool commissioning = false;
     uint32_t target_period_us = 10000;
     uint32_t refresh_period_us = 20000;
     uint32_t authorization_us = 100000;
@@ -27,6 +29,7 @@ public:
     void disable(uint32_t mask);
     void halt();
     void heartbeat();
+    void inject_timeout(TimeoutInjection injection);
     void tick();
     ControllerStatus status();
     TelemetrySnapshot capture();
@@ -45,6 +48,8 @@ private:
     uint32_t session_=0, sequence_=0, configured_=0, enabled_=0, tracking_=0, stopped_=0, applied_=0;
     uint64_t lease_=0, next_refresh_=0, next_target_=0, ready_deadline_=0;
     std::array<uint64_t,4> stop_deadline_{};
+    TimeoutInjection injection_=TimeoutInjection::none;
+    uint64_t injection_deadline_=0;
     bool prepared_=false, halted_=true;
 };
 }

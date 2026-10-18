@@ -4,8 +4,10 @@ from pathlib import Path
 with tempfile.TemporaryDirectory(prefix='dmotor-service-') as tmp:
     root=Path(tmp);env={**os.environ,'DMOTOR_TEST_DIRECTORY':tmp}
     config=root/'motors.conf'
-    config.write_text('0 7 400000 1000000 2000000 1560 1 1 100 2 655 65536 32768 16384 1000000 2000000 1000000 8192\n')
-    daemon=subprocess.Popen([sys.argv[1],'--externally-inhibited','/dev/fake',str(config)],env=env,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+    config.write_text((Path(__file__).resolve().parents[1]/'config/output-validation.conf').read_text())
+    commissioning=len(sys.argv)>3
+    log=open(root/'service.log','w+')
+    daemon=subprocess.Popen([sys.argv[1],'--externally-inhibited','/dev/fake',str(config)]+(['--commissioning'] if commissioning else []),env=env,stdout=log,stderr=log)
     def connect():
         s=socket.socket(socket.AF_UNIX,socket.SOCK_SEQPACKET);s.settimeout(2);s.connect(str(root/'control.sock'));return s
     def request(s,op,mask=0,vel=(0,0,0,0)):
@@ -50,8 +52,27 @@ with tempfile.TemporaryDirectory(prefix='dmotor-service-') as tmp:
         s=connect();assert request(s,1)[2]&(1<<18)
         assert request(s,3,1)[1]==0
         request(s,8);s.close()
+        for op in (9,10):
+            time.sleep(.03);s=connect()
+            assert request(s,2)[1]==1
+            assert request(s,3,1)[1]==1
+            assert request(s,4,1,(1000,0,0,0))[1]==1
+            time.sleep(.03)
+            assert request(s,op)[1]==int(commissioning)
+            if commissioning:
+                # The fixture has no FPGA expiry timers: independent host fallback
+                # must disconnect before the 500 ms client lease.
+                time.sleep(.2);assert s.recv(192)==b'';s.close()
+                s=connect();assert request(s,1)[2]&(1<<18)
+                assert request(s,3,1)[1]==0
+            request(s,8);s.close()
         print('PASS: exclusive client, lease expiry, disconnect, stale enable rejection, idle menu lease, partial-input HALT, quit, EOF and killed client')
     finally:
         daemon.terminate()
         try: daemon.communicate(timeout=3)
         except subprocess.TimeoutExpired: daemon.kill();daemon.communicate()
+
+    log.flush();log.seek(0);evidence=log.read();log.close()
+    if commissioning:
+        assert 'inject_target' in evidence and 'inject_watchdog' in evidence
+        assert 'Injection deadline: FPGA trip not observed; host HALT' in evidence

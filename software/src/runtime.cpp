@@ -35,8 +35,19 @@ void Runtime::wait_status(uint32_t mask,uint32_t expected) {
     }
 }
 void Runtime::halt() {
+    injection_=TimeoutInjection::none;
     halted_=true; prepared_=false; enabled_=tracking_=stopped_=0; targets_.fill(0);
     io_.halt(true); // Platform must confirm inhibition or throw; never claim success on access loss.
+}
+void Runtime::inject_timeout(TimeoutInjection injection) {
+    require(policy_.commissioning,"Timeout injection requires --commissioning");
+    require(prepared_ && !halted_ && enabled_ && tracking_ && applied_ &&
+            injection_==TimeoutInjection::none && injection!=TimeoutInjection::none,
+            "Injection requires active applied velocity; rearm between injections");
+    injection_=injection;
+    // Independent host fallback if the FPGA does not trip. Never auto-resume.
+    const auto budget=injection==TimeoutInjection::target ? policy_.target_timeout_us : policy_.authorization_us;
+    injection_deadline_=io_.now_us()+budget+policy_.transition_us;
 }
 void Runtime::heartbeat() { lease_=io_.now_us(); }
 ControllerStatus Runtime::status() { return protocol_.status(); }
@@ -118,14 +129,15 @@ void Runtime::tick() {
     try {
         const auto now=io_.now_us();
         require(now-lease_<policy_.client_lease_us,"Maintenance lease expired");
+        require(injection_==TimeoutInjection::none || now<injection_deadline_,"Injection deadline: FPGA trip not observed; host HALT");
         auto s=status();
         require(!s.fault && !s.shared_halt && !s.blocked,"Hardware protection active");
         require((s.enabled&enabled_)==enabled_,"Motor unexpectedly disabled");
         require((s.ready&(enabled_&~stopped_))==(enabled_&~stopped_) || now<ready_deadline_,"Readiness timeout");
         for(unsigned m=0;m<4;++m) if((stopped_&enabled_&(1U<<m)) && !(s.stopped&(1U<<m)))
             require(now<stop_deadline_[m],"Controlled STOP timeout");
-        if(enabled_ && now>=next_refresh_) { refresh(enabled_);next_refresh_=now+policy_.refresh_period_us; }
-        if(tracking_ && now>=next_target_) {
+        if(injection_!=TimeoutInjection::watchdog && enabled_ && now>=next_refresh_) { refresh(enabled_);next_refresh_=now+policy_.refresh_period_us; }
+        if(injection_!=TimeoutInjection::target && tracking_ && now>=next_target_) {
             auto pending=io_.read32(batch::PENDING_MASK);
             if(!pending || pending==tracking_) {
                 require(sequence_!=UINT32_MAX,"Target sequence exhausted");

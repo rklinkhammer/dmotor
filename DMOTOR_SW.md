@@ -545,3 +545,16 @@ statements that UIO was not deployed or that revision 4 had not been routed are
 superseded by the revision-6 image and user-reported encoder observation.
 
 Validation of the initial implementation: [runtime evidence](software/evidence/runtime_validation.md).
+
+## 10. Inhibited output validation — software 0.7.0
+
+Implemented opt-in `dmotord --commissioning` (still requires
+`--externally-inhibited`), manual menu target/watchdog timeout injection, bounded
+host fallback and monotonic status/fault snapshots. The separate maintenance
+application remains manual; native service tests use a non-deployed fake device.
+A motor-0, 1560-count/revolution, 10 RPM/5% duty provisional configuration supports
+drive-disconnected signal testing. It is not a qualified powered tuning profile.
+See [output validation](software/linux/output-validation.md) for scope procedures,
+synthetic feedback requirements and distinguishing FPGA trips from host fallback.
+Physical timing/protection validation, powered commissioning, and position planning
+remain outstanding. No RTL or MMIO ABI changes are introduced by this step.

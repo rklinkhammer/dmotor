@@ -53,6 +53,8 @@ void menu() {
         "d       disable selected motors\n"
         "!       immediate HALT ALL, including during partial input\n"
         "q       HALT ALL and quit\n"
+        "x       inject target timeout (commissioning daemon only)\n"
+        "w       inject watchdog timeout (commissioning daemon only)\n"
         "Configuration is supplied to dmotord; no live retuning. Position/dwell unavailable.\n> "<<std::flush;
 }
 }
@@ -102,6 +104,8 @@ int main(int argc,char** argv) {
                             switch(op) {
                             case 's':r.operation=Operation::status;break;
                             case 'r':r.operation=Operation::prepare;break;
+                            case 'x':r.operation=Operation::inject_target;break;
+                            case 'w':r.operation=Operation::inject_watchdog;break;
                             case 'e':r.operation=Operation::enable;break;
                             case 't':r.operation=Operation::stop;break;
                             case 'd':r.operation=Operation::disable;break;

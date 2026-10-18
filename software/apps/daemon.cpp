@@ -52,12 +52,14 @@ uint32_t load(const char* path,std::array<MotorConfiguration,4>& configs) {
 }
 int main(int argc,char** argv) {
     if(startup_version("dmotord",argc,argv)) return 0;
-    if(argc!=4 || std::string(argv[1])!="--externally-inhibited") {
-        std::cerr<<"Usage: dmotord --externally-inhibited /dev/dmotor0 CONFIG\nInitial commissioning only; disconnect drive power.\n";return 2;
+    const bool commissioning=argc==5 && std::string(argv[4])=="--commissioning";
+    if((argc!=4 && !commissioning) || std::string(argv[1])!="--externally-inhibited") {
+        std::cerr<<"Usage: dmotord --externally-inhibited /dev/dmotor0 CONFIG [--commissioning]\nInitial commissioning only; disconnect drive power.\n";return 2;
     }
     try {
         std::array<MotorConfiguration,4> configs{};const auto mask=load(argv[3],configs);
-        KernelDevice device(argv[2]);Runtime runtime(device);
+        KernelDevice device(argv[2]);
+        RuntimePolicy policy;policy.commissioning=commissioning;Runtime runtime(device,policy);
         if(mkdir(service_directory.c_str(),0700) && errno!=EEXIST) throw IoError("Cannot create service directory");
         struct stat st{};if(lstat(service_directory.c_str(),&st) || !S_ISDIR(st.st_mode) || st.st_uid!=geteuid() || (st.st_mode&077)) throw IoError("Unsafe service directory");
         Socket server;server.fd=socket(AF_UNIX,SOCK_SEQPACKET|SOCK_CLOEXEC|SOCK_NONBLOCK,0);
@@ -69,7 +71,21 @@ int main(int argc,char** argv) {
         if(std::signal(SIGINT,signal_exit)==SIG_ERR || std::signal(SIGTERM,signal_exit)==SIG_ERR) throw IoError("Cannot install signal handlers");
         Socket client;
         uint64_t last_client=0;
-        RuntimePolicy policy;
+        // CSV is diagnostic, monotonic host time; scope edges establish electrical latency.
+        auto trace=[&](const char* event) {
+            if(!commissioning) return;
+            const auto s=runtime.status();const auto t=runtime.capture();
+            for(unsigned m=0;m<4;++m) {
+                const auto& v=t.motors[m];
+                std::cout<<device.now_us()<<','<<event<<','<<runtime.session()<<','<<s.raw<<','<<m
+                         <<','<<v.position_counts<<','<<v.measured_mrpm<<','<<v.duty_q16
+                         <<','<<v.engine_faults<<','<<v.protection_faults<<'\n';
+            }
+            std::cout.flush();
+        };
+        if(commissioning) std::cout<<"time_us,event,session,status,motor,position,measured_mrpm,duty_q16,engine_faults,protection_faults\n";
+        uint64_t next_trace=0;
+        constexpr uint64_t trace_period_us=20000;
         auto disconnect=[&]() { runtime.halt();if(client.fd>=0) { close(client.fd);client.fd=-1; } };
         std::cout<<"Inhibited commissioning service ready; no automatic rearm or enable.\n";
         uint64_t next_tick=device.now_us();
@@ -100,6 +116,8 @@ int main(int argc,char** argv) {
                     std::array<int32_t,4> velocities{};
                     for(unsigned i=0;i<4;++i) velocities[i]=request.velocity[i];
                     switch(request.operation) {
+                    case Operation::inject_target:trace("inject_target");runtime.inject_timeout(TimeoutInjection::target);break;
+                    case Operation::inject_watchdog:trace("inject_watchdog");runtime.inject_timeout(TimeoutInjection::watchdog);break;
                     case Operation::ping: case Operation::status: break;
                     case Operation::prepare: runtime.prepare(configs,mask);break;
                     case Operation::enable:runtime.enable(request.mask);break;
@@ -119,6 +137,7 @@ int main(int argc,char** argv) {
                             response.position_lo[m]=static_cast<uint32_t>(p);response.position_hi[m]=static_cast<uint32_t>(p>>32);
                         }
                     }
+                    if(request.operation!=Operation::ping) trace("command");
                     response.okay=1;
                 } catch(const std::exception& e) {
                     runtime.halt();std::strncpy(response.message,e.what(),sizeof(response.message)-1);
@@ -127,8 +146,17 @@ int main(int argc,char** argv) {
                 if(quit) disconnect();
             }
             if(device.now_us()>=next_tick) {
-                try { runtime.tick(); }
-                catch(const std::exception& e) { std::cerr<<"HALT: "<<e.what()<<'\n';disconnect(); }
+                try {
+                    // Snapshot before tick can assert host HALT, preserving original fault evidence.
+                    if(commissioning) {
+                        const auto s=runtime.status();
+                        if(device.now_us()>=next_trace || s.fault || s.shared_halt) {
+                            trace("sample");next_trace=device.now_us()+trace_period_us;
+                        }
+                    }
+                    runtime.tick();
+                }
+                catch(const std::exception& e) { std::cerr<<device.now_us()<<" HALT: "<<e.what()<<'\n';disconnect(); }
                 // Absolute monotonic schedule; skip missed ticks rather than replaying.
                 const auto now=device.now_us();
                 next_tick+=((now-next_tick)/tick_us+1)*tick_us;

@@ -30,5 +30,5 @@ RDEPENDS:dmotor-encoder += "dmotor-version"
 
 # Opt-in commissioning service and separate maintenance client; no autostart.
 PACKAGES =+ "dmotor-runtime"
-FILES:dmotor-runtime = "${bindir}/dmotord ${bindir}/dmotor-maint ${datadir}/dmotor/inhibited-example.conf"
+FILES:dmotor-runtime = "${bindir}/dmotord ${bindir}/dmotor-maint ${datadir}/dmotor/inhibited-example.conf ${datadir}/dmotor/output-validation.conf"
 RDEPENDS:dmotor-runtime += "dmotor-version"
