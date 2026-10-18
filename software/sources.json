@@ -47,5 +47,6 @@
   "software/yocto/dmotor-access.bb",
   "software/config/inhibited-example.conf",
   "software/config/output-validation.conf",
-  "software/linux/driver/dmotor_regs.h"
+  "software/linux/driver/dmotor_regs.h",
+  "software/config/powered-direct-duty.conf"
 ]

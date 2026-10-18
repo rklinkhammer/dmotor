@@ -8,8 +8,12 @@ struct Platform : Device {
     virtual void sleep_us(uint32_t duration) = 0;
 };
 enum class TimeoutInjection { none, target, watchdog };
+constexpr uint32_t powered_pulse_limit_us = 1000000;
 struct RuntimePolicy {
     bool commissioning = false;
+    // Zero preserves continuous inhibited commissioning. Nonzero bounds one
+    // direct-duty pulse per rearm; refreshed commands cannot extend it.
+    uint32_t direct_pulse_us = 0;
     uint32_t direct_mask = 0;
     uint32_t duty_limit_q16 = 3277;
     uint32_t duty_floor_q16 = 0;
@@ -54,6 +58,8 @@ private:
     std::array<uint64_t,4> stop_deadline_{};
     TimeoutInjection injection_=TimeoutInjection::none;
     uint64_t injection_deadline_=0;
+    uint64_t pulse_started_=0;
+    bool pulse_active_=false;
     bool prepared_=false, halted_=true;
 };
 }

@@ -128,3 +128,5 @@ The existing UIO/encoder workflow remains the default image configuration.
 [DMI2 direct-duty procedure](linux/direct-duty.md) adds an adjustable signed-duty
 ceiling and optional measured floor without encoder stimulus. Requires matched new
 FPGA/driver/software. The 0.7 velocity validation procedure remains separate.
+
+Software 0.9.0: [bounded powered commissioning and next board test plan](linux/powered-commissioning.md).

@@ -119,8 +119,10 @@ Validation of the initial implementation: [runtime evidence](../evidence/runtime
 
 Follow [drive-disconnected output validation](output-validation.md) for the bounded
 nonzero-duty profile, opt-in timeout injection (`x`/`w`) and scope acceptance record.
-The maintenance client remains a manual debug application; no powered mode is provided.
+The maintenance client remains a manual debug application. Software 0.9.0 adds
+[bounded powered commissioning](powered-commissioning.md), with separate launch
+selection and a one-second pulse limit.
 
 Direct PWM without encoder feedback is available on the new DMI2 controller; see
 [direct-duty commissioning](direct-duty.md). It requires a matching rebuilt FPGA
-and driver, and does not authorize powered operation.
+and driver. Use the separate powered procedure only after the output/electrical checks.

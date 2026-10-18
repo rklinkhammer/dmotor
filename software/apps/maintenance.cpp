@@ -43,7 +43,7 @@ int32_t rpm(std::string s) {
     return negative?-value:value;
 }
 void menu() {
-    std::cout<<"\nDMOTOR maintenance (exclusive, inhibited commissioning)\n"
+    std::cout<<"\nDMOTOR maintenance (exclusive commissioning; mode selected at daemon startup)\n"
         "m MASK  select motors (decimal bitmask 1..15; selection does not move motors)\n"
         "s       status and encoder positions\n"
         "r       explicit global reset/configure/recovery; resets position epochs\n"
@@ -54,8 +54,9 @@ void menu() {
         "!       immediate HALT ALL, including during partial input\n"
         "q       HALT ALL and quit\n"
         "p PERCENT signed duty, e.g. p 25 or p -12.5 (direct-duty daemon only)\n"
-        "x       inject target timeout (commissioning daemon only)\n"
-        "w       inject watchdog timeout (commissioning daemon only)\n"
+        "Powered daemon: 1-second pulse; updates do not extend it; zero/expiry require rearm.\n"
+        "x       inject target timeout (inhibited commissioning only)\n"
+        "w       inject watchdog timeout (inhibited commissioning only)\n"
         "Configuration is supplied to dmotord; no live retuning. Position/dwell unavailable.\n> "<<std::flush;
 }
 }

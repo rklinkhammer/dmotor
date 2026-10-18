@@ -10,8 +10,8 @@ Rebuild/package the controller IP, board bitstream, kernel module and software
 using the centralized EDF build workflow. The endpoint identity is now DMI2
 (0x444d4932): the new software/driver rejects the older DMI1 image rather than
 accessing undefined registers. The mailbox ABI remains DMB1. Do not install only
-the new daemon onto the previous bitstream/driver. No powered mode is introduced;
-`--externally-inhibited` still requires motor drive power disconnected.
+the new daemon onto the previous bitstream/driver. The inhibited mode below still requires motor drive power disconnected.
+Software 0.9.0 adds a separate [bounded powered mode](powered-commissioning.md).
 
 ## Start and adjust
 
@@ -72,10 +72,12 @@ is zero in this mode; encoder position remains observable.
 Breakaway duty (starting rotation) and sustaining duty (continuing rotation) can
 be different, and change with load, voltage, direction and temperature. Do not
 infer a single universal minimum from an unloaded motor. Record both directions
-and representative loads during a separately qualified powered commissioning step.
+and representative loads during the [bounded powered commissioning step](powered-commissioning.md).
 Keep the floor at zero until measured; then select a policy deliberately. The
 current drive-disconnected procedure cannot measure mechanical breakaway duty,
 and its inhibition assertion must not be used with a powered motor.
 
 [Implementation validation](../../docs/evidence/direct_duty/README.md) records
 simulation, software and implementation checks separately from board tests.
+
+Next: [powered commissioning preparation and test plan](powered-commissioning.md).

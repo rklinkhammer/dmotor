@@ -45,66 +45,35 @@ set_property -dict {PACKAGE_PIN V12 IOSTANDARD LVCMOS33 PULLDOWN true} [get_port
 #set_property -dict { PACKAGE_PIN L20    IOSTANDARD LVCMOS33 } [get_ports { btn[2] }]; #IO_L9N_T1_DQS_AD3N_35 Sch=BTN2
 #set_property -dict { PACKAGE_PIN L19    IOSTANDARD LVCMOS33 } [get_ports { btn[3] }]; #IO_L9P_T1_DQS_AD3P_35 Sch=BTN3
 
-# ====================================================================
-# Pmod Header JA - Type 5 Single H-Bridge Configuration
-# ====================================================================
+## Pmod JA: physical pin reference (Arty Z7-20 Rev.B)
+# Reference: https://github.com/Digilent/digilent-xdc/blob/master/Arty-Z7-20-Master.xdc
+# Active assignments are at the top of this file; the following are commented templates.
+# Physical pins 5/11 = GND; 6/12 = 3.3 V.
+# Pin 9 is shared HALT OUTPUT. Do not connect an external driven signal to it.
+# Pin 10 is unused. No external HALT input is currently routed to this header.
+#set_property -dict { PACKAGE_PIN Y18 IOSTANDARD LVCMOS33 } [get_ports { ja_p[1] }]; # JA pin 1: mc0_dir OUT
+#set_property -dict { PACKAGE_PIN Y19 IOSTANDARD LVCMOS33 } [get_ports { ja_n[1] }]; # JA pin 2: mc0_pwm OUT
+#set_property -dict { PACKAGE_PIN Y16 IOSTANDARD LVCMOS33 } [get_ports { ja_p[2] }]; # JA pin 3: mc0_qa IN
+#set_property -dict { PACKAGE_PIN Y17 IOSTANDARD LVCMOS33 } [get_ports { ja_n[2] }]; # JA pin 4: mc0_qb IN
+#set_property -dict { PACKAGE_PIN U18 IOSTANDARD LVCMOS33 } [get_ports { ja_p[3] }]; # JA pin 7: mc0_en OUT
+#set_property -dict { PACKAGE_PIN U19 IOSTANDARD LVCMOS33 } [get_ports { ja_n[3] }]; # JA pin 8: mc0_fault IN (active high, pulldown)
+#set_property -dict { PACKAGE_PIN W18 IOSTANDARD LVCMOS33 } [get_ports { ja_p[4] }]; # JA pin 9: mc0_halt OUT (shared_halt)
+#set_property -dict { PACKAGE_PIN W19 IOSTANDARD LVCMOS33 } [get_ports { ja_n[4] }]; # JA pin 10: unused
 
-# Pin 1: Direction control output
-
-# Pin 2: PWM Speed control output
-
-# Pin 3: Encoder Feedback Channel A input
-
-# Pin 4: Encoder Feedback Channel B input
-
-# --------------------------------------------------------------------
-# Global H-Bridge Master Enable Line (Choose Option A or Option B)
-# --------------------------------------------------------------------
-# OPTION A: If your hardware requires a dedicated 5th physical pin,
-# you can route it to the first pin of the bottom row (Pin 7):
-
-# OPTION B: If your H-Bridge module hardwires EN to VCC, comment out the line
-# above and drive your internal IP block's enable logic entirely inside Vivado.
-
-# Note: Pmod Pins 5/11 (GND) and 6/12 (VCC) are hardwired on your PCB layout
-# and do not get mapped via software constraints.
-
-# Pin 8: Motor Fault
-
-# Pin 9: Motor Fault
-
-#set_property -dict { PACKAGE_PIN W19   IOSTANDARD LVCMOS33 } [get_ports { ja_n[4] }]; #IO_L22N_T3_34 Sch=JA4_N (Pin 10)
-
-## Pmod Header JB
-# ====================================================================
-# Pmod Header JB - Type 5 Single H-Bridge Configuration (Motor 2)
-# ====================================================================
-
-# Pin 1: Direction control output for Motor 2
-
-# Pin 2: PWM Speed control output for Motor 2
-
-# Pin 3: Encoder Feedback Channel A input for Motor 2
-
-# Pin 4: Encoder Feedback Channel B input for Motor 2
-
-# --------------------------------------------------------------------
-# Global H-Bridge Master Enable Line (Choose Option A or Option B)
-# --------------------------------------------------------------------
-# OPTION A: If your hardware requires a dedicated 5th physical pin,
-# you can route it to the first pin of the bottom row (Pin 7):
-
-# OPTION B: If your H-Bridge module hardwires EN to VCC, comment out the line
-# above and drive your internal IP block's enable logic entirely inside Vivado.
-
-# Pin 8: Motor Fault
-
-# Pin 9: Motor Fault
-
-# Note: Pmod Pins 5/11 (GND) and 6/12 (VCC) are hardwired on your PCB layout
-# and do not get mapped via software constraints.
-
-#set_property -dict { PACKAGE_PIN W13   IOSTANDARD LVCMOS33 } [get_ports { jb_n[4] }]; #IO_L4N_T0_34 Sch=JB4_N (Pin 10)
+## Pmod JB: physical pin reference (Arty Z7-20 Rev.B)
+# Reference: https://github.com/Digilent/digilent-xdc/blob/master/Arty-Z7-20-Master.xdc
+# Active assignments are at the top of this file; the following are commented templates.
+# Physical pins 5/11 = GND; 6/12 = 3.3 V.
+# Pin 9 is shared HALT OUTPUT. Do not connect an external driven signal to it.
+# Pin 10 is unused. No external HALT input is currently routed to this header.
+#set_property -dict { PACKAGE_PIN W14 IOSTANDARD LVCMOS33 } [get_ports { jb_p[1] }]; # JB pin 1: mc1_dir OUT
+#set_property -dict { PACKAGE_PIN Y14 IOSTANDARD LVCMOS33 } [get_ports { jb_n[1] }]; # JB pin 2: mc1_pwm OUT
+#set_property -dict { PACKAGE_PIN T11 IOSTANDARD LVCMOS33 } [get_ports { jb_p[2] }]; # JB pin 3: mc1_qa IN
+#set_property -dict { PACKAGE_PIN T10 IOSTANDARD LVCMOS33 } [get_ports { jb_n[2] }]; # JB pin 4: mc1_qb IN
+#set_property -dict { PACKAGE_PIN V16 IOSTANDARD LVCMOS33 } [get_ports { jb_p[3] }]; # JB pin 7: mc1_en OUT
+#set_property -dict { PACKAGE_PIN W16 IOSTANDARD LVCMOS33 } [get_ports { jb_n[3] }]; # JB pin 8: mc1_fault IN (active high, pulldown)
+#set_property -dict { PACKAGE_PIN V12 IOSTANDARD LVCMOS33 } [get_ports { jb_p[4] }]; # JB pin 9: mc1_halt OUT (shared_halt)
+#set_property -dict { PACKAGE_PIN W13 IOSTANDARD LVCMOS33 } [get_ports { jb_n[4] }]; # JB pin 10: unused
 
 ## Audio Out
 #set_property -dict { PACKAGE_PIN R18   IOSTANDARD LVCMOS33 } [get_ports { aud_pwm }]; #IO_L20N_T3_34 Sch=AUD_PWM

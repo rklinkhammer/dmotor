@@ -26,6 +26,8 @@ Runtime::Runtime(Platform& io, RuntimePolicy policy) : io_(io), protocol_(io), p
     require(!policy.direct_mask || (policy.commissioning && policy.direct_mask<=8 &&
         !(policy.direct_mask&(policy.direct_mask-1)) && policy.duty_limit_q16<=65536 &&
         policy.duty_floor_q16<=policy.duty_limit_q16),"Invalid direct-duty policy");
+    require(!policy.direct_pulse_us || (policy.direct_mask && policy.direct_pulse_us<=powered_pulse_limit_us),
+            "Bounded pulse requires direct duty and at most one second");
     halt();
 }
 Runtime::~Runtime() { try { halt(); } catch (...) {} }
@@ -38,12 +40,13 @@ void Runtime::wait_status(uint32_t mask,uint32_t expected) {
     }
 }
 void Runtime::halt() {
+    pulse_active_=false;
     injection_=TimeoutInjection::none;
     halted_=true; prepared_=false; enabled_=tracking_=stopped_=0; targets_.fill(0);
     io_.halt(true); // Platform must confirm inhibition or throw; never claim success on access loss.
 }
 void Runtime::inject_timeout(TimeoutInjection injection) {
-    require(policy_.commissioning,"Timeout injection requires --commissioning");
+    require(policy_.commissioning && !policy_.direct_pulse_us,"Timeout injection requires inhibited commissioning");
     require(prepared_ && !halted_ && enabled_ && tracking_ && applied_ &&
             injection_==TimeoutInjection::none && injection!=TimeoutInjection::none,
             "Injection requires active applied velocity; rearm between injections");
@@ -125,16 +128,26 @@ void Runtime::duty(int32_t value) {
     const int64_t magnitude=value<0 ? -int64_t{value} : value;
     require(magnitude<=policy_.duty_limit_q16 && (!magnitude || magnitude>=policy_.duty_floor_q16),"Duty outside configured floor/limit (zero always allowed)");
     require((status().ready&policy_.direct_mask)==policy_.direct_mask,"Motor not ready");
+    if(policy_.direct_pulse_us) {
+        if(pulse_active_ && io_.now_us()-pulse_started_>=policy_.direct_pulse_us) {
+            stop(policy_.direct_mask);
+            throw IoError("Duty pulse expired; rearm required");
+        }
+        if(!value) { stop(policy_.direct_mask);pulse_active_=false;return; }
+        if(!pulse_active_) { pulse_started_=io_.now_us();pulse_active_=true; }
+    }
     for(unsigned m=0;m<4;++m)targets_[m]=value;
     tracking_=policy_.direct_mask;next_target_=io_.now_us();
 }
 void Runtime::stop(uint32_t mask) {
     require(mask && !(mask&~enabled_),"Invalid STOP mask");
+    if(policy_.direct_mask) pulse_active_=false;
     write(reg::STOP,mask); if(policy_.direct_mask)enabled_&=~mask; tracking_&=~mask;stopped_|=mask;
     for(unsigned m=0;m<4;++m) if(mask&(1U<<m)) stop_deadline_[m]=io_.now_us()+configs_[m].stop_timeout_us;
 }
 void Runtime::disable(uint32_t mask) {
     require(mask && !(mask&~all),"Invalid disable mask");
+    if(policy_.direct_mask) pulse_active_=false;
     write(reg::DISABLE,mask);enabled_&=~mask;tracking_&=~mask;
     // Re-enable always goes through global prepare to discard pending intent.
     stopped_|=mask;
@@ -150,6 +163,11 @@ void Runtime::tick() {
     if(halted_) return;
     try {
         const auto now=io_.now_us();
+        // Check before publishing or refreshing. STOP disables direct drive and
+        // makes a new pulse require explicit global rearm.
+        if(pulse_active_ && now-pulse_started_>=policy_.direct_pulse_us) {
+            stop(policy_.direct_mask);pulse_active_=false;
+        }
         require(now-lease_<policy_.client_lease_us,"Maintenance lease expired");
         require(injection_==TimeoutInjection::none || now<injection_deadline_,"Injection deadline: FPGA trip not observed; host HALT");
         auto s=status();

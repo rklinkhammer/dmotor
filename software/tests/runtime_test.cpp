@@ -125,5 +125,28 @@ int main(int argc,char** argv) {
         r.prepare(config(),1);r.enable(1);r.duty(16384);r.tick();r.inject_timeout(TimeoutInjection::target);
         const auto seq=r.applied_sequence();io.time+=20000;r.heartbeat();r.tick();CHECK(r.applied_sequence()==seq);
     }
+    {
+        Fake io;RuntimePolicy p;p.commissioning=true;p.direct_mask=1;
+        p.direct_pulse_us=100000;p.duty_limit_q16=32768;Runtime r(io,p);
+        r.prepare(config(),1);r.enable(1);r.duty(16384);r.tick();
+        CHECK(rejects([&]{r.inject_timeout(TimeoutInjection::target);}));
+        io.time+=50000;r.heartbeat();r.duty(-16384);r.tick();
+        CHECK(!io.source && (io.words[reg::STATUS]&1));
+        io.time+=50000;r.heartbeat();r.tick();
+        CHECK(!(io.words[reg::STATUS]&1) && io.words[reg::STOP]==1);
+        CHECK(rejects([&]{r.duty(16384);}));CHECK(rejects([&]{r.enable(1);}));
+        r.prepare(config(),1);r.enable(1);r.duty(16384);r.tick();
+        r.duty(0);CHECK(!(io.words[reg::STATUS]&1));
+        CHECK(rejects([&]{r.duty(16384);}));
+        r.prepare(config(),1);r.enable(1);r.duty(16384);r.tick();
+        // A command arriving after deadline cannot restart or extend a pulse,
+        // even before the next periodic tick.
+        io.time+=100000;CHECK(rejects([&]{r.duty(16384);}));
+        CHECK(!(io.words[reg::STATUS]&1));
+        r.prepare(config(),1);r.enable(1);r.duty(16384);r.tick();
+        r.halt();r.prepare(config(),1);r.enable(1);r.tick();
+        CHECK(io.words[reg::DIRECT_COMMIT]==r.applied_sequence() || r.applied_sequence()==0);
+        CHECK(!io.source); // Rearm alone must not start another pulse.
+    }
     std::cout<<"PASS: lifecycle, 400RPM limits, atomic masks, STOP/rearm, watchdog refresh, lease/fault/access loss and readiness deadlines\n";
 }

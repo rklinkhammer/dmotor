@@ -5,10 +5,13 @@ with tempfile.TemporaryDirectory(prefix='dmotor-service-') as tmp:
     root=Path(tmp);env={**os.environ,'DMOTOR_TEST_DIRECTORY':tmp}
     config=root/'motors.conf'
     config.write_text((Path(__file__).resolve().parents[1]/'config/output-validation.conf').read_text())
-    direct=len(sys.argv)>3 and sys.argv[3]=="--direct"
+    powered=len(sys.argv)>3 and sys.argv[3]=="--powered"
+    direct=len(sys.argv)>3 and sys.argv[3] in ("--direct", "--powered")
+    if powered:
+        config.write_text((Path(__file__).resolve().parents[1]/'config/powered-direct-duty.conf').read_text())
     commissioning=len(sys.argv)>3
     log=open(root/'service.log','w+')
-    daemon=subprocess.Popen([sys.argv[1],'--externally-inhibited','/dev/fake',str(config)]+(['--direct-duty','50','10'] if direct else ['--commissioning'] if commissioning else []),env=env,stdout=log,stderr=log)
+    daemon=subprocess.Popen([sys.argv[1],'--powered-commissioning' if powered else '--externally-inhibited','/dev/fake',str(config)]+(['--direct-duty','50','10'] if direct else ['--commissioning'] if commissioning else []),env=env,stdout=log,stderr=log)
     def connect():
         s=socket.socket(socket.AF_UNIX,socket.SOCK_SEQPACKET);s.settimeout(2);s.connect(str(root/'control.sock'));return s
     def request(s,op,mask=0,vel=(0,0,0,0)):
@@ -27,6 +30,24 @@ with tempfile.TemporaryDirectory(prefix='dmotor-service-') as tmp:
         assert request(s,3,1)[1]==1
         assert target(s)[1]==1
         time.sleep(.04);assert request(s,1)[3]>0
+        if powered:
+            # Keep lease alive and repeatedly update duty: original pulse deadline wins.
+            start=time.monotonic()
+            while time.monotonic()-start<.75:
+                assert target(s)[1]==1
+                time.sleep(.04)
+            while time.monotonic()-start<1.1:
+                assert request(s,0)[1]==1
+                time.sleep(.04)
+            assert request(s,1)[2]&1==0  # disabled by pulse expiry
+            assert target(s)[1]==0       # no restart without rearm
+            assert request(s,2)[1]==1
+            assert request(s,3,1)[1]==1
+            assert target(s)[1]==1
+            time.sleep(.02)
+            assert request(s,11,1,(0,0,0,0))[1]==1
+            assert request(s,1)[2]&1==0
+            assert target(s)[1]==0
         # Inactivity expires ownership, closes client and leaves HALT latched.
         time.sleep(.6);assert s.recv(192)==b'';s.close()
         s=connect();assert request(s,1)[2]&(1<<18)
@@ -61,8 +82,8 @@ with tempfile.TemporaryDirectory(prefix='dmotor-service-') as tmp:
             assert request(s,3,1)[1]==1
             assert target(s)[1]==1
             time.sleep(.03)
-            assert request(s,op)[1]==int(commissioning)
-            if commissioning:
+            assert request(s,op)[1]==int(commissioning and not powered)
+            if commissioning and not powered:
                 # The fixture has no FPGA expiry timers: independent host fallback
                 # must disconnect before the 500 ms client lease.
                 time.sleep(.2);assert s.recv(192)==b'';s.close()
@@ -76,6 +97,6 @@ with tempfile.TemporaryDirectory(prefix='dmotor-service-') as tmp:
         except subprocess.TimeoutExpired: daemon.kill();daemon.communicate()
 
     log.flush();log.seek(0);evidence=log.read();log.close()
-    if commissioning:
+    if commissioning and not powered:
         assert 'inject_target' in evidence and 'inject_watchdog' in evidence
         assert 'Injection deadline: FPGA trip not observed; host HALT' in evidence

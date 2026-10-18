@@ -565,3 +565,24 @@ Added explicit single-motor direct-duty policy with a hardware ceiling and optio
 host floor, manual signed-percent commands, periodic sequenced publication and
 existing timeout injection. See [procedure](software/linux/direct-duty.md). Requires
 DMI2 hardware plus matching driver; powered commissioning remains outstanding.
+
+## Bounded powered commissioning preparation — 2026-10-18
+
+Added a configurable runtime-only direct-duty pulse deadline. Updates cannot
+extend the deadline; expiry and zero command disable drive and require rearm.
+The existing inhibited daemon interface remains unchanged while motor/power and
+pulse-policy inputs are pending. Native UBSan validation passed all seven suites,
+including deadline, repeated-update, early-zero and no-restart cases. This does
+not qualify powered operation or establish FPGA/electrical timing. See the
+[next hardware test plan](software/linux/powered-commissioning.md).
+
+### Powered commissioning interface — software 0.9.0
+
+The approved one-second pulse policy is exposed through explicit
+`--powered-commissioning ... --direct-duty MAX_PERCENT FLOOR_PERCENT` startup.
+Only one configured motor is allowed. Pulse expiry and zero duty disable drive;
+rearm/enable plus a fresh command are required. Timeout injection is inhibited-only.
+The temporary adapter is Pmod HB3; the board test selects GB37-520-30F channel 0, a 12 V supply with a 2.0 A
+current limit and 50% duty ceiling, unloaded wheels and no stall testing. Existing DMI2 hardware and kernel ABI are reused.
+The preceding preparation status is superseded by this interface implementation;
+powered hardware qualification remains outstanding.

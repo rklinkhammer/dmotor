@@ -53,9 +53,10 @@ uint32_t load(const char* path,std::array<MotorConfiguration,4>& configs) {
 int main(int argc,char** argv) {
     if(startup_version("dmotord",argc,argv)) return 0;
     const bool direct=argc==7 && std::string(argv[4])=="--direct-duty";
+    const bool powered=direct && std::string(argv[1])=="--powered-commissioning";
     const bool commissioning=direct || (argc==5 && std::string(argv[4])=="--commissioning");
-    if((argc!=4 && !commissioning) || std::string(argv[1])!="--externally-inhibited") {
-        std::cerr<<"Usage: dmotord --externally-inhibited /dev/dmotor0 CONFIG [--commissioning | --direct-duty MAX_PERCENT FLOOR_PERCENT]\nInitial commissioning only; disconnect drive power.\n";return 2;
+    if((argc!=4 && !commissioning) || (!powered && std::string(argv[1])!="--externally-inhibited")) {
+        std::cerr<<"Usage: dmotord --externally-inhibited /dev/dmotor0 CONFIG [--commissioning | --direct-duty MAX_PERCENT FLOOR_PERCENT]\n       dmotord --powered-commissioning /dev/dmotor0 CONFIG --direct-duty MAX_PERCENT FLOOR_PERCENT\nPowered mode: one-second pulses, explicit rearm required.\n";return 2;
     }
     try {
         std::array<MotorConfiguration,4> configs{};const auto mask=load(argv[3],configs);
@@ -68,7 +69,8 @@ int main(int argc,char** argv) {
                 return static_cast<uint32_t>((n*65536+50)/100);
             };
             policy.direct_mask=mask;policy.duty_limit_q16=percent(argv[5]);policy.duty_floor_q16=percent(argv[6]);
-            std::cout<<"DIRECT DUTY: mask="<<mask<<" limit_q16="<<policy.duty_limit_q16<<" floor_q16="<<policy.duty_floor_q16<<"; no velocity regulation\n";
+            if(powered) policy.direct_pulse_us=powered_pulse_limit_us;
+            std::cout<<"DIRECT DUTY: mask="<<mask<<" limit_q16="<<policy.duty_limit_q16<<" floor_q16="<<policy.duty_floor_q16<<" pulse_us="<<policy.direct_pulse_us<<"; no velocity regulation\n";
         }
         Runtime runtime(device,policy);
         if(mkdir(service_directory.c_str(),0700) && errno!=EEXIST) throw IoError("Cannot create service directory");
@@ -98,7 +100,7 @@ int main(int argc,char** argv) {
         uint64_t next_trace=0;
         constexpr uint64_t trace_period_us=20000;
         auto disconnect=[&]() { runtime.halt();if(client.fd>=0) { close(client.fd);client.fd=-1; } };
-        std::cout<<"Inhibited commissioning service ready; no automatic rearm or enable.\n";
+        std::cout<<(powered ? "POWERED commissioning" : "Inhibited commissioning")<<" service ready; no automatic rearm or enable.\n";
         uint64_t next_tick=device.now_us();
         constexpr uint64_t tick_us=service_period_ms*1000;
         while(!exiting) {
