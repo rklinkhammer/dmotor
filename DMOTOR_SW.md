@@ -558,3 +558,10 @@ See [output validation](software/linux/output-validation.md) for scope procedure
 synthetic feedback requirements and distinguishing FPGA trips from host fallback.
 Physical timing/protection validation, powered commissioning, and position planning
 remain outstanding. No RTL or MMIO ABI changes are introduced by this step.
+
+## Direct-duty commissioning — software 0.8.0
+
+Added explicit single-motor direct-duty policy with a hardware ceiling and optional
+host floor, manual signed-percent commands, periodic sequenced publication and
+existing timeout injection. See [procedure](software/linux/direct-duty.md). Requires
+DMI2 hardware plus matching driver; powered commissioning remains outstanding.

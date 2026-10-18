@@ -22,7 +22,7 @@ int main(int argc, char** argv) {
         const auto status = protocol.status();
         dmotor_sw::TelemetrySnapshot snapshot;
         if (!protocol.capture(snapshot)) throw dmotor_sw::IoError("Snapshot changed; no coherent result");
-        std::cout << "DMI1 status=0x" << std::hex << status.raw << std::dec
+        std::cout << "DMI2 status=0x" << std::hex << status.raw << std::dec
                   << " capture=" << snapshot.capture_sequence << '\n';
         for (unsigned i = 0; i < snapshot.motors.size(); ++i) {
             const auto& motor = snapshot.motors[i];

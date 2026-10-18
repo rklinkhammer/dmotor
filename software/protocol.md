@@ -29,7 +29,7 @@ No generation advancement or lifecycle orchestration is implemented here.
 
 ## Inspection
 
-`compatible_controller()` reads DMI1 at 0x1000 only, allowing local inspection when
+`compatible_controller()` reads DMI2 at 0x1000 only, allowing local inspection when
 the mailbox is blocked by HALT/reset. `compatible_mailbox()` checks DMB1, schema
 and motor count separately; call it only when atomic accesses are available.
 

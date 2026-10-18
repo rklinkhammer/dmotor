@@ -53,6 +53,7 @@ void menu() {
         "d       disable selected motors\n"
         "!       immediate HALT ALL, including during partial input\n"
         "q       HALT ALL and quit\n"
+        "p PERCENT signed duty, e.g. p 25 or p -12.5 (direct-duty daemon only)\n"
         "x       inject target timeout (commissioning daemon only)\n"
         "w       inject watchdog timeout (commissioning daemon only)\n"
         "Configuration is supplied to dmotord; no live retuning. Position/dwell unavailable.\n> "<<std::flush;
@@ -104,6 +105,12 @@ int main(int argc,char** argv) {
                             switch(op) {
                             case 's':r.operation=Operation::status;break;
                             case 'r':r.operation=Operation::prepare;break;
+                            case 'p': {
+                                std::string value;if(!(in>>value))throw std::runtime_error("Duty percentage required");
+                                const auto milli=rpm(value);
+                                if(milli>100000 || milli< -100000)throw std::runtime_error("Duty exceeds 100 percent");
+                                r.operation=Operation::duty;r.velocity[0]=static_cast<int32_t>((int64_t{milli}*65536+(milli>=0?50000:-50000))/100000);break;
+                            }
                             case 'x':r.operation=Operation::inject_target;break;
                             case 'w':r.operation=Operation::inject_watchdog;break;
                             case 'e':r.operation=Operation::enable;break;

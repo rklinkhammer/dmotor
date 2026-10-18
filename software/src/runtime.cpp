@@ -23,6 +23,9 @@ Runtime::Runtime(Platform& io, RuntimePolicy policy) : io_(io), protocol_(io), p
             policy.target_period_us && uint64_t{policy.target_period_us}*3 <= policy.target_timeout_us &&
             policy.target_timeout_us >= 1000 && policy.target_timeout_us <= 1000000 &&
             policy.client_lease_us && policy.readiness_us && policy.transition_us, "Invalid runtime timing policy");
+    require(!policy.direct_mask || (policy.commissioning && policy.direct_mask<=8 &&
+        !(policy.direct_mask&(policy.direct_mask-1)) && policy.duty_limit_q16<=65536 &&
+        policy.duty_floor_q16<=policy.duty_limit_q16),"Invalid direct-duty policy");
     halt();
 }
 Runtime::~Runtime() { try { halt(); } catch (...) {} }
@@ -55,7 +58,7 @@ TelemetrySnapshot Runtime::capture() {
     TelemetrySnapshot result; require(protocol_.capture(result),"Incoherent telemetry"); return result;
 }
 void Runtime::prepare(const std::array<MotorConfiguration,4>& configs,uint32_t mask) {
-    require(mask && !(mask&~all),"Invalid configuration mask");
+    require(mask && !(mask&~all) && (!policy_.direct_mask || mask==policy_.direct_mask),"Invalid configuration mask");
     for(unsigned m=0;m<4;++m) if(mask&(1U<<m)) require(valid_configuration(configs[m]),"Invalid motor configuration");
     try {
         halt(); wait_status(all,0);
@@ -73,6 +76,15 @@ void Runtime::prepare(const std::array<MotorConfiguration,4>& configs,uint32_t m
             for(unsigned w=0;w<configuration_words;++w)
                 require(io_.read32(reg::CONFIG_BASE+m*reg::CONFIG_STRIDE+w*4)==words[w],"Configuration readback mismatch");
         }
+        if(policy_.direct_mask) {
+            require(io_.read32(reg::DIRECT_CAPABILITY)==0x44445531U,"Bitstream lacks direct-duty capability");
+            write(reg::DIRECT_MODE,policy_.direct_mask);
+            write(reg::DIRECT_LIMIT,policy_.duty_limit_q16);
+            require(io_.read32(reg::DIRECT_MODE)==policy_.direct_mask && io_.read32(reg::DIRECT_LIMIT)==policy_.duty_limit_q16,"Direct-duty configuration rejected");
+        } else {
+            write(reg::DIRECT_MODE,0);
+            require(io_.read32(reg::DIRECT_MODE)==0,"Direct-duty mode did not clear");
+        }
         write(reg::WATCHDOG_CYCLES,policy_.authorization_us*clocks_per_us);
         write(reg::TARGET_TIMEOUT_CYCLES,policy_.target_timeout_us*clocks_per_us);
         io_.halt(false); io_.sleep_us(poll_us);
@@ -81,7 +93,7 @@ void Runtime::prepare(const std::array<MotorConfiguration,4>& configs,uint32_t m
         write(reg::ACKNOWLEDGE,4); io_.sleep_us(poll_us);
         write(reg::CORE_RESET,0);
         wait_status((1U<<16)|(1U<<17)|(1U<<18),0);
-        require(protocol_.compatible_mailbox(),"Unsupported mailbox");
+        require(policy_.direct_mask || protocol_.compatible_mailbox(),"Unsupported mailbox");
         configs_=configs;configured_=mask;sequence_=applied_=0;refresh_sequence_.fill(0);
         halted_=false;prepared_=true;heartbeat();
         next_refresh_=next_target_=io_.now_us();
@@ -96,6 +108,7 @@ void Runtime::enable(uint32_t mask) {
     next_refresh_=io_.now_us();
 }
 void Runtime::velocity(uint32_t mask,const std::array<int32_t,4>& targets) {
+    require(!policy_.direct_mask,"Velocity command unavailable in direct-duty mode");
     require(prepared_ && !halted_ && mask && !(mask&~enabled_) && !(mask&stopped_),"Motor unavailable");
     require((status().ready&mask)==mask,"Motors not ready");
     for(unsigned m=0;m<4;++m) if(mask&(1U<<m)) {
@@ -106,9 +119,18 @@ void Runtime::velocity(uint32_t mask,const std::array<int32_t,4>& targets) {
     for(unsigned m=0;m<4;++m) if(mask&(1U<<m)) targets_[m]=targets[m];
     tracking_|=mask; next_target_=io_.now_us();
 }
+void Runtime::duty(int32_t value) {
+    require(policy_.direct_mask && prepared_ && !halted_ &&
+        (enabled_&policy_.direct_mask)==policy_.direct_mask && !stopped_,"Direct-duty motor unavailable");
+    const int64_t magnitude=value<0 ? -int64_t{value} : value;
+    require(magnitude<=policy_.duty_limit_q16 && (!magnitude || magnitude>=policy_.duty_floor_q16),"Duty outside configured floor/limit (zero always allowed)");
+    require((status().ready&policy_.direct_mask)==policy_.direct_mask,"Motor not ready");
+    for(unsigned m=0;m<4;++m)targets_[m]=value;
+    tracking_=policy_.direct_mask;next_target_=io_.now_us();
+}
 void Runtime::stop(uint32_t mask) {
     require(mask && !(mask&~enabled_),"Invalid STOP mask");
-    write(reg::STOP,mask); tracking_&=~mask;stopped_|=mask;
+    write(reg::STOP,mask); if(policy_.direct_mask)enabled_&=~mask; tracking_&=~mask;stopped_|=mask;
     for(unsigned m=0;m<4;++m) if(mask&(1U<<m)) stop_deadline_[m]=io_.now_us()+configs_[m].stop_timeout_us;
 }
 void Runtime::disable(uint32_t mask) {
@@ -138,6 +160,14 @@ void Runtime::tick() {
             require(now<stop_deadline_[m],"Controlled STOP timeout");
         if(injection_!=TimeoutInjection::watchdog && enabled_ && now>=next_refresh_) { refresh(enabled_);next_refresh_=now+policy_.refresh_period_us; }
         if(injection_!=TimeoutInjection::target && tracking_ && now>=next_target_) {
+            if(policy_.direct_mask) {
+                require(sequence_!=UINT32_MAX,"Duty sequence exhausted");
+                write(reg::DIRECT_DUTY,static_cast<uint32_t>(targets_[0]));
+                write(reg::DIRECT_COMMIT,++sequence_);
+                applied_=io_.read32(reg::DIRECT_COMMIT);
+                require(applied_==sequence_,"Direct-duty command rejected");
+                next_target_=now+policy_.target_period_us;
+            } else {
             auto pending=io_.read32(batch::PENDING_MASK);
             if(!pending || pending==tracking_) {
                 require(sequence_!=UINT32_MAX,"Target sequence exhausted");
@@ -147,7 +177,8 @@ void Runtime::tick() {
                 next_target_=now+policy_.target_period_us;
             }
         }
-        if(enabled_) {
+        }
+        if(enabled_ && !policy_.direct_mask) {
             Adapter adapter{io_};dmotor::AppliedBatchSnapshot sample;
             if(dmotor::read_applied_batch(adapter,sample)) applied_=sample.sequence;
         }

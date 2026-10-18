@@ -14,7 +14,7 @@ struct Fake : Platform {
     std::vector<std::pair<uint32_t,uint32_t>> writes;
     uint64_t time=0;bool source=true,reset=true,fail=false,hold_ready=false,halt_failure=false;
     unsigned halt_count=0;
-    Fake() { words[reg::IDENTITY]=reg::PROFILE_ID;words[reg::STATUS]=1U<<18;words[b::IDENTITY]=b::PROFILE_ID;words[b::SCHEMA]=1;words[b::MOTOR_COUNT]=4; }
+    Fake() { words[reg::DIRECT_CAPABILITY]=0x44445531;words[reg::IDENTITY]=reg::PROFILE_ID;words[reg::STATUS]=1U<<18;words[b::IDENTITY]=b::PROFILE_ID;words[b::SCHEMA]=1;words[b::MOTOR_COUNT]=4; }
     uint32_t read32(uint32_t a) override { if(fail) throw IoError("bus");return words[a]; }
     void write32(uint32_t a,uint32_t v) override {
         if(fail) throw IoError("bus");
@@ -23,6 +23,7 @@ struct Fake : Platform {
         if(a==reg::CORE_RESET) { reset=v!=0;if(reset) words[reg::STATUS]|=1U<<18;else if(!source) words[reg::STATUS]&=~(1U<<18); }
         if(a==reg::ENABLE) { CHECK(!reset && !source);words[reg::STATUS]|=v;if(!hold_ready) words[reg::STATUS]|=v<<8; }
         if(a==reg::DISABLE) words[reg::STATUS]&=~(v|(v<<8));
+        if(a==reg::STOP && words[reg::DIRECT_MODE])words[reg::STATUS]&=~(v|(v<<8));
         if(a==reg::STOP) { words[reg::STATUS]|=v<<12;words[reg::STATUS]&=~(v<<8);words[b::PENDING_MASK]=0; }
         if(a==b::COMMIT) {
             CHECK(v==1 && !source && !reset);
@@ -110,6 +111,19 @@ int main(int argc,char** argv) {
         r.velocity(1,{{1000,0,0,0}});r.tick();CHECK(!io.source);
         r.inject_timeout(injection);io.words[reg::STATUS]|=1U<<16;
         CHECK(rejects([&]{r.tick();}));CHECK(io.source);
+    }
+    {
+        Fake io;RuntimePolicy p;p.commissioning=true;p.direct_mask=1;
+        p.duty_limit_q16=32768;p.duty_floor_q16=6554;Runtime r(io,p);
+        r.prepare(config(),1);r.enable(1);r.tick();
+        CHECK(rejects([&]{r.velocity(1,{{1000,0,0,0}});}));
+        CHECK(rejects([&]{r.duty(6553);}));CHECK(rejects([&]{r.duty(32769);}));
+        r.duty(32768);r.tick();CHECK(io.words[reg::DIRECT_DUTY]==32768 && r.applied_sequence()==1);
+        r.duty(-6554);r.tick();CHECK(io.words[reg::DIRECT_DUTY]==static_cast<uint32_t>(-6554));
+        r.duty(0);r.tick();CHECK(io.words[reg::DIRECT_DUTY]==0);
+        r.stop(1);r.tick();CHECK(rejects([&]{r.duty(32768);}));CHECK(rejects([&]{r.enable(1);}));
+        r.prepare(config(),1);r.enable(1);r.duty(16384);r.tick();r.inject_timeout(TimeoutInjection::target);
+        const auto seq=r.applied_sequence();io.time+=20000;r.heartbeat();r.tick();CHECK(r.applied_sequence()==seq);
     }
     std::cout<<"PASS: lifecycle, 400RPM limits, atomic masks, STOP/rearm, watchdog refresh, lease/fault/access loss and readiness deadlines\n";
 }

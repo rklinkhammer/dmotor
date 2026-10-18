@@ -20,7 +20,7 @@ def provenance(root):
         return subprocess.check_output(['git', '-C', str(root), *args], text=True).strip()
     return dict(version=(root / 'software/VERSION').read_text().strip(),
                 git_commit=git('rev-parse', 'HEAD'), dirty=bool(git('status', '--porcelain', '--untracked-files=normal')),
-                source_sha256=fingerprint, controller_abi='DMI1/DMB1-schema1', files=hashes)
+                source_sha256=fingerprint, controller_abi='DMI2/DMB1-schema1', files=hashes)
 
 def write(path, text):
     path.parent.mkdir(parents=True, exist_ok=True)

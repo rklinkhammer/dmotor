@@ -16,6 +16,9 @@ module dmotor_controller_axi(
  reg local_valid,local_okay,atomic_owner;
  reg [31:0] local_data;
  reg core_reset;
+ reg [3:0] direct_mode;
+ reg [31:0] direct_limit,direct_staging,direct_duty,direct_sequence;
+ reg direct_valid;
  reg [31:0] session;
  reg [2559:0] configurations,staging;
  reg [79:0] written;
@@ -37,12 +40,12 @@ module dmotor_controller_axi(
  wire [127:0] max_speeds={configurations[1952 +:32],configurations[1312 +:32],configurations[672 +:32],configurations[32 +:32]};
  wire atomic_ready,atomic_valid,atomic_okay;
  wire [31:0] atomic_data;
- wire atomic_select=host_address<IDENTITY && !core_reset && !fault && !shared_halt && !controller_blocked;
+ wire atomic_select=direct_mode==0 && host_address<IDENTITY && !core_reset && !fault && !shared_halt && !controller_blocked;
  assign host_ready=atomic_select ? atomic_ready : !local_valid && !atomic_owner;
  assign host_response_valid=atomic_owner ? atomic_valid : local_valid;
  assign host_response_okay=atomic_owner ? atomic_okay : local_okay;
  assign host_rdata=atomic_owner ? atomic_data : local_data;
- dmotor_motor_io controller(.clk(clk),.reset(reset),.core_reset(core_reset),
+ dmotor_motor_io controller(.direct_mode(direct_mode),.direct_duty(direct_duty),.direct_valid(direct_valid),.clk(clk),.reset(reset),.core_reset(core_reset),
   .inhibit(1'b0),.cancel_frame(1'b0),.halt_async(halt_async),.qa(qa),.qb(qb),.physical_faults(physical_faults),
   .enable_request(enable_request),.disable_request(disable_request),.refresh_valid(refresh_valid),
   .encoder_initialize(encoder_initialize),.refresh_sequences(refresh_sequences),.refresh_session(refresh_session),
@@ -81,6 +84,7 @@ module dmotor_controller_axi(
  end
  always @(posedge clk)begin
   if(reset)begin
+   direct_mode<=0;direct_limit<=0;direct_staging<=0;direct_duty<=0;direct_sequence<=0;direct_valid<=0;
    local_valid<=0;local_okay<=0;local_data<=0;atomic_owner<=0;core_reset<=1;session<=0;
    configurations<=0;staging<=0;written<=0;configured<=0;enable_request<=0;disable_request<=0;stop<=0;stop_event<=0;pending_stop<=0;
    refresh_valid<=0;refresh_sequences<=0;refresh_session<=0;encoder_initialize<=0;age_configure<=0;
@@ -88,6 +92,8 @@ module dmotor_controller_axi(
    age_timeout_cycles<=dmotor_timing::TARGET_TIMEOUT_DEFAULT_CYCLES;
    acknowledge_local<=0;acknowledge_external<=0;acknowledge_halt<=0;snapshot_bank<=0;snapshot_sequence<=0;
   end else begin
+   direct_valid<=0;
+   if(core_reset)begin direct_sequence<=0;direct_duty<=0;direct_staging<=0;end
    enable_request<=0;disable_request<=0;stop_event<=0;refresh_valid<=0;encoder_initialize<=0;age_configure<=0;
    acknowledge_local<=0;acknowledge_external<=0;acknowledge_halt<=0;
    if(!controller_busy && pending_stop!=0)begin
@@ -119,15 +125,35 @@ module dmotor_controller_axi(
       end else if(host_address>=TELEMETRY_BASE && host_address<32'h3150 && !host_write)begin
        local_data<=snapshot_read;local_okay<=1;
       end else case(host_address)
+       DIRECT_CAPABILITY:if(!host_write)begin local_data<=32'h44445531;local_okay<=1;end
+       DIRECT_MODE:begin
+        if(!host_write)begin local_data<={28'd0,direct_mode};local_okay<=1;end
+        else if(core_reset && enabled==0 && (host_wdata==0 || host_wdata==1 || host_wdata==2 || host_wdata==4 || host_wdata==8))begin direct_mode<=host_wdata[3:0];local_okay<=1;end
+       end
+       DIRECT_LIMIT:begin
+        if(!host_write)begin local_data<=direct_limit;local_okay<=1;end
+        else if(core_reset && enabled==0 && host_wdata<=65536)begin direct_limit<=host_wdata;local_okay<=1;end
+       end
+       DIRECT_DUTY:begin
+        if(!host_write)begin local_data<=direct_duty;local_okay<=1;end
+        else if(direct_mode!=0 && !core_reset && $signed(host_wdata)<=$signed(direct_limit) && $signed(host_wdata)>=-$signed(direct_limit))begin direct_staging<=host_wdata;local_okay<=1;end
+       end
+       DIRECT_COMMIT:begin
+        if(!host_write)begin local_data<=direct_sequence;local_okay<=1;end
+        else if(direct_mode!=0 && !core_reset && !shared_halt && !fault && !controller_blocked &&
+          (enabled&direct_mode)==direct_mode && (stop&direct_mode)==0 && host_wdata>direct_sequence)begin
+         direct_duty<=direct_staging;direct_valid<=1;direct_sequence<=host_wdata;local_okay<=1;
+        end
+       end
        IDENTITY:if(!host_write)begin local_data<=PROFILE_ID;local_okay<=1;end
        STATUS:if(!host_write)begin local_data<={9'd0,age_faults,controller_blocked,shared_halt,fault,stopped,ready_mask,configured,enabled};local_okay<=1;end
        SESSION:begin
         if(!host_write)begin local_data<=session;local_okay<=1;end
         else if(core_reset && enabled==0 && host_wdata!=0)begin session<=host_wdata;local_okay<=1;end
        end
-       ENABLE:if(host_write && host_wdata<16 && !core_reset && !shared_halt && !fault && protocol_initialized && (host_wdata[3:0]&configured)==host_wdata[3:0] && (host_wdata[3:0]&stop)==0)begin enable_request<=host_wdata[3:0];local_okay<=1;end
+       ENABLE:if(host_write && host_wdata<16 && !core_reset && !shared_halt && !fault && protocol_initialized && (direct_mode==0 || host_wdata[3:0]==direct_mode) && (host_wdata[3:0]&configured)==host_wdata[3:0] && (host_wdata[3:0]&stop)==0)begin enable_request<=host_wdata[3:0];local_okay<=1;end
        DISABLE:if(host_write && host_wdata<16)begin disable_request<=host_wdata[3:0];local_okay<=1;end
-       STOP:if(host_write && host_wdata<16)begin pending_stop<=pending_stop|host_wdata[3:0];local_okay<=1;end
+       STOP:if(host_write && host_wdata<16)begin if(direct_mode!=0)disable_request<=host_wdata[3:0];pending_stop<=pending_stop|host_wdata[3:0];local_okay<=1;end
        REFRESH_SESSION:if(host_write)begin refresh_session<=host_wdata;local_okay<=1;end
        CORE_RESET:if(host_write && enabled==0 && host_wdata<=1 && session!=0)begin
         core_reset<=host_wdata[0];if(!host_wdata[0])begin age_configure<=configured;stop<=0;end

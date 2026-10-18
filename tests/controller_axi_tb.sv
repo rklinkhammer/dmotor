@@ -32,6 +32,7 @@ module controller_axi_tb;
  reg [2687:0] snapshot_pattern;
  reg seen_fault=0;
  always @(negedge clk)begin
+  if(dut.enable_request) $display("enable request %h cfg=%h initialized=%b inhibit=%b local=%h ext=%h halt=%h enabled=%h time=%t",dut.enable_request,dut.configured,dut.protocol_initialized,dut.controller.global_inhibit,dut.watchdog_faults,dut.controller.external_latches,dut.controller.halt_detected,dut.enabled,$time);
   if(reset)seen_fault=0;
   else if(dut.fault && !seen_fault)begin
    seen_fault=1;
@@ -40,13 +41,24 @@ module controller_axi_tb;
     dut.controller.controller.engine.fault,dut.controller.controller.control.control.scheduler.fault,dut.stop);
   end
  end
+ task direct_start(input [31:0] wd,input [31:0] age,input [31:0] limit=65536);begin
+  @(negedge clk);reset=1;physical_faults=0;halt_async=0;repeat(4)step();@(negedge clk);reset=0;
+  write_word('h1008,1,0);
+  cfg[0]=1;for(i=0;i<20;i=i+1)write_word('h2000+i*4,cfg[i],0);
+  write_word('h2080,1,0);
+  write_word('h1054,3,2);write_word('h1054,1,0);write_word('h1058,limit,0);
+  write_word('h1028,wd,0);write_word('h102c,age,0);write_word('h1020,0,0);
+  repeat(10)step();write_word('h100c,2,2);write_word('h100c,1,0);
+  write_word('h1018,1,0);write_word('h1040,1,0);
+ end endtask
+ integer highs;
  initial begin
   for(i=0;i<20;i=i+1)cfg[i]=0;
   cfg[1]=200000;cfg[2]=1000000;cfg[3]=1000000;cfg[4]=10296;cfg[5]=5;
   cfg[6]=1;cfg[7]=100;cfg[8]=2;cfg[9]=655;cfg[10]=65536;cfg[11]=65536;cfg[12]=65536;
   cfg[13]=1000000;cfg[14]=40000;cfg[15]=20000;cfg[16]=128;
   repeat(4)step();@(negedge clk);reset=0;
-  read_word('h1000);if(value!=32'h444d4931)$fatal(1,"identity");
+  read_word('h1000);if(value!=32'h444d4932)$fatal(1,"identity");
   write_word('h1008,7,0);
   // Encoder-only utility lifecycle: no configuration, enable or watchdog writes.
   write_word('h1020,1,0);write_word('h1020,0,0);repeat(8)step();
@@ -142,7 +154,40 @@ module controller_axi_tb;
   @(negedge clk);halt_async=0;repeat(8)step();read_word(0,2);
   write_word('h1024,4,0);repeat(8)step();read_word(0);
   if(value!=32'h444d4231)$fatal(1,"external HALT recovery");
+  // Direct-duty path: no encoder pulses or HLS readiness required.
+  direct_start(200000,200000);
+  read_word('h1050);if(value!=32'h44445531)$fatal(1,"direct capability");
+  write_word('h1054,0,2);write_word('h1058,32768,2);read_word(0,2);
+  if(drive_enable)$fatal(1,"nonzero entry duty");
+  write_word('h105c,65537,2);write_word('h105c,-65537,2);
+  write_word('h105c,16384,0);write_word('h1060,1,0);
+  repeat(2200)step();highs=0;repeat(1000)begin step();if(pwm[0])highs=highs+1;end
+  if(highs!=250 || drive_enable!=1 || direction[0])$fatal(1,"25 percent duty %d",highs);
+  write_word('h1060,1,2); // replay cannot refresh command age
+  write_word('h105c,65536,0);write_word('h1060,2,0);
+  repeat(1200)step();highs=0;repeat(1000)begin step();if(pwm[0])highs=highs+1;end
+  if(highs!=1000)$fatal(1,"100 percent duty");
+  write_word('h105c,-32768,0);write_word('h1060,3,0);
+  wait(!drive_enable[0]);repeat(3200)step();highs=0;repeat(1000)begin step();if(pwm[0])highs=highs+1;end
+  if(highs!=500 || !direction[0])$fatal(1,"reverse duty");
+  write_word('h105c,0,0);write_word('h1060,4,0);repeat(1200)step();if(drive_enable)$fatal(1,"zero duty");
+  write_word('h105c,16384,0);write_word('h1060,5,0);repeat(1200)step();
+  write_word('h1014,1,0);repeat(8)step();if(drive_enable || dut.enabled)$fatal(1,"direct STOP");
+  write_word('h1060,6,2);write_word('h100c,1,2);
+  direct_start(200000,20000);write_word('h105c,16384,0);write_word('h1060,1,0);
+  wait(shared_halt);repeat(5)step();if(drive_enable || dut.age_faults!=1)$fatal(1,"direct command expiry");
+  direct_start(20000,200000);write_word('h105c,16384,0);write_word('h1060,1,0);
+  wait(shared_halt);repeat(5)step();if(drive_enable || !dut.watchdog_faults[0])$fatal(1,"direct watchdog");
+  direct_start(200000,200000);write_word('h105c,16384,0);write_word('h1060,1,0);repeat(1200)step();
+  @(negedge clk);physical_faults=2;repeat(8)step();if(drive_enable || !shared_halt)$fatal(1,"direct shared external fault");
+  direct_start(200000,200000);write_word('h105c,16384,0);write_word('h1060,1,0);repeat(1200)step();
+  @(negedge clk);halt_async=1;repeat(8)step();if(drive_enable || dut.enabled)$fatal(1,"direct HALT");
+  direct_start(200000,200000,32768);
+  write_word('h105c,32769,2);write_word('h105c,-32769,2);
+  write_word('h105c,-32768,0);write_word('h1060,1,0);repeat(3200)step();
+  if(drive_enable!=1 || !direction[0])$fatal(1,"configured ceiling boundary");
+  $display("direct-duty PASS: 0/25/50/100 percent, signed ceiling, mode lock, replay rejection, STOP, expiry, watchdog, faults and HALT");
   $display("controller_axi PASS: real AXI, both HLS kernels, configuration, four-motor targets, encoder capture, telemetry shared physical fault, explicit recovery and watchdog expiration");$finish;
  end
- initial begin repeat(500000)step();$fatal(1,"timeout fault=%b ready=%h",dut.fault,dut.ready_mask);end
+ initial begin repeat(500000)step();$fatal(1,"timeout fault=%b ready=%h enabled=%h core=%b direct=%h address=%h valid=%b atomic=%b initialized=%b",dut.fault,dut.ready_mask,dut.enabled,dut.core_reset,dut.direct_mode,dut.host_address,dut.host_valid,dut.atomic_owner,dut.protocol_initialized);end
 endmodule

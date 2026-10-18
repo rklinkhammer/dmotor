@@ -1,6 +1,6 @@
 # Exclusive-access and velocity-runtime commissioning
 
-Version 0.7.0 implements the first production-access/lifecycle foundation. It is
+Version 0.8.0 implements the first production-access/lifecycle foundation. It is
 not yet qualified for powered motor operation. The target configuration selects inspection or production; the current EDF
 checkout selects production commissioning. No service is started at boot and no driver is loaded by these tools.
 
@@ -120,3 +120,7 @@ Validation of the initial implementation: [runtime evidence](../evidence/runtime
 Follow [drive-disconnected output validation](output-validation.md) for the bounded
 nonzero-duty profile, opt-in timeout injection (`x`/`w`) and scope acceptance record.
 The maintenance client remains a manual debug application; no powered mode is provided.
+
+Direct PWM without encoder feedback is available on the new DMI2 controller; see
+[direct-duty commissioning](direct-duty.md). It requires a matching rebuilt FPGA
+and driver, and does not authorize powered operation.

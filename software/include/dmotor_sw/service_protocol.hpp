@@ -5,7 +5,7 @@ namespace dmotor_sw {
 constexpr uint32_t service_schema=1;
 constexpr unsigned service_period_ms=5;
 constexpr unsigned client_ping_ms=100;
-enum class Operation : uint32_t { ping, status, prepare, enable, velocity, stop, disable, halt, quit, inject_target, inject_watchdog };
+enum class Operation : uint32_t { ping, status, prepare, enable, velocity, stop, disable, halt, quit, inject_target, inject_watchdog, duty };
 struct Request {
     uint32_t schema=service_schema;
     Operation operation=Operation::status;

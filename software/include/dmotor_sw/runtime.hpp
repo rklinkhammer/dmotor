@@ -10,6 +10,9 @@ struct Platform : Device {
 enum class TimeoutInjection { none, target, watchdog };
 struct RuntimePolicy {
     bool commissioning = false;
+    uint32_t direct_mask = 0;
+    uint32_t duty_limit_q16 = 3277;
+    uint32_t duty_floor_q16 = 0;
     uint32_t target_period_us = 10000;
     uint32_t refresh_period_us = 20000;
     uint32_t authorization_us = 100000;
@@ -25,6 +28,7 @@ public:
     void prepare(const std::array<MotorConfiguration,4>& configs, uint32_t mask);
     void enable(uint32_t mask);
     void velocity(uint32_t mask, const std::array<int32_t,4>& targets);
+    void duty(int32_t value_q16);
     void stop(uint32_t mask);
     void disable(uint32_t mask);
     void halt();

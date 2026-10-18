@@ -40,7 +40,7 @@ struct TelemetrySnapshot {
 class Protocol {
 public:
     explicit Protocol(Device& device) : device_(device) {}
-    // DMI1-only check works even when mailbox accesses are blocked by reset/HALT.
+    // DMI2-only check works even when mailbox accesses are blocked by reset/HALT.
     bool compatible_controller();
     // Call only when the mailbox is accessible; no automatic reset or recovery.
     bool compatible_mailbox();

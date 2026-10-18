@@ -10,7 +10,7 @@ namespace r=dmotor::controller_reg;
 namespace b=dmotor::batch_reg;
 namespace { std::map<uint32_t,uint32_t> words;bool reset=true,source=true; }
 KernelDevice::KernelDevice(const std::string&) {
-    words.clear();words[r::IDENTITY]=r::PROFILE_ID;words[r::STATUS]=1U<<18;
+    words.clear();words[r::DIRECT_CAPABILITY]=0x44445531;words[r::IDENTITY]=r::PROFILE_ID;words[r::STATUS]=1U<<18;
     words[b::IDENTITY]=b::PROFILE_ID;words[b::SCHEMA]=1;words[b::MOTOR_COUNT]=4;
 }
 KernelDevice::~KernelDevice() { halt(true); }
@@ -20,7 +20,8 @@ void KernelDevice::write32(uint32_t a,uint32_t v) {
     if(a==r::CORE_RESET) { reset=v!=0;if(reset) words[r::STATUS]|=1U<<18;else if(!source) words[r::STATUS]&=~(1U<<18); }
     if(a==r::ENABLE) words[r::STATUS]|=v|(v<<8);
     if(a==r::DISABLE) words[r::STATUS]&=~(v|(v<<8));
-    if(a==r::STOP) words[r::STATUS]|=v<<12;
+    if(a==r::STOP && words[r::DIRECT_MODE])words[r::STATUS]&=~(v|(v<<8));
+        if(a==r::STOP) words[r::STATUS]|=v<<12;
     if(a==b::COMMIT) { words[b::PUBLISHED_SEQUENCE]=words[b::STAGE_SEQUENCE];words[b::APPLIED_SEQUENCE]=words[b::STAGE_SEQUENCE]; }
     words[a]=v;
 }

@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 namespace dmotor { namespace controller_reg {
-constexpr uint32_t PROFILE_ID = 1145915697U;
+constexpr uint32_t PROFILE_ID = 1145915698U;
 constexpr uint32_t IDENTITY = 4096U;
 constexpr uint32_t STATUS = 4100U;
 constexpr uint32_t SESSION = 4104U;
@@ -20,4 +20,9 @@ constexpr uint32_t CONFIG_STRIDE = 256U;
 constexpr uint32_t CONFIG_COMMIT = 128U;
 constexpr uint32_t TELEMETRY_BASE = 12288U;
 constexpr uint32_t TELEMETRY_STRIDE = 84U;
+constexpr uint32_t DIRECT_CAPABILITY = 4176U;
+constexpr uint32_t DIRECT_MODE = 4180U;
+constexpr uint32_t DIRECT_LIMIT = 4184U;
+constexpr uint32_t DIRECT_DUTY = 4188U;
+constexpr uint32_t DIRECT_COMMIT = 4192U;
 } }

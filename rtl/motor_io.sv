@@ -7,6 +7,9 @@ module dmotor_motor_io #(
     parameter integer PWM_CYCLES=dmotor_timing::PWM_PERIOD_CYCLES
 )(
     input wire clk, reset, inhibit, cancel_frame,
+    input wire [3:0] direct_mode,
+    input wire signed [31:0] direct_duty,
+    input wire direct_valid,
     input wire halt_async, core_reset, acknowledge_local, acknowledge_external, acknowledge_halt,
     input wire [3:0] qa,qb,physical_faults,enable_request,disable_request,refresh_valid,encoder_initialize,
     input wire [127:0] refresh_sequences,
@@ -62,8 +65,47 @@ module dmotor_motor_io #(
         if(reset)begin halt_meta<=0;halt_sync<=0;end
         else begin halt_meta<=halt_async;halt_sync<=halt_meta;end
     end
-    wire ctrl_fault,ctrl_halt,aggregated;
-    wire global_inhibit=inhibit || aggregated || |halt_detected || |external_latches || |physical_sync || ctrl_fault || |(enabled & safety_inhibits);
+    wire ctrl_fault,ctrl_halt,aggregated,global_inhibit;
+    wire direct_active=|direct_mode;
+    wire engine_fault,engine_halt,engine_initialized,engine_busy,engine_blocked;
+    wire [3:0] engine_ready_mask,engine_stopped,engine_age_faults;
+    wire [3:0] engine_pwm,engine_enable,engine_direction;
+    wire [127:0] engine_applied;
+    wire [2047:0] engine_telemetry;
+    reg direct_fault,direct_armed;
+    reg [31:0] direct_age;
+    reg signed [31:0] direct_requested;
+    wire direct_pwm,direct_enable,direct_direction;
+    wire signed [31:0] direct_applied;
+    wire direct_running=|(enabled & direct_mode);
+    assign ctrl_fault=engine_fault || direct_fault;
+    assign ctrl_halt=engine_halt || direct_fault;
+    assign protocol_initialized=direct_active || engine_initialized;
+    assign ready_mask=direct_active ? (enabled & direct_mode & ~stop) : engine_ready_mask;
+    assign stopped=direct_active ? stop : engine_stopped;
+    assign busy=direct_active ? 1'b0 : engine_busy;
+    assign fault_inhibit=direct_active ? (core_reset || global_inhibit || direct_fault) : engine_blocked;
+    assign age_faults=direct_active ? ({4{direct_fault}} & direct_mode) : engine_age_faults;
+    assign pwm=direct_active ? ({4{direct_pwm}} & direct_mode) : engine_pwm;
+    assign drive_enable=direct_active ? ({4{direct_enable}} & direct_mode) : engine_enable;
+    assign direction=direct_active ? ({4{direct_direction}} & direct_mode) : engine_direction;
+    genvar dm;
+    generate for(dm=0;dm<4;dm=dm+1)begin: direct_feedback
+      assign applied_duties[dm*32 +:32]=direct_active ? (direct_mode[dm] ? direct_applied : 32'd0) : engine_applied[dm*32 +:32];
+      assign telemetry[dm*512 +:512]=direct_active ? {352'd0,(direct_mode[dm] ? direct_applied : 32'd0),128'd0} : engine_telemetry[dm*512 +:512];
+    end endgenerate
+    always @(posedge clk)begin
+      if(reset || core_reset || !direct_active)begin direct_fault<=0;direct_armed<=0;direct_age<=0;direct_requested<=0;end
+      else if(!direct_running || global_inhibit || |(stop & direct_mode))begin direct_armed<=0;direct_age<=0;direct_requested<=0;end
+      else if(direct_armed && direct_age>=age_timeout_cycles-1)begin direct_fault<=1;direct_requested<=0;end
+      else if(direct_valid)begin direct_requested<=direct_duty;direct_armed<=1;direct_age<=0;end
+      else if(direct_armed)direct_age<=direct_age+1'b1;
+    end
+    dmotor_pwm #(.PERIOD_CYCLES(PWM_CYCLES)) direct_output(.clk(clk),.reset(reset || core_reset || !direct_active),
+      .inhibit(global_inhibit || direct_fault || !direct_running || |(stop & direct_mode)),
+      .requested_duty_q16(direct_requested),.pwm(direct_pwm),.drive_enable(direct_enable),
+      .direction(direct_direction),.applied_duty_q16(direct_applied),.reversing(),.timestamp(),.application_timestamp());
+    assign global_inhibit=inhibit || aggregated || |halt_detected || |external_latches || |physical_sync || ctrl_fault || |(enabled & safety_inhibits);
     assign shared_halt=aggregated || |safety_requests || ctrl_halt;
     assign fault=ctrl_fault || |watchdog_faults;
     assign halt_request=shared_halt;
@@ -111,5 +153,9 @@ module dmotor_motor_io #(
     end endgenerate
     dmotor_integrated_control #(.SNAPSHOT_BITS(SNAPSHOT_BITS),.TICK_CYCLES(TICK_CYCLES),
         .DEADLINE_CYCLES(DEADLINE_CYCLES),.PWM_CYCLES(PWM_CYCLES)) controller(
-        .reset(reset || core_reset),.inhibit(global_inhibit || |safety_requests || core_reset),.fault(ctrl_fault),.halt_request(ctrl_halt),.*);
+        .reset(reset || core_reset || direct_active),.inhibit(global_inhibit || |safety_requests || core_reset || direct_active),
+        .fault(engine_fault),.halt_request(engine_halt),.protocol_initialized(engine_initialized),
+        .ready_mask(engine_ready_mask),.stopped(engine_stopped),.busy(engine_busy),.fault_inhibit(engine_blocked),
+        .age_faults(engine_age_faults),.pwm(engine_pwm),.drive_enable(engine_enable),.direction(engine_direction),
+        .applied_duties(engine_applied),.telemetry(engine_telemetry),.*);
 endmodule

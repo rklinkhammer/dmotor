@@ -1,5 +1,5 @@
 {
-  "identity": 1145915697,
+  "identity": 1145915698,
   "registers": {
     "IDENTITY": 4096,
     "STATUS": 4100,
@@ -18,6 +18,11 @@
     "CONFIG_STRIDE": 256,
     "CONFIG_COMMIT": 128,
     "TELEMETRY_BASE": 12288,
-    "TELEMETRY_STRIDE": 84
+    "TELEMETRY_STRIDE": 84,
+    "DIRECT_CAPABILITY": 4176,
+    "DIRECT_MODE": 4180,
+    "DIRECT_LIMIT": 4184,
+    "DIRECT_DUTY": 4188,
+    "DIRECT_COMMIT": 4192
   }
 }

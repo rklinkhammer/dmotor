@@ -1,7 +1,7 @@
 # Inhibited Linux inspection backend
 
 This is an opt-in UIO bring-up path, **not the motion-capable production backend**.
-`dmotor-inspect` identifies DMI1 and reads status/captured telemetry while all
+`dmotor-inspect` identifies DMI2 and reads status/captured telemetry while all
 motors are disabled and outputs are externally inhibited. It never enables,
 resets, acknowledges, refreshes watchdogs, publishes targets or changes configuration.
 Its sole permitted write is SNAPSHOT=1. It is neither `dmotord` nor `dmotor-maint`.
@@ -11,7 +11,7 @@ Its sole permitted write is SNAPSHOT=1. It is neither `dmotord` nor `dmotor-main
 `LinuxInspection::open_uio(index)` uses `/sys/class/uio/uioN/maps/map0/{size,offset}`
 and the matching `/dev/uioN` character device, not a hardcoded physical address or
 `/dev/mem`. It requires the UIO name `dmotor-inspection`, validates device major/minor,
-checks DMI1, and refuses attachment when any enabled bit is set. Mapping geometry
+checks DMI2, and refuses attachment when any enabled bit is set. Mapping geometry
 and each requested offset are checked. UIO map selection/offset conventions follow
 the [Linux UIO documentation](https://www.kernel.org/doc/html/next/driver-api/uio-howto.html).
 
@@ -24,7 +24,7 @@ fork an owner into unrelated processes, reload FPGA firmware, unbind the driver,
 or remove its overlay while a mapping exists.
 
 ARM accesses use aligned volatile 32-bit loads/stores with `dsb sy`; completion
-fences also read back DMI1 from the same peripheral. Actual device mapping
+fences also read back DMI2 from the same peripheral. Actual device mapping
 attributes, bus ordering and completion still require target validation. Native
 x86 execution is allowed only for mapped-file fixtures; real UIO opening is
 rejected there. This is not a portable assertion that ordinary memory fences
@@ -69,7 +69,7 @@ permission rule, firmware load or motion operation is installed.
 ## Validation and production recommendation
 
 `dmotor-linux-tests` uses temporary mapped files, including a nonzero map offset,
-DMI1 rejection, enabled-state refusal, read/write allowlists, constructor cleanup,
+DMI2 rejection, enabled-state refusal, read/write allowlists, constructor cleanup,
 reacquisition and second-owner rejection both in-process and across `fork()`.
 EDF's existing recipe also runs it under ARM QEMU user emulation. The fixtures
 exercise Linux calls and decoding, not UIO driver behavior, FPGA register side

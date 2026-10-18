@@ -1,5 +1,8 @@
 # Drive-disconnected output validation
 
+For PWM testing without encoder stimulus, use [direct duty](direct-duty.md).
+The velocity-mode procedure below still requires real or synthetic encoder feedback.
+
 This is a manual commissioning procedure, not an automated maintenance-menu test.
 Keep motor drive power disconnected, FPGA/encoder logic powered, and connect a
 scope or logic analyzer. `--externally-inhibited` is an operator assertion, not a

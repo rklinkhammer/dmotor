@@ -1,0 +1,19 @@
+Test project /home/rklinkhammer/workspace/dmotor/build/software
+    Start 1: software_semantics
+1/7 Test #1: software_semantics ...............   Passed    0.00 sec
+    Start 2: software_protocol
+2/7 Test #2: software_protocol ................   Passed    0.01 sec
+    Start 3: software_linux
+3/7 Test #3: software_linux ...................   Passed    0.00 sec
+    Start 4: software_runtime
+4/7 Test #4: software_runtime .................   Passed    0.00 sec
+    Start 5: software_direct
+5/7 Test #5: software_direct ..................   Passed    2.12 sec
+    Start 6: software_commissioning
+6/7 Test #6: software_commissioning ...........   Passed    2.12 sec
+    Start 7: software_service
+7/7 Test #7: software_service .................   Passed    1.72 sec
+
+100% tests passed, 0 tests failed out of 7
+
+Total Test time (real) =   5.97 sec

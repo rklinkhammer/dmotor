@@ -15,7 +15,8 @@ PWM. The 400 RPM revision-6 IP passed complete Arty routing (+2.783 ns setup,
 +0.012 ns hold) and is integrated into EDF. Linux FPGA Manager/UIO inspection
 works; the user has observed changing encoder positions on the board. Direction,
 counts/revolution, powered control and electrical protection are not thereby
-qualified. Software 0.6.0 adds an exclusive-access kernel-driver foundation,
+qualified. Software 0.8.0 adds direct-duty commissioning (see the extension below);
+software 0.6.0 introduced an exclusive-access kernel-driver foundation,
 lifecycle/velocity service and separate maintenance menu for inhibited
 commissioning. See [production commissioning](software/linux/production.md).
 The ABI remains provisional; lifecycle stress, external-I/O/CDC review and
@@ -495,3 +496,21 @@ Actual GPIO-to-output timing, ownership-loss behavior, device removal/reset and
 Linux scheduling under load require board acceptance. The separate menu is a
 maintenance client, not a test runner. Driver/current-sense/stall-classification
 extensions discussed separately have not been implemented by this increment.
+
+## Direct-duty commissioning extension (DMI2)
+
+One selected motor can run signed open-loop Q16 duty instead of the shared HLS
+velocity engine. Mode and hardware duty ceiling are configured only under core
+reset while all motors are disabled. No mixed-mode operation; no synthetic encoder
+is required. The engine is held reset in this mode, so encoder-acquisition and
+no-motion checks do not apply. The existing safety/watchdog, external HALT/fault,
+encoder-range fault and reversal blanking remain; an independent duty-command age
+timer escalates expiry to shared HALT. Expiration wins over a simultaneous update.
+STOP means immediate disable/zero drive, not velocity-controlled deceleration.
+Entry and disable clear drive intent; reset/rearm is explicit. A fresh monotonically
+increasing nonzero command sequence is required; replay cannot refresh command age.
+
+The hardware ceiling permits 0..65536 (0..100%). Host policy can reject nonzero
+commands below an optional measured floor; zero always means no drive. No automatic
+boost, breakaway pulse or minimum duty is inferred. Powered-mode qualification and
+mechanical breakaway/sustaining measurements remain outstanding.

@@ -1,5 +1,5 @@
 package dmotor_controller_registers;
-localparam logic [31:0] PROFILE_ID = 32'd1145915697;
+localparam logic [31:0] PROFILE_ID = 32'd1145915698;
 localparam logic [31:0] IDENTITY = 32'd4096;
 localparam logic [31:0] STATUS = 32'd4100;
 localparam logic [31:0] SESSION = 32'd4104;
@@ -18,4 +18,9 @@ localparam logic [31:0] CONFIG_STRIDE = 32'd256;
 localparam logic [31:0] CONFIG_COMMIT = 32'd128;
 localparam logic [31:0] TELEMETRY_BASE = 32'd12288;
 localparam logic [31:0] TELEMETRY_STRIDE = 32'd84;
+localparam logic [31:0] DIRECT_CAPABILITY = 32'd4176;
+localparam logic [31:0] DIRECT_MODE = 32'd4180;
+localparam logic [31:0] DIRECT_LIMIT = 32'd4184;
+localparam logic [31:0] DIRECT_DUTY = 32'd4188;
+localparam logic [31:0] DIRECT_COMMIT = 32'd4192;
 endpackage

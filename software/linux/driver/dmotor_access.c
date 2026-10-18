@@ -70,6 +70,7 @@ static bool readable(u32 a)
 {
  if (a & 3) return false;
  return a <= 0x40 || (a >= 0x100 && a < 0x140) ||
+        (a >= DM_DIRECT_CAPABILITY && a <= DM_DIRECT_COMMIT) ||
         a == ID || a == STATUS || a == SESSION || a == DM_SNAPSHOT ||
         (a >= DM_CONFIG_BASE && a < (DM_CONFIG_BASE + 4 * DM_CONFIG_STRIDE) && (a & (DM_CONFIG_STRIDE - 1)) < 80) ||
         (a >= DM_TELEMETRY_BASE && a < (DM_TELEMETRY_BASE + 4 * DM_TELEMETRY_STRIDE));
@@ -81,7 +82,10 @@ static bool writable(u32 a, u32 v, u32 status)
  if (a == 0x1c || a == DM_SNAPSHOT) return v == 1;
  if (a == DM_ENABLE || a == DM_DISABLE || a == DM_STOP) return v < 16;
  if (a == DM_REFRESH_SESSION || (a >= DM_REFRESH_BASE && a < (DM_REFRESH_BASE + 4 * 4))) return v != 0;
+ if (a == DM_DIRECT_DUTY || a == DM_DIRECT_COMMIT) return true;
  if (status & 15) return false;
+ if (a == DM_DIRECT_MODE) return v == 0 || v == 1 || v == 2 || v == 4 || v == 8;
+ if (a == DM_DIRECT_LIMIT) return v <= 65536;
  if (a == SESSION) return v != 0;
  if (a == RESET) return v <= 1;
  if (a == DM_ACKNOWLEDGE) return v < 8;

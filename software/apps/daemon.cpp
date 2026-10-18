@@ -52,14 +52,25 @@ uint32_t load(const char* path,std::array<MotorConfiguration,4>& configs) {
 }
 int main(int argc,char** argv) {
     if(startup_version("dmotord",argc,argv)) return 0;
-    const bool commissioning=argc==5 && std::string(argv[4])=="--commissioning";
+    const bool direct=argc==7 && std::string(argv[4])=="--direct-duty";
+    const bool commissioning=direct || (argc==5 && std::string(argv[4])=="--commissioning");
     if((argc!=4 && !commissioning) || std::string(argv[1])!="--externally-inhibited") {
-        std::cerr<<"Usage: dmotord --externally-inhibited /dev/dmotor0 CONFIG [--commissioning]\nInitial commissioning only; disconnect drive power.\n";return 2;
+        std::cerr<<"Usage: dmotord --externally-inhibited /dev/dmotor0 CONFIG [--commissioning | --direct-duty MAX_PERCENT FLOOR_PERCENT]\nInitial commissioning only; disconnect drive power.\n";return 2;
     }
     try {
         std::array<MotorConfiguration,4> configs{};const auto mask=load(argv[3],configs);
         KernelDevice device(argv[2]);
-        RuntimePolicy policy;policy.commissioning=commissioning;Runtime runtime(device,policy);
+        RuntimePolicy policy;policy.commissioning=commissioning;
+        if(direct) {
+            auto percent=[](const char* text) {
+                std::string s(text);if(s.empty() || s.find_first_not_of("0123456789")!=std::string::npos)throw IoError("Duty limits must be whole percentages 0..100");
+                const auto n=std::stoul(s);if(n>100)throw IoError("Duty exceeds 100 percent");
+                return static_cast<uint32_t>((n*65536+50)/100);
+            };
+            policy.direct_mask=mask;policy.duty_limit_q16=percent(argv[5]);policy.duty_floor_q16=percent(argv[6]);
+            std::cout<<"DIRECT DUTY: mask="<<mask<<" limit_q16="<<policy.duty_limit_q16<<" floor_q16="<<policy.duty_floor_q16<<"; no velocity regulation\n";
+        }
+        Runtime runtime(device,policy);
         if(mkdir(service_directory.c_str(),0700) && errno!=EEXIST) throw IoError("Cannot create service directory");
         struct stat st{};if(lstat(service_directory.c_str(),&st) || !S_ISDIR(st.st_mode) || st.st_uid!=geteuid() || (st.st_mode&077)) throw IoError("Unsafe service directory");
         Socket server;server.fd=socket(AF_UNIX,SOCK_SEQPACKET|SOCK_CLOEXEC|SOCK_NONBLOCK,0);
@@ -116,6 +127,7 @@ int main(int argc,char** argv) {
                     std::array<int32_t,4> velocities{};
                     for(unsigned i=0;i<4;++i) velocities[i]=request.velocity[i];
                     switch(request.operation) {
+                    case Operation::duty:runtime.duty(request.velocity[0]);break;
                     case Operation::inject_target:trace("inject_target");runtime.inject_timeout(TimeoutInjection::target);break;
                     case Operation::inject_watchdog:trace("inject_watchdog");runtime.inject_timeout(TimeoutInjection::watchdog);break;
                     case Operation::ping: case Operation::status: break;

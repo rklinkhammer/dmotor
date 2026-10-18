@@ -1,0 +1,17 @@
+Time resolution is 1 ps
+enable request f cfg=f initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=           186050000
+fault time=          7297000000 hls_fault=00000000 reject=00000000 core_fault=0 scheduler=0 stop=f
+enable request 3 cfg=f initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=          7305700000
+enable request 1 cfg=1 initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=          8328550000
+enable request 1 cfg=1 initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=          8972800000
+fault time=          9974450000 hls_fault=00000000 reject=00000000 core_fault=0 scheduler=0 stop=0
+enable request 1 cfg=1 initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=          9987150000
+fault time=         10988000000 hls_fault=00000000 reject=00000000 core_fault=0 scheduler=0 stop=0
+enable request 1 cfg=1 initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=         11000700000
+fault time=         11062650000 hls_fault=00000000 reject=00000000 core_fault=0 scheduler=0 stop=0
+enable request 1 cfg=1 initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=         11075350000
+enable request 1 cfg=1 initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=         11150000000
+direct-duty PASS: 0/25/50/100 percent, signed ceiling, mode lock, replay rejection, STOP, expiry, watchdog, faults and HALT
+controller_axi PASS: real AXI, both HLS kernels, configuration, four-motor targets, encoder capture, telemetry shared physical fault, explicit recovery and watchdog expiration
+$finish called at time : 11312576 ns : File "/home/rklinkhammer/workspace/dmotor/tests/controller_axi_tb.sv" Line 190
+INFO: xsimkernel Simulation Memory Usage: 296996 KB (Peak: 353428 KB), Simulation CPU Usage: 5300 ms

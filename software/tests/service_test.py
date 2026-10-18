@@ -5,14 +5,17 @@ with tempfile.TemporaryDirectory(prefix='dmotor-service-') as tmp:
     root=Path(tmp);env={**os.environ,'DMOTOR_TEST_DIRECTORY':tmp}
     config=root/'motors.conf'
     config.write_text((Path(__file__).resolve().parents[1]/'config/output-validation.conf').read_text())
+    direct=len(sys.argv)>3 and sys.argv[3]=="--direct"
     commissioning=len(sys.argv)>3
     log=open(root/'service.log','w+')
-    daemon=subprocess.Popen([sys.argv[1],'--externally-inhibited','/dev/fake',str(config)]+(['--commissioning'] if commissioning else []),env=env,stdout=log,stderr=log)
+    daemon=subprocess.Popen([sys.argv[1],'--externally-inhibited','/dev/fake',str(config)]+(['--direct-duty','50','10'] if direct else ['--commissioning'] if commissioning else []),env=env,stdout=log,stderr=log)
     def connect():
         s=socket.socket(socket.AF_UNIX,socket.SOCK_SEQPACKET);s.settimeout(2);s.connect(str(root/'control.sock'));return s
     def request(s,op,mask=0,vel=(0,0,0,0)):
         s.send(struct.pack('<IIIiiii',1,op,mask,*vel));data=s.recv(192);assert len(data)==192
         return struct.unpack('<IIII',data[:16])
+    def target(s):
+        return request(s,11,1,(16384,0,0,0)) if direct else request(s,4,1,(1000,0,0,0))
     try:
         for _ in range(200):
             if (root/'control.sock').exists(): break
@@ -22,7 +25,7 @@ with tempfile.TemporaryDirectory(prefix='dmotor-service-') as tmp:
         second=connect();assert second.recv(192)==b'';second.close()
         assert request(s,2)[1]==1
         assert request(s,3,1)[1]==1
-        assert request(s,4,1,(1000,0,0,0))[1]==1
+        assert target(s)[1]==1
         time.sleep(.04);assert request(s,1)[3]>0
         # Inactivity expires ownership, closes client and leaves HALT latched.
         time.sleep(.6);assert s.recv(192)==b'';s.close()
@@ -56,7 +59,7 @@ with tempfile.TemporaryDirectory(prefix='dmotor-service-') as tmp:
             time.sleep(.03);s=connect()
             assert request(s,2)[1]==1
             assert request(s,3,1)[1]==1
-            assert request(s,4,1,(1000,0,0,0))[1]==1
+            assert target(s)[1]==1
             time.sleep(.03)
             assert request(s,op)[1]==int(commissioning)
             if commissioning:

@@ -91,12 +91,12 @@ return SLVERR instead of hanging during HALT/reset. Local status/recovery regist
 remain accessible. Full aligned writes with WSTRB=0xf are required.
 
 The integrated ABI is generated from `abi/controller.json` into C++ and SV constants.
-The DMI1 identity lives at offset 0x1000; atomic identity remains at offset zero.
+The DMI2 identity lives at offset 0x1000; atomic identity remains at offset zero.
 All offsets are peripheral-relative; no address was assigned in the user's dvrmc BD.
 
 | Offset | Register | Contract |
 | --- | --- | --- |
-| 0x1000 | IDENTITY | Read 0x444D4931 (DMI1) |
+| 0x1000 | IDENTITY | Read 0x444D4932 (DMI2) |
 | 0x1004 | STATUS | Enabled[3:0], configured[7:4], ready[11:8], stopped[15:12], fault[16], local shared HALT[17], blocked[18], per-motor target-age faults[22:19] |
 | 0x1008 | SESSION | Nonzero; writable while disabled and core reset held |
 | 0x100c | ENABLE | Write motor mask; watchdog arms and HLS initialization/warm-up follows |
@@ -191,3 +191,30 @@ remain outstanding.
 
 Current architecture/milestone analysis and revision 4 shared HALT CDC details:
 [architecture_status.md](architecture_status.md).
+
+## Revision 7 direct-duty extension
+
+The endpoint identity is DMI2; software/driver must be upgraded with the bitstream.
+The normal mailbox remains DMB1. Direct mode holds the HLS control engine reset
+and selects a separate single-channel PWM path using the same PWM primitive and
+shared protection chain. All nonselected motors remain disabled.
+
+| Offset | Register | Contract |
+|---|---|---|
+| 0x1050 | DIRECT_CAPABILITY | Read 0x44445531 (`DDU1`) |
+| 0x1054 | DIRECT_MODE | 0 = velocity, or one-hot motor mask 1/2/4/8; write only disabled under core reset |
+| 0x1058 | DIRECT_LIMIT | Absolute Q16 duty ceiling, 0..65536; write only disabled under core reset |
+| 0x105c | DIRECT_DUTY | Stage signed Q16, reject outside ceiling; read last accepted command |
+| 0x1060 | DIRECT_COMMIT | Write strictly increasing nonzero sequence; read last accepted sequence |
+
+Commit requires direct mode, selected motor enabled, no STOP/HALT/fault, and core
+reset released. Replays are rejected and cannot refresh the command-age timer.
+Core reset clears staging, sequence and drive intent. The command-age timer uses
+TARGET_TIMEOUT_CYCLES and expires even at zero duty; expiry wins at the boundary.
+STOP immediately disables direct drive. Physical output duty is latched at PWM
+boundaries with existing reversal blanking. A core-reset-only recovery does not
+clear protective latches; acknowledgment/rearm is still required.
+
+The host's optional nonzero duty floor is not an FPGA interlock. Zero is always
+allowed; limit and floor changes require service restart/rearm. See
+[commissioning](../software/linux/direct-duty.md).

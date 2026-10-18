@@ -113,7 +113,7 @@ writes are allowed. SIGKILL, process crash, FPGA removal or AXI bus abort can
 prevent cleanup; external drive inhibition must remain in place throughout.
 Do not reload/unbind the FPGA while this utility is running. The lock is
 cooperative and cannot exclude unrelated raw MMIO users. Reset is write-only in
-DMI1, so software cannot read back proof of its assertion; position changes and
+DMI2, so software cannot read back proof of its assertion; position changes and
 board output measurements remain hardware acceptance checks.
 
 ### Version 0.6.0 lifecycle/velocity foundation
@@ -122,3 +122,9 @@ See [production-access commissioning](linux/production.md) for the exclusive
 kernel driver, `dmotord`, separate `dmotor-maint` menu and opt-in EDF binding.
 These additions require inhibited board qualification before powered operation.
 The existing UIO/encoder workflow remains the default image configuration.
+
+### Software 0.8.0: direct PWM commissioning
+
+[DMI2 direct-duty procedure](linux/direct-duty.md) adds an adjustable signed-duty
+ceiling and optional measured floor without encoder stimulus. Requires matched new
+FPGA/driver/software. The 0.7 velocity validation procedure remains separate.

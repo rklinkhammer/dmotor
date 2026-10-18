@@ -9,7 +9,7 @@ public:
         namespace reg = dmotor::controller_reg;
         if (device_.read32(reg::IDENTITY) != reg::PROFILE_ID ||
             (device_.read32(reg::STATUS) & 255U))
-            throw IoError("Encoder check requires a disabled, unconfigured DMI1 controller");
+            throw IoError("Encoder check requires a disabled, unconfigured DMI2 controller");
         if (device_.read32(reg::SESSION) == 0) {
             device_.write32(reg::SESSION, 1);
             device_.fence();
