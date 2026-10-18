@@ -1,5 +1,9 @@
 # Integrated controller: priorities 1–4 implementation
 
+> Current product builds: [build guide](build.md). Commands below are specialized
+> component/experiment reproduction or historical evidence, not the default build.
+
+
 The first complete logical control path is now implemented in
 `rtl/controller_axi.sv`. It connects AXI4-Lite, the actual atomic-mailbox HLS IP,
 the scheduler, the actual shared four-context motor HLS IP, four encoder channels,

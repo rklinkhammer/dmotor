@@ -1,5 +1,9 @@
 # C++ HLS queue/controller dispatcher
 
+> Current product builds: [build guide](build.md). Commands below are specialized
+> component/experiment reproduction or historical evidence, not the default build.
+
+
 `dmotor_dispatcher` owns one `CommandRing` and one combined `Controller`. It
 serializes internal queue-service requests with autonomous 1 kHz control ticks.
 This connects queue policy to actual controller acceptance in synthesizable C++;

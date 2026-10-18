@@ -1,5 +1,9 @@
 # Atomic velocity batch protocol
 
+> Current product builds: [build guide](build.md). Commands below are specialized
+> component/experiment reproduction or historical evidence, not the default build.
+
+
 Revision 0.18's first implementation milestone is a standalone C++ HLS protocol
 block, separate from the retained full-profile ring peripheral. It provides the
 new batch publication/activation contract and a portable host reference adapter.

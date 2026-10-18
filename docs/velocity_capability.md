@@ -1,5 +1,9 @@
 # 400 RPM shared velocity capability
 
+> Current product builds: [build guide](build.md). Commands below are specialized
+> component/experiment reproduction or historical evidence, not the default build.
+
+
 The controller capability is now 400 RPM (400000 milliRPM), defined in
 `include/dmotor/capabilities.hpp`. Each motor still has its own configured maximum;
 this does not authorize a 130 RPM motor to run at 400 RPM. The JGA25-370 ratio is

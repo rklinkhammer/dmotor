@@ -1,5 +1,9 @@
 # Two-motor shared velocity engine evaluation
 
+> Current product builds: [build guide](build.md). Commands below are specialized
+> component/experiment reproduction or historical evidence, not the default build.
+
+
 This is an isolated 20 MHz experiment based on the velocity-only profile.
 The active full-feature source and its reports are unchanged. The selected
 experiment is `build/velocity_pair_direct`; the initial copy-based experiment

@@ -1,0 +1,41 @@
+2026-10-17 America/New_York — build-workflow migration
+
+PASS: product profile native regression 7/7.
+PASS: atomic mailbox HLS C simulation, synthesis and co-simulation.
+PASS: shared engine HLS C simulation, synthesis and co-simulation.
+PASS: IP packaging and mailbox SystemVerilog simulation.
+PASS: full AXI simulation using both generated HLS kernels.
+PASS: unchanged IP build reuses fingerprint- and packaged-hash-matched outputs.
+PASS: recreated Vivado project BD validation/output generation using prior
+      revision-6 board sources. Existing PS DDR skew critical warnings retained.
+PASS: EDF unit tests 33 run, 3 environment-dependent skipped.
+PASS: existing revision-6 hardware bundle pack/unpack through EDF --bundle
+      --generate-only, without AMD tools or live-input replacement.
+PASS: Python compilation, shell syntax and git diff whitespace checks.
+
+USER DECISION 2026-10-17: latest saved root DVRMC interface selected (two fault
+inputs plus shared-HALT outputs). Its BD/XDC are now the authoritative board sources.
+The earlier candidate build was stopped before import; disposable output removed.
+PASS: selected board synthesized, implemented and bitstream/XSA generated.
+Final timing: setup WNS +2.552 ns, hold WHS +0.011 ns, pulse-width slack +4.020 ns.
+DRC: zero errors; 40 DSP pipelining warnings. Existing PS DDR skew critical
+warnings from board configuration remain; they are not new timing failures.
+Bus skew: all 5 constraints MET (minimum reported slack +39.147 ns).
+I/O: mc0_fault U19 input, mc1_fault W16 input, both PULLDOWN;
+mc0_halt W18 output, mc1_halt V12 output.
+Hardware artifact run: edf-dev/artifacts/arty-hardware/20261018T014024Z-a54a6bd9.
+PASS: SDT and EDF machine generation; verified candidate imported.
+PASS: new product bundle imported with --generate-only without AMD tools.
+Hardware fingerprint: 65d358a1dbc98986307209bb89567a12653078a899efa7cf325b0d8515c856e2
+PASS: board firmware build (2898 tasks); production Linux image (9178 tasks).
+Fixed image package selection to install dmotor-access explicitly, pulling in its
+versioned kernel module; the previous virtual module request omitted the driver
+recipe from the rootfs package feed.
+Confirmed rootfs has dmotor-maint, inspection/encoder/test programs and
+dmotor_access.ko.
+PASS: immutable SD export: edf-dev/artifacts/arty-z7-20/20261018T021317Z-2dde50db.
+Export hardware file hashes match imported hardware. Package manifest includes
+dmotor-access, versioned kernel module, dmotor-runtime, encoder/inspection/tests.
+Software 0.6.0, source SHA256:
+38ee912ca7e754b59efc7134cb4c4b9290c5f3939201aba33e4b5759bdaf0ecd
+No physical programming or boot/powered-motor testing performed.

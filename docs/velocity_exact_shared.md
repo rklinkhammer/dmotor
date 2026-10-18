@@ -1,5 +1,9 @@
 # Integrated shared exact PI divider
 
+> Current product builds: [build guide](build.md). Commands below are specialized
+> component/experiment reproduction or historical evidence, not the default build.
+
+
 The bounded exact-milliRPM velocity-only candidate now uses one 39-bit numerator /
 20-bit denominator divider for all proportional and integral rounding operations.
 It lives in `build/velocity_exact_shared`; the active full position/motion profile

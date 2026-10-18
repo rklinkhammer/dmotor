@@ -1,5 +1,9 @@
 # DVRMC integration synthesis audit — 2026-10-12
 
+> Historical integration observation. The authoritative board sources now live in
+> `platforms/arty-z7-20`; use the [current build guide](build.md).
+
+
 Vivado 2026.1 validated and synthesized an isolated copy of
 `/home/rklinkhammer/workspace/dvrmc/dvrmc.xpr`, targeting `xc7z020clg400-1`.
 The original project was not modified. The working copy is

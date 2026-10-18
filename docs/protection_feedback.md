@@ -1,5 +1,9 @@
 # Protection feedback repair
 
+> Current product builds: [build guide](build.md). Commands below are specialized
+> component/experiment reproduction or historical evidence, not the default build.
+
+
 The 2026-10-12 Vivado board-project audit exposed combinational feedback in the
 integrated controller. This repair preserves the 20 MHz clock, MMIO contract,
 and immediate PWM inhibition. Control computations remain in C++ HLS.

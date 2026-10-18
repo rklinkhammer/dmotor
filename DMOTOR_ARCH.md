@@ -6,7 +6,7 @@
 
 **Primary target:** AMD Zynq-7000 `xc7z020clg400-1`, Vitis HLS, 20 MHz
 **Portability target:** Microchip PolarFire SoC / SmartHLS; separate qualification required
-**Vivado reference:** `~/workspace/dvrmc/dvrmc.xpr`; [integration notes](docs/vivado_reference.md)
+**Vivado board sources:** `platforms/arty-z7-20`; [current build workflow](docs/build.md). The former DVRMC checkout is migration reference.
 **Driver selection:** Pololu DRV8263H carrier #5238; electrical adapter validation remains open
 
 **Status:** The integrated four-motor AXI controller connects the actual HLS

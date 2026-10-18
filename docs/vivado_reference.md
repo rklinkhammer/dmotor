@@ -1,5 +1,9 @@
 # Vivado integration reference
 
+> Historical integration observation. The authoritative board sources now live in
+> `platforms/arty-z7-20`; use the [current build guide](build.md).
+
+
 Inspected 2026-10-11. The user-designated target reference is
 `~/workspace/dvrmc/dvrmc.xpr`, with block design
 `dvrmc.srcs/sources_1/bd/design_1/design_1.bd`. These files were read only.

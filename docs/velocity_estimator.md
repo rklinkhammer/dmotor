@@ -1,5 +1,9 @@
 # C++ HLS encoder velocity estimator
 
+> Current product builds: [build guide](build.md). Commands below are specialized
+> component/experiment reproduction or historical evidence, not the default build.
+
+
 `dmotor_velocity` in `src/velocity.cpp` estimates signed milli-RPM from a coherent
 encoder-event snapshot once per 1 kHz control tick. The fabric rate is 20 MHz.
 The computation is portable C++14; no vendor integer types or floating point are

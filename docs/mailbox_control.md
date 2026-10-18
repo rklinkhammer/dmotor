@@ -1,5 +1,9 @@
 # Mailbox-to-scheduler integration
 
+> Current product builds: [build guide](build.md). Commands below are specialized
+> component/experiment reproduction or historical evidence, not the default build.
+
+
 `rtl/mailbox_control.sv` connects the generated C++ HLS atomic mailbox through
 `rtl/atomic_mailbox_arbiter.sv` to the real shared scheduler, target-age protection
 and four PWM blocks. Motor-engine ports remain normalized; the shared velocity

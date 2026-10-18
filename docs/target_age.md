@@ -1,5 +1,9 @@
 # Independent target-age protection
 
+> Current product builds: [build guide](build.md). Commands below are specialized
+> component/experiment reproduction or historical evidence, not the default build.
+
+
 `rtl/target_age.sv` implements the next revision 0.18 component: four independent
 tracking-intent timers with a common inhibit request and per-motor latched causes.
 It runs every fabric clock, outside the shared HLS computation. The existing

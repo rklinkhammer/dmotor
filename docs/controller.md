@@ -1,5 +1,9 @@
 # Combined C++ HLS controller tick
 
+> Current product builds: [build guide](build.md). Commands below are specialized
+> component/experiment reproduction or historical evidence, not the default build.
+
+
 `dmotor_controller` combines the existing velocity estimator and motion executor
 in one hardware-scheduled C++ HLS transaction. It consumes a coherent encoder
 snapshot and one pending command mailbox at each 1 kHz control boundary. It is

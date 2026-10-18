@@ -1,8 +1,8 @@
 # Exclusive-access and velocity-runtime commissioning
 
 Version 0.6.0 implements the first production-access/lifecycle foundation. It is
-not yet qualified for powered motor operation. The existing UIO image remains
-the default. No service is started at boot and no driver is loaded by these tools.
+not yet qualified for powered motor operation. The target configuration selects inspection or production; the current EDF
+checkout selects production commissioning. No service is started at boot and no driver is loaded by these tools.
 
 ## Access and HALT
 
@@ -69,14 +69,14 @@ views remain follow-up UI work; the validated configuration file is authoritativ
 
 ## EDF opt-in
 
-Keep `EDF_DMOTOR_ACCESS = "inspection"` for the working baseline. To build the
-production-access commissioning image, set `EDF_DMOTOR_ACCESS = "production"` in
+Use `EDF_DMOTOR_ACCESS = "inspection"` for UIO bring-up. For the
+production-access commissioning image, select `EDF_DMOTOR_ACCESS = "production"` in
 `edf-dev/config/targets/arty-z7-20.conf`, then:
 
-```sh
-EDF_DMOTOR_SOURCE=../dmotor ./edf --target arty-z7-20 image
-EDF_DMOTOR_SOURCE=../dmotor ./edf --target arty-z7-20 export
-```
+Use the software/image commands in EDF `docs/build.md`, with the same
+`EDF_DMOTOR_SOURCE` used for the hardware bundle. Build instructions and bundle
+selection are centralized there; the commands below are board runtime operations.
+
 
 The firmware recipe changes only the controller binding and adds halt-gpios. The
 image includes dmotor-runtime and kernel-module-dmotor-access. The matching

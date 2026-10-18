@@ -1,5 +1,9 @@
 # Atomic mailbox HLS transport
 
+> Current product builds: [build guide](build.md). Commands below are specialized
+> component/experiment reproduction or historical evidence, not the default build.
+
+
 `rtl/atomic_hls_adapter.sv` connects the actual generated `dmotor_atomic_mailbox`
 ports to a single-request valid/ready interface. Protocol validation, staging,
 reservation, cancellation and retirement remain in `src/atomic_mailbox*.cpp`.

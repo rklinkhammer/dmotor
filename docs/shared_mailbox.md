@@ -1,5 +1,9 @@
 # Four-motor shared velocity mailbox measurement
 
+> Current product builds: [build guide](build.md). Commands below are specialized
+> component/experiment reproduction or historical evidence, not the default build.
+
+
 This isolated experiment adds four independent motor contexts to the velocity
 mailbox, with one calculation path selected by motor index. It preserves the
 bounded exact velocity arithmetic and one-phase divider. Main sources and the

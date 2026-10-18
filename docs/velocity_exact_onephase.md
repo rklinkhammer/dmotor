@@ -1,5 +1,9 @@
 # One-phase shared exact PI divider
 
+> Current product builds: [build guide](build.md). Commands below are specialized
+> component/experiment reproduction or historical evidence, not the default build.
+
+
 This experiment replaces only the bounded velocity candidate's 39/20-bit PI
 divider loop. Each iteration shifts the next numerator bit into the remainder,
 compares/subtracts, and advances the quotient in one phase. The remainder's

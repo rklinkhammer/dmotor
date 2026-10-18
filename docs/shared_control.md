@@ -1,5 +1,9 @@
 # Shared scheduler, protection and PWM boundary
 
+> Current product builds: [build guide](build.md). Commands below are specialized
+> component/experiment reproduction or historical evidence, not the default build.
+
+
 `rtl/shared_control.sv` connects an autonomous four-channel scheduler, the real
 independent target-age module, and four phase-aligned PWM output blocks. It exposes
 normalized protocol and engine handshakes for the next generated-HLS integration.

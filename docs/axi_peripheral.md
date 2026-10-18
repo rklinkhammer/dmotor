@@ -1,5 +1,9 @@
 # HLS register peripheral and AXI bridge
 
+> Current product builds: [build guide](build.md). Commands below are specialized
+> component/experiment reproduction or historical evidence, not the default build.
+
+
 `src/peripheral.cpp` implements register decoding and queue operations in portable
 C++ HLS. `rtl/axi_bridge.sv` handles only transport, fair arbitration, and the HLS
 handshake. `rtl/peripheral_top.sv` connects the actual Vitis-generated ports,

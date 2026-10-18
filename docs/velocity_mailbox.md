@@ -1,5 +1,9 @@
 # Velocity mailbox measurement
 
+> Current product builds: [build guide](build.md). Commands below are specialized
+> component/experiment reproduction or historical evidence, not the default build.
+
+
 This isolated experiment replaces the velocity-only dispatcher's command and
 completion rings with an atomic velocity setpoint mailbox. Main production
 sources and the architectural contract are unchanged. The helper builds a

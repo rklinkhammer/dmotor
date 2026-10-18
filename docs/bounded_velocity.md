@@ -1,5 +1,9 @@
 # Bounded velocity implementation and measurement
 
+> Current product builds: [build guide](build.md). Commands below are specialized
+> component/experiment reproduction or historical evidence, not the default build.
+
+
 These are isolated velocity-only profiles, based on the existing experiment at
 revision 17116b7, at 20 MHz on xc7z020clg400-1 with Vitis 2026.1. The active full
 position/motion profile is unchanged. Neither candidate is a deployed ABI.

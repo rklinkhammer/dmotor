@@ -1,55 +1,20 @@
 # DMOTOR processor software — first increment
 
+Build and cross-compilation instructions: [component guide](../docs/build.md) and
+EDF `docs/build.md`. This document describes software interfaces and board use.
+
+
 This directory starts Phase 0 of [DMOTOR_SW.md](../DMOTOR_SW.md). It builds
 independently of Vitis/Vivado and the legacy controller code. It currently contains
 an **in-process semantic model, typed protocol, inhibited Linux inspection tool
 and automated tests**, not a deployable motion service or maintenance application.
 
-## Native validation
+## Build and validation
 
-```sh
-cmake -S software -B build/software -DDMOTOR_SW_SANITIZE=ON
-cmake --build build/software -j4
-ctest --test-dir build/software --output-on-failure
-```
-
-Tests retain their checks in Release builds. The model uses the real
-`AtomicMailbox` and `publish_velocity_batch` helper, including ABI identification,
-full staging, commit, same-mask replacement, replay rejection and atomic retirement.
-It adds explicit virtual control ticks, typed admission limits and snapshots,
-authorization/target timeouts, exclusive ownership and maintenance lease loss.
-
-The tests cover multi-motor atomic application, mask conflicts, stale sequence and
-configuration rejection, signed velocity range, expiration winning simultaneous
-refresh/application, READY authorization, zero-target freshness, normal maintenance
-close, lease renewal/expiry, stale ownership tokens and explicit rearm without replay.
-
-## ARM validation through EDF and BitBake QEMU
-
-From the dmotor checkout, stage the explicit source subset and recipe:
-
-```sh
-python3 software/yocto/stage.py ../edf-dev
-cd ../edf-dev
-./edf --target zc702 bitbake dmotor-semantic-tests
-# Force another execution even if the build is already up to date:
-./edf --target zc702 bitbake -c semantics -f dmotor-semantic-tests
-```
-
-Restage after modifying the model or tests. The staging script updates only
-`meta-edf-dev/recipes-dmotor/dmotor-semantic-tests/`. The recipe uses `LICENSE =
-"CLOSED"` because this repository currently supplies no distribution license;
-this does not establish a new project license.
-
-BitBake cross-compiles for EDF's Cortex-A9 hard-float Linux target and executes
-`dmotor-semantic-tests` using **qemu-native user-mode emulation** with the target
-sysroot. `do_semantics` runs between compile and install, fails the build on test
-failure, and records output in the recipe's `temp/log.do_semantics`. No host ARM
-compiler or separately installed QEMU is needed. The tests are packaged as
-`/usr/bin/dmotor-semantic-tests`; they are not automatically added to the production
-image or launched at boot. A future full-system EDF QEMU image can install this
-package and execute the same tests in its guest. ZC702 supplies the ARM build
-context here; this is not validation of Arty's board peripherals or custom PL.
+Use the [component build guide](../docs/build.md) for native validation and EDF
+`docs/build.md` for ARM/BitBake QEMU and image builds. EDF stages the selected source
+automatically; do not manually copy or stage a different checkout. User-mode QEMU
+validates software semantics, not the FPGA or kernel driver's physical behavior.
 
 ## Model boundaries
 

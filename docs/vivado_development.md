@@ -1,5 +1,9 @@
 # First Vivado milestone: permanently inhibited development IP
 
+> Current product builds: [build guide](build.md). Commands below are specialized
+> component/experiment reproduction or historical evidence, not the default build.
+
+
 This milestone provides a small AXI4-Lite peripheral for the XC7Z020 and a separate
 Arty Z7-20 reference block design. It deliberately does not instantiate the motor
 engine or accept motion commands. PWM, direction and drive-enable outputs are tied

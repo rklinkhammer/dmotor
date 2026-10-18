@@ -1,5 +1,9 @@
 # C++ HLS motion executor
 
+> Current product builds: [build guide](build.md). Commands below are specialized
+> component/experiment reproduction or historical evidence, not the default build.
+
+
 `src/motion.cpp` implements the portable `MotionExecutor` and Vitis top
 `dmotor_motion`. It executes one control boundary per call at **1 kHz**, with
 **20 MHz** fabric timestamps. Calls come from hardware, not processor software.

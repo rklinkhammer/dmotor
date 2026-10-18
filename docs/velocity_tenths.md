@@ -1,5 +1,9 @@
 # 0.1 RPM arithmetic measurement
 
+> Current product builds: [build guide](build.md). Commands below are specialized
+> component/experiment reproduction or historical evidence, not the default build.
+
+
 An isolated velocity-only candidate in `build/velocity_tenths` evaluates decimal
 fixed-point PI inputs at ten units per RPM. The operating envelope remains
 +/-200 gearbox-output RPM and a maximum 100 mm wheel diameter, at 20 MHz on

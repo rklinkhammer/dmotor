@@ -1,5 +1,9 @@
 # Velocity-only profile evaluation
 
+> Current product builds: [build guide](build.md). Commands below are specialized
+> component/experiment reproduction or historical evidence, not the default build.
+
+
 The active project remains the full 20 MHz profile. This experiment lives in
 `build/velocity_only`; its reproducible patch and evidence are under
 `docs/evidence/velocity_only/`, based on source revision `17116b7`.

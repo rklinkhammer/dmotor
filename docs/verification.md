@@ -1,5 +1,9 @@
 # Verification record — 2026-10-11
 
+> Current product builds: [build guide](build.md). Commands below are specialized
+> component/experiment reproduction or historical evidence, not the default build.
+
+
 The active profile is now 20 MHz. Earlier sections below are historical records
 of their stated clock profiles; see the final section for current adoption results.
 
