@@ -1,5 +1,7 @@
 # First Vivado milestone: permanently inhibited development IP
 
+> For the current Arty `platforms/arty-z7-20/vivado/create.tcl` invocation, see
+> [Recreate and open the current project](build.md#recreate-and-open-the-current-project).
 > Current product builds: [build guide](build.md). Commands below are specialized
 > component/experiment reproduction or historical evidence, not the default build.
 

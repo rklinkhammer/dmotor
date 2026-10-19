@@ -11,6 +11,7 @@ import subprocess
 import sys
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT/'build/product'
+BOARD_PLATFORMS = ('arty-z7-20', 'dvrz')
 # Include transformation patches until the tested profile becomes direct sources.
 INPUTS = ('src','include','rtl','tests','tools','platforms','abi','constraints','experiments/mailbox',
           'docs/evidence/velocity_only','docs/evidence/velocity_bounded',
@@ -21,7 +22,7 @@ def fingerprint(board=True):
         paths += [p for p in (ROOT/directory).rglob('*') if p.is_file() and '__pycache__' not in p.parts]
     digest=hashlib.sha256()
     for p in sorted(set(paths)):
-        if p.suffix=='.md' or (not board and (ROOT/'platforms/arty-z7-20') in p.parents): continue
+        if p.suffix=='.md' or (not board and any((ROOT/'platforms'/name) in p.parents for name in BOARD_PLATFORMS)): continue
         digest.update(str(p.relative_to(ROOT)).encode()+b'\0'+p.read_bytes()+b'\0')
     return digest.hexdigest()
 def packaged_hash():
@@ -38,12 +39,15 @@ def run(command, env=None):
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('stage',choices=['ip','project'])
+    p.add_argument('--platform',choices=BOARD_PLATFORMS,default='arty-z7-20')
     p.add_argument('--amd-root',type=Path,default=Path('/opt/vitis/2026.1'))
     p.add_argument('--force',action='store_true')
     p.add_argument('--dry-run',action='store_true')
     a=p.parse_args()
     key={'source_sha256':fingerprint(board=False),'amd_root':str(a.amd_root.resolve())}
     print(f'DMOTOR source: {ROOT}\nHardware fingerprint: {key["source_sha256"]}',flush=True)
+    project = OUT/'vivado' if a.platform=='arty-z7-20' else OUT/a.platform/'vivado'
+    if a.stage=='project': print(f'Platform: {a.platform} -> {project}',flush=True)
     if a.dry_run:
         print('Stages: prepare 400 RPM profile -> native tests -> HLS csim/synthesis/cosim (atomic + shared engine) -> IP export -> full AXI simulation'+(' -> recreate Vivado project' if a.stage=='project' else ''))
         return
@@ -74,9 +78,8 @@ def main():
             stamp.write_text(json.dumps({'inputs':key,'packaged_sha256':packaged_hash()},indent=2)+'\n')
         else: print('Reusing fingerprint-matched, tested IP.',flush=True)
         if a.stage=='project':
-            project=OUT/'vivado'
             if project.exists(): shutil.rmtree(project)
-            run([vivado,'-mode','batch','-source','platforms/arty-z7-20/vivado/create.tcl','-tclargs',project],env)
+            run([vivado,'-mode','batch','-source',f'platforms/{a.platform}/vivado/create.tcl','-tclargs',project],env)
         print('Complete: '+str(OUT),flush=True)
 if __name__=='__main__':
     try: main()

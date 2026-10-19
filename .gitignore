@@ -7,3 +7,11 @@ __pycache__/
 # Retain curated verification evidence referenced by the documentation.
 !/docs/evidence/*.log
 .DS_Store
+
+# Vivado/XSim artifacts emitted in the repository working directory.
+/nlviewcommon.logfile
+/vivado_pid*.str
+/NA/
+/NONE/
+/clockInfo.txt
+/xvlog.pb

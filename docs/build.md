@@ -58,7 +58,81 @@ pipeline automatically, runs board implementation and timing/DRC gates, then
 creates a portable matched hardware bundle. Ordinary software-only EDF builds do
 not invoke HLS/Vivado. A Mac consumes the bundle with Docker/OrbStack.
 
+## Additional platform: DVRZ / MYIR Z-Turn
+
+`--platform` selects the board project; Arty remains the default. Both platforms
+use the same tested XC7Z020 controller IP. Board sources are excluded from the
+shared IP fingerprint, while the selected project is recreated on every run.
+
+```sh
+cd ~/workspace/dmotor
+python3 tools/build.py project --platform dvrz --dry-run
+python3 tools/build.py project --platform dvrz
+/opt/vitis/2026.1/Vivado/bin/vivado -mode gui build/product/dvrz/vivado/dvrz.xpr
+```
+
+For direct recreation with already packaged IP:
+
+```sh
+/opt/vitis/2026.1/Vivado/bin/vivado -mode batch \
+  -source platforms/dvrz/vivado/create.tcl \
+  -tclargs build/product/dvrz/vivado
+```
+
+DVRZ requires board definition `myir.com:mys-7z020:part0:2.1`; use
+`DMOTOR_BOARD_REPO` if it is not installed in the local board store. Tracked sources
+are `platforms/dvrz/vivado/dvrz.bd` and `platforms/dvrz/constraints/dvrz.xdc`.
+The source project `~/dvrz` is retained untouched and is no longer read by these
+commands. DVRZ output does not replace `build/product/vivado` for Arty.
+
+**DVRZ currently supports project recreation, not a qualified bitstream.** Pin
+assignments remain pending by user decision; see [DVRZ integration status](dvrz.md).
+This addition does not add an EDF target, firmware bundle, or Linux device tree.
+The EDF Arty workflow remains unchanged.
+
 ## GUI work
+
+### Recreate and open the current project
+
+From the DMOTOR repository, the recommended command prepares/verifies the IP and
+invokes `platforms/arty-z7-20/vivado/create.tcl` automatically:
+
+```sh
+cd ~/workspace/dmotor
+python3 tools/build.py project
+/opt/vitis/2026.1/Vivado/bin/vivado -mode gui build/product/vivado/dvrmc.xpr
+```
+
+To invoke `create.tcl` directly after preparing the IP:
+
+```sh
+cd ~/workspace/dmotor
+python3 tools/build.py ip
+/opt/vitis/2026.1/Vivado/bin/vivado -mode batch \
+  -source platforms/arty-z7-20/vivado/create.tcl \
+  -tclargs build/product/vivado
+/opt/vitis/2026.1/Vivado/bin/vivado -mode gui build/product/vivado/dvrmc.xpr
+```
+
+The script requires exactly one argument: the output directory (relative to the
+invocation's working directory, or absolute). It creates project `dvrmc` for
+`xc7z020clg400-1`, imports the tracked BD, references the tracked XDC, upgrades the
+controller instance from `build/current_ip/controller_axi/ip`, validates the BD,
+generates targets/wrapper, writes `ip_status.txt`, and closes the project. It does
+not synthesize, implement, or generate a bitstream.
+
+It uses `create_project -force`: save any generated-project BD edits back to the
+tracked source first, close its GUI, and do not run this concurrently with a build.
+Direct invocation bypasses the build wrapper's lock and IP fingerprint validation.
+For an independent GUI project, pass another generated directory, for example
+`build/gui/dvrmc`, and open `build/gui/dvrmc/dvrmc.xpr` instead.
+
+If the Arty board definition is missing, set `DMOTOR_BOARD_REPO` to your installed
+Digilent board repository before invoking Vivado. The required board identifier is
+`digilentinc.com:arty-z7-20:part0:1.1`. The script discovers source/IP paths relative
+to its own location; it does not use the legacy `~/workspace/dvrmc` checkout.
+
+### Preserve GUI edits
 
 Open `build/product/vivado/dvrmc.xpr` in Vivado. Edit the source XDC directly;
 it is referenced rather than imported. To retain block-design changes, save the

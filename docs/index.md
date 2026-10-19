@@ -23,6 +23,7 @@ Historical build logs live in `history/`; raw verification evidence stays in
 - [current_ip_export](current_ip_export.md)
 - [dispatcher](dispatcher.md)
 - [divider_widths](divider_widths.md)
+- [DVRZ platform](dvrz.md)
 - [dvrmc_validation](dvrmc_validation.md)
 - [implementation](implementation.md)
 - [mailbox_control](mailbox_control.md)

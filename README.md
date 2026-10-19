@@ -13,3 +13,5 @@ Board integration formerly maintained as DVRMC now lives in
 `platforms/arty-z7-20`. Generated IP/projects live under `build/`; one tracked XDC
 is authoritative. EDF consumes this checkout for both hardware and host software.
 Physical motor qualification remains distinct from build and simulation success.
+
+Additional board: [DVRZ / MYIR Z-Turn](docs/dvrz.md), selected with `tools/build.py project --platform dvrz` (pin assignments pending).
