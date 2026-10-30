@@ -6,7 +6,7 @@ configured motor limits, using the exact one-phase shared arithmetic implementat
 
 - **[Build guide](docs/build.md)** — current component, board, GUI and Linux workflow.
 - [Documentation index](docs/index.md) — architecture, implementation and evidence.
-- [Architecture](DMOTOR_ARCH.md) and [software plan](DMOTOR_SW.md).
+- [Architecture](DMOTOR_ARCH.md), [software plan](DMOTOR_SW.md) and [external monitoring circuitry](DMOTOR_CONTROL.md).
 - [Maintenance/commissioning](software/linux/production.md).
 
 Board integration formerly maintained as DVRMC now lives in

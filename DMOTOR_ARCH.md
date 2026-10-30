@@ -422,6 +422,17 @@ biases and FPGA-unconfigured/clock-loss/power-sequencing behavior. The prior
 [board assessment](docs/DMOTOR_ARCH_0_17.md#d03c-selected-board--2026-10-11) remains
 reference material; this architecture update does not requalify electrical limits.
 
+External circuitry is restarted per [DMOTOR_CONTROL.md](DMOTOR_CONTROL.md)
+(2026-10-30, revision 2): one DRV8263H carrier per PCB; a single central
+microcontroller (ESP32-S3 recommended) owns all fault detection, protection
+policy and arming, provides the qualified `BATT_OK`/HB heartbeat to the PL and
+receives FPGA HALT_OUT; per-motor and battery INA226 devices plus IPROPI ADC
+channels replace the discrete comparators. By recorded user decision, board-level
+software-independent protection is now limited to the driver's on-chip
+ITRIP/OCP/TSD/UVLO plus passive coast-default and hardwired-STOP topology; all
+other protective layers are millisecond-scale firmware/I2C and must not be
+cited as bounded-latency evidence.
+
 The carrier default current limit is not assumed to protect the motor. Select
 limits from startup/load torque, permitted stall duration and thermal measurements.
 Hall inputs are independent FPGA QA/QB inputs with validated voltage levels.
