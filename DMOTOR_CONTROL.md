@@ -41,7 +41,7 @@ Numeric values marked *initial* are starting points, not qualified limits.
 │ DRV8263H carrier ◄─┘          │ firmware: arm latch, fault aggregation,   │
 │ INA226 + shunt   ◄── I2C ────►│ thresholds, DRVOFF permits, HB, telemetry │
 │ IPROPI RC filter ──── ADC ───►│ ADC: 4×IPROPI + 2×battery taps            │
-│ nFAULT pull-up   ──── GPIO ──►│ battery INA226 + shunt (I2C)              │
+│ nFAULT pull-up   ──── GPIO ──►│ battery dividers (balance plugs)              │
 │ DRVOFF pull-up (coast default)◄─ permit GPIO ×4                           │
 └──────────────────┘            └───────────────────────────────────────────┘
           STOP (NC) hardwired in series with every DRVOFF pull-low return
@@ -58,7 +58,17 @@ Detailed requirements and net intent:
 `motor-interface-integrated/motor-board/README.md`. Summary — each board
 contains only what cannot be collapsed into the monitor or an I2C device:
 
-- DRV8263H #5238 carrier (PH/EN mode, SLEEP to local 5 V).
+- DRV8263H #5238 carrier (PH/EN mode). **Carrier VDD and SLEEP run from the
+  harness +3V3** so the carrier's onboard nFAULT pull-up sits at 3.3 V
+  (ESP32-safe) and a disconnected monitor harness puts the driver to sleep
+  (coast). The motor board routes the carrier's ITRIP pin through **RV1
+  (100 kΩ 25-turn rheostat) in series with floor resistor R13 (shipped
+  DNP) to GND, with TP1/TP2 test loops**: as shipped the chain is open and
+  the carrier's default ≈10 A current limit applies, far above the
+  2.3–2.6 A motor stall figures, so D03b stays a release gate — closing it
+  means fitting R13 and trimming RV1 into the ≈3 A level band at TP1/TP2
+  (the DRV8263H ITRIP pin is 5-level/discrete; near 0 Ω disables the
+  regulation, hence the floor).
 - INA226 + shunt in the board's 12 V feed. A0/A1 address straps make the four
   boards distinct on one I2C bus. The INA226's open-drain ALERT output is the
   **hardware threshold element that replaces the LM393 comparator**: its limit
@@ -80,8 +90,16 @@ arm latch, optocouplers, peer-link connector.
 
 Requirements: `motor-interface-integrated/monitor/README.md`. The single
 controller needs **17 digital GPIOs** (4 nFAULT, 4 DRVOFF permits, shared
-ALERT, ARM, STOP sense, HB, HALT_OUT, UART×2, I2C×2) plus **6 ADC channels**
-(4 IPROPI, 2 battery taps).
+ALERT, ARM, STOP sense, HB, HALT_OUT, UART×2, and one I2C bus to the four
+motor-board INA226s over the harnesses) plus **6 ADC channels** (4 IPROPI,
+2 battery taps). All remaining spare GPIOs are brought out on a 2×7
+expansion header. The battery-feed INA226 was removed (2026-10-31): battery
+current is **estimated** from the four motor-board feeds — those measure on
+the regulated 12 V side, so firmware converts power, not current:
+I_battery ≈ 12 V × ΣI_feed / (V_battery × η_regulator) + other battery
+loads. Accuracy is bounded by the regulator-efficiency model; pack
+protection therefore rests on the per-pack voltage dividers, not on this
+estimate or on coulomb counting.
 
 | Candidate | Verdict |
 |---|---|
@@ -89,16 +107,58 @@ ALERT, ARM, STOP sense, HB, HALT_OUT, UART×2, I2C×2) plus **6 ADC channels**
 | **ESP32-S3** | **Recommended.** ~33 usable GPIOs, ten ADC1 channels (no Wi-Fi/ADC2 conflict), same toolchain; radios stay disabled. |
 | Teensy 4.1 | Accepted fallback: more I/O, substantially better ADC linearity, no radio. Different toolchain; 3.3 V, not 5 V tolerant (same as ESP32). |
 
+**On-hand board analysis (2026-10-31, design unchanged).** The monitor needs
+23 module pins: 13 plain digital + UART×2 + I2C×2 + 6 ADC. Against the three
+boards on hand:
+
+| On-hand board | Fit |
+|---|---|
+| **Teensy 3.2** (MK20DX256, 72 MHz M4) | **Clean drop-in replacement — validated fallback.** All 23 functions fit the outer DIP rows with one spare: UART 0/1, I2C 18/19, ADC 14–17 (IPROPI) + 20/21 (battery), 13 digital from 2–13/22/23. Better ADC than any ESP32 (dual 13-bit effective), Kinetis pins disabled (hi-Z) at reset, 5 V-tolerant inputs, VIN takes the D24V5F5 5 V, 250 mA 3.3 V regulator covers the harness +3V3 load. Caveats: product line discontinued (fine for a one-off; Teensy 4.0 shares the outer-row form factor as an upgrade path, 12-bit ADC, not 5 V tolerant), spare-GPIO expansion shrinks to ~1 pin (bottom pads inaccessible when socketed), Teensyduino toolchain, and switching costs a monitor re-layout (new socket footprint and pin map; the module is far smaller than the 70 mm DevKitC, so the board gets easier). MK20 V_IH = 0.7·VDD ≈ 2.31 V; the "any non-solid-low STOP_SENSE = STOP" firmware rule is unaffected. |
+| HUZZAH32 Feather (ESP32 classic) | **No — 2 pins short** (21 broken-out GPIOs incl. three input-only vs 23 needed). Closing the gap means dropping a safety-relevant signal or putting PERMIT/NFAULT behind an I2C GPIO expander — rejected. |
+| Feather M0 (ATSAMD21 + ATWINC1500) | **No.** Fits only by holding the WINC1500 in reset and scavenging its SPI pins as GPIO; zero margin, weakest CPU (48 MHz M0+). The WINC1500 is itself EOL. |
+
+Since the monitor firmware (I7) is not yet written, a toolchain switch has
+no porting cost; the Teensy 3.2 is recorded as the validated hardware
+fallback, and the ESP32-S3 design stands.
+
 Firmware duties (full list in the monitor README): firmware arm latch, fault
 aggregation with first-cause latching, threshold policy, DRVOFF permit
 control, HB generation, UART telemetry. Task watchdog and brownout detector
 mandatory — any reset, hang or brownout stops HB and releases all permits.
 
+**Hardware backstop (added 2026-11-01):** the monitor now routes all four
+PERMIT lines through AND gates (74HC08) enabled by a MAX705 watchdog and an
+FPGA-HALT inhibit transistor. **HB (which also feeds the watchdog) must be
+toggled in firmware only after a completed monitoring cycle with fresh ADC
+and I2C data** — never from a free-running hardware timer, which would keep
+toggling while application tasks are dead. A hung application therefore
+drops all permits in ≤1.6 s without firmware help, and the FPGA can force
+coast directly via HALT even when the ESP32 is stuck. The path is
+inhibit-only (unpowered gate/watchdog/FPGA = coast; STOP chain untouched).
+
+**Telemetry role separation (2026-11-01):** the INA226 measures the 12 V
+*input* current, not circulating winding current — in PH/EN drive/brake
+PWM, motor current recirculates while input current is far lower. Do not
+treat a low averaged INA226 reading as proof of low winding current. Roles:
+INA226 = input power/energy/supply-overload trends (its "one conversion"
+time is not a system response spec — conversion, averaging and alert
+configuration set the real latency); IPROPI = driver current, sampled with
+appropriate timing; ITRIP = fast limiting; encoder + elapsed time/current =
+stall policy. ITRIP itself is two-stage: characterize with RV1/R13 + test
+points, then fit a fixed, documented band resistor for production builds.
+Harness hardening (keyed locking connectors, strain relief, protection
+footprints) is deferred to the vehicle-integration revision; bench phase
+uses pin headers.
+
 ## 5. Battery and current monitoring
 
-Battery monitoring carries over from the first revision unchanged in
-substance: two divider taps (`TAP_FULL` 12.0–16.8 V, `TAP_MID` 6.0–8.4 V,
-top pack by difference) scaled to ≈2.4 V max, 1% resistors, ≈100 nF at each
+Battery monitoring carries over from the first revision in substance, with
+the sense interface now the packs' **balance connectors** (two JST-XH 3-pos
+headers mate the 2S balance plugs directly; a separate 2-pos terminal feeds
+the monitor's regulator so supply current never crosses balance leads): two
+divider taps (stack top 12.0–16.8 V via pack B B+, series midpoint
+6.0–8.4 V via the joined balance pins, top pack by difference; no separate
+battery-feed current monitor — see above) scaled to ≈2.4 V max, 1% resistors, ≈100 nF at each
 ADC pin, one-point installation calibration (≈±1% thereafter). Initial
 per-pack thresholds: warn < 7.0 V, fault < 6.6 V sustained 500 ms with
 hysteresis (stall sag must not trip it), overvoltage sanity > 8.6 V,
@@ -110,13 +170,14 @@ Per-motor current now has three layers:
 | Layer | Mechanism | Latency class |
 |---|---|---|
 | Regulation/protection | DRV8263 on-chip ITRIP current regulation, OCP, TSD, UVLO — set by carrier components per D03b | µs, on-chip |
-| Hardware threshold | INA226 limit register → ALERT (per board) | one conversion, ~0.14–1.1 ms by configuration |
+| Hardware threshold | INA226 limit register → ALERT (per motor board, on the shared harness I2C bus) | one conversion, ~0.14–1.1 ms by configuration |
 | Policy/telemetry | Monitor firmware on IPROPI ADC + INA226 readings | ms–tens of ms |
 
-The carrier ITRIP component selection is now the **primary** fast current
-protection and is safety-relevant; D03b (exact carrier configuration,
-current-limit components, truth table, thermal tests) remains open and gains
-importance from this restart.
+The ITRIP level selection is now the **primary** fast current protection
+and is safety-relevant; the motor board provides the RV1 trimmer + R13
+floor + TP1/TP2 network, and D03b (per-board calibration against the full
+DRV8263H-Q1 datasheet level table, truth table, thermal tests) remains open
+and gains importance from this restart.
 
 ## 6. Protection re-evaluation — what changed and what holds
 
@@ -140,7 +201,7 @@ independence for a drastic parts-count and board-complexity reduction.
 2. NC STOP loop in series with every DRVOFF pull-low return: opening STOP
    coasts all four motors regardless of monitor state, including firmware
    stuck asserting permits.
-3. Monitor reset/brownout/hang stops HB (hardware-timer output ceases) →
+3. Monitor reset/brownout/hang stops HB (software-gated toggling ceases) →
    Zynq PL qualifier latches the external fault and inhibits PWM.
 
 ### 6.3 ARM/STOP recommendation (adopted as initial)
@@ -157,11 +218,17 @@ design; reverting to full-firmware STOP is a one-line schematic change.
 
 ### 6.4 Monitor–Zynq contract (unchanged in spirit from revision 1)
 
-- HB: hardware-timer square wave (initial 100 Hz), generated only while
-  measurements are fresh and no fault is latched. A small independent RTL
-  qualifier in the PL (not the HLS engine) latches a fault and inhibits PWM
+- HB: **software-toggled square wave (~50 Hz at the 10 ms safety cycle;
+  never a hardware timer)**, toggled only after a completed monitoring
+  cycle with all sensor data inside its freshness limits and no fault
+  latched (monitor FIRMWARE.md §4). A small independent RTL
+  qualifier in the PL (not the HLS engine) **latches** a fault and inhibits PWM
   when edges are absent beyond the window (initial 50 ms) or the line is
-  static. Assert-only; HB can never enable motion or clear anything.
+  static. Assert-only; HB can never enable motion. **The latch is cleared
+  only by an explicit PS-side handshake (AXI register write after software
+  review), never by HB merely resuming** — this is the system-level
+  backstop for the monitor watchdog's non-latching ~WDO (monitor
+  FIRMWARE.md §4) and must be verified end-to-end in the P1/P3 bench tests or clear anything.
 - FPGA HALT_OUT → monitor interrupt → all DRVOFF permits dropped. Target
   end-to-end FPGA-fault-to-coast latency < 1 ms firmware path (measure);
   the FPGA's own PWM zeroing remains its existing ≤10 µs digital path.
@@ -184,8 +251,9 @@ any DMOTOR_ARCH evidence.
 
 ## 7. Validation gates before reliance
 
-1. D03b closure on one board: carrier ITRIP components selected and verified
-   against bounded injected stall; coast truth table measured.
+1. D03b closure on one board: R13 fitted and RV1 trimmed into the target
+   level band (measured at TP1/TP2), verified against bounded injected
+   stall; coast truth table measured.
 2. Passive invariants: pull harness, power, reset and each permit line on a
    live board; verify coast each time with no firmware assistance. Open STOP
    mid-drive; verify all-board coast.
