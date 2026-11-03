@@ -4,6 +4,113 @@ Date: 2026-11-03. Boards are ordered; this review treats the current rev A
 hardware as the integration target. Recommendations below are proposed changes,
 not newly approved requirements or evidence of physical qualification.
 
+**Latest review — PROPOSED v2, 2026-11-03:** checked dmotor `b02267b`
+(clean working tree before this review; v2 is committed, not uncommitted).
+The v2 assessment below supersedes the v1 follow-up's closure status. V2 makes
+substantial progress, but the claim that F1–F5 are all resolved is not supported.
+No RTL, driver or monitor implementation accompanies the proposal.
+
+## Latest assessment: recovery contract v2
+
+| Finding | Credit for v2 | Remaining status |
+|---|---|---|
+| F1 | Recovery exchange required before permits, including after monitor boot | Partially addressed: epoch binding and continuous inhibition are underspecified |
+| F2 | Latch clearing no longer depends on exchange; final ACK and framing added | Original circular dependency resolved in the design; commit failure/replay rules remain open |
+| F3 | Withdraws the claim that rev A inherently asserts coast before configuration | Open: replacement XDC mitigation and exposure-bound claims are incorrect or unsupported |
+| F4 | Global emergency coast separated from selected-motor controlled STOP; lifecycle mapped | Original STOP/global-coast conflict resolved in the design; clarify immediate DISABLE semantics |
+| F5 | Explicit HB qualification prerequisite, held-ARM rule and separate detection classes | Partially addressed: state coverage and timing bounds remain incomplete |
+
+R1/R2 still require implementation and qualification. R3 remains open for the
+protocol issues below. R4 remains an open system requirement even though it is
+outside this contract's scope. R5–R8/R10 are unchanged; residual R9 cleanup may
+follow adoption, but deferment is not closure. The following checks concern the
+actual v2 text, not the summary of its intended behavior.
+
+### V2-1 — High: bind recovery authorization to an epoch and retain inhibition
+
+The monitor returns `epoch` in RECOVER_STATE, but COMMIT contains only `txn` and
+no rule binds that transaction to the captured epoch. Define that binding and
+invalidate pending transactions and completed ARM eligibility on every new
+fault, peer/session change and boot. Otherwise a delayed pre-fault COMMIT can
+be mistaken for recovery of a newer fault within the same boot session.
+Initialize boot with **no completed exchange**, even when epoch starts at zero.
+T7 currently covers only ARMED; faults during SAFE, ARM_PENDING and the exchange
+must also invalidate authorization and win over COMMIT/permit writes.
+
+The PS attestation is a snapshot, not a sustained interlock. Keep the PL disabled,
+targets/PI state cleared and command admission closed from cleanup through the
+exchange and physical ARM; define the explicit transition that admits a new
+command afterward. Reject old queued intent. A monitor reboot interlock does not
+cover a PL-only reboot while monitor permits remain high: define that case
+separately rather than claiming A′ bounds it. Test new faults between STATE and
+COMMIT, faults during ARM_PENDING, repeated recovery, and commands arriving after
+attestation but before ARM.
+
+### V2-2 — High: COMMIT outcome and session validation remain contradictory
+
+The monitor enters SAFE when it sends COMMIT_ACK. If that ACK and all retries are
+lost, the later claim that timeout leaves the monitor in FAULT is false: the PS
+and monitor disagree about the result. Choose explicit outcome-reconciliation
+rules. Do not allow ARM against an exchange the PS abandoned while assuming its
+peer remained inhibited. T8 also requires stages 1–3 to enter SAFE, but stage 3
+is physical ARM and T5 requires SAFE first; change T8 to the intended exchange
+completion boundary so that the transition table itself is acyclic.
+
+`peer_session_echo` validates the receiver's identity only. It does not reject a
+packet from an old **sender** boot when the receiver has not rebooted. Require
+`src_session` to match the established peer and specify discovery/session-change
+handling. Bind txn to both sessions and the monitor epoch; define transaction
+reuse, sequence-window advancement and duplicate-cache expiry. The two-bitfield
+identities being present in a frame is not the same as validating both of them.
+The v2 wire description also needs explicit byte order for multibyte fields
+other than CRC and bounded decoded/escaped frame lengths.
+
+Implementation note: `DMOTOR_RELEASE_HALT` already exists in the kernel driver,
+and `Runtime::prepare()` already calls `io_.halt(false)`. Extending it to a new
+PL latch may need work, but describing release as a wholly new driver operation
+misstates the current implementation. Three acknowledgment writes alone do not
+clear all targets/PI state; map cleanup to the existing reset/session sequence
+and verify completion before attestation.
+
+### V2-3 — High: XDC PULLUP is not a pre-configuration safety mechanism
+
+V2 B′ proposes an XDC PULLUP as asserting COAST_REQ before configuration. That
+claim must be withdrawn: configuration-time pull behavior is controlled by
+PUDC_B and power sequencing, not a user-design XDC setting alone. AMD recommends
+an external pull-up when immediate power-ramp assertion is critical; see
+[7 Series configuration guide UG470](https://docs.amd.com/api/khub/documents/FOs3lXmlcWxBhTIFxVKyGA/content).
+Verify the Arty/Zynq board configuration and supply states before selecting a
+mitigation. The quoted 2.6 V unloaded divider estimate also cannot establish
+Q2 operation: its base-emitter junction loads that node; validate available
+base current and the resulting ENABLE voltage instead.
+
+A′ imposes no elapsed-time bound on stale permits after PL-only failure; a
+future recovery is not a shutdown deadline. Remove “bounds the stale-permit
+window” and “stationary-safe” as unsupported guarantees. Distinguish CORE_RESET,
+fabric reset, reconfiguration, clock loss and power loss. EN/PH pulldowns govern
+undriven pins, not every actively driven or frozen-output case. Keep this a
+documented open hardware/system issue, with no claim of a one-line fix.
+
+### V2-4 — Medium: the revised timing/state rules still need derivation
+
+T7b's 30/40 ms figures do not close R5: three stale cycles occur only after the
+25 ms age threshold, and the 10 ms cycle itself lacks a worst-case bound.
+Battery low-voltage policy also has a 500 ms persistence interval. Name the
+starting event for each bound and separate persistence, detection and output
+latency. A STOP sample checked by a task is not automatically an ISR event.
+Keep proposed targets separate from measured guarantees.
+
+The scoped zero-intent invariant still says **every** inhibit/fault transition
+clears intent, contradicting A′'s admitted inability to clear PL intent on a
+monitor-only fault. Express separate invariants for monitor permits and PL
+cleanup. Define HB_QUALIFIED invalidation and fault precedence, not just its first
+assertion. Finally, per-motor DISABLE must remain immediate output inhibition;
+“zero-target + EN=0” must not become a zero-velocity PI command or controlled STOP.
+
+**Follow-up validation:** source/document comparison and vendor documentation
+check only. No executable changes, test rerun, FPGA build or hardware experiment.
+The initial 8/8 test result later in this file is historical evidence only.
+
 **Follow-up review, 2026-11-03:** includes dmotor `f983070` and
 motor-interface-integrated `21133df`, particularly the new
 [proposed recovery transition contract](recovery_transition_contract.md).
@@ -30,6 +137,9 @@ This is an architecture and selected implementation review, not an exhaustive
 line-by-line audit, new routed FPGA qualification, or electrical certification.
 
 ## Follow-up status and review of the proposed recovery contract
+
+This section records the **v1** review. Use the latest v2 assessment above for
+current closure status; the original findings are retained for traceability.
 
 | Finding | Updated status |
 |---|---|

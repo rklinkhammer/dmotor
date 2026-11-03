@@ -1,13 +1,18 @@
 # Joint recovery and coast-request transition contract — PROPOSED v2
 
 Status: **PROPOSED v2, 2026-11-03, not approved, no code.** v1 responded to
-review findings R1/R3; this revision resolves the follow-up defects **F1–F5**
+review findings R1/R3; this revision proposes resolutions to defects **F1–F5**
 in [software_architecture_review_2026_11_03.md](software_architecture_review_2026_11_03.md)
 and keeps the I10 (non-latching ~WDO) layering. On adoption this supersedes
 the recovery prose in DMOTOR_CONTROL §6.4 and monitor FIRMWARE.md §5.
 R4 (PL clock-loss supervision) is **explicitly out of scope** here: a
 combinational coast request cannot detect a frozen clock; R4 needs its own
 architectural decision (UART progress lease vs narrowed failure model).
+
+**Review status:** the [v2 assessment](software_architecture_review_2026_11_03.md#latest-assessment-recovery-contract-v2)
+credits the STOP/coast separation and removal of the original latch-clear
+dependency, but leaves epoch/commit handling, reset bias and timing claims open.
+The design below remains a proposal requiring those corrections.
 
 ## 1. Architectural resolutions
 
