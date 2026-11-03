@@ -8,6 +8,11 @@ and folds in the MAX706R's non-latching ~WDO (board ISSUES.md I10). On
 adoption this supersedes the recovery prose in DMOTOR_CONTROL §6.4 and
 monitor FIRMWARE.md §5; both already point here.
 
+**Follow-up review:** this draft does not yet close R1/R3. See
+[findings F1–F5](software_architecture_review_2026_11_03.md#follow-up-status-and-review-of-the-proposed-recovery-contract)
+for unresolved fault visibility, recovery ordering, reset bias, STOP scope and
+transition/protocol details. The behavior below remains proposed, not implemented.
+
 ## 1. Architectural resolutions (the decisions that break the knots)
 
 **A. HB means liveness, never permission.** HB is toggled iff the monitor

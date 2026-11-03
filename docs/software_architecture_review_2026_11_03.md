@@ -4,6 +4,13 @@ Date: 2026-11-03. Boards are ordered; this review treats the current rev A
 hardware as the integration target. Recommendations below are proposed changes,
 not newly approved requirements or evidence of physical qualification.
 
+**Follow-up review, 2026-11-03:** includes dmotor `f983070` and
+motor-interface-integrated `21133df`, particularly the new
+[proposed recovery transition contract](recovery_transition_contract.md).
+R1/R3 now have a proposed design, but remain open for the reasons below.
+R9 is partially resolved by the board-document reconciliation. No implementation
+or physical qualification was added by these updates.
+
 ## Assessment
 
 Retain the partition: Zynq PL owns deterministic motor control and independent
@@ -22,6 +29,103 @@ RTL, and the monitor README/FIRMWARE.md/issue register and circuit intent.
 This is an architecture and selected implementation review, not an exhaustive
 line-by-line audit, new routed FPGA qualification, or electrical certification.
 
+## Follow-up status and review of the proposed recovery contract
+
+| Finding | Updated status |
+|---|---|
+| R1 — software HALT/coast | Open: outward COAST_REQ proposed; reset bias, STOP scope and implementation unresolved |
+| R2 — board PL integration | Open: qualifier timings proposed, but no pin map/RTL/ABI implementation |
+| R3 — joint recovery | Open: useful liveness/permission split and UART policy; transition/protocol defects below |
+| R4 — PL clock loss | Open: a combinational coast request cannot detect a frozen clock by itself |
+| R5 — safety-cycle bound | Open: acquisition budget and first/second failure behavior unchanged |
+| R6 — ESP32 isolation | Open: IDF/flash/ISR/watchdog implementation contract unchanged |
+| R7 — Linux diagnostics | Open: synchronous trace output unchanged |
+| R8 — sensor/configuration contract | Open: population, NVS and threshold details unchanged |
+| R9 — document consistency | Partially resolved: listed board facts corrected; residual contradictions remain |
+| R10 — vehicle/release | Planned work unchanged |
+
+The proposal makes three useful distinctions: monitor liveness versus permission,
+outward coast request versus local fault attribution, and advisory operational
+telemetry versus required recovery messages. These address the original design
+questions, but are not sufficient to close R1/R3. The following are contract
+defects to resolve before adopting or implementing it.
+
+### F1 — High: healthy HB can conceal a monitor fault from the PL
+
+Section 1A allows HB during FAULT while UART remains advisory in operation.
+For a monitor-detected fault with valid/fresh samples (for example nFAULT or a
+current threshold), permits drop but the PL receives no mandatory fault signal.
+It may retain an active velocity target and PI state until a separate feedback
+or acquisition fault occurs; that secondary detection is not the monitor-fault
+contract. The current core-reset/watchdog mechanisms do not prove intent was
+invalidated at the instant the monitor revoked permission.
+
+Specify how every monitor fault invalidates PL intent before permits can be
+restored. A recovery interlock must prove a fresh PL session, disabled outputs
+and cleared targets even when UART was absent throughout the fault. Define
+boot/restart the same way: a quick monitor reset may not exceed the 50 ms HB
+window, and T5/T6 currently allow physical ARM without a fresh peer handshake.
+Test a short reset and a monitor fault with UART disconnected and a still-live
+host target. Neither ARM nor HB resumption may reconnect stale drive.
+
+### F2 — High: T10 and the exchange still contain a circular dependency
+
+T10 requires a recovery exchange to clear LOCAL_FAULT if COAST_REQ was asserted.
+Exchange step 1 instead requires the PS to have already cleared its latches
+under T4/T10. T8 also requires HALT_IN deasserted, but a retained LOCAL_FAULT
+holds COAST_REQ asserted. The new HB policy removes one circular wait, not this
+one. Define staged recovery with separate authorization to clear local latches,
+release COAST_REQ and commit monitor SAFE, while motion stays disabled throughout.
+Specify PS deliberate-HALT release explicitly; it is absent from the table.
+
+Step 3 also lacks a final monitor acknowledgment: if COMMIT is lost, PS cannot
+know the monitor entered SAFE. Bind every exchange to both peer boot identities
+and a transaction identifier; specify final ACK, replay rejection, sequence wrap,
+duplicate handling and timeout reconciliation. A single sender session and
+16-bit sequence do not by themselves reject a delayed command from an earlier
+peer boot. Complete framing rules (delimiter escaping/resynchronization), CRC
+reflection/final-XOR/wire order and payload definitions before protocol tests.
+
+### F3 — High: proposed reset-time asserted bias is not present on rev A
+
+Section 1B/T2/T11 assume COAST_REQ is asserted while PL is unconfigured.
+The ordered monitor circuit intent has R17 from Q2 base to GND; the active PL
+HALT output constraints use PULLDOWN. Monitor README/I10 explicitly say an
+absent FPGA does not inhibit. An RTL expression cannot establish an output
+level before configuration or with FPGA power absent.
+
+Separate the desired reset guarantee from the as-ordered hardware behavior.
+Document and qualify any external bias/rework needed, or revise the guarantee
+and recovery preconditions. Do not treat T11's peer observation as established
+for every reset/power case. This also leaves R4's frozen-output case open.
+
+### F4 — High: global coast conflicts with controlled and selected-motor STOP
+
+Section 1B asserts COAST_REQ for STOP/DISABLE, but the truth table omits those
+conditions and the single Q2 gate inhibits all four motors. Immediate assertion
+on STOP prevents the controlled deceleration required by DMOTOR_ARCH §7.
+A selected-motor STOP/DISABLE would also coast peers whose runtime targets and
+watchdogs may remain active. Define whether coast occurs after STOP completion,
+whether these operations become global, and how peer intent is invalidated.
+These are behavior changes, not just a rename of shared_halt.
+
+Clarify READY after STOP as well: the proposal allows READY braking but requires
+STOP coast. A distinct retained coast/rearm state or explicit latch is needed
+to express both. The proposed PL RESET/READY/RUN shorthand must map to the
+existing DISABLED/READY/RUNNING/STOPPING/HALTED lifecycle.
+
+### F5 — Medium: transition guarantees need state-specific conditions
+
+T3 allows one second for the first HB while §2 permits PWM in READY/RUN whenever
+fault latches are clear. Add an explicit HB-qualified prerequisite before any
+motion authorization; an initial grace period must never authorize motion.
+T7 claims every cause was inhibited in an ISR, but stale samples and battery
+thresholds are task-detected. Give those paths their own bounds. ARM press versus
+release, a held button across recovery, and STOP-cycle qualification also need
+precise event definitions. The blanket invariant that every row leaves zero
+intent cannot describe ordinary ARMED operation; scope it to inhibit/recovery
+transitions and state exactly when fresh motion intent becomes admissible.
+
 ## Existing foundations to preserve
 
 | Layer | Present | Still needed for this system |
@@ -39,6 +143,9 @@ back into PL or motor PI into the ESP32.
 ## Findings, ordered by integration priority
 
 ### R1 — High: software HALT does not reach the monitor coast output
+
+**Follow-up:** the implementation finding still holds. Proposed contract §1B
+addresses the intended outward signal; F3/F4 above block design closure.
 
 Evidence: `software/linux/driver/dmotor_access.c:halt_all()` asserts AXI GPIO;
 `platforms/arty-z7-20/vivado/design_1.bd` connects that GPIO to `halt_async`,
@@ -81,6 +188,10 @@ CDC review and connector-level measurement. Old route results cannot qualify
 the additional I/O or new logic.
 
 ### R3 — High: recovery can become circular; UART authority is contradictory
+
+**Follow-up:** the following evidence describes the original contract, still
+retained pending adoption. The new proposal explicitly separates UART roles
+and permits healthy HB in FAULT; F1/F2/F5 above describe the remaining gaps.
 
 Evidence: DMOTOR_CONTROL §6.4 stops HB with a latched fault and requires monitor
 acknowledgment/HB restoration before FPGA acknowledgment. Monitor FIRMWARE §5
@@ -198,18 +309,20 @@ use immediate unsafe assertion with delayed, deliberate release.
 
 ### R9 — Medium: architecture documents describe incompatible board revisions
 
-DMOTOR_ARCH §12 still includes a battery INA226 and omits the added watchdog/HALT
-gate. DMOTOR_CONTROL includes five ALERTs, a removed battery monitor, old joined
-balance taps, a MOSFET rather than the implemented 2N3904, and firmware-only HALT
-claims alongside the newer hardware path. Its current-limit target also differs
-from the later issue register. Monitor README contains both “No PCB exists yet”
-and routed-PCB status. These are consequential inputs to firmware, not cosmetic
-history: they change expected devices, recovery behavior and protection limits.
+**Partially resolved in the follow-up.** DMOTOR_ARCH §12 now removes the battery
+INA226 and includes the watchdog/HALT gate. DMOTOR_CONTROL revision 3 identifies
+the ordered rev A baseline, corrects four ALERTs, the single-conductor balance
+taps and divider ratios, Q1's 2N3904 type, and the provisional current-limit
+description. Monitor README's stale “No PCB exists yet” sentence is removed.
 
-Required cleanup: a dated current-system contract tied to the ordered fabrication
-revision, plus clearly separated historical evidence. Reconcile to the actual
-board intent and assembly options; do not silently choose resistor values from
-conflicting text. Preserve the user's existing uncommitted edits while doing so.
+Remaining: DMOTOR_CONTROL §1 still describes FPGA coast as firmware-mediated,
+and §6.1 says only driver protection/passive topology are software-independent,
+despite the added watchdog/Q2 gate. Its old §6.4 HB/fault semantics are explicitly
+pending replacement, not resolved by a link to a PROPOSED contract. Reconcile
+those statements once F1–F5 are settled. Monitor README also retains pre-release
+wording about physical fit despite the later issue-register clearance. Close
+R9 only after current behavior and historical statements are clearly separated;
+this documentation closure would not close physical qualification findings.
 
 ### R10 — Planned gap: vehicle runtime and release qualification remain open
 
@@ -227,8 +340,9 @@ establish real MMIO ordering, scheduler bounds or electrical shutdown.
 
 ## Recommended implementation sequence
 
-1. Reconcile the current board contract and settle R1–R4 jointly. Deliver the
-   pin map, output truth table, boot/recovery transition table and UART contract.
+1. Revise the proposed recovery contract to resolve F1–F5, then settle R1–R4
+   jointly. Complete the pin map, output truth table and wire protocol; reconcile
+   the residual R9 text to the adopted behavior and actual ordered hardware.
 2. Implement a host-compilable ESP32 safety core with explicit timestamped inputs
    and desired permit/HB outputs. Add a thin IDF acquisition/ISR adapter; only
    the safety owner may authorize outputs. Resolve R5/R6/R8 in its detailed design.
@@ -244,6 +358,11 @@ establish real MMIO ordering, scheduler bounds or electrical shutdown.
    required recovery/status fields.
 
 ## Validation performed for this review
+
+The results below are from the initial review, not a rerun after the documentation
+update. The follow-up compared the two repositories' document changes, current
+runtime/RTL wiring and monitor circuit intent. No executable changes were made;
+native tests were not rerun for this documentation-only follow-up.
 
 Fresh native build in `/tmp/dmotor-review-20261103`:
 

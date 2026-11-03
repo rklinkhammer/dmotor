@@ -8,7 +8,8 @@ For the ordered rev A boards, see the
 [Zynq and ESP32 software architecture review](software_architecture_review_2026_11_03.md)
 for integration findings and the recommended implementation sequence, and the
 [joint recovery transition contract](recovery_transition_contract.md)
-(PROPOSED) answering its R1/R3 findings.
+(PROPOSED) addressing its R1/R3 findings. The review's follow-up status records
+the completed documentation cleanup and remaining defects in that proposal.
 
 The following component documents and measurements retain their individual scope.
 Historical build logs live in `history/`; raw verification evidence stays in
