@@ -1,7 +1,16 @@
 # DMOTOR external motor-control circuitry — per-motor PCB restart
 
-Revision: 2026-10-30 (2). This supersedes the same-day first revision and
-re-evaluates the complete external circuitry after the user's restart decision.
+Revision: 2026-11-03 (3) — **current-system contract for the ordered rev A
+boards** (motor-interface-integrated `5ebcebe`+, fabrication cleared and
+ordered 2026-11-02). This revision reconciles the text against the
+as-ordered hardware per review R9 (docs/software_architecture_review_2026_11_03.md);
+sections describing superseded intermediate states are corrected in place,
+and the joint recovery semantics of §6.4 are being redesigned — see
+[docs/recovery_transition_contract.md](docs/recovery_transition_contract.md)
+(PROPOSED) for the R1/R3 transition table that will replace them on adoption.
+
+Revision 2026-10-30 (2) superseded the same-day first revision and
+re-evaluated the complete external circuitry after the user's restart decision.
 The previous two-motor interface board — including its LM393 IPROPI
 comparators, LM4040 reference, MCP130 supervisor, HCT arm-latch logic and the
 optocoupled two-board peer interlock — is **superseded and archived unchanged**
@@ -66,18 +75,22 @@ contains only what cannot be collapsed into the monitor or an I2C device:
   DNP) to GND, with TP1/TP2 test loops**: as shipped the chain is open and
   the carrier's default ≈10 A current limit applies, far above the
   2.3–2.6 A motor stall figures, so D03b stays a release gate — closing it
-  means fitting R13 and trimming RV1 into the ≈3 A level band at TP1/TP2
+  means fitting R13 (6.8 kΩ 1 % specified) and trimming RV1 into the lowest
+  useful level band (≈3.9 A if the family V_ITRIP ladder transfers —
+  reconciled to the issue register 2026-11-03) at TP1/TP2
   (the DRV8263H ITRIP pin is 5-level/discrete; near 0 Ω disables the
   regulation, hence the floor).
 - INA226 + shunt in the board's 12 V feed. A0/A1 address straps make the four
   boards distinct on one I2C bus. The INA226's open-drain ALERT output is the
   **hardware threshold element that replaces the LM393 comparator**: its limit
   register asserts ALERT after one conversion without firmware in the loop.
-  All five ALERTs wire-OR onto one monitor interrupt line.
+  All four ALERTs wire-OR onto one monitor interrupt line (the
+  battery-feed INA226 was removed 2026-10-31).
 - IPROPI, RC-filtered, to a monitor ADC channel (coarse per-motor telemetry).
 - DRVOFF pulled up locally (**coast is the default state**); a small-signal
-  MOSFET pulls DRVOFF low to permit drive, gated by the monitor and returned
-  through the series STOP loop.
+  NPN (Q1, 2N3904) pulls DRVOFF low to permit drive, its base driven by the
+  monitor permit (through the hardware watchdog/HALT gate) and its emitter
+  returned through the series STOP loop.
 - nFAULT pull-up, routed to a monitor interrupt input.
 - Encoder 5 V supply and level translation to 3.3 V FPGA inputs; a validated
   3.3 V sensor configuration may later delete the translator.
@@ -127,14 +140,14 @@ control, HB generation, UART telemetry. Task watchdog and brownout detector
 mandatory — any reset, hang or brownout stops HB and releases all permits.
 
 **Hardware backstop (added 2026-11-01):** the monitor now routes all four
-PERMIT lines through AND gates (74HC08) enabled by a MAX705 watchdog and an
+PERMIT lines through AND gates (74HC08) enabled by a MAX706R watchdog and an
 FPGA-HALT inhibit transistor. **HB (which also feeds the watchdog) must be
 toggled in firmware only after a completed monitoring cycle with fresh ADC
 and I2C data** — never from a free-running hardware timer, which would keep
 toggling while application tasks are dead. A hung application therefore
-drops all permits in ≤1.6 s without firmware help, and the FPGA can force
+drops all permits in ≤2.25 s without firmware help, and the FPGA can force
 coast directly via HALT even when the ESP32 is stuck. The path is
-inhibit-only (unpowered gate/watchdog/FPGA = coast; STOP chain untouched).
+inhibit-only.
 
 **Telemetry role separation (2026-11-01):** the INA226 measures the 12 V
 *input* current, not circulating winding current — in PH/EN drive/brake
@@ -156,14 +169,20 @@ Battery monitoring carries over from the first revision in substance, with
 the sense interface now the packs' **balance connectors** (two JST-XH 3-pos
 headers mate the 2S balance plugs directly; a separate 2-pos terminal feeds
 the monitor's regulator so supply current never crosses balance leads): two
-divider taps (stack top 12.0–16.8 V via pack B B+, series midpoint
-6.0–8.4 V via the joined balance pins, top pack by difference; no separate
-battery-feed current monitor — see above) scaled to ≈2.4 V max, 1% resistors, ≈100 nF at each
-ADC pin, one-point installation calibration (≈±1% thereafter). Initial
-per-pack thresholds: warn < 7.0 V, fault < 6.6 V sustained 500 ms with
-hysteresis (stall sag must not trip it), overvoltage sanity > 8.6 V,
-imbalance warning at > 0.3 V divergence. A battery-feed INA226 + shunt adds
-pack current, an independent stack-voltage reading and charge estimation.
+divider taps (stack top 12.0–16.8 V via pack B's B+, series midpoint
+6.0–8.4 V via pack A's B+ — **exactly one conductor lands per balance plug**
+(ISSUES.md I9: landing duplicates would parallel the high-current pack
+interconnects through the balance wires); the divider ground references the
+main harness, so readings under-estimate slightly under load (fail-safe)
+and are exact at rest where calibration is done; top pack by calibrated
+full-minus-mid difference; no battery-feed current monitor) scaled to
+≈2.4 V (full) / ≈1.5 V (mid, fault-tolerant 1 M/220 k ratio) max, 1%
+resistors, ≈100 nF at each ADC pin, one-point installation calibration
+(≈±1% thereafter). Initial per-pack thresholds: warn < 7.0 V, fault
+< 6.6 V sustained 500 ms with hysteresis (stall sag must not trip it),
+overvoltage sanity > 8.6 V, imbalance warning at > 0.3 V divergence.
+Battery current is estimated by power conversion from the four motor-feed
+INA226s (§4); there is no independent pack-current measurement.
 
 Per-motor current now has three layers:
 
@@ -228,7 +247,7 @@ design; reverting to full-firmware STOP is a one-line schematic change.
   only by an explicit PS-side handshake (AXI register write after software
   review), never by HB merely resuming** — this is the system-level
   backstop for the monitor watchdog's non-latching ~WDO (monitor
-  FIRMWARE.md §4) and must be verified end-to-end in the P1/P3 bench tests or clear anything.
+  FIRMWARE.md §4) and must be verified end-to-end in the P1/P3 bench tests.
 - FPGA HALT_OUT → monitor interrupt → all DRVOFF permits dropped. Target
   end-to-end FPGA-fault-to-coast latency < 1 ms firmware path (measure);
   the FPGA's own PWM zeroing remains its existing ≤10 µs digital path.
@@ -242,7 +261,7 @@ design; reverting to full-firmware STOP is a one-line schematic change.
 
 A single monitor is now a single point of protection policy. Its failure
 modes are fail-safe (6.2), but there is no redundancy and no peer
-cross-check anymore; welded STOP contacts, a shorted permit MOSFET, or a
+cross-check anymore; welded STOP contacts, a shorted permit transistor, or a
 stuck-on DRV8263 output stage are not diagnosed by this architecture. The
 ms-scale firmware layers cannot protect the motor from fast electrical
 events — that burden is entirely on the carrier's ITRIP/OCP configuration.

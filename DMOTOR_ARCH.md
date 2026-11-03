@@ -426,12 +426,18 @@ External circuitry is restarted per [DMOTOR_CONTROL.md](DMOTOR_CONTROL.md)
 (2026-10-30, revision 2): one DRV8263H carrier per PCB; a single central
 microcontroller (ESP32-S3 recommended) owns all fault detection, protection
 policy and arming, provides the qualified `BATT_OK`/HB heartbeat to the PL and
-receives FPGA HALT_OUT; per-motor and battery INA226 devices plus IPROPI ADC
-channels replace the discrete comparators. By recorded user decision, board-level
-software-independent protection is now limited to the driver's on-chip
-ITRIP/OCP/TSD/UVLO plus passive coast-default and hardwired-STOP topology; all
-other protective layers are millisecond-scale firmware/I2C and must not be
-cited as bounded-latency evidence.
+receives FPGA HALT_OUT; per-motor INA226 devices plus IPROPI ADC channels
+replace the discrete comparators (the battery-feed INA226 was removed
+2026-10-31; battery current is estimated by power conversion from the motor
+feeds). A hardware permit gate was added 2026-11-01: the four DRVOFF permits
+pass through 74HC08 AND gates enabled by a MAX706R watchdog (fed by the
+firmware-gated HB) and an FPGA-HALT inhibit transistor, bounding
+hung-monitor shutdown at ≤2.25 s and giving the FPGA a direct coast path
+with the ESP32 stuck. By recorded user decision, the remaining board-level
+software-independent protection is the driver's on-chip ITRIP/OCP/TSD/UVLO
+plus passive coast-default, the hardwired-STOP topology and that watchdog
+gate; all other protective layers are millisecond-scale firmware/I2C and
+must not be cited as bounded-latency evidence.
 
 The carrier default current limit is not assumed to protect the motor. Select
 limits from startup/load torque, permitted stall duration and thermal measurements.
