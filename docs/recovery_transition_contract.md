@@ -1,8 +1,9 @@
-# Joint recovery and coast-request transition contract — PROPOSED v2
+# Joint recovery and coast-request transition contract — PROPOSED v3
 
-Status: **PROPOSED v2, 2026-11-03, not approved, no code.** v1 responded to
-review findings R1/R3; this revision proposes resolutions to defects **F1–F5**
-in [software_architecture_review_2026_11_03.md](software_architecture_review_2026_11_03.md)
+Status: **PROPOSED v3, 2026-11-03, not approved, no code.** v1 responded to
+review findings R1/R3; v2 proposed resolutions to **F1–F5**; this revision
+resolves the v2-assessment defects **V2-1…V2-4** in
+[software_architecture_review_2026_11_03.md](software_architecture_review_2026_11_03.md)
 and keeps the I10 (non-latching ~WDO) layering. On adoption this supersedes
 the recovery prose in DMOTOR_CONTROL §6.4 and monitor FIRMWARE.md §5.
 R4 (PL clock-loss supervision) is **explicitly out of scope** here: a
@@ -11,8 +12,10 @@ architectural decision (UART progress lease vs narrowed failure model).
 
 **Review status:** the [v2 assessment](software_architecture_review_2026_11_03.md#latest-assessment-recovery-contract-v2)
 credits the STOP/coast separation and removal of the original latch-clear
-dependency, but leaves epoch/commit handling, reset bias and timing claims open.
-The design below remains a proposal requiring those corrections.
+dependency; v3 (this text) incorporates its corrections — epoch/commit
+binding (V2-1), outcome reconciliation and dual-session validation (V2-2),
+withdrawal of the XDC-PULLUP reset-bias mechanism (V2-3), and derived,
+separated timing/invariant rules (V2-4). Still a proposal pending review.
 
 ## 1. Architectural resolutions
 
@@ -25,13 +28,27 @@ the only mandatory monitor→PL channel on rev A, monitor faults cannot
 compel the PL to drop intent in real time. The guarantee is therefore moved
 to where the monitor has authority: **the monitor leaves FAULT only through
 the recovery exchange (§4), whose request carries a PS attestation —
-session identity, outputs disabled, all targets/PI state cleared.** No
-exchange, no SAFE; no SAFE, no ARM; no ARM, no permits. UART thus stays
+session identity, outputs disabled, all targets/PI state cleared via the
+existing driver reset/session sequence and VERIFIED BY READBACK before
+attesting** (V2-2: the existing `DMOTOR_RELEASE_HALT` ioctl and
+`Runtime::prepare()` are the extension points — release is not a new
+operation; the three acknowledgment writes alone do not clear targets/PI,
+so cleanup maps to the session-reset path). **The attestation is backed by
+a sustained PS-side recovery hold (V2-1), not a snapshot:** from stage 1
+until the explicit `RECOVERY_COMPLETE` transition, command admission is
+closed, queued intent is flushed, and outputs stay disabled; new commands
+become admissible only after the PS confirms monitor SAFE (§4) and ARM is
+observed. No exchange, no SAFE; no SAFE, no ARM; no ARM, no permits; no
+RECOVERY_COMPLETE, no command admission. UART thus stays
 advisory in operation but is *required equipment for recovery* — a monitor
 fault with UART unplugged parks the system in FAULT (coast) until telemetry
-is restored. A monitor reset too fast for the PL's 50 ms HB window is
-harmless for the same reason: it boots into SAFE with permits low and a new
-session id, and reaching ARMED again requires the exchange + ARM. On FAULT
+is restored. A monitor reset of any duration is covered: BOOT unconditionally sets
+`exchange_completed = false` (V2-1 — even though epoch restarts), takes a
+fresh session id, and reaching ARMED again requires a new exchange + ARM.
+**A PL-only reboot while monitor permits are high is NOT covered** — as
+ordered the monitor cannot observe it (B′); it is a documented open case
+under R4 with an interim *procedural* rule (not a guarantee): PL/PS
+reboots are preceded by operator STOP or PS HALT. On FAULT
 entry the monitor also emits an unsolicited best-effort `FAULT_EVT` frame
 (attribution fast path, not relied upon).
 
@@ -58,21 +75,24 @@ deceleration), HALTED ≙ HALTED (COAST_REQ asserted). READY-after-STOP stays
 braking unless the operator escalates to global HALT — both states are
 explicit, satisfying F4's "both must be expressible".
 
-**B′ (F3). Reset-time bias, as ordered vs desired.** On rev A, an
-unconfigured or absent FPGA does **not** assert COAST_REQ (R17 pulls Q2's
-base low; XDC uses PULLDOWN; I10 documents "absent FPGA does not inhibit").
-v1's "idles asserted" claim is withdrawn. The as-ordered reset behavior is:
-PL reset ⇒ PWM ceases, motor-board EN/PH pulldowns give zero drive
-(brake-class, stationary-safe) while permits remain whatever the monitor
-holds. Mitigations, layered: (i) the A′ interlock bounds the stale-permit
-window — permits can only be high if the monitor reached ARMED, and any
-monitor fault/STOP revokes them independently of the PL; (ii) **proposed
-one-line rework for bring-up qualification: set the PL HALT_OUT pin's IOB
-to `PULLUP` in the XDC** — during/before configuration the internal pull-up
-(≈14 k) against R16+R17 biases Q2's base ≈2.6 V ⇒ COAST_REQ asserted while
-unconfigured (verify the divider on hardware; powered-off FPGA still does
-not assert, which remains an R4-class residual). T2/T11 below state only
-the as-ordered guarantee; the PULLUP upgrade is a tracked option.
+**B′ (F3, corrected per V2-3). Reset-time behavior, stated honestly.** On
+rev A, an unconfigured or absent FPGA does **not** assert COAST_REQ (R17
+pulls Q2's base low; I10: "absent FPGA does not inhibit"). v1's
+"idles asserted" claim is withdrawn, and **v2's XDC-PULLUP proposal is
+withdrawn as a mechanism** (V2-3): configuration-time pull behavior is
+governed by PUDC_B and power sequencing, not by a user-design XDC property
+alone (UG470), and v2's 2.6 V estimate ignored Q2's base-emitter loading of
+that node. The PL failure classes are distinct and individually **open
+under R4**: CORE_RESET, fabric reset, reconfiguration, clock loss and power
+loss. The motor boards' EN/PH pulldowns govern *undriven* pins only —
+nothing here covers frozen actively-driven outputs — so **no coast or
+"stationary-safe" guarantee and no stale-permit time bound is claimed for
+any PL failure class.** If pre-configuration coast assertion becomes a
+requirement, the qualified route is an **external pull-up on the PL
+HALT_OUT net** (UG470's recommendation for power-ramp-critical assertion),
+designed as a whole bias network (pull-up value, R16, R17, Q2 V_BE and
+base-current budget) and bench-validated for the actual Arty Z7 PUDC_B and
+supply sequencing — a hardware change to evaluate, not a one-line fix.
 
 **C. UART: advisory in operation; required and authoritative for the
 recovery exchange** (sharpened from v1 per A′).
@@ -114,18 +134,43 @@ any single sample not low (assert immediately, release deliberately).
 | T4 | PL: HB_FAULT clear | PS handshake write after review | qualified HB ≥500 ms; zero motion intent | PS | — | resumed HB alone never clears (D) |
 | T5 | Monitor SAFE → ARM_PENDING | ARM press (defined above) | no latched fault; STOP solid-low; packs in window; imbalance <0.3 V; mask satisfied; **exchange completed for current epoch** (F1) | monitor | — | ignore |
 | T6 | ARM_PENDING → ARMED | T5 conditions re-verified 10 cycles | HALT_IN low | monitor | 200 ms | → SAFE |
-| T7a | ARMED → FAULT (ISR class) | nFAULTn↓, ALERT↓, STOP sample ≠ low, HALT_IN↑ | permits dropped in ISR | monitor | ≤100 µs inhibit; ≤1 cycle confirm/latch | — |
-| T7b | ARMED → FAULT (task class) | sensor stale 3-strike; battery/imbalance threshold crossing | detection bound: ≤3 cycles (30 ms) stale; ≤1 cycle after the crossing sample (F5) | monitor | ≤40 ms inhibit worst case | — |
-| T8 | Monitor FAULT → SAFE | recovery exchange stages 1–3 complete (§4) | cause cleared; sensors fresh; STOP solid-low; HALT_IN low | monitor | per §4 | remain FAULT; UART loss ⇒ refuse (C) |
+| T7a | any state → FAULT (ISR class) | nFAULTn↓, ALERT↓, **STOP rising edge (GPIO interrupt)**, HALT_IN↑ | permits dropped + epoch++ in ISR; valid in SAFE/ARM_PENDING/ARMED and mid-exchange (V2-1) | monitor | output ≤100 µs from edge; confirm/latch ≤1 cycle | — |
+| T7b | any state → FAULT (task class) | sensor staleness; battery/imbalance persistence | see the derived bounds below the table (V2-4) | monitor | per derivation | — |
+| T8 | Monitor FAULT → SAFE | **stages 1–2 complete** (first valid COMMIT; stage 3/ARM happens from SAFE via T5/T6 — table is acyclic, V2-2) | cause cleared; sensors fresh; STOP solid-low; HALT_IN low | monitor | per §4 | remain FAULT; UART loss ⇒ refuse (C) |
 | T9 | PS global HALT (any PL state) | `DMOTOR_HALT` | sets PS_HALT latch ⇒ COAST_REQ | PS→PL | PWM zero ≤10 µs; gate inhibit ≤µs (Q2) | release only via §4 stage 1 |
 | T10 | PL LOCAL_FAULT clear | existing 3-ack rearm | zero motion intent; targets invalidated; **does not require the exchange** (F2 — ordering fixed: local latches clear first, exchange runs after) | PS | — | latch persists |
 | T11 | Either side resets mid-operation | — | peer sees HB loss (T3) or permit drop; **PL death is NOT guaranteed visible to the monitor as-ordered (B′)** — bounded by A′ on next recovery | — | per T3/T7 | no boot-order requirement |
 | T12 | Simultaneous HALT_IN + HB expiry | — | recover: T10 → stage 1 → T4 → §4 → T5 | PS then monitor | — | — |
 
-Invariant (scoped per F5): **every transition into or out of an
-inhibit/fault/recovery state leaves zero motion intent**; during steady
-ARMED operation, intent admissibility is governed by the existing target
-freshness/authorization rules, not this table.
+Invariants, split per V2-4 (the v2 blanket form contradicted A′):
+
+- **Monitor permit invariant:** every fault/inhibit entry drops all permits
+  within its class bound (T7a ≤100 µs, T7b per derivation) and increments
+  the epoch — in every monitor state, including mid-exchange.
+- **PL cleanup invariant:** every PL-side transition into an inhibit/fault/
+  halt state clears PL motion intent (targets, PI state). A monitor-only
+  fault does NOT clear PL intent in real time; intent is instead *proven
+  cleared and held cleared* by the A′ recovery hold before permits return.
+- Steady ARMED operation is governed by the existing target freshness and
+  authorization rules, not this table.
+
+**Derived T7b bounds (V2-4 — named start events, persistence vs detection
+vs output):** *staleness*: from the last valid conversion timestamp:
+25 ms age threshold + up to 3 further 10 ms cycles (strike confirmation) +
+1 cycle output write ⇒ **inhibit ≤65 ms after the last valid conversion**,
+assuming the R5 cycle-budget work bounds each cycle at 10 ms (explicitly a
+target pending R5, not a measured guarantee). *Battery LVC/imbalance*:
+500 ms persistence window (policy, from the first crossing sample) +
+1 cycle detection + 1 cycle output ⇒ **inhibit ≤520 ms after the first
+qualifying sample**. STOP: the rising edge is ISR-class (T7a); the
+solid-low *release* qualification is task-class sampling and gates arming
+only. **HB_QUALIFIED lifecycle (V2-4):** set after the first qualified
+window; **invalidated by HB_FAULT latch, CORE_RESET, or reconfiguration**;
+motion authorization requires `HB_QUALIFIED ∧ ¬HB_FAULT ∧ ¬LOCAL_FAULT ∧
+¬PS_HALT`; fault latches always take precedence over qualification status.
+**Per-motor DISABLE (V2-4):** immediate output inhibition of that channel
+(EN forced inactive within one PL control frame) — never a zero-velocity
+PI command; controlled deceleration is exclusively the STOPPING state.
 
 ## 4. Recovery exchange (staged; resolves F2)
 
@@ -136,31 +181,54 @@ Stage 1 — PS-side cleanup (no monitor involvement): operator/service review;
 components clear. *Nothing in stage 1 requires the exchange; the exchange
 requires stage 1 — strictly acyclic.*
 
-Stage 2 — exchange (UART, authoritative):
-1. PS→M `RECOVER_REQ {attestation: outputs_disabled, targets_cleared,
-   causes_acked, pl_configured}` — sendable only after stage 1.
+Stage 2 — exchange (UART, authoritative; all frames carry the epoch):
+1. PS→M `RECOVER_REQ {epoch?, attestation: outputs_disabled,
+   targets_cleared_verified, causes_acked, pl_configured}` — sendable only
+   after stage 1 completes and its readback verification passed.
 2. M→PS `RECOVER_STATE {epoch, first_cause, sensors_ok, stop_state,
-   halt_in_state}` or `NAK {reason}` (cause persists / stale / STOP / HALT_IN
-   still high).
-3. PS→M `RECOVER_COMMIT {txn}`.
-4. **M→PS `COMMIT_ACK {txn, new_state=SAFE}`** (F2: PS must learn the
-   outcome); monitor enters SAFE on sending it. Lost ACK: PS retransmits
-   COMMIT; monitor re-ACKs idempotently by `txn` without re-execution.
+   halt_in_state}` or `NAK {reason}`. The returned `epoch` is the binding
+   value for this attempt.
+3. PS→M `RECOVER_COMMIT {txn, epoch}` — **the monitor accepts a COMMIT only
+   if its epoch equals the monitor's CURRENT epoch** (V2-1): any fault in
+   any state (SAFE, ARM_PENDING, ARMED, or mid-exchange) increments the
+   epoch inside the same critical section that drops permits, instantly
+   invalidating pending transactions, completed-exchange status and ARM
+   eligibility; a delayed pre-fault COMMIT is therefore NAKed.
+4. **M→PS `COMMIT_ACK {txn, epoch, new_state=SAFE}`**; the monitor enters
+   SAFE on first valid COMMIT and re-ACKs duplicates idempotently.
+   **Outcome reconciliation (V2-2):** if the PS exhausts COMMIT retries
+   without an ACK, the result is UNKNOWN — the PS keeps the recovery hold
+   and polls with idempotent `STATE_QUERY` frames until it learns the
+   monitor's state and epoch; it never assumes the peer stayed inhibited.
+   If the monitor meanwhile faulted (new epoch), the PS restarts at step 1.
+   ARM eligibility on the monitor side requires `exchange_completed` for
+   the current epoch; `RECOVERY_COMPLETE` on the PS side requires a
+   confirmed SAFE with matching txn+epoch.
 
 Stage 3 — physical: ARM press (T5/T6). Never part of the exchange.
 
-Framing (F2 completions): HDLC-style — delimiter `0x7E`, escape `0x7D`
-(XOR `0x20`), resync on next `0x7E`. Fields after unescaping:
-`ver(1) | src_session(4) | peer_session_echo(4) | txn(2) | seq(2) | type(1)
-| len(1) | payload(≤48) | crc(2)`. CRC-16/CCITT-FALSE (poly 0x1021, init
-0xFFFF, no reflection, no final XOR) over ver..payload, transmitted
-big-endian. 115200 8N1. Sessions are boot-random per side; **a frame is
-accepted only if `peer_session_echo` matches the receiver's current
-session** — delayed frames from an earlier peer boot are rejected
-regardless of seq (F2). `seq` is 16-bit modular, window 8, duplicates
-re-ACKed not re-executed; `txn` binds one recovery attempt end-to-end.
-Timeouts: 100 ms/step, ≤3 attempts, then both sides abandon (monitor stays
-FAULT, PS reports). Boot-order free: pre-T1 frames are discarded silently.
+Framing (F2, completed per V2-2): HDLC-style — delimiter `0x7E`, escape
+`0x7D` (XOR `0x20`), resync on next `0x7E`; decoded frame ≤ 64 B, escaped
+wire frame ≤ 130 B, oversize aborts the frame. Fields after unescaping:
+`ver(1) | src_session(4) | peer_session_echo(4) | epoch(2) | txn(2) |
+seq(2) | type(1) | len(1) | payload(≤44) | crc(2)`. **All multibyte fields
+little-endian except the CRC, which is transmitted big-endian**
+(CRC-16/CCITT-FALSE: poly 0x1021, init 0xFFFF, no reflection, no final
+XOR, over ver..payload). 115200 8N1. Sessions are boot-random per side and
+established by a `HELLO/HELLO_ACK` discovery exchange after T1/T2
+(repeated on mismatch). **A frame is accepted only if BOTH identities
+validate (V2-2): `src_session` equals the established peer session AND
+`peer_session_echo` equals the receiver's own current session.** Any
+session mismatch tears down the established pairing, invalidates in-flight
+transactions and `exchange_completed`, and forces re-discovery. `txn` is
+bound to the tuple (src_session, peer_session, epoch); the duplicate cache
+holds the last 8 txns per pairing and expires with the pairing. `seq` is
+16-bit modular with window 8; a duplicate within the window is re-ACKed
+without re-execution; beyond the window it is discarded. Timeouts:
+100 ms/step, ≤3 attempts; on exhaustion the monitor holds its current
+state, the PS keeps the recovery hold and reconciles via `STATE_QUERY`
+(§4.4). Boot-order free: frames before discovery are answered only by
+HELLO.
 
 ## 5. Required tests
 
@@ -174,4 +242,14 @@ XDC PULLUP option, FPGA powered-off case recorded as residual; (F4)
 selected-motor STOP while peers run — assert no COAST_REQ and peers
 unaffected; STOP-then-escalate-to-HALT; (F5) motion attempt before first
 HB qualification (must refuse), held ARM through recovery (must not rearm),
-stale-sensor and battery-threshold detection latencies against T7b bounds.
+stale-sensor and battery-threshold detection latencies against the derived
+T7b bounds; plus (V2-1) a new fault injected between RECOVER_STATE and
+COMMIT (stale COMMIT must NAK on epoch), a fault during ARM_PENDING, a
+command sent after attestation but before ARM (must be rejected by the
+recovery hold), repeated recovery cycles; (V2-2) lost COMMIT_ACK with
+STATE_QUERY reconciliation, a replayed COMMIT from a previous PS boot
+against a non-rebooted monitor (src_session rejection), sequence-window
+wrap and duplicate-cache expiry on re-discovery; (V2-3) bench
+characterization of the PL HALT_OUT net through configuration, reset,
+reconfiguration and power-off, with and without a candidate external
+pull-up, measuring Q2 base current and ENABLE voltage directly.
