@@ -4,6 +4,56 @@ Date: 2026-11-03. Boards are ordered; this review treats the current rev A
 hardware as the integration target. Recommendations below are proposed changes,
 not newly approved requirements or evidence of physical qualification.
 
+## Current disposition — v3 reviewed, contract corrected to v4
+
+2026-11-03: reviewed v3 at dmotor `d1295a3` and corrected the current
+[contract](recovery_transition_contract.md) to **PROPOSED v4**. The older
+assessments below are retained as history, not the current closure status.
+
+V3 addressed epoch validation, the PS recovery hold and the withdrawal of the
+XDC-only reset mitigation, but retained contradictions: SAFE versus ARMED at
+completion, a still-new driver-release claim, a stale-permit bound in T11,
+modular identifier reuse and the withdrawn XDC option in its tests.
+V4 replaces the accumulated amendments with one staged contract and:
+
+- Holds outputs disabled until a fresh matching ARMED query and explicit
+  RECOVERY_COMPLETE; accepts a committed ARMED outcome after a lost SAFE ACK.
+- Binds recovery to both endpoint sessions, epoch and transaction; prevents
+  counter reuse, constrains duplicate effects and bounds uncertainty polling.
+- Separates boot discovery from control authority and defines inhibition during
+  explicit re-pairing; no mismatched frame can replace an active peer silently.
+- Reuses existing HALT release/reset operations, distinguishes readable proof
+  from internal PI/reset guarantees, and leaves required ABI observability open.
+- Removes unsupported PL-failure bounds and XDC-only mitigation; preserves
+  immediate DISABLE separately from controlled STOP and global physical coast.
+- Labels timing as proposed, keeps imbalance policy separate from battery LVC,
+  and invalidates recovery on new faults in every monitor state.
+
+**Documentation ownership is settled:** ESP32 firmware, its C safety core,
+ESP-IDF adapters and tests will be included in dmotor at
+[software/esp32/](../software/esp32/README.md). Cross-device schema/vectors are
+planned under `software/protocol/monitor/`. The companion hardware repository's
+firmware plan is marked historical where it conflicts; PCB/assembly work stays
+there. Root architecture/software/control documents and indexes now link here.
+
+| Finding | Current disposition |
+|---|---|
+| R1/R3, F1–F5, V2-1–V2-4 | Contract-level corrections incorporated in proposed v4; implementation, shared simulation and physical qualification still required |
+| R2 | Pin map, qualifier, ABI and deployment integration remain open |
+| R4 | No shutdown claim for PL-only failure; independent supervision/failure-model decision remains open |
+| R5/R6/R8 | Timing, IDF isolation and validated configuration/threshold detail remain implementation prerequisites |
+| R7 | Blocking Linux diagnostics remain an implementation issue; no code changed in this documentation pass |
+| R9 | Main conflicting recovery/protection prose reconciled; hardware/firmware evidence still must track exact released revisions |
+| R10 | Vehicle planner and release qualification remain planned work |
+
+Validation for this update: documentation diff and relative-link checks only.
+No firmware was created, no hardware programmed and no runtime tests rerun.
+Historical test results below do not qualify the new contract. The wire schema,
+PL observability, timing budgets and R4 decision must be completed before this
+proposal can be treated as implementation-ready.
+
+## Historical review rounds
+
 **Latest review — PROPOSED v2, 2026-11-03:** checked dmotor `b02267b`
 (clean working tree before this review; v2 is committed, not uncommitted).
 The v2 assessment below supersedes the v1 follow-up's closure status. V2 makes

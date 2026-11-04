@@ -8,6 +8,8 @@ configured motor limits, using the exact one-phase shared arithmetic implementat
 - [Documentation index](docs/index.md) — architecture, implementation and evidence.
 - [Architecture](DMOTOR_ARCH.md), [software plan](DMOTOR_SW.md) and [external monitoring circuitry](DMOTOR_CONTROL.md).
 - [Maintenance/commissioning](software/linux/production.md).
+- [ESP32-S3 firmware plan](software/esp32/README.md) — firmware and tests will
+  live in this repository under `software/esp32/`; implementation is pending.
 
 Board integration formerly maintained as DVRMC now lives in
 `platforms/arty-z7-20`. Generated IP/projects live under `build/`; one tracked XDC

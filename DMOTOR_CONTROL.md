@@ -7,7 +7,10 @@ as-ordered hardware per review R9 (docs/software_architecture_review_2026_11_03.
 sections describing superseded intermediate states are corrected in place,
 and the joint recovery semantics of §6.4 are being redesigned — see
 [docs/recovery_transition_contract.md](docs/recovery_transition_contract.md)
-(PROPOSED) for the R1/R3 transition table that will replace them on adoption.
+(PROPOSED v4) for the single current recovery design. It remains unimplemented.
+ESP32 firmware will live in this dmotor repository under
+[software/esp32/](software/esp32/README.md); PCB/assembly sources stay in
+motor-interface-integrated.
 
 Revision 2026-10-30 (2) superseded the same-day first revision and
 re-evaluated the complete external circuitry after the user's restart decision.
@@ -30,9 +33,10 @@ Numeric values marked *initial* are starting points, not qualified limits.
   is marginal and recommends the **ESP32-S3**; **Teensy 4.1** is the fallback.
 - **Current sensing: both** an INA226 per motor board and IPROPI into
   microcontroller ADC channels.
-- **FPGA-initiated coast goes via the microcontroller**: FPGA HALT_OUT is a
-  monitor input; the monitor drops the DRVOFF permits (millisecond-scale).
-  The FPGA independently zeroes its own PWM, as before.
+- **FPGA-initiated coast uses the monitor hardware gate**: asserted HALT_OUT
+  drives Q2 to inhibit all four permits independently of ESP32 firmware. The
+  monitor also records HALT and clears its permit outputs. The FPGA independently
+  inhibits PWM. Software HALT routing to this line remains implementation work.
 - Battery: **two 2S LiPo packs in series** (4S, ~12.0–16.8 V) feeding the
   external 12 V regulator; **per-pack** voltage monitoring, low precision
   acceptable. UART telemetry from the monitor into the Zynq PL.
@@ -202,31 +206,30 @@ and gains importance from this restart.
 
 ### 6.1 Explicit supersessions (user decision 2026-10-30)
 
-The board-level microsecond-scale discrete protection path (LM393 IPROPI
-trips into `RAW_SAFE_N`, hardware arm latch, peer interlock, 5 V supervisor)
-is **removed**, not relocated. Board-level protection latency moves from
-µs-scale discrete hardware to: on-chip driver protection (µs) → INA226 ALERT
-(~ms) → monitor firmware (ms) → HB loss to Zynq (≤50 ms window, initial).
-The DMOTOR_ARCH requirement that bounded-latency protection be independent of
-software is now satisfied **only** by the DRV8263's internal protections and
-the passive fail-safe topology below; every other protective action involves
-firmware. This is a deliberate, recorded trade of response time and
-independence for a drastic parts-count and board-complexity reduction.
+The earlier comparator/arm-latch/peer-interlock design is removed. The ordered
+rev A has driver internal protection, the passive STOP/coast topology, and the
+MAX706R/74HC08/Q2 permit gate. The watchdog and asserted FPGA HALT can therefore
+inhibit permits without a functioning ESP32 application. Current/battery policy
+and sensor acquisition remain firmware functions. Under the proposed recovery
+contract, HB reports timely monitoring work even in a latched operational fault;
+monitor faults directly revoke permits, with UART providing attribution. Do not
+assume every monitor fault propagates to PL by stopping HB.
 
-### 6.2 Passive fail-safe invariants (no firmware involved)
+### 6.2 Hardware backstops and planned PL protection
 
 1. DRVOFF pulled up on every board: harness disconnected, monitor unpowered,
    held in reset, or GPIO floating → **coast**.
 2. NC STOP loop in series with every DRVOFF pull-low return: opening STOP
    coasts all four motors regardless of monitor state, including firmware
    stuck asserting permits.
-3. Monitor reset/brownout/hang stops HB (software-gated toggling ceases) →
-   Zynq PL qualifier latches the external fault and inhibits PWM.
+3. Stopped HB drives the external watchdog permit gate after its timeout. The
+   additional Zynq HB qualifier/latch is planned, not implemented; see the joint
+   contract for separate timeout, reset and qualification requirements.
 
 ### 6.3 ARM/STOP recommendation (adopted as initial)
 
-**ARM** becomes a firmware state machine (GPIO button; grant permits only on
-release, with no latched fault and all permits inactive). **STOP stays
+**ARM** uses the proposed joint-contract state machine: a fresh press/release
+cycle after the current recovery exchange, with all prerequisites rechecked. **STOP stays
 physically hardwired** into the DRVOFF permit return as in 6.2, and is also
 sensed by a GPIO for reporting. Rationale: the operator's last-resort stop
 should remain effective against the one failure class firmware cannot cover —
@@ -235,27 +238,22 @@ logic ICs, which honors the collapse goal; full-firmware STOP was rejected
 for that single reason. This is a recommendation adopted as the initial
 design; reverting to full-firmware STOP is a one-line schematic change.
 
-### 6.4 Monitor–Zynq contract (unchanged in spirit from revision 1)
+### 6.4 Monitor–Zynq contract — current proposed design
 
-- HB: **software-toggled square wave (~50 Hz at the 10 ms safety cycle;
-  never a hardware timer)**, toggled only after a completed monitoring
-  cycle with all sensor data inside its freshness limits and no fault
-  latched (monitor FIRMWARE.md §4). A small independent RTL
-  qualifier in the PL (not the HLS engine) **latches** a fault and inhibits PWM
-  when edges are absent beyond the window (initial 50 ms) or the line is
-  static. Assert-only; HB can never enable motion. **The latch is cleared
-  only by an explicit PS-side handshake (AXI register write after software
-  review), never by HB merely resuming** — this is the system-level
-  backstop for the monitor watchdog's non-latching ~WDO (monitor
-  FIRMWARE.md §4) and must be verified end-to-end in the P1/P3 bench tests.
-- FPGA HALT_OUT → monitor interrupt → all DRVOFF permits dropped. Target
-  end-to-end FPGA-fault-to-coast latency < 1 ms firmware path (measure);
-  the FPGA's own PWM zeroing remains its existing ≤10 µs digital path.
-- UART telemetry (sequence + CRC) is advisory; loss of UART is never a
-  motion inhibit — HB is the only protective signal toward the Zynq.
-- Recovery keeps the DMOTOR_ARCH order: correct cause → acknowledge at the
-  monitor (clears its latch, restores HB) → FPGA-side acknowledge/rearm →
-  deliberate physical ARM cycle. No path auto-restarts motion.
+[Recovery contract v4](docs/recovery_transition_contract.md) is the single source
+for state transitions, timing targets and protocol behavior. It replaces the
+older competing recovery prose here as a design proposal, not implemented code.
+HB means completed, fresh monitoring work; it can continue in SAFE/FAULT with
+permits low. PL HB loss must latch and never auto-clear. UART is advisory during
+active operation but mandatory for boot arming and recovery. A PS recovery hold
+keeps outputs disabled and rejects commands until a verified cleanup, matching
+exchange and physical ARM complete. Global HALT requests physical coast;
+selected-motor STOP retains controlled deceleration, and DISABLE immediately
+inhibits its channel. Neither zero PWM nor EN inactive implies physical coast.
+
+PL-only reset/clock/power-loss protection is still open (R4). An absent FPGA
+does not reliably assert the coast line on rev A. No XDC-only pull-up or
+future recovery exchange supplies a shutdown guarantee for that case.
 
 ### 6.5 Honest limitations
 

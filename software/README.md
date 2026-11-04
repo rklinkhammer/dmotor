@@ -1,13 +1,15 @@
-# DMOTOR processor software — first increment
+# DMOTOR software — Zynq runtime and planned ESP32 firmware
 
 Build and cross-compilation instructions: [component guide](../docs/build.md) and
 EDF `docs/build.md`. This document describes software interfaces and board use.
 
 
-This directory starts Phase 0 of [DMOTOR_SW.md](../DMOTOR_SW.md). It builds
-independently of Vitis/Vivado and the legacy controller code. It currently contains
-an **in-process semantic model, typed protocol, inhibited Linux inspection tool
-and automated tests**, not a deployable motion service or maintenance application.
+This directory contains the Zynq semantic model, typed protocol, Linux access,
+runtime, maintenance/commissioning tools and native tests described in
+[DMOTOR_SW.md](../DMOTOR_SW.md). Its native build is independent of Vitis/Vivado.
+The **ESP32 firmware will be included here under [esp32/](esp32/README.md)**,
+with a separate ESP-IDF build and host-testable C core. That implementation is
+pending; the existing build and historical evidence below concern Zynq software.
 
 ## Build and validation
 

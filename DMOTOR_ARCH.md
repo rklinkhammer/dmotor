@@ -415,6 +415,12 @@ inhibition requires external-safe biasing/adapter design, not a stopped-clock co
 
 ### 12. Driver and physical integration
 
+ESP32-S3 monitor firmware will be maintained with the Zynq software in this
+dmotor repository at [software/esp32/](software/esp32/README.md). The
+[joint recovery contract](docs/recovery_transition_contract.md) defines proposed
+rev A recovery/coast integration; it does not claim implemented or qualified
+hardware behavior. PCB and assembly sources remain in motor-interface-integrated.
+
 Retain the approved Pololu DRV8263H #5238 and disable/coast intent. Record the exact
 received board revision and verify its control mode, DRVOFF inhibit connection,
 FAULT routing, current-limit components, analog current-sense interface, reset

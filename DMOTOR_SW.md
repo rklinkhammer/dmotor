@@ -12,6 +12,14 @@ motion planning and release qualification remain pending.
 
 ## 1. Objective and scope
 
+The ESP32-S3 monitor firmware will also be included in the **dmotor repository**,
+under [software/esp32/](software/esp32/README.md), with its host-testable C safety
+core, ESP-IDF adapters and tests. Linux and ESP32 will share a versioned monitor
+UART schema in `software/protocol/monitor/`. Firmware remains unimplemented;
+the existing C++ runtime and EDF build are Zynq software. PCB/assembly artifacts
+remain in motor-interface-integrated. The current proposed joint behavior is
+[recovery contract v4](docs/recovery_transition_contract.md).
+
 Implement the processor software that operates the shared, four-motor FPGA
 velocity controller. Here, “host” means the ARM processor on the board. The
 development workstation builds, deploys and inspects this software.
