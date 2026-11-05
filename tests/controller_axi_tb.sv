@@ -125,7 +125,7 @@ module controller_axi_tb;
    for(i=0;i<20;i=i+1)write_word('h2000+m*256+i*4,cfg[i],0);
    write_word('h2080+m*256,1,0);
   end
-  write_word('h1020,0,0);repeat(100)step();write_word('h100c,15,0);
+  write_word('h1020,0,0);wait(dut.cleanup_complete || dut.direct_mode!=0);repeat(3)step();write_word('h100c,15,0);
   // A host cannot reconfigure an enabled context.
   write_word('h2004,100000,2);
   wait(dut.ready_mask==15);
@@ -155,13 +155,13 @@ module controller_axi_tb;
   // Explicit recovery order, then watchdog expiration with multiple motors enabled.
   write_word('h1024,1,0);write_word('h1024,2,0);write_word('h1024,4,0);
   if(shared_halt)$fatal(1,"acknowledgments did not clear inactive causes");
-  write_word('h1028,20000,0);write_word('h1020,0,0);repeat(100)step();
+  write_word('h1028,20000,0);write_word('h1020,0,0);wait(dut.cleanup_complete || dut.direct_mode!=0);repeat(3)step();
   write_word('h100c,3,0);wait(shared_halt);repeat(4)step();
   if(drive_enable || (dut.watchdog_faults[0]!==1'b1 && dut.watchdog_faults[32]!==1'b1))
    $fatal(1,"watchdog did not halt all motors");
   // External HALT blocks atomic traffic with SLVERR rather than hanging AXI.
   @(negedge clk);reset=1;repeat(3)step();@(negedge clk);reset=0;
-  write_word('h1008,8,0);write_word('h1020,0,0);repeat(100)step();
+  write_word('h1008,8,0);write_word('h1020,0,0);wait(dut.cleanup_complete || dut.direct_mode!=0);repeat(3)step();
   @(negedge clk);#7;halt_async=1;
   step();if(dut.controller.halt_detected!==0)$fatal(1,"HALT bypassed first stage");
   step();if(dut.controller.halt_detected!==15 || drive_enable!==0)
@@ -173,7 +173,12 @@ module controller_axi_tb;
   @(negedge clk);halt_async=0;repeat(8)step();read_word(0,2);
   if(!coast_req)$fatal(1,"coast cleared before acknowledgment");
 
-  write_word('h1024,4,0);repeat(8)step();read_word(0);
+  // External HALT cancels cleanup proof without creating a local fault.
+  // Recovery now requires fresh cleanup, not just dropping the HALT latch.
+  read_word('h1074);if(value!=4)$fatal(1,"HALT retained cleanup proof");
+  write_word('h1020,1,0);
+  write_word('h1024,1,0);write_word('h1024,2,0);write_word('h1024,4,0);
+  write_word('h1020,0,0);wait(dut.cleanup_complete);read_word(0);
   if(coast_req)$fatal(1,"coast did not clear after explicit acknowledgment");
   if(value!=32'h444d4231)$fatal(1,"external HALT recovery");
   // Direct-duty path: no encoder pulses or HLS readiness required.
@@ -222,7 +227,7 @@ module controller_axi_tb;
   if(!dut.monitor_healthy || !dut.monitor_fault || !coast_req)$fatal(1,"HB resume auto-cleared fault");
   write_word('h106c,2,2);write_word('h106c,1,0);
   read_word('h1068);if(value[1] || value[2] || !value[0])$fatal(1,"HB ack during core reset");
-  write_word('h1020,0,0);repeat(100)step();
+  write_word('h1020,0,0);wait(dut.cleanup_complete || dut.direct_mode!=0);repeat(3)step();
   if(dut.enabled || pwm || drive_enable || coast_req)$fatal(1,"HB recovery restarted drive");
   read_word('h1064);if(value!=32'h48423131)$fatal(1,"HB capability");
   // At cold boot, a static pin must not permit even direct-mode enable.
@@ -230,7 +235,7 @@ module controller_axi_tb;
   write_word('h1008,1,0);
   cfg[0]=1;for(i=0;i<20;i=i+1)write_word('h2000+i*4,cfg[i],0);
   write_word('h2080,1,0);write_word('h1054,1,0);write_word('h1058,32768,0);
-  write_word('h1020,0,0);repeat(100)step();
+  write_word('h1020,0,0);wait(dut.cleanup_complete || dut.direct_mode!=0);repeat(3)step();
   if(dut.configured!=1 || !dut.protocol_initialized)$fatal(1,"startup test preconditions");
   write_word('h100c,1,2);repeat(90)step();
   if(!dut.monitor_fault || !coast_req)$fatal(1,"HB startup not protected");

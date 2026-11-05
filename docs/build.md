@@ -22,7 +22,9 @@ reproduce those experiments and are not the current product build.
 The board BD/XDC were migrated from the latest saved root `dvrmc/dvrmc.xpr`
 project, as selected by the user on 2026-10-17, and subsequently updated for
 four motor channels and the ESP32 monitor. The current development controller
-IP is revision 10, with heartbeat input and global coast output. Physical-fault
+IP source is revision 11, adding CLN1 disabled cleanup to the heartbeat/global
+coast interface. See the current evidence in [system status](system_status.md);
+source revision alone does not establish a rebuilt or qualified image. Physical-fault
 inputs remain on the controller, currently tied inactive in the saved BD;
 drive-enable diagnostics connect to internal GPIO. The old checkout is retained as reference;
 it is no longer the default build input. No .xpr, .xci or run outputs need to be
@@ -45,7 +47,8 @@ Override `--amd-root /path/to/2026.1` if needed. Install Digilent Arty Z7-20
 board files version 1.1; `DMOTOR_BOARD_REPO` can point to a board repository if
 it is not already in Vivado or its local XHub board store. The pipeline runs profile native
 regression tests; atomic-mailbox and shared-engine HLS C simulation, synthesis and
-co-simulation; IP packaging; complete AXI simulation; and board project recreation.
+co-simulation; IP packaging; complete AXI lifecycle and interrupted-cleanup simulation using both
+actual HLS kernels; and board project recreation.
 The prepared engine is always `build/product/engine`; no implicit selection of an
 old `shared_mailbox_copy` or `rpm400_*` directory occurs. Historical transformation
 patches remain inputs for now, included in the fingerprint; they are not disposable

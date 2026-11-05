@@ -158,10 +158,39 @@ void Runtime::prepare(const std::array<MotorConfiguration, 4>& configs, uint32_t
         io_.sleep_us(poll_us);
         write(reg::ACKNOWLEDGE, 4);
         io_.sleep_us(poll_us);
+        uint32_t cleanup_request = 0;
+        if (!policy_.direct_mask) {
+            require(io_.read32(reg::CLEANUP_CAPABILITY) == 0x434c4e31U,
+                    "Bitstream lacks disabled cleanup completion");
+            cleanup_request = io_.read32(reg::CLEANUP_REQUEST);
+            require(cleanup_request != UINT32_MAX,
+                    "Cleanup requests exhausted; fabric reset required");
+        }
         write(reg::CORE_RESET, 0);
+        if (!policy_.direct_mask) {
+            const auto cleanup_start = io_.now_us();
+            for (;;) {
+                const auto status = io_.read32(reg::CLEANUP_STATUS);
+                require(!(status & ~3U), "Disabled cleanup failed or unsupported");
+                if (status == 2U)
+                    break;
+                require(io_.now_us() - cleanup_start < policy_.transition_us,
+                        "Disabled cleanup timeout");
+                io_.sleep_us(poll_us);
+            }
+            require(io_.read32(reg::CLEANUP_REQUEST) == cleanup_request + 1 &&
+                        io_.read32(reg::CLEANUP_SESSION) == session_ &&
+                        io_.read32(reg::SESSION) == session_,
+                    "Stale cleanup completion");
+        }
         wait_status((1U << 16) | (1U << 17) | (1U << 18), 0);
         require((io_.read32(reg::MONITOR_STATUS) & 7U) == 5U, "Monitor not qualified");
         require(policy_.direct_mask || protocol_.compatible_mailbox(), "Unsupported mailbox");
+        if (!policy_.direct_mask)
+            require(!(io_.read32(reg::STATUS) & all) && io_.read32(reg::CLEANUP_STATUS) == 2U &&
+                        io_.read32(reg::CLEANUP_REQUEST) == cleanup_request + 1 &&
+                        io_.read32(reg::CLEANUP_SESSION) == session_,
+                    "Cleanup completion invalidated");
         configs_ = configs;
         configured_ = mask;
         sequence_ = applied_ = 0;

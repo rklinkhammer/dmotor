@@ -109,8 +109,10 @@ cleanup success. The service explicitly confirms HALT at orderly shutdown.
 4. Set watchdog and target-age budgets. Require HB11, wait for healthy monitor HB
    while disabled/reset, write MONITOR_ACK and verify the monitor fault cleared.
 5. Release the PS-owned HALT GPIO, issue ordered ACKNOWLEDGE values 1, 2, 4 with
-   settling delays, release core reset, and verify faults/HALT/blocked cleared.
-6. Require qualified monitor status, validate DMB1 for velocity mode, discard old
+   settling delays, then release core reset. In velocity mode require CLN1 and verify
+   bounded cleanup completion for the new request/session; verify faults/HALT/blocked cleared.
+6. Require qualified monitor status, validate DMB1 and reread cleanup validity for
+   velocity mode, discard old
    software intent/sequences and start a new client lease.
 
 Failure attempts HALT and propagates the error. Preparation affects **all motors**;
@@ -207,6 +209,7 @@ Important register groups (all byte offsets relative to the controller):
 | Snapshot | 0x1030; capture bank uses sequence validation |
 | Direct duty | 0x1050–0x1060; capability DDU1, explicit commissioning policy |
 | Monitor | HB11 0x1064, status 0x1068, ACK 0x106c |
+| Cleanup | CLN1 0x1070, status 0x1074, completed session 0x1078, request identity 0x107c (all read-only) |
 | Configuration | 0x2000 + 0x100×motor; commit at channel base + 0x80 |
 | Telemetry | 0x3000 + 84×motor; 21 words per motor |
 

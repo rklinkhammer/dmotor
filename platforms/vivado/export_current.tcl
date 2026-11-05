@@ -39,7 +39,8 @@ proc export_block {root out name top generated sources} {
     set_property version 0.18 $core
     # Scheduler feedback-loop repair: advertise a new revision to existing BDs.
     if {$name in {mailbox_control controller_axi}} {set_property core_revision 2 $core}
-    if {$name eq "controller_axi"} {set_property core_revision 10 $core}
+    if {$name eq "mailbox_control"} {set_property core_revision 3 $core}
+    if {$name eq "controller_axi"} {set_property core_revision 11 $core}
     set_property display_name "DMOTOR current $name (integration preview)" $core
     set_property description "Current tested component. Not a complete motor controller; see docs/current_ip_export.md." $core
     ipx::infer_bus_interfaces xilinx.com:signal:clock_rtl:1.0 $core
@@ -91,7 +92,7 @@ export_block $root $out shared_engine dmotor_shared_engine_transport \
     {timing.sv shared_engine_transport.sv}
 export_block $root $out controller_axi dmotor_controller_axi \
     [list [file join $root build vitis_atomic hls syn verilog] [file join $engine_profile build vitis_dispatcher hls syn verilog]] \
-    {timing.sv controller_registers.sv batch_registers.sv atomic_hls_adapter.sv atomic_mailbox_arbiter.sv shared_scheduler.sv target_age.sv pwm.sv shared_control.sv mailbox_control.sv shared_engine_transport.sv motor_engine_adapter.sv integrated_control.sv safety.sv qcencoder.sv encoder_snapshot.sv motor_io.sv monitor_heartbeat.sv axi_host.sv controller_axi.sv}
+    {timing.sv controller_registers.sv batch_registers.sv atomic_hls_adapter.sv atomic_mailbox_arbiter.sv shared_scheduler.sv target_age.sv pwm.sv shared_control.sv mailbox_control.sv shared_engine_transport.sv motor_engine_adapter.sv cleanup_sequencer.sv integrated_control.sv safety.sv qcencoder.sv encoder_snapshot.sv motor_io.sv monitor_heartbeat.sv axi_host.sv controller_axi.sv}
 # Simulation uses actual mailbox HLS RTL; motor results are behavioral in this bench.
 open_project [file join $out mailbox_control project mailbox_control.xpr]
 add_files -fileset sim_1 [file join $root tests mailbox_control_tb.sv]

@@ -1,0 +1,11 @@
+DEBUG: Executing shell function do_semantics
+dmotor-semantic-tests: DMOTOR 0.9.0 commit=5f88ca5691f7e52aea39a6df6c93f88521ed2242 dirty=true source=69004710c7c402a9203b9528d6a77f78bf0d7c77422e750616c9741f72935e45 ABI=DMI2/DMB1-schema1
+PASS: mailbox atomicity, replay/range checks, timeout precedence, ownership and HALT lifecycle
+dmotor-protocol-tests: DMOTOR 0.9.0 commit=5f88ca5691f7e52aea39a6df6c93f88521ed2242 dirty=true source=69004710c7c402a9203b9528d6a77f78bf0d7c77422e750616c9741f72935e45 ABI=DMI2/DMB1-schema1
+PASS: typed configuration, ABI checks, telemetry decoding/coherence and transport failure propagation
+dmotor-linux-tests: DMOTOR 0.9.0 commit=5f88ca5691f7e52aea39a6df6c93f88521ed2242 dirty=true source=69004710c7c402a9203b9528d6a77f78bf0d7c77422e750616c9741f72935e45 ABI=DMI2/DMB1-schema1
+PASS: Linux mapping, cross-process ownership, inspection allowlists and cleanup
+dmotor-runtime-tests: DMOTOR 0.9.0 commit=5f88ca5691f7e52aea39a6df6c93f88521ed2242 dirty=true source=69004710c7c402a9203b9528d6a77f78bf0d7c77422e750616c9741f72935e45 ABI=DMI2/DMB1-schema1
+PASS: lifecycle, 400RPM limits, atomic masks, STOP/rearm, watchdog refresh, lease/fault/access loss and readiness deadlines
+monitor codec PASS
+DEBUG: Shell function do_semantics finished

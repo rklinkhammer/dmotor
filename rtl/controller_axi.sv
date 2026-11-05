@@ -16,6 +16,9 @@ module dmotor_controller_axi(
  reg local_valid,local_okay,atomic_owner;
  reg [31:0] local_data;
  reg core_reset;
+ wire cleanup_complete,cleanup_pending,cleanup_failed;
+ wire [31:0] cleanup_session;
+ reg [31:0] cleanup_request;
  reg monitor_ack;
  wire monitor_fault,monitor_healthy,monitor_qualified,controller_coast;
  dmotor_monitor_heartbeat monitor(.clk(clk),.reset(reset),.core_reset(core_reset),
@@ -68,6 +71,8 @@ module dmotor_controller_axi(
   .positions(positions),.watchdog_fault_times(watchdog_fault_times),.watchdog_faults(watchdog_faults),
   .shared_halt(shared_halt),.coast_req(controller_coast),.enabled(enabled),.authorized(configured),.invalidate_mask(stop_event),
   .max_speeds(max_speeds),.configurations(configurations),.stop(stop),.ready_mask(ready_mask),.stopped(stopped),
+  .cleanup_complete(cleanup_complete),.cleanup_pending(cleanup_pending),
+  .cleanup_failed(cleanup_failed),.cleanup_session(cleanup_session),
   .telemetry(telemetry),.protocol_initialized(protocol_initialized),.protocol_fault(),
   .host_valid(host_valid && atomic_select),.host_write(host_write),.host_address(host_address),
   .host_wdata(host_wdata),.host_strobes(host_strobes),.host_ready(atomic_ready),
@@ -98,7 +103,7 @@ module dmotor_controller_axi(
  end
  always @(posedge clk)begin
   if(reset)begin
-   monitor_ack<=0;
+   monitor_ack<=0;cleanup_request<=0;
    direct_mode<=0;direct_limit<=0;direct_staging<=0;direct_duty<=0;direct_sequence<=0;direct_valid<=0;
    local_valid<=0;local_okay<=0;local_data<=0;atomic_owner<=0;core_reset<=1;session<=0;
    configurations<=0;staging<=0;written<=0;configured<=0;enable_request<=0;disable_request<=0;stop<=0;stop_event<=0;pending_stop<=0;
@@ -169,6 +174,13 @@ module dmotor_controller_axi(
         end
        end
        IDENTITY:if(!host_write)begin local_data<=PROFILE_ID;local_okay<=1;end
+       CLEANUP_CAPABILITY:if(!host_write)begin local_data<=32'h434c4e31;local_okay<=1;end
+       CLEANUP_STATUS:if(!host_write)begin
+        // Direct-duty mode holds the velocity engine reset; it has no cleanup proof.
+        local_data<=direct_mode!=0 ? 32'd8 : {29'd0,cleanup_failed,cleanup_complete,cleanup_pending};local_okay<=1;
+       end
+       CLEANUP_SESSION:if(!host_write)begin local_data<=cleanup_complete ? cleanup_session : 32'd0;local_okay<=1;end
+       CLEANUP_REQUEST:if(!host_write)begin local_data<=cleanup_request;local_okay<=1;end
        STATUS:if(!host_write)begin local_data<={9'd0,age_faults,controller_blocked,shared_halt,(fault || monitor_fault),stopped,ready_mask,configured,enabled};local_okay<=1;end
        SESSION:begin
         if(!host_write)begin local_data<=session;local_okay<=1;end
@@ -178,7 +190,9 @@ module dmotor_controller_axi(
        DISABLE:if(host_write && host_wdata<16)begin disable_request<=host_wdata[3:0];local_okay<=1;end
        STOP:if(host_write && host_wdata<16)begin if(direct_mode!=0)disable_request<=host_wdata[3:0];pending_stop<=pending_stop|host_wdata[3:0];local_okay<=1;end
        REFRESH_SESSION:if(host_write)begin refresh_session<=host_wdata;local_okay<=1;end
-       CORE_RESET:if(host_write && enabled==0 && host_wdata<=1 && session!=0)begin
+       CORE_RESET:if(host_write && enabled==0 && host_wdata<=1 && session!=0 &&
+         (host_wdata==1 || (core_reset && cleanup_request!=32'hffffffff)))begin
+        if(host_wdata==0)cleanup_request<=cleanup_request+1'b1;
         core_reset<=host_wdata[0];if(!host_wdata[0])begin age_configure<=configured;stop<=0;end
         local_okay<=1;
        end

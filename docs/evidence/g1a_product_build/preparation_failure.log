@@ -1,0 +1,55 @@
+DMOTOR source: /home/rklinkhammer/workspace/dmotor
+Hardware fingerprint: f1c30d1d78b869b1aabe23f9a63cf1ad555e8f5904af1b49e273ee5c73db97c2
++ /usr/bin/python3 tools/prepare_shared_mailbox.py --output /home/rklinkhammer/workspace/dmotor/build/product/engine
+Prepared 20000000 Hz profile at /home/rklinkhammer/workspace/dmotor/build/product/engine; synthesis and verification still required
+patching file src/protocol.cpp
+patching file src/motion.cpp
+patching file include/dmotor/motion.hpp
+patching file tests/motion_test.cpp
+patching file tests/controller_test.cpp
+patching file tests/dispatcher_test.cpp
+Prepared velocity-only 20 MHz evaluation at /home/rklinkhammer/workspace/dmotor/build/product/engine; validation still required
+patching file include/dmotor/operating_limits.hpp
+patching file include/dmotor/motion.hpp
+patching file src/motion.cpp
+patching file src/velocity.cpp
+patching file tests/motion_test.cpp
+patching file tests/velocity_test.cpp
+patching file include/dmotor/detail/arithmetic.hpp
+Hunk #1 succeeded at 5 with fuzz 2.
+patching file src/arithmetic.cpp
+Hunk #2 succeeded at 23 (offset -1 lines).
+patching file src/motion.cpp
+patching file tests/arithmetic_test.cpp
+patching file platforms/vitis/motion.cfg
+patching file platforms/vitis/controller.cfg
+patching file platforms/vitis/dispatcher.cfg
+patching file src/arithmetic.cpp
+Hunk #1 succeeded at 39 (offset -1 lines).
+Prepared bounded velocity evaluation at /home/rklinkhammer/workspace/dmotor/build/product/engine; validation still required
+Prepared mailbox measurement at /home/rklinkhammer/workspace/dmotor/build/product/engine; dispatcher runner synthesizes dmotor_mailbox
+Prepared four-motor mailbox at /home/rklinkhammer/workspace/dmotor/build/product/engine; dispatcher runner uses dmotor_mailbox_shared
++ cmake -S /home/rklinkhammer/workspace/dmotor/build/product/engine -B /home/rklinkhammer/workspace/dmotor/build/product/engine/build
+-- The CXX compiler identification is GNU 15.2.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found Python3: /usr/bin/python3 (found version "3.14.4") found components: Interpreter
+CMake Warning at CMakeLists.txt:32 (message):
+  Icarus not found: RTL tests unavailable (not passed)
+
+
+CMake Error: File /home/rklinkhammer/workspace/dmotor/build/product/engine/experiments/mailbox/mailbox.hpp does not exist.
+CMake Error at CMakeLists.txt:129 (configure_file):
+  configure_file Problem configuring file
+
+
+CMake Error: File /home/rklinkhammer/workspace/dmotor/build/product/engine/experiments/mailbox/shared_mailbox.hpp does not exist.
+CMake Error at CMakeLists.txt:129 (configure_file):
+  configure_file Problem configuring file
+
+
+-- Configuring incomplete, errors occurred!
+Command '['cmake', '-S', '/home/rklinkhammer/workspace/dmotor/build/product/engine', '-B', '/home/rklinkhammer/workspace/dmotor/build/product/engine/build']' returned non-zero exit status 1.

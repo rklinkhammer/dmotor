@@ -10,8 +10,11 @@ acceptance, hardware-test permission or motion authority.
 The [reset/cleanup audit and admission specification](g1a_cleanup_admission.md)
 now traces A1–A4/A8. It identifies lazy context initialization as a barrier to
 claiming all-context cleanup from reset readback. An adapter reset regression
-passes; the proposed explicit disabled-cleanup mechanism remains to be reviewed
-and implemented. A5–A7 and G1a acceptance remain open.
+passes; an internal disabled four-context cleanup primitive and native reset tests
+are implemented. Combined mailbox cleanup, CLN1 MMIO completion, kernel access and PS verification
+are integrated in source. Actual motor-HLS co-simulation, full AXI and interrupted-cleanup integration
+now pass; the matched revision-11 hardware/ARM build also passes. Time-separated
+review and remaining recovery qualification are outstanding. A5–A7 and G1a acceptance remain open.
 
 The [single proposed recovery contract](recovery_transition_contract.md) remains
 v4. Its wire layout exists in `software/protocol/monitor/wire.json`; PS framing
@@ -22,7 +25,7 @@ proof of completed recovery. Complete these tasks before G1a acceptance:
 |---|---|---|
 | A1: recovery admission hold | Runtime has prepared/halted state, but no monitor-coordinator hold | State/command table for every public Runtime/client operation during hold; queued targets discarded; only explicit completion opens admission; simulator tests tied to SYS-07/09 |
 | A2: outputs disabled | STATUS bits 0–3; driver/MMIO path and runtime HALT | Specify repeated/race-aware disabled verification across cleanup and completion; tests inject new fault/enable attempts; no single stale read treated as perpetual proof |
-| A3: reset/drain/PI cleanup | CORE_RESET drives the controller reset path in `rtl/controller_axi.sv` / `rtl/motor_io.sv`; HB11 status bit 3 reports asserted core reset | Trace reset into mailbox/HLS/PI state and outstanding AXI/HLS results; derive minimum assertion/completion conditions and prove with RTL tests. Decide whether an observable completion/ABI extension is needed. CORE_RESET readback alone does not prove drain |
+| A3: reset/drain/PI cleanup | CLN1 disabled sweep/completion plus session/request binding; actual-HLS reset interruption and full controller tests pass; see [evidence](g1a_cleanup_admission.md#8-combined-cln1-integration) | Trace reset into mailbox/HLS/PI state and outstanding AXI/HLS results; derive minimum assertion/completion conditions and prove with RTL tests. Review CLN1 completion semantics and complete the remaining boundary/race cases. CORE_RESET readback alone does not prove drain |
 | A4: session/configuration/causes | Nonzero session and configuration readback; local/HB status and ACK operations | Map each attestation flag to exact reads, ordering, reset guarantees and failure exits; verify expiration/new fault wins ACK and no unverified flag is sent |
 | A5: endpoint sessions | Contract requires monotonic persistent 64-bit allocation; no allocator implemented | PS/ESP32 storage format, integrity/atomic-update strategy, power-loss/exhaustion handling and inhibited allocation ordering; never reuse a lifetime identifier |
 | A6: pairing/freshness | Decoder checks field shape only; schema contains sessions/epoch/txn/seq | Specify HELLO confirmation, explicit re-pair inhibition, duplicate cache and sequence advancement; cover stale/mutated frames and peer restart in deterministic tests |

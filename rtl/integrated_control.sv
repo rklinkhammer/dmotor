@@ -16,6 +16,8 @@ module dmotor_integrated_control #(
     output wire [3:0] ready_mask, stopped,
     output wire [2047:0] telemetry,
     output wire protocol_initialized, protocol_fault,
+    output wire cleanup_complete, cleanup_pending, cleanup_failed,
+    output wire [31:0] cleanup_session,
     input wire host_valid, host_write,
     input wire [31:0] host_address, host_wdata,
     input wire [3:0] host_strobes,
@@ -44,6 +46,17 @@ module dmotor_integrated_control #(
     output wire [3:0] pwm, drive_enable, direction,
     output wire [127:0] applied_duties
 );
+    wire cleanup_hold,cleanup_override,cleanup_start,cleanup_done,cleanup_admission,cleanup_local_fault;
+    wire mailbox_initialized,protocol_quiescent;
+    dmotor_cleanup_sequencer cleanup(.clk(clk),.reset(reset),.inhibit(inhibit),
+        .invalidate(cancel_frame || |invalidate_mask || (host_valid && host_write)),
+        .component_fault(controller_fault || engine_fault),.enabled(enabled),
+        .session(session),.configurations(configurations),.mailbox_quiescent(protocol_quiescent),
+        .engine_ready(engine_ready),.engine_done(cleanup_done),.hold_outputs(cleanup_hold),
+        .engine_override(cleanup_override),.engine_start(cleanup_start),
+        .complete(cleanup_complete),.pending(cleanup_pending),.admission_ready(cleanup_admission),
+        .failed(cleanup_failed),.local_fault(cleanup_local_fault),.completed_session(cleanup_session));
+    assign protocol_initialized=mailbox_initialized && cleanup_admission;
     wire engine_start,engine_ready,engine_done,engine_fault,engine_reset,engine_apply_target;
     wire [1:0] engine_motor,result_motor;
     wire [31:0] engine_session,engine_generation,engine_target,result_session,result_generation;
@@ -58,11 +71,12 @@ module dmotor_integrated_control #(
         if(reset)retained_telemetry<=0;
         else if(!engine_reset || engine_fault)retained_telemetry<=engine_telemetry;
     end
-    assign fault=controller_fault || engine_fault;
-    assign halt_request=controller_halt || engine_fault;
-    dmotor_motor_engine_adapter engine(.clk(clk),.reset(reset || engine_reset),
+    assign fault=controller_fault || engine_fault || cleanup_local_fault;
+    assign halt_request=controller_halt || engine_fault || cleanup_local_fault;
+    dmotor_motor_engine_adapter engine(.clk(clk),.reset(reset || (cleanup_override ? inhibit || controller_fault : engine_reset)),
+        .cleanup_start(cleanup_start),.cleanup_busy(),.cleanup_done(cleanup_done),
         .start(engine_start),.ready(engine_ready),.done(engine_done),.fault(engine_fault),
-        .motor(engine_motor),.session(engine_session),.generation(engine_generation),
+        .motor(engine_motor),.session(cleanup_override ? session : engine_session),.generation(engine_generation),
         .target(engine_target),.tick(frame_tick),.snapshot(engine_snapshot),
         .apply_target(engine_apply_target),.enabled(enabled),.stop(stop),.configurations(configurations),
         .ready_mask(ready_mask),.stopped(stopped),.telemetry(engine_telemetry),
@@ -70,5 +84,6 @@ module dmotor_integrated_control #(
         .result_tick(result_tick),.result_duty(result_duty));
     dmotor_mailbox_control #(.SNAPSHOT_BITS(SNAPSHOT_BITS),.TICK_CYCLES(TICK_CYCLES),
         .DEADLINE_CYCLES(DEADLINE_CYCLES),.PWM_CYCLES(PWM_CYCLES)) control(
-        .inhibit(inhibit),.fault(controller_fault),.halt_request(controller_halt),.*);
+        .protocol_initialized(mailbox_initialized),
+        .inhibit(inhibit || cleanup_hold),.fault(controller_fault),.halt_request(controller_halt),.*);
 endmodule

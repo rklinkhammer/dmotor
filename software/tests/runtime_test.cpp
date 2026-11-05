@@ -20,8 +20,9 @@ struct Fake : Platform {
     std::vector<std::pair<uint32_t, uint32_t>> writes;
     uint64_t time = 0;
     bool source = true, reset = true, fail = false, hold_ready = false, halt_failure = false;
-    unsigned halt_count = 0;
+    unsigned halt_count = 0, cleanup_failure = 0, cleanup_reads = 0;
     Fake() {
+        words[reg::CLEANUP_CAPABILITY] = 0x434c4e31;
         words[reg::MONITOR_CAPABILITY] = 0x48423131;
         words[reg::MONITOR_STATUS] = 5;
         words[reg::DIRECT_CAPABILITY] = 0x44445531;
@@ -34,6 +35,8 @@ struct Fake : Platform {
     uint32_t read32(uint32_t a) override {
         if (fail)
             throw IoError("bus");
+        if (a == reg::CLEANUP_STATUS && cleanup_failure == 5 && ++cleanup_reads > 1)
+            return 4; // A new fault between the first proof read and final check.
         return words[a];
     }
     void write32(uint32_t a, uint32_t v) override {
@@ -51,6 +54,20 @@ struct Fake : Platform {
         }
         if (a == reg::CORE_RESET) {
             reset = v != 0;
+            words[reg::CLEANUP_STATUS] = reset ? 0 : 2;
+            words[reg::CLEANUP_SESSION] = reset ? 0 : words[reg::SESSION];
+            if (!reset)
+                ++words[reg::CLEANUP_REQUEST];
+            if (!reset) {
+                if (cleanup_failure == 1)
+                    words[reg::CLEANUP_STATUS] = 4;
+                if (cleanup_failure == 2)
+                    words[reg::CLEANUP_STATUS] = 1;
+                if (cleanup_failure == 3)
+                    words[reg::CLEANUP_SESSION] = 0;
+                if (cleanup_failure == 4)
+                    --words[reg::CLEANUP_REQUEST];
+            }
             if (reset)
                 words[reg::STATUS] |= 1U << 18;
             else if (!source)
@@ -121,6 +138,20 @@ template <class F> bool rejects(F f) {
 int main(int argc, char** argv) {
     if (startup_version("dmotor-runtime-tests", argc, argv))
         return 0;
+    for (unsigned failure = 0; failure < 7; ++failure) {
+        Fake io;
+        RuntimePolicy policy;
+        policy.transition_us = 1000;
+        Runtime runtime(io, policy);
+        io.cleanup_failure = failure;
+        if (failure == 0)
+            io.words[reg::CLEANUP_CAPABILITY] = 0;
+        if (failure == 6)
+            io.words[reg::CLEANUP_REQUEST] = UINT32_MAX;
+        CHECK(rejects([&] { runtime.prepare(config(), 1); }));
+        CHECK(io.source && !(io.words[reg::STATUS] & 15));
+        CHECK(rejects([&] { runtime.enable(1); }));
+    }
     {
         Fake io;
         RuntimePolicy p;

@@ -1,0 +1,7 @@
+{
+  "inputs": {
+    "source_sha256": "9f69c617a702b90e3520a0958384842c1464c948a85c2cc014cb88312af3fa9d",
+    "amd_root": "/opt/vitis/2026.1"
+  },
+  "packaged_sha256": "974c9b1c6886877153372ea014ec2f707e051258aa5a478c2f217be88cd210fa"
+}

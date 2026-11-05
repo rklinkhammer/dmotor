@@ -228,3 +228,35 @@ diagnostics, adding one controller-clock delay to that readout while leaving
 PWM/coast protection unchanged. See [PL monitor integration](pl_monitor_progress.md)
 for MONITOR_CAPABILITY/STATUS/ACK (0x1064/0x1068/0x106C), disabled/reset recovery,
 software compatibility and test evidence. This is not the UART/ARM interlock.
+
+## Revision 11 disabled cleanup
+
+CLN1 adds a disabled startup sweep after CORE_RESET release in velocity mode.
+The scheduler/PWM remain inhibited until atomic-mailbox initialization/drain and
+four acknowledged motor-context resets complete. No channels are enabled by cleanup.
+Existing per-channel readiness acquisition still follows explicit ENABLE.
+
+| Address | Register | Read-only semantics |
+|---|---|---|
+| 0x1070 | CLEANUP_CAPABILITY | `0x434c4e31` (CLN1) |
+| 0x1074 | CLEANUP_STATUS | bit 0 pending, bit 1 valid completion, bit 2 failed, bit 3 unsupported direct-duty mode; reset returns 0 in velocity mode |
+| 0x1078 | CLEANUP_SESSION | Completed session while completion is valid, otherwise 0 |
+| 0x107c | CLEANUP_REQUEST | Fabric-lifetime count of accepted CORE_RESET releases; starts at 0; never wraps |
+
+CORE_RESET=0 now requires an asserted reset and a non-exhausted request counter.
+Repeated releases return SLVERR. Request identity survives core reset but not fabric
+reset; it is not a persistent peer/session lifetime ID. Session/configuration are
+captured by the sequencer; configuration remains writable only while core reset is
+asserted. Completion becomes invalid on reset, configuration/session change,
+inhibit/fault, enable or a mutating mailbox request. Disable does not restore it.
+A failed active sequence requires reset/retry; it never admits motion.
+
+The primitive runs unauthorized reset-only commands even for unconfigured channels;
+this does not relax validation before operation. Direct-duty mode keeps the shared
+engine reset and reports unsupported, so it cannot supply this recovery attestation.
+PS velocity preparation requires CLN1 and verifies request/session/completion, while
+the driver requires CLN1 at probe and allows read-only access. See the
+[cleanup contract and qualification limits](g1a_cleanup_admission.md#8-combined-cln1-integration).
+Revision 11 requires a matched hardware/software build. The latest actual-HLS and
+routed evidence is linked from [system status](system_status.md); earlier revision
+evidence does not qualify the new reset-ownership path. No new external block-diagram ports are added.

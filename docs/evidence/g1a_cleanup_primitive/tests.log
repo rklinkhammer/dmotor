@@ -1,0 +1,15 @@
+Test project /home/rklinkhammer/workspace/dmotor/build/g1-reset-check
+    Start  4: rtl_motor_engine_adapter
+1/5 Test  #4: rtl_motor_engine_adapter .........   Passed    0.07 sec
+    Start  5: rtl_monitor_heartbeat
+2/5 Test  #5: rtl_monitor_heartbeat ............   Passed    0.06 sec
+    Start 14: rtl_shared_scheduler
+3/5 Test #14: rtl_shared_scheduler .............   Passed    0.09 sec
+    Start 35: shared_mailbox_direct
+4/5 Test #35: shared_mailbox_direct ............   Passed    0.01 sec
+    Start 36: shared_mailbox_copy
+5/5 Test #36: shared_mailbox_copy ..............   Passed    0.01 sec
+
+100% tests passed, 0 tests failed out of 5
+
+Total Test time (real) =   0.23 sec

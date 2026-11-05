@@ -74,6 +74,7 @@ def main():
                 run([sys.executable,script,'--kernel',kernel,'--vitis',a.amd_root/'Vitis'])
             run([vivado,'-mode','batch','-source','platforms/vivado/export_current.tcl'],env)
             run([vivado,'-mode','batch','-source','platforms/vivado/sim_controller_axi.tcl'],env)
+            run([vivado,'-mode','batch','-source','platforms/vivado/sim_controller_axi.tcl','-tclargs','controller_cleanup'],env)
             if fingerprint(board=False)!=key['source_sha256']: raise RuntimeError('Sources changed during build; retry')
             stamp.write_text(json.dumps({'inputs':key,'packaged_sha256':packaged_hash()},indent=2)+'\n')
         else: print('Reusing fingerprint-matched, tested IP.',flush=True)

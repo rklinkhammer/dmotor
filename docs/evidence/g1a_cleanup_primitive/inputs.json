@@ -1,0 +1,16 @@
+{
+  "baseline_commit": "5f88ca5691f7e52aea39a6df6c93f88521ed2242",
+  "scope": "Internal adapter with transport stub; native direct/copy four-context C++ under UBSan. No generated four-context HLS or board evidence.",
+  "command": "ctest --test-dir build/g1-reset-check -R '^(rtl_motor_engine_adapter|shared_mailbox_direct|shared_mailbox_copy|rtl_shared_scheduler|rtl_monitor_heartbeat)$' --output-on-failure",
+  "tool": "Icarus 12.0; host CMake/GNU C++",
+  "files": {
+    "CMakeLists.txt": "4916147b440534244c59480c528ffa5cf20bcb0eea937fd50986fc8af9322192",
+    "rtl/motor_engine_adapter.sv": "d30cf21c0296f9f86957f3fb200d5591e045dc4c329b6d5779e77686314ca8ee",
+    "rtl/integrated_control.sv": "0c24dbf3e46ecdf1f1bab6dffc12abdd9e8e3ea95a6d552059a0a285511065dd",
+    "tests/motor_engine_adapter_tb.sv": "8ed8571d11a59706aa2d49160e345ff39300bca0961b491e395d8a45b57d53b6",
+    "experiments/mailbox/shared_mailbox_test.cpp": "c92f770baac7cbab87e6f19a6e2c33a041d4a38acc59477320f5c69172a7f2dd",
+    "experiments/mailbox/shared_mailbox.cpp": "12adf66be10a65424c17f410410175be77a5ed725a53765b337c22a540693330",
+    "experiments/mailbox/mailbox.cpp": "a4ec09a081bda49b9aa5f51171a25a0561ada5ca286a24fdfe9c1ad06671fe13",
+    "src/controller.cpp": "613942aaa125075b80564c7022ab3a3e2705c629529b838f823c4bd7ba347549"
+  }
+}

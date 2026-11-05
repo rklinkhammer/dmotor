@@ -1,0 +1,81 @@
+Test project /home/rklinkhammer/workspace/dmotor/build/g1-reset-check
+      Start  1: arithmetic
+ 1/38 Test  #1: arithmetic .......................   Passed    0.02 sec
+      Start  2: protocol
+ 2/38 Test  #2: protocol .........................   Passed    0.00 sec
+      Start  3: generated_abi
+ 3/38 Test  #3: generated_abi ....................   Passed    0.03 sec
+      Start  4: rtl_cleanup_sequencer
+ 4/38 Test  #4: rtl_cleanup_sequencer ............   Passed    0.05 sec
+      Start  5: rtl_motor_engine_adapter
+ 5/38 Test  #5: rtl_motor_engine_adapter .........   Passed    0.06 sec
+      Start  6: rtl_monitor_heartbeat
+ 6/38 Test  #6: rtl_monitor_heartbeat ............   Passed    0.05 sec
+      Start  7: rtl_safety
+ 7/38 Test  #7: rtl_safety .......................   Passed    0.06 sec
+      Start  8: rtl_scheduler
+ 8/38 Test  #8: rtl_scheduler ....................   Passed    0.05 sec
+      Start  9: rtl_qcencoder
+ 9/38 Test  #9: rtl_qcencoder ....................   Passed    0.06 sec
+      Start 10: rtl_pwm
+10/38 Test #10: rtl_pwm ..........................   Passed    0.06 sec
+      Start 11: rtl_latency
+11/38 Test #11: rtl_latency ......................   Passed    0.06 sec
+      Start 12: rtl_axi_bridge
+12/38 Test #12: rtl_axi_bridge ...................   Passed    0.05 sec
+      Start 13: rtl_encoder_snapshot
+13/38 Test #13: rtl_encoder_snapshot .............   Passed    0.06 sec
+      Start 14: rtl_target_age
+14/38 Test #14: rtl_target_age ...................   Passed    0.06 sec
+      Start 15: rtl_shared_scheduler
+15/38 Test #15: rtl_shared_scheduler .............   Passed    0.13 sec
+      Start 16: rtl_vivado_dev
+16/38 Test #16: rtl_vivado_dev ...................   Passed    0.06 sec
+      Start 17: control
+17/38 Test #17: control ..........................   Passed    0.00 sec
+      Start 18: command_engine
+18/38 Test #18: command_engine ...................   Passed    0.00 sec
+      Start 19: peripheral
+19/38 Test #19: peripheral .......................   Passed    0.00 sec
+      Start 20: rtl_peripheral_integrated
+20/38 Test #20: rtl_peripheral_integrated ........   Passed    9.49 sec
+      Start 21: configuration
+21/38 Test #21: configuration ....................   Passed    0.00 sec
+      Start 22: motion
+22/38 Test #22: motion ...........................   Passed    0.01 sec
+      Start 23: motion_queue
+23/38 Test #23: motion_queue .....................   Passed    0.00 sec
+      Start 24: rtl_motion_integrated
+24/38 Test #24: rtl_motion_integrated ............   Passed   25.35 sec
+      Start 25: velocity
+25/38 Test #25: velocity .........................   Passed    0.00 sec
+      Start 26: controller
+26/38 Test #26: controller .......................   Passed    0.00 sec
+      Start 27: dispatcher
+27/38 Test #27: dispatcher .......................   Passed    0.00 sec
+      Start 28: position_error
+28/38 Test #28: position_error ...................   Passed    0.02 sec
+      Start 29: atomic_mailbox
+29/38 Test #29: atomic_mailbox ...................   Passed    0.00 sec
+      Start 30: generated_mailbox_abi
+30/38 Test #30: generated_mailbox_abi ............   Passed    0.04 sec
+      Start 31: atomic_mailbox_top
+31/38 Test #31: atomic_mailbox_top ...............   Passed    0.00 sec
+      Start 32: rtl_atomic_adapter
+32/38 Test #32: rtl_atomic_adapter ...............   Passed    0.41 sec
+      Start 33: rtl_controller_cleanup
+33/38 Test #33: rtl_controller_cleanup ...........   Passed    0.28 sec
+      Start 34: rtl_mailbox_control
+34/38 Test #34: rtl_mailbox_control ..............   Passed    1.87 sec
+      Start 35: controller_host
+35/38 Test #35: controller_host ..................   Passed    0.00 sec
+      Start 36: generated_controller_abi
+36/38 Test #36: generated_controller_abi .........   Passed    0.04 sec
+      Start 37: shared_mailbox_direct
+37/38 Test #37: shared_mailbox_direct ............   Passed    0.01 sec
+      Start 38: shared_mailbox_copy
+38/38 Test #38: shared_mailbox_copy ..............   Passed    0.01 sec
+
+100% tests passed, 0 tests failed out of 38
+
+Total Test time (real) =  38.42 sec

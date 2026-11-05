@@ -1,0 +1,20 @@
+[ 25%] Built target dmotor
+[ 29%] Built target command_engine_test
+[ 33%] Built target control_test
+[ 41%] Built target arithmetic_test
+[ 41%] Built target protocol_test
+[ 45%] Built target motion_queue_test
+[ 52%] Built target peripheral_test
+[ 52%] Built target motion_test
+[ 56%] Built target configuration_test
+[ 60%] Built target dispatcher_test
+[ 64%] Built target controller_test
+[ 68%] Built target velocity_test
+[ 72%] Built target position_error_test
+[ 80%] Building CXX object CMakeFiles/controller_host_test.dir/tests/controller_host_test.cpp.o
+[ 80%] Built target atomic_mailbox_top_test
+[ 82%] Built target atomic_mailbox_test
+[ 90%] Built target shared_mailbox_direct_test
+[ 98%] Built target shared_mailbox_copy_test
+[100%] Linking CXX executable controller_host_test
+[100%] Built target controller_host_test

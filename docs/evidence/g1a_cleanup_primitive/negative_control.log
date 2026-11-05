@@ -1,0 +1,3 @@
+Mutation: stop sweep after context 2, skipping context 3. Expected failure observed.
+FATAL: tests/motor_engine_adapter_tb.sv:63: disabled cleanup failed
+       Time: 1826000  Scope: motor_engine_adapter_tb

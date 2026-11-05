@@ -28,6 +28,8 @@ module dmotor_motor_io #(
     output wire [3:0] ready_mask, stopped,
     output wire [2047:0] telemetry,
     output wire protocol_initialized, protocol_fault,
+    output wire cleanup_complete, cleanup_pending, cleanup_failed,
+    output wire [31:0] cleanup_session,
     input wire host_valid, host_write,
     input wire [31:0] host_address, host_wdata,
     input wire [3:0] host_strobes,

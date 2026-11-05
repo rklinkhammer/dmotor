@@ -14,6 +14,7 @@ bool reset = true, source = true;
 } // namespace
 KernelDevice::KernelDevice(const std::string&) {
     words.clear();
+    words[r::CLEANUP_CAPABILITY] = 0x434c4e31;
     words[r::MONITOR_CAPABILITY] = 0x48423131;
     words[r::MONITOR_STATUS] = 5;
     words[r::DIRECT_CAPABILITY] = 0x44445531;
@@ -36,6 +37,10 @@ void KernelDevice::write32(uint32_t a, uint32_t v) {
         words[b::SESSION] = v;
     if (a == r::CORE_RESET) {
         reset = v != 0;
+        words[r::CLEANUP_STATUS] = reset ? 0 : 2;
+        words[r::CLEANUP_SESSION] = reset ? 0 : words[r::SESSION];
+        if (!reset)
+            ++words[r::CLEANUP_REQUEST];
         if (reset)
             words[r::STATUS] |= 1U << 18;
         else if (!source)

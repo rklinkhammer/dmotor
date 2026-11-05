@@ -28,4 +28,8 @@ constexpr uint32_t DIRECT_COMMIT = 4192U;
 constexpr uint32_t MONITOR_CAPABILITY = 4196U;
 constexpr uint32_t MONITOR_STATUS = 4200U;
 constexpr uint32_t MONITOR_ACK = 4204U;
+constexpr uint32_t CLEANUP_CAPABILITY = 4208U;
+constexpr uint32_t CLEANUP_STATUS = 4212U;
+constexpr uint32_t CLEANUP_SESSION = 4216U;
+constexpr uint32_t CLEANUP_REQUEST = 4220U;
 } }

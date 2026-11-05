@@ -75,6 +75,7 @@ static bool readable(u32 a)
  return a <= 0x40 || (a >= 0x100 && a < 0x140) ||
         (a >= DM_DIRECT_CAPABILITY && a <= DM_DIRECT_COMMIT) ||
         a == DM_MONITOR_CAPABILITY || a == DM_MONITOR_STATUS ||
+        (a >= DM_CLEANUP_CAPABILITY && a <= DM_CLEANUP_REQUEST) ||
         a == ID || a == STATUS || a == SESSION || a == DM_SNAPSHOT ||
         (a >= DM_CONFIG_BASE && a < (DM_CONFIG_BASE + 4 * DM_CONFIG_STRIDE) && (a & (DM_CONFIG_STRIDE - 1)) < 80) ||
         (a >= DM_TELEMETRY_BASE && a < (DM_TELEMETRY_BASE + 4 * DM_TELEMETRY_STRIDE));
@@ -177,6 +178,11 @@ static int dm_probe(struct platform_device *pdev)
  ret = halt_all(d); if (ret) goto fail;
  if (readl(d->base + DM_MONITOR_CAPABILITY) != MONITOR_PROFILE) {
   dev_err(&pdev->dev, "Controller lacks required HB11 monitor supervision\n");
+  ret = -ENODEV;
+  goto fail;
+ }
+ if (readl(d->base + DM_CLEANUP_CAPABILITY) != 0x434c4e31U) {
+  dev_err(&pdev->dev, "Controller lacks required CLN1 disabled cleanup\n");
   ret = -ENODEV;
   goto fail;
  }

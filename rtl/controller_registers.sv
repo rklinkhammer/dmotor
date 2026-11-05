@@ -26,4 +26,8 @@ localparam logic [31:0] DIRECT_COMMIT = 32'd4192;
 localparam logic [31:0] MONITOR_CAPABILITY = 32'd4196;
 localparam logic [31:0] MONITOR_STATUS = 32'd4200;
 localparam logic [31:0] MONITOR_ACK = 32'd4204;
+localparam logic [31:0] CLEANUP_CAPABILITY = 32'd4208;
+localparam logic [31:0] CLEANUP_STATUS = 32'd4212;
+localparam logic [31:0] CLEANUP_SESSION = 32'd4216;
+localparam logic [31:0] CLEANUP_REQUEST = 32'd4220;
 endpackage

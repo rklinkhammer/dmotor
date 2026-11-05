@@ -1,27 +1,30 @@
 # G1a cleanup proof and recovery admission specification
 
-**Status: source audit and proposed implementation contract, 2026-11-04.**
-Prepared against implementation baseline `a334d99`; Robert Klinkhammer's
-time-separated review is pending. No recovery admission or PL ABI is changed by
-this increment. Relates to A1–A4/A8, U02 and SYS-07/09 in the
+**Status: source audit, combined PL cleanup and PS verification implemented; actual-HLS regressions and matched hardware/ARM build passed; system qualification open, 2026-11-04.**
+Initial audit baseline: `a334d99`. CLN1 integration below is current source;
+Robert Klinkhammer's time-separated review is pending. The PL ABI now exposes
+cleanup completion; full monitor recovery admission remains unimplemented. Relates to A1–A4/A8, U02 and SYS-07/09 in the
 [G1 work package](g1_work_package.md).
 
-## 1. Audit result: reset assertion is not all-context cleanup completion
+## 1. Baseline audit result: reset assertion is not all-context cleanup completion
 
-The current design deliberately has two different reset mechanisms:
+The audited baseline deliberately has two different reset mechanisms:
 
 - RTL reset cancels scheduler/adapter/transport state and holds output inhibition.
 - Explicit HLS commands initialize mailbox and motor application state. Motor
   initialization is lazy: each enabled motor gets RESET_CONTEXT on its first
   adapter invocation after reset. It is not an all-motor sweep while disabled.
 
-Consequently **the current PS must not assert `reset_drain_complete` solely from
+Consequently **the PS must not assert `reset_drain_complete` solely from
 MONITOR_STATUS.core_reset, a delay, zero PWM or `Runtime::prepare()` success**.
 We have not established generated-HLS data-memory reset guarantees. This is a
 proof/observability gap, not evidence that stale drive currently resumes: the
 lazy initialization and enable/readiness restrictions are important existing defenses.
 
-## 2. Source-level reset chain and visibility
+## 2. Baseline source-level reset chain and visibility
+
+This table records the pre-CLN1 audit. Sections 7–8 describe its implemented
+resolution and remaining qualification gaps.
 
 | Boundary | Observed implementation | Proof available / limit |
 |---|---|---|
@@ -45,12 +48,11 @@ the exact generated implementation. A stopped PL clock remains R4, not solved by
 status bit or software wait. Existing monitor qualification may remain active while
 the motor core is held reset; preserve that property to avoid circular recovery.
 
-## 3. Proposed proof mechanism — explicit disabled cleanup
+## 3. Cleanup proof requirements
 
-**Recommendation for review:** add an explicit inhibited cleanup operation and an
-observable completion record, rather than weakening v4's attestation to mean only
-“will clear contexts after enabling.” Do not allocate MMIO offsets or wire flags
-until the operation and schema impact are reviewed.
+The implementation adds inhibited cleanup with observable completion. It does not
+weaken v4 attestation to mean “will clear contexts after enabling.” CLN1 offsets
+are defined in the generated controller ABI; monitor wire flags are unchanged.
 
 The implementation must:
 
@@ -62,7 +64,7 @@ The implementation must:
    cannot satisfy new operations. Initialize the atomic mailbox for this session.
 3. Explicitly reset all four motor contexts with valid configuration semantics for
    selected/absent channels. Decide how unconfigured channels are cleared without
-   weakening configuration validation; this remains a design question.
+   weakening configuration validation; zero configuration is permitted for reset only (section 7).
 4. Collect actual completion acknowledgments, detect transport/engine errors, and
    expose completion bound to a software-visible request identity/session and
    configuration identity. Clear validity on a new cleanup, reset, session/config
@@ -74,14 +76,15 @@ The implementation must:
 A verified eager reset guarantee with equivalent observability could replace this
 mechanism, but requires generated-HLS/RTL evidence for every context and transaction
 boundary. Merely exposing existing `quiescent` or `busy==0` is insufficient: neither
-establishes all motor contexts were reset. This recommendation is not implemented.
+establishes all motor contexts were reset. The combined PL operation and MMIO completion record are implemented below.
+Actual generated-motor-HLS and system recovery qualification remain required.
 
 ## 4. Attestation proof obligations
 
 | Wire flag | Required evidence immediately before request | Current gap |
 |---|---|---|
 | outputs_disabled | All STATUS enabled bits zero, exclusive ownership, admission hold prevents enable/target admission, no pending software intent | Admission hold/coordinator not implemented; repeated reads alone cannot replace it |
-| reset_drain_complete | Current-session/config-bound cleanup completion, all contexts cleared, old transactions/replies excluded | No combined observable proof or eager all-context sweep; proposed §3 work required |
+| reset_drain_complete | Current-session/config-bound cleanup completion, all contexts cleared, old transactions/replies excluded | CLN1 combined sweep/completion exists; generated-motor-HLS evidence and coordinator hold still required |
 | causes_cleared | Local fault/HALT/blocked status clear, HB qualified with no HB fault, required cleanup completion still valid | Readable status exists; coordinator must order checks and invalidate proof on new events |
 
 Compose flags only after all obligations succeed. A later fault must invalidate
@@ -138,3 +141,85 @@ new fault/session/config changes at every cleanup boundary; failed context reset
 counter exhaustion; disabled output enforcement throughout cleanup and stale
 completion rejection. Add an assertion for each attestation obligation, plus
 end-to-end actual-HLS integration before closing A2–A4 or G1a.
+
+## 7. Implemented motor-context primitive
+
+`dmotor_motor_engine_adapter` now accepts an internal `cleanup_start` pulse only
+while idle, all motors disabled, session nonzero and no ordinary start. It captures
+the complete configuration bank, clears adapter intent/readiness/telemetry and
+issues exactly four RESET_CONTEXT calls with authorization false and no TICK.
+Each response must contain only the echoed session, with every other word zero.
+The fourth valid response emits one `cleanup_done` pulse; `cleanup_busy` covers
+the transaction sequence. A changed session/configuration, enable, competing
+start/request, transport fault or malformed response fails cleanup. Reset cancels
+it. Changes detected on the final response take priority over success.
+
+Absent channels may use zero configuration for **reset only**. The C++ reset path
+clears the mailbox/controller and prepares configuration without authorizing motion.
+Native tests exercise previously active contexts, reset with zero configuration,
+and confirm a subsequent authorized tick still faults with zero duty. Both direct
+and copy-context implementations run under UBSan. Ordinary motor startup retains
+its explicit reset/TICK readiness path; cleanup does not set any ready bits.
+
+The primitive is now driven by the combined sequencer in section 8. Its pulse alone
+is not recovery attestation; the system also requires atomic-mailbox completion,
+request/session/configuration binding and a PS admission hold.
+
+[Primitive test evidence](evidence/g1a_cleanup_primitive/tests.log) and
+[source identity](evidence/g1a_cleanup_primitive/inputs.json) cover adapter ordering,
+final-response races, malformed/failed replies, mid-sweep reset, and native context
+semantics. Those primitive tests use a stub. Subsequent actual product-HLS verification is
+recorded in section 8. Neither result alone closes G1a.
+
+## 8. Combined CLN1 integration
+
+On each accepted CORE_RESET 1→0 release, the controller increments a fabric-lifetime
+request identifier; exhaustion rejects release instead of wrapping. Reset/session/
+configuration setup is serialized through the existing AXI interface. While disabled,
+`cleanup_sequencer.sv` waits for prerequisites and atomic-mailbox initialization/drain,
+holds the scheduler/PWM inhibited, releases only the motor adapter reset and runs
+the four-context sweep. It remembers motor completion while awaiting mailbox
+quiescence. The active sequence has a bounded cycle timeout; PS bounds the initial
+prerequisite wait. Failure/cancellation remains latched until core reset. External inhibition cancels
+proof without echoing external HALT as a new local fault; engine/protocol errors,
+changed identity, invalid early admission and active-sequence timeout retain local
+fault attribution.
+
+Completion is bound to the captured session and full configuration bank, and is
+invalidated by reset, changed inputs, new inhibit/fault, enable or a mutating mailbox
+request. Enabling consumes the proof without blocking ordinary operation; disabling
+later cannot recreate it. Ordinary startup still executes reset/TICK for readiness.
+The [CLN1 register map](controller_axi.md#revision-11-disabled-cleanup) exposes pending,
+complete, failed, session and request identity. Direct-duty mode reports unsupported;
+it cannot claim this all-context proof. Independent output inhibition stays active
+while internal reset is released. Protection latches keep their existing ACK rules.
+
+Velocity-mode `Runtime::prepare()` now requires CLN1, waits within its transition
+budget, checks incremented request/session and rereads completion after local health
+checks. Failure attempts HALT and keeps preparation false. The kernel driver exposes
+only read access to CLN1 registers and requires the capability at probe. The exported
+controller IP revision is 11; the deployed revision-10 image is not updated by this
+source change. Full UART recovery/ARM admission is still absent, and no wire
+attestation flag is emitted by this work.
+
+[Combined evidence](evidence/g1a_cleanup_integration/inputs.json) separates sequencer
+unit tests, controller/AXI tests with **actual atomic HLS and a stub motor transport**,
+PS failure injection, and a native Linux kernel module compilation. That earlier run did not qualify shared motor HLS RTL, routed timing or the
+ARM image. The product run below supplies those build/test results; physical
+behavior remains unqualified.
+
+The next product run uses `build/product/engine`, not the historical experiment path.
+Its native/HLS C tests and C/RTL co-simulation pass (2,449 shared-context transactions).
+The full AXI lifecycle bench and CLN1 bench now pass with both actual generated HLS
+kernels, including interruption of an accepted context reset, stale-completion
+rejection, protection invalidation and request exhaustion. CLN1 is now a mandatory
+actual-HLS product-build test. Startup tests poll completion rather than assuming
+that 100 clock cycles clear all contexts. Evidence is recorded in
+[product build evidence](evidence/g1a_product_build/).
+
+Matched revision-11 hardware/ARM build passed: routed setup slack +2.406 ns,
+hold slack +0.024 ns, no DRC errors, ARM driver compilation and five QEMU semantic
+executables passed. UART Lite is built in with console support disabled. See
+[current system status](system_status.md) for the exported artifact identities. Continue the remaining boundary/race
+qualification and A1/A5–A8 admission, endpoint lifetime and recovery outcome work
+before using CLN1 as part of a monitor attestation. G1a remains open.

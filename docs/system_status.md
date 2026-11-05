@@ -13,12 +13,12 @@ is inferred from starting the plan.
 
 | Area | Current state | What is not established |
 |---|---|---|
-| Zynq PL | Revision-10 motor control, HB qualifier/inhibit/latch/ACK, global coast output, registered drive-enable diagnostics; routed build evidence | Electrical response on the assembled system; independent shutdown for PL-only failures |
-| Zynq PS | Exclusive driver, runtime, daemon, typed client, maintenance tools, monitor codec/UART transport; native tests and tooling | Full monitor recovery/ARM coordinator, persistent endpoint sessions, bounded diagnostic draining, vehicle planner |
-| Client API | `dmotor_client`, installed `dmotor::client` CMake target and Yocto SDK packaging; maintenance migrated; 14 native tests pass including installed/staged consumer | Latest ARM package/image and board validation must be tied to their actual source manifest |
+| Zynq PL | Revision-11 CLN1 cleanup, HB supervision/coast and motor control built and routed; actual atomic/motor HLS lifecycle and interrupted-cleanup tests pass; setup +2.406 ns, hold +0.024 ns, no DRC errors | Electrical response on the assembled system; independent shutdown for PL-only failures |
+| Zynq PS | CLN1-aware exclusive driver/runtime, daemon/client/tools and monitor transport built for ARM; driver compilation and five QEMU semantic executables pass | Full monitor recovery/ARM coordinator, persistent endpoint sessions, bounded diagnostic draining, vehicle planner |
+| Client API | `dmotor_client`, installed `dmotor::client` CMake target and Yocto SDK packaging; maintenance migrated; 14 native tests pass including installed/staged consumer | Client/runtime are in the matched ARM build; physical board/client qualification remains |
 | ESP32 | Native ESP-IDF v6.1 container pinned by digest in `esp32-dev`; ESP32-S3/C3 environment smoke builds | DMOTOR application, safety core, board drivers and target qualification are not implemented |
 | Integration | Shared monitor wire schema and proposed recovery v4; saved wiring map | Joint state-machine tests, measured timing and accepted system release |
-| Build evidence | Recorded 2026-11-04 matched PL/EDF/ARM build and SD export | That dated record does not prove subsequent client/tooling changes are in a deployed image |
+| Build evidence | [Current matched hardware/ARM build and SD export](evidence/g1a_product_build/inputs.json); source hashes and export checksums verified | Exported artifacts have not been programmed, booted or electrically qualified |
 
 Builds, host simulations, ARM QEMU and electrical tests are separate evidence
 classes. None alone closes a system safety claim. Existing encoder observations
@@ -29,7 +29,7 @@ scope, not qualification of the newly integrated monitor system.
 
 | Gate/work | State | Next evidence or disposition |
 |---|---|---|
-| G1a recovery/admission | Open | [Reset audit/admission proposal](g1a_cleanup_admission.md) prepared; adapter regression passes; all-context cleanup proof/observability and A5–A8 remain open |
+| G1a recovery/admission | Open | [Cleanup/admission specification](g1a_cleanup_admission.md): CLN1, actual-HLS integration and matched build pass; remaining race/boundary qualification, admission hold, persistent sessions and A6–A8 recovery semantics remain open |
 | G1b electrical/R4 | Open | Complete inhibited experiment setup, limits and candidate disposition; no hardware experiment executed |
 | G1c monitor design | Open | Acquisition budget, calibration/protection policies and IDF isolation design |
 | G1d documentation | [Prepared for self-review](gates/G1d.md) | Current records and initial archive created; matrix has 19 seed rows; extraction/self-review and full inventory migration remain open |
@@ -37,12 +37,27 @@ scope, not qualification of the newly integrated monitor system.
 | BV/GV | Deferred | Not in first-release scope; retain U08 for subsequent vehicle work |
 | G7 | Not accepted | Matched release, gate records and completed documentation migration required |
 
-Current native client/tooling evidence is distinct from the older full EDF image.
-The [dated full-build record](archive/pre-system-plan-2026-11-04/docs/current_build_2026_11_04.md)
-records hardware bundle `20261104T231424Z-88b1f40c` and SD export
-`20261105T000706Z-ce4bbc9b` in edf-dev. Its source manifest, not its date or title,
-defines what is installed. No new target image or board qualification is claimed.
-[Retained manifests and reports](evidence/current_build_2026_11_04/) remain in place.
+Current EDF artifacts (under `edf-dev/artifacts/`):
+
+- Hardware bundle: `arty-hardware/20261105T032708Z-6227df62/`.
+- Matched SD export: `arty-z7-20/20261105T034755Z-c38af1d1/`, including
+  `sdcard.wic.xz`, `sdcard.wic.bmap`, manifests and `SHA256SUMS`.
+- [Build/test evidence and provenance](evidence/g1a_product_build/inputs.json),
+  [hardware manifest](evidence/g1a_product_build/hardware_manifest.json),
+  [image build info](evidence/g1a_product_build/build-info.json) and
+  [software identity](evidence/g1a_product_build/dmotor-source-version.json).
+
+All 72 software-source hashes and both hardware fingerprints match this uncommitted
+checkout. UART Lite is built in; UART Lite console is disabled. I/O confirms HB on
+CK_IO2/U13, coast on CK_IO3/V13 and UART TX/RX on T14/U12. The build corrected
+prepared-profile test packaging, replaced fixed startup delays with completion
+polling and preserved external-HALT attribution when cleanup is canceled. No board
+was programmed and no SD card was written. Prior builds remain in the archive.
+
+Next development: finish the G1a recovery-admission/session/outcome model and its
+remaining proof cases. Robert's evidence review and the G1b/G1c decisions remain
+prerequisites for system qualification; a successful image build does not accept
+those gates.
 
 The first archive pass covers the plan baseline and chronological review/PL/PS/build
 records. [Archive manifest and original copies](archive/index.md) preserve provenance.

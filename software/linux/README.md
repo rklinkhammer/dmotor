@@ -89,3 +89,9 @@ and a defined FPGA removal/reset policy. UIO remains an inhibited diagnostic pat
 make a nonresponding AXI slave recoverable; bus timeout/error behavior still needs
 qualification. The driver/service lifecycle now exists; the joint monitor recovery/ARM coordinator
 and target qualification remain outstanding.
+
+The current production driver requires both HB11 monitor supervision and CLN1
+cleanup capability. CLN1 registers are read-only through the ioctl allowlist.
+Velocity-mode preparation verifies cleanup request/session/completion; old bitstreams
+without CLN1 are rejected. Rebuild the matching PL export, kernel module and userspace
+before deploying this revision. Native module compilation is not ARM/board qualification.

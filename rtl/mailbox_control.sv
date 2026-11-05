@@ -11,7 +11,7 @@ module dmotor_mailbox_control #(
     input wire [3:0] enabled,
     input wire [3:0] authorized, ready_mask, invalidate_mask,
     input wire [127:0] max_speeds,
-    output wire protocol_initialized, protocol_fault,
+    output wire protocol_initialized, protocol_fault, protocol_quiescent,
     input wire host_valid, host_write,
     input wire [31:0] host_address, host_wdata,
     input wire [3:0] host_strobes,
@@ -71,7 +71,7 @@ module dmotor_mailbox_control #(
     assign halt_request=control_halt || protocol_fault;
     dmotor_atomic_mailbox_arbiter protocol(
         .live_admission(live_admission),.invalidate_mask(protocol_invalidate),
-        .initialized(protocol_initialized),.fault(protocol_fault),.quiescent(),
+        .initialized(protocol_initialized),.fault(protocol_fault),.quiescent(protocol_quiescent),
         .inhibit(inhibit || target_inhibit || control_fault),.*);
     dmotor_shared_control #(.SNAPSHOT_BITS(SNAPSHOT_BITS),.TICK_CYCLES(TICK_CYCLES),
         .DEADLINE_CYCLES(DEADLINE_CYCLES),.PWM_CYCLES(PWM_CYCLES)) control(

@@ -2,7 +2,8 @@
 // Adapter reset/ordering test only. Transport stub is NOT generated HLS evidence.
 module motor_engine_adapter_tb;
  reg clk=0;always #5 clk=~clk;
- reg reset=1,start=0,apply_target=0;
+ reg reset=1,start=0,apply_target=0,cleanup_start=0;
+ wire cleanup_busy,cleanup_done;
  reg [1:0] motor=0;
  reg [31:0] session=1,generation=1,target=0;
  reg [63:0] tick=1;
@@ -18,11 +19,15 @@ module motor_engine_adapter_tb;
  wire [2047:0] telemetry;
  integer m,phase,before_count;
  dmotor_motor_engine_adapter dut(.*);
+ always @(posedge clk)if(cleanup_busy && dut.transport.command_valid)begin
+  if(!dut.record[32] || dut.record[34] || dut.record[33] || result_duty || ready_mask)
+   $fatal(1,"cleanup authorized/ticked a motor");
+ end
  task step;begin @(posedge clk);#1;end endtask
  task launch;begin wait(ready);@(negedge clk);start=1;step();@(negedge clk);start=0;end endtask
  task check_reset;begin
   @(negedge clk);reset=1;step();
-  if(done || ready || ready_mask || result_duty || telemetry || dut.initialized || dut.active_targets)
+  if(cleanup_busy || cleanup_done || done || ready || ready_mask || result_duty || telemetry || dut.initialized || dut.active_targets)
    $fatal(1,"adapter state survived reset");
   // Reset is held: no explicit context-reset transactions can execute.
   before_count=dut.transport.reset_count;
@@ -48,7 +53,39 @@ module motor_engine_adapter_tb;
    motor=0;launch();wait(dut.state==phase);check_reset();
    session=session+1;warm();
   end
-  $display("motor_engine_adapter reset PASS: all contexts initialized lazily; SEND/WAIT_REPLY/FINISH cancellation and no late completion");
+  // Explicit cleanup includes absent/unconfigured channels, without TICK.
+  check_reset();enabled=0;configurations=0;
+  before_count=dut.transport.reset_count;
+  @(negedge clk);cleanup_start=1;step();@(negedge clk);cleanup_start=0;
+  wait(cleanup_done);#1;
+  if(fault || cleanup_busy || done || ready_mask || stopped || result_duty ||
+     dut.transport.reset_count!=before_count+4 || dut.transport.requires_init!=0)
+   $fatal(1,"disabled cleanup failed");
+  step();if(cleanup_done)$fatal(1,"cleanup completion not a pulse");
+  // No completion on session/configuration/enable changes, including final reply.
+  for(phase=0;phase<5;phase=phase+1)begin
+   check_reset();enabled=0;configurations=0;
+   @(negedge clk);cleanup_start=1;step();@(negedge clk);cleanup_start=0;
+   wait(dut.result_motor==3 && dut.state==2 && dut.response_valid);
+   @(negedge clk);
+   case(phase)
+    0:session=session+1;
+    1:configurations[700]=1;
+    2:enabled=1;
+    3:force dut.transport.response_words[416 +:32]=0;
+    4:force dut.transport.response_error=1;
+   endcase
+   step();if(!fault || cleanup_done || cleanup_busy)$fatal(1,"stale cleanup completion");
+   release dut.transport.response_words;release dut.transport.response_error;
+  end
+  check_reset();enabled=0;configurations=0;
+  @(negedge clk);cleanup_start=1;step();@(negedge clk);cleanup_start=0;
+  wait(dut.result_motor==2 && dut.state==2);check_reset();
+  if(cleanup_busy || cleanup_done)$fatal(1,"cleanup survived reset");
+  // Enabling after a sweep still requires the ordinary reset/TICK readiness path.
+  enabled=15;for(m=0;m<4;m=m+1)configurations[m*640 +:32]=1;
+  motor=0;warm();
+  $display("motor_engine_adapter cleanup/reset PASS: all contexts initialized lazily; SEND/WAIT_REPLY/FINISH cancellation and no late completion");
   $finish;
  end
  initial begin repeat(3000)step();$fatal(1,"test timeout");end
@@ -80,7 +117,7 @@ module dmotor_shared_engine_transport(
    if(delay_left>0)begin
     delay_left<=delay_left-1;
     if(delay_left==1)begin
-     response_words<=0;response_words[224]<=1;response_valid<=1;
+     response_words<=0;response_words[224]<=!saved[32];response_words[416 +:32]<=saved[64 +:32];response_valid<=1;
      if(saved[32])begin
       requires_init[saved[1:0]]<=0;reset_count<=reset_count+1;
      end else if(requires_init[saved[1:0]])$fatal(1,"operation before context reset");

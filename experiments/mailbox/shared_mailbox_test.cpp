@@ -128,6 +128,20 @@ int main() {
     for(unsigned m=0;m<4;++m){channels[m].authorized=true;++channels[m].session;
         service(m,0,0,0,false,true);publish(m,1,1000);}
     for(unsigned t=0;t<110;++t)for(unsigned m=0;m<4;++m)tick(m);
+    // Cleanup absent/unconfigured channels after active PI/pending state. Reset
+    // must clear every observable word without granting operational validity.
+    for(unsigned m=0;m<4;++m) {
+        auto& c=channels[m];
+        c.authorized=false;++c.session;
+        for(auto& word:c.config)word=0;
+        service(m,0,0,0,false,true);
+        for(unsigned i=0;i<16;++i)CHECK(c.reply[i]==(i==13 ? c.session : 0));
+        c.authorized=true;tick(m);
+        CHECK(c.reply[8]!=0); // Invalid configuration still prevents operation.
+        CHECK(c.reply[4]==0);
+        c.authorized=false;service(m,0,0,0,false,true);
+        for(unsigned i=0;i<16;++i)CHECK(c.reply[i]==(i==13 ? c.session : 0));
+    }
     std::cout << "shared mailbox: " << compared
               << " interleaved transactions, all 16 reply words match four independent contexts\n";
 }

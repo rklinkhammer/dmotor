@@ -1,0 +1,77 @@
+{
+  "baseline_commit": "5f88ca5691f7e52aea39a6df6c93f88521ed2242",
+  "dirty": true,
+  "hardware_stage": "arty-hardware/20261105T032708Z-6227df62",
+  "sd_export": "arty-z7-20/20261105T034755Z-c38af1d1",
+  "hardware_source_sha256": "067267da859bfb868812e52e7a7bc2b6069e2083cc13dfdb6c6714a75077b7be",
+  "ip_source_sha256": "9f69c617a702b90e3520a0958384842c1464c948a85c2cc014cb88312af3fa9d",
+  "command": "EDF_DMOTOR_SOURCE=../dmotor ./edf --target arty-z7-20 build",
+  "result": "passed; no board programmed or SD card written",
+  "timing": {
+    "WNS_ns": 2.406,
+    "WHS_ns": 0.024,
+    "TNS_ns": 0,
+    "THS_ns": 0,
+    "DRC_errors": 0,
+    "bus_skew": "all constraints met"
+  },
+  "tests": {
+    "profile_native": 7,
+    "shared_HLS_transactions": 2449,
+    "atomic_HLS_transactions": 1165,
+    "actual_HLS": [
+      "controller_axi",
+      "controller_cleanup (accepted reset interruption included)"
+    ],
+    "ARM_QEMU": [
+      "semantic",
+      "protocol",
+      "Linux backend",
+      "runtime",
+      "monitor codec"
+    ],
+    "ARM_driver": "compiled"
+  },
+  "corrections": [
+    "Prepared-profile CMake excludes root-only experiment tests; keeps its own shared-mailbox tests.",
+    "Cleanup cancellation by external inhibit does not echo a local HALT cause.",
+    "Startup tests wait for CLN1 instead of fixed cycles.",
+    "Actual-HLS cleanup bench is a mandatory product gate."
+  ],
+  "limits": [
+    "No electrical qualification or gate acceptance",
+    "No completed monitor recovery/ARM coordinator or persistent endpoint-session allocator",
+    "R4 remains unresolved"
+  ],
+  "evidence_sha256": {
+    "SHA256SUMS": "4b07b93909ae253f01d2982109221acfc9e2c7e1490c97f1cae4dded7548c4a9",
+    "actual_cleanup.log": "f59dc938ba28cf37bb46ae668d267aa932016e5aa0ff9da1ddaee835a9f16f15",
+    "arm_driver_compile.log": "73b49424f68acbf1bee02055ca6fe07ac886112268dfca82f06a947fe31e7748",
+    "arm_semantics.log": "62401475d39c30f4369f3d99ac51a9f13963d1e201908e1244ce532929b48e03",
+    "atomic_cosim.log": "4a47e4cb205c3eca06e8214243ce2161df67c1f1df1632ce22b3bc4d63d6abd0",
+    "atomic_csim.log": "69e612b0002252305a310971d34aa460459768ba07234f5c5091bc8073e84d7d",
+    "atomic_synth.log": "f31fa3e8c5e930efd93afdc544cac5146634459d13bca8c8309aba622aab2d43",
+    "axi_simulation.log": "896d20fcae27b3795aac916db82b8f0f6fafb6c1bc2a67db334c4c366f4ddcc9",
+    "build-info.json": "e3cf8c2fa1cfa0086f5dc3f90d6448cf099324209df3eb82187ccaaf829889e1",
+    "bus_skew.rpt": "a0823284f3370dd6f1dfc97f6a668482814d649e794a27718e4763069d678ffd",
+    "dmotor-source-version.json": "d49ab0493c459a24f849a8dfdf7927b8bc0b362498b531c1579919247896bb68",
+    "drc.rpt": "43bfb27cb052d12963a23fdc53b73d654f37b4eb8b6558a7698a66170cb5c60e",
+    "dvrmc-hardware-inputs.json": "c5128af8e5bfafc265cd469b858abb83f9e88d226d218771c9c5ee2d6df9b576",
+    "early_enable_failure.log": "27dce425286719ade28ce86641c1afa8238b376c102d7eabdacdfdeb9f970554",
+    "export_checksums.log": "89372555e9e1ffca67670331d484c21e04de874cd0aa5f311433f9ad86d267be",
+    "hardware_manifest.json": "c5128af8e5bfafc265cd469b858abb83f9e88d226d218771c9c5ee2d6df9b576",
+    "io.rpt": "cda5d4fe635ab255fc34203d56def770d9fa79c188ec468267783d8ac41bf40b",
+    "motor_cosim.log": "c869658c44c4e62819b7ca3d1b75ac5029371f7cc9c96a52c9f6e8b86d3bce58",
+    "motor_csim.log": "8b64e9454458b0658fa55ce1e4436dd92231ca00e0cf140d12a2ff80d2988566",
+    "motor_synth.log": "fc7cdaf4833fb7a14073bd455a16dbad117ceb6f4d9be6d2b1b0734a7316e437",
+    "packages.manifest": "b142559444e2dd5ea302e6bfe3c90d3b42b42c09b490ba213e9e214ce0304f2e",
+    "preparation_failure.log": "f5e11ffa4dfe0eb47ddb9a44054ae3043054741f23b85688c06805d6a1b43637",
+    "source_match.log": "88f0057a94844aee682cbc966be5c5479a4b81981a6c7b7b290fb76835ce340b",
+    "system_build.log": "f197742d3bf39dc5b200757dfbec140314b1b05f6fcca799ef58cd8b36442e02",
+    "tested_ip.json": "097f91aee2ee7ea2da7d023f1aba0f58dd263d5851b8ad5de992247754399edb",
+    "timing.rpt": "06b9659849d1356b4c5b7e30d196e37c3d0a6b7799e42a2d8c4f1bee069e22ef",
+    "uartlite_config.log": "bd6d71722c9ee9b5b21befc222f808d8ed94bb2ea0be482501d9229a727abb53",
+    "utilization.rpt": "0e8cc0a45c27456e14dcb97c91ae36b4d7478afc9e682b48b203460f5b7b9581",
+    "workflow.json": "b8db32090c9c3a9e6fb28cd83246fddca663cf731a1937d97435adb57f32b313"
+  }
+}

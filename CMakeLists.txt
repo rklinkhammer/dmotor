@@ -23,7 +23,7 @@ find_program(IVERILOG iverilog)
 find_program(VVP vvp)
 set(IVERILOG_BASE "" CACHE PATH "Optional relocated Icarus backend directory")
 if(IVERILOG AND VVP)
-  foreach(test motor_engine_adapter monitor_heartbeat safety scheduler qcencoder pwm latency axi_bridge encoder_snapshot target_age shared_scheduler vivado_dev)
+  foreach(test cleanup_sequencer motor_engine_adapter monitor_heartbeat safety scheduler qcencoder pwm latency axi_bridge encoder_snapshot target_age shared_scheduler vivado_dev)
     add_test(NAME rtl_${test} COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/rtl_test.py
       --iverilog ${IVERILOG} --vvp ${VVP} --base "${IVERILOG_BASE}"
       --source ${CMAKE_SOURCE_DIR} --build ${CMAKE_BINARY_DIR} --test ${test})
@@ -103,6 +103,9 @@ endif()
 
 # Generated atomic mailbox plus real scheduler, target age and PWM; motor math mocked.
 if(IVERILOG AND VVP AND EXISTS "${CMAKE_SOURCE_DIR}/build/vitis_atomic/hls/syn/verilog/dmotor_atomic_mailbox.v")
+  add_test(NAME rtl_controller_cleanup COMMAND ${Python3_EXECUTABLE}
+    ${CMAKE_SOURCE_DIR}/tools/atomic_adapter_rtl.py --test controller_cleanup
+    --iverilog ${IVERILOG} --vvp ${VVP} --base "${IVERILOG_BASE}")
   add_test(NAME rtl_mailbox_control COMMAND ${Python3_EXECUTABLE}
     ${CMAKE_SOURCE_DIR}/tools/atomic_adapter_rtl.py --test mailbox_control
     --iverilog ${IVERILOG} --vvp ${VVP} --base "${IVERILOG_BASE}")
@@ -120,3 +123,24 @@ target_link_libraries(controller_host_test PRIVATE dmotor)
 add_test(NAME controller_host COMMAND controller_host_test)
 add_test(NAME generated_controller_abi COMMAND ${Python3_EXECUTABLE}
   ${CMAKE_SOURCE_DIR}/tools/generate_controller_abi.py --check)
+
+# Native checks of the same four-context sources used by HLS experiments.
+# Prepared HLS profiles install their own mailbox sources/tests instead.
+if(EXISTS "${CMAKE_SOURCE_DIR}/experiments/mailbox/shared_mailbox.cpp")
+  foreach(header mailbox shared_mailbox)
+    configure_file(experiments/mailbox/${header}.hpp
+      ${CMAKE_BINARY_DIR}/mailbox_include/dmotor/${header}.hpp COPYONLY)
+  endforeach()
+  foreach(variant direct copy)
+    add_executable(shared_mailbox_${variant}_test
+      experiments/mailbox/shared_mailbox_test.cpp experiments/mailbox/mailbox.cpp
+      experiments/mailbox/shared_mailbox.cpp)
+    target_include_directories(shared_mailbox_${variant}_test PRIVATE
+      ${CMAKE_BINARY_DIR}/mailbox_include)
+    target_link_libraries(shared_mailbox_${variant}_test PRIVATE dmotor)
+    if(variant STREQUAL "copy")
+      target_compile_definitions(shared_mailbox_${variant}_test PRIVATE DMOTOR_MAILBOX_COPY_CONTEXT)
+    endif()
+    add_test(NAME shared_mailbox_${variant} COMMAND shared_mailbox_${variant}_test)
+  endforeach()
+endif()
