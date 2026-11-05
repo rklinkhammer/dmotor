@@ -1,16 +1,17 @@
 # Documentation consolidation and archival proposal
 
-**Status: DRAFT FOR REVIEW — 2026-11-04.** Companion to the
-[integrated system plan](system_bringup_plan.md). This is a migration proposal and
-inventory, not an executed archive. Existing links and documents remain in place
-while reviewers decide the replacement content and requirement ownership.
+**Status: IMPLEMENTATION IN PROGRESS — 2026-11-04.** The user directed execution
+of the [system plan](system_bringup_plan.md). The first extraction is recorded in
+[archive manifest](archive/pre-system-plan-2026-11-04/manifest.json); its byte-exact
+originals and browsable snapshots are retained. Robert Klinkhammer owns acceptance
+using time-separated self-review. No full-migration or technical gate closure is claimed.
 
-G1d accepts ownership rules and the initial [requirements-to-test matrix](system_requirements_matrix.md).
-Archive extraction/migration proceeds in parallel with B2–B4 work and completes
-before G7 acceptance; any remaining migration is a B7 work item, not a B7 entry
-prerequisite. It is not a prerequisite for starting independently approved software
-or inhibited electrical work. Preserve the B1–B7/BV identifiers and separate GV
-vehicle gate when extracting the older PS-only phase plan.
+Current state, active decisions and unresolved issues now have dedicated records.
+The initial [requirements matrix](system_requirements_matrix.md) has 19 rows.
+G1d extraction review and remaining mixed/companion document migration continue in
+parallel with independently approved work; completion is required before G7 acceptance.
+The inventory below remains the baseline work list; manifest entries identify the
+first completed moves/snapshots. No unlisted document has been declared obsolete.
 
 ## Desired result
 
@@ -30,10 +31,10 @@ filename predates this plan. Mixed documents require extraction and review first
 |---|---|---|
 | `README.md`, `docs/index.md` | Short orientation/current-document directory; one archive link | Historical chronology or independent requirements |
 | `docs/system_bringup_plan.md` | Accepted development sequence, prerequisites and acceptance gates after review | Detailed build recipes or repeated protocol definitions |
-| `docs/system_status.md` (to create) | One current component/gate matrix and exact latest verified artifact identities | Append-only progress journal; unsupported “all current” claims |
+| `docs/system_status.md` | One current component/gate matrix and exact latest verified artifact identities | Append-only progress journal; unsupported “all current” claims |
 | `docs/system_requirements_matrix.md` | Stable requirement-to-contract/test/evidence mapping; TBD acceptance limits and affected gate | Test count used as proof of a passing run; duplicate requirements |
-| `docs/open_issues.md` (to create) | One unresolved issue register with owner, blocking gate, disposition and evidence | Separate copies of R/F/V finding status in multiple reviews |
-| `docs/decisions.md` (to create) | Concise active decisions, rationale, scope and source; proposals explicitly marked | Superseded alternatives presented as selectable current behavior |
+| `docs/open_issues.md` | One unresolved issue register with owner, blocking gate, disposition and evidence | Separate copies of R/F/V finding status in multiple reviews |
+| `docs/decisions.md` | Concise active decisions, rationale, scope and source; proposals explicitly marked | Superseded alternatives presented as selectable current behavior |
 | `DMOTOR_ARCH.md`, `DMOTOR_CONTROL.md` | Current system/PL boundary and ordered-board protection/electrical behavior | Historical revision sections or duplicate firmware state machines |
 | `docs/recovery_transition_contract.md` | Single cross-device state/authority/recovery contract; retain PROPOSED until adopted | Multiple v1/v2/v3 files in the active tree |
 | `docs/arty_monitor_interface.md` | Current physical pins, harness/BD signals and interface checks | Historical CK_IO4/5 assignment or programming recipes |

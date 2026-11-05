@@ -1,0 +1,87 @@
+# G1 execution work package
+
+Status: in progress; Robert Klinkhammer is accountable owner/reviewer, using
+separate preparation and self-review records. This document makes the first
+[system-plan](system_bringup_plan.md) contract work concrete; it grants no gate
+acceptance, hardware-test permission or motion authority.
+
+## G1a — Recovery and admission proof
+
+The [single proposed recovery contract](recovery_transition_contract.md) remains
+v4. Its wire layout exists in `software/protocol/monitor/wire.json`; PS framing
+and UART transport exist. A successful decode or `Runtime::prepare()` is not
+proof of completed recovery. Complete these tasks before G1a acceptance:
+
+| Task | Existing implementation/evidence | Required deliverable and acceptance |
+|---|---|---|
+| A1: recovery admission hold | Runtime has prepared/halted state, but no monitor-coordinator hold | State/command table for every public Runtime/client operation during hold; queued targets discarded; only explicit completion opens admission; simulator tests tied to SYS-07/09 |
+| A2: outputs disabled | STATUS bits 0–3; driver/MMIO path and runtime HALT | Specify repeated/race-aware disabled verification across cleanup and completion; tests inject new fault/enable attempts; no single stale read treated as perpetual proof |
+| A3: reset/drain/PI cleanup | CORE_RESET drives the controller reset path in `rtl/controller_axi.sv` / `rtl/motor_io.sv`; HB11 status bit 3 reports asserted core reset | Trace reset into mailbox/HLS/PI state and outstanding AXI/HLS results; derive minimum assertion/completion conditions and prove with RTL tests. Decide whether an observable completion/ABI extension is needed. CORE_RESET readback alone does not prove drain |
+| A4: session/configuration/causes | Nonzero session and configuration readback; local/HB status and ACK operations | Map each attestation flag to exact reads, ordering, reset guarantees and failure exits; verify expiration/new fault wins ACK and no unverified flag is sent |
+| A5: endpoint sessions | Contract requires monotonic persistent 64-bit allocation; no allocator implemented | PS/ESP32 storage format, integrity/atomic-update strategy, power-loss/exhaustion handling and inhibited allocation ordering; never reuse a lifetime identifier |
+| A6: pairing/freshness | Decoder checks field shape only; schema contains sessions/epoch/txn/seq | Specify HELLO confirmation, explicit re-pair inhibition, duplicate cache and sequence advancement; cover stale/mutated frames and peer restart in deterministic tests |
+| A7: outcome uncertainty | COMMIT_ACK and challenged STATE_REPLY layouts exist | Transition table for lost ACK, SAFE/ARM_PENDING/ARMED responses, changed epoch/session and bounded retry/query exhaustion; preserve hold on ambiguity |
+| A8: observable client semantics | Current Client.prepare is PL-only; schema-1 service replies lack recovery state | Decide explicit recovery/status API and wire versioning, client admission/error behavior and how UI reports pending physical ARM; do not silently relabel prepare success as full recovery |
+
+**Next coding boundary:** first write a deterministic host recovery model/tests after
+A1/A6/A7 transition semantics are reviewed. Keep it disconnected from deployed
+motion admission until A2–A5/A8 proof and integration are accepted. This does not
+create an alternate protocol or relax any live daemon precondition.
+
+Acceptance record: link the amended/adopted v4 revision, A1–A8 dispositions and
+SYS-07/08/09 cases. Required observability must be demonstrated or explicitly
+implemented before attestation code is accepted; do not populate cleanup flags
+with unconditional `7` as a substitute for proof.
+
+## G1b — Inhibited R4 experiment design
+
+U01 is open. Candidate choices remain independent PL-progress supervision versus
+an explicitly restricted supported failure model; no choice is adopted here.
+The experiment design must precede its execution. Motor drive power stays
+disconnected and the approved fixture must remain inhibited independently of PL.
+
+| Case | Observe | Decision informed |
+|---|---|---|
+| B1: control-clock stops with active output | PWM/PH/coast/permit/DRVOFF; distinguish frozen level from undriven pin | Can independent hardware detect the required loss of progress? |
+| B2: CORE_RESET versus fabric reset | Same signals plus reset/HB; separate each reset domain | Which guarantees survive which reset? |
+| B3: configuration absent/reloaded | Safe levels and supply sequence; physical STOP held | Are external bias/rework and update restrictions required? |
+| B4: individual rail loss/restoration | Rail voltage, back-power paths, signals while observer/driver powered | Does a low observed voltage merely reflect an unpowered observer? |
+
+Before running, fill in exact fault-injection method, permitted rails/levels,
+instrument grounding/isolation, fixture schematic, abort conditions, expected
+response/limit (or characterization-only objective), operator and review record.
+Record traces against SYS-02; an experiment is not closed by “no movement” with
+motor power absent. Review whether results require rev-A rework/harness changes,
+a new board or a restricted scope; do not silently exclude a failed case.
+
+## G1c — Monitor budget and configuration closure
+
+Create the following tables from the actual populated board and ESP-IDF target:
+
+- Acquisition inventory: channel/device, mandatory versus population-selected,
+  transaction count, normal/worst-case duration, conversion timestamp, deadline,
+  early-abort behavior and permit/HB action on stale/failed/over-budget data.
+- Protection policy: calibrated units, valid range, threshold, persistence,
+  hysteresis, startup allowance, cause bit, response bound and inhibited clear rule.
+  Battery taps stay mandatory; imbalance policy is distinct from LVC.
+- Calibration storage: schema/version/integrity, atomic update, corruption behavior,
+  error budget and inhibited-only persistence. Missing calibration blocks arming.
+- Isolation audit: ISR call/data placement, locks/shared resources, flash/cache/NVS
+  constraints, watchdog API/config and measured reset-to-permits-low behavior.
+
+No operational thresholds are selected by this work package. The 10 ms cycle,
+ISR/staleness/LVC targets in v4 remain proposed until derived and reviewed. The
+ESP-IDF v6.1 tool image is pinned; that does not qualify the firmware's isolation.
+Link the completed tables to SYS-03–06 and U03/U04/U06 before G1c acceptance.
+
+## G1d — Current records and first archive increment
+
+Implemented: separate current state/decisions/issues; selected release scope and
+review ownership; 19-row seed matrix; snapshot manifest with exact originals for
+the reviewed plan and chronological review/PL/PS/build records; current navigation.
+
+Remaining: Robert's time-separated extraction review; atomic test-case expansion;
+remaining mixed documents and companion inventories; complete requirement mapping,
+link/packaging audit and eventual G7 migration acceptance. Historical component
+documents remain reachable from the archive index pending extraction. The first
+increment does not mark the whole archive migration complete.

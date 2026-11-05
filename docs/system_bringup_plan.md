@@ -1,6 +1,6 @@
 # Integrated Zynq and ESP32 development and bring-up plan
 
-**Status: DRAFT FOR REVIEW — 2026-11-04.** Baseline inspected: dmotor `63d5cdb`.
+**Status: IMPLEMENTATION STARTED — 2026-11-04; technical gates remain open.** Baseline inspected: dmotor `63d5cdb`.
 This amended proposal incorporates the supplied plan review and retains the seven
 bring-up stages B1–B7, with a separate optional vehicle-development workstream BV.
 It does not approve powered operation, adopt the proposed recovery contract, or
@@ -10,8 +10,8 @@ The inspected implementation baseline remains `63d5cdb`; the review document
 revision is its Git commit (`git log -1 -- docs/system_bringup_plan.md`).
 
 Review alongside the [documentation consolidation plan](documentation_consolidation_plan.md).
-That plan proposes archive destinations and replacement documents; no existing
-document is moved by this draft. After adoption, maintain current state, decisions
+The first extraction/archive increment is recorded in its manifest; remaining
+migrations and document acceptance are tracked under G1d/U10. After adoption, maintain current state, decisions
 and unresolved work directly instead of appending successive historical narratives.
 
 ## 1. Objective, boundaries and baseline
@@ -21,55 +21,14 @@ intent and application lifecycle, and the ESP32-S3 monitor owns sensor protectio
 permits and physical ARM/STOP. Demonstrate safe inhibition and deliberate recovery
 under the adopted failure model before expanding to loaded vehicle operation.
 
-| Area | Current state | What is not established |
-|---|---|---|
-| Zynq PL | Revision-10 motor control, HB qualifier/inhibit/latch/ACK, global coast output, registered drive-enable diagnostics; routed build evidence | Electrical response on the assembled system; independent shutdown for PL-only failures |
-| Zynq PS | Exclusive driver, runtime, daemon, typed client, maintenance tools, monitor codec/UART transport; native tests and tooling | Full monitor recovery/ARM coordinator, persistent endpoint sessions, bounded diagnostic draining, vehicle planner |
-| Client API | `dmotor_client`, installed `dmotor::client` CMake target and Yocto SDK packaging; maintenance migrated; 14 native tests pass including installed/staged consumer | Latest ARM package/image and board validation must be tied to their actual source manifest |
-| ESP32 | Native ESP-IDF v6.1 container pinned by digest in `esp32-dev`; ESP32-S3/C3 environment smoke builds | DMOTOR application, safety core, board drivers and target qualification are not implemented |
-| Integration | Shared monitor wire schema and proposed recovery v4; saved wiring map | Joint state-machine tests, measured timing and accepted system release |
-| Build evidence | Recorded 2026-11-04 matched PL/EDF/ARM build and SD export | That dated record does not prove subsequent client/tooling changes are in a deployed image |
+The authoritative implementation/evidence matrix is [system_status.md](system_status.md).
+[decisions.md](decisions.md) owns active choices; [open_issues.md](open_issues.md)
+owns unresolved work. The [reviewed baseline snapshot](archive/pre-system-plan-2026-11-04/docs/system_bringup_plan.md)
+retains the prior tables and their revision identity.
 
-Builds, host simulations, ARM QEMU and electrical tests are separate evidence
-classes. None alone closes a system safety claim. Existing encoder observations
-and commissioning work remain useful historical evidence within their recorded
-scope, not qualification of the newly integrated monitor system.
-
-### Settled decisions carried forward
-
-1. **Repository ownership:** dmotor owns PL, PS, `software/esp32/`, and shared monitor
-   schema/vectors in `software/protocol/monitor/`. `motor-interface-integrated`
-   owns ordered PCB/assembly/harness sources. `edf-dev` owns Zynq build/deployment
-   tooling; `esp32-dev` owns the native ESP-IDF Docker environment. No firmware fork.
-2. **Pins:** `mon_hb` = CK_IO2/U13; `coast_req` = CK_IO3/V13. Monitor UART uses
-   `mon_tx` CK_IO0/T14: **PL TX → monitor RX**;
-   `mon_rx` CK_IO1/U12: **monitor TX → PL RX**, 115200/8N1. Earlier CK_IO4/5 choices are superseded.
-   U13's PUDC_B relationship is not a configuration-time safety guarantee.
-3. **Preserved interfaces:** physical_faults[3:0] remains in the controller, currently
-   tied inactive in the saved BD; future routing is separate work. drive_enable
-   remains internal GPIO diagnostic readback, not an external permission signal.
-4. **Software ownership:** the daemon exclusively owns the controller. Every
-   application calling it uses `dmotor_client`. Independent protocol tests and
-   explicitly inhibited UIO board diagnostics retain their distinct scopes.
-5. **Control:** PL retains deterministic velocity control/protection; PS owns
-   position/trajectory/vehicle behavior. No restoration of the legacy FPGA command
-   ring. Current runtime requires global rearm after STOP/disable.
-6. **Output meanings:** controlled velocity STOP decelerates selected channels;
-   DISABLE immediately inhibits a channel; neither asserts global coast. Disabled
-   EN with monitor permits high can brake, not coast. Direct-duty STOP disables.
-   Global HALT requests all-channel coast through the monitor gate.
-7. **Current commissioning timing:** 100 ms authorization, 20 ms refresh, 100 Hz
-   target publication, 100 ms target timeout and 500 ms client lease are the initial
-   policy. They require target measurements, not merely matching constants; see
-  SYS-18 in the requirements matrix.
-8. **Development baseline:** PS C++14, clang-format/clang-tidy 18, native UBSan/tests;
-   ESP-IDF tools stay separate. No build, connection or service start automatically
-   arms, enables motion or flashes hardware.
-
-Recovery v4 remains a **proposal**, including its exact transition semantics and
-acceptance targets. Its corrections replace the withdrawn XDC pull-up mitigation
-and earlier zero-target interpretation of DISABLE. Do not treat a healthy HB,
-valid UART frame, successful PL prepare or low PWM as completed recovery/coast proof.
+First release is commissioning-only; BV/GV follows later. Robert Klinkhammer owns
+gate acceptance using time-separated self-review. Technical contracts and gates
+remain subject to their explicit acceptance criteria.
 
 ## 2. Gate management and evidence
 
@@ -410,34 +369,19 @@ its application exists in dmotor. Keep detailed commands in the owning build gui
 
 ## 10. Unresolved issue register for review
 
-| ID / prior finding | Required decision or work | Owner role | Blocks / closure evidence |
-|---|---|---|---|
-| U01 / R4 | Independent PL-failure response or expressly restricted failure model; rev-A changes if needed | Hardware + PL + system | G1b candidate, final G5/G6; separate clock/reset/config/power fault measurements |
-| U02 / R1,R3 and follow-ups | Adopt/amend v4, determine cleanup proof/remaining ABI, implement recovery and ARM admission | PS + ESP32 + PL | G4/G5; transition matrix, shared simulation and physical recovery traces |
-| U03 / R5 | Absolute acquisition budget, timeout policy and derived detection limits | ESP32 | G1c/G3; transaction budget and worst-case target traces |
-| U04 / R6 | Validate pinned IDF/ISR/flash/WDT isolation; define update inhibition | ESP32 | G3/G5; call/data audit and cache/flash/stall tests |
-| U05 / R7 | Bounded Linux diagnostics and scheduler behavior | PS | G4/G5; stdout/storage/load tests and measured deadlines |
-| U06 / R8 | Calibration, population, thresholds, persistence, hysteresis and cause-bit allocation | Hardware + ESP32 | G1c/G3/G6; reviewed schema, corrupt/missing sensor tests and calibrated measurements |
-| U07 / R2 | Qualify implemented rev-10 pin/PL/UART integration; retain future physical-fault routing as separate scope | Hardware + PL/PS | G2/G5; connector checks and traces (not an assertion that implementation is still absent) |
-| U08 / R10 | Normal application ownership, planning, pose/queue policy and vehicle acceptance limits | PS + controls | BV/GV for full-vehicle scope; agreed requirements, simulation and loaded tests |
-| U09 | Match newest source/client SDK to ARM/ESP32 release and deployment evidence | Build/release | G7; manifests, target package tests and clean deployment |
-| U10 / R9 | Replace accumulated status/history with current documents and archive without losing requirements | Documentation + subsystem reviewers | G1d ownership/matrix; migration completion before G7 with manifest/link audit and no unowned requirements |
-| U11 | Assign named gate owners/review mode and approve integrated powered-test procedure | System + hardware/operator | Before respective acceptance tests; B6 entry requires approved procedure and operational controls |
-
-Proposed v4 timing targets (including ISR and stale-sample/LVC bounds) are inputs
-to U03/U06 review, not measured facts. Electrical thresholds and vehicle tolerances
-remain unspecified where not accepted; this plan does not manufacture values.
+The current [U01–U11 issue register](open_issues.md) is maintained separately.
+Its owner/disposition updates must not be duplicated in this plan.
 
 ## 11. Review decisions and first execution slice
 
 Reviewers should explicitly disposition:
 
-- The settled baseline and release scope: commissioning-only versus full vehicle.
+- Confirm the execution baseline; first-release scope is now commissioning-only (D01).
 - G1a–G1d assignments and the conditional R4 candidate/experiments/rework triggers.
 - Recovery v4 semantics, required proof/ABI, timing/threshold owners and gate limits.
 - The archive/current-document split and migration inventory.
-- Named gate owners/reviewers or documented small-team substitutes, board availability,
-  instrumentation ownership and integrated powered/vehicle procedure approval.
+- Robert Klinkhammer is the named gate owner/reviewer (D02); assign operational
+  duties, board availability and instrumentation, and approve the integrated powered procedure.
 
 After adoption, produce the initial traceability rows and assign G1a–G1d owners.
 Close each applicable sub-gate independently: start inhibited B2 characterization
@@ -447,5 +391,5 @@ software development or postpone traceability. If full-vehicle is selected, sche
 BV independently and require GV before its release. Do not rewrite completed PL
 integration or create a second firmware/protocol implementation.
 
-These documents remain review drafts even when committed. Record review comments
+Unaccepted contracts and gate criteria remain reviewable proposals even when committed. Record review comments
 against their commit hashes; a commit establishes identity, not gate approval.

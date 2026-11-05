@@ -1,0 +1,140 @@
+{
+  "source_commit": "20f59728dce1076b44769efd3e597d66d38a3286",
+  "migration": "B1/G1d first extraction; no gate acceptance implied",
+  "entries": [
+    {
+      "original_path": "docs/system_bringup_plan.md",
+      "source_commit": "20f59728dce1076b44769efd3e597d66d38a3286",
+      "source_blob": "96aaa10ec9ac2642c4ca9856fbc396b240970d30",
+      "original_sha256": "6581ad9a31b7338311788e4a4b2547ffa9c8751627d26fe86bddb515e5c847b3",
+      "original_copy": "docs/archive/pre-system-plan-2026-11-04/docs/system_bringup_plan.original.txt",
+      "archive_page": "docs/archive/pre-system-plan-2026-11-04/docs/system_bringup_plan.md",
+      "archive_sha256": "2c74e1e88eb3419d681fe2ddbc01a3f81980c2bedef2f056e98cfefd4cfc3540",
+      "successors": [
+        "docs/system_status.md",
+        "docs/decisions.md",
+        "docs/open_issues.md"
+      ],
+      "issue_mapping": [
+        "U01",
+        "U02",
+        "U03",
+        "U04",
+        "U05",
+        "U06",
+        "U07",
+        "U08",
+        "U09",
+        "U10",
+        "U11"
+      ],
+      "review": "Extraction prepared by Codex; Robert Klinkhammer time-separated acceptance pending"
+    },
+    {
+      "original_path": "docs/software_architecture_review_2026_11_03.md",
+      "source_commit": "20f59728dce1076b44769efd3e597d66d38a3286",
+      "source_blob": "182e2c74c71d11a5f97a1367f2bbdc52e13caa00",
+      "original_sha256": "7b0eb30e73ad4c24e793edfc1c971bbf8c6c89ced2937b89bd6211d492d96c9a",
+      "original_copy": "docs/archive/pre-system-plan-2026-11-04/docs/software_architecture_review_2026_11_03.original.txt",
+      "archive_page": "docs/archive/pre-system-plan-2026-11-04/docs/software_architecture_review_2026_11_03.md",
+      "archive_sha256": "1ba23e39b614bc3d3c18029689cbd9cde3055d4f80d24a114c864c1e6d06ba9e",
+      "successors": [
+        "docs/system_status.md",
+        "docs/decisions.md",
+        "docs/open_issues.md"
+      ],
+      "issue_mapping": [
+        "U01",
+        "U02",
+        "U03",
+        "U04",
+        "U05",
+        "U06",
+        "U07",
+        "U08",
+        "U09",
+        "U10",
+        "U11"
+      ],
+      "review": "Extraction prepared by Codex; Robert Klinkhammer time-separated acceptance pending"
+    },
+    {
+      "original_path": "docs/pl_monitor_progress.md",
+      "source_commit": "20f59728dce1076b44769efd3e597d66d38a3286",
+      "source_blob": "8925886b584ec69f2094d0e3014554c261026dcf",
+      "original_sha256": "78e91b57036ddf6022a6c8f6ba1b5b2cef1663994581d00858afa071dee7861a",
+      "original_copy": "docs/archive/pre-system-plan-2026-11-04/docs/pl_monitor_progress.original.txt",
+      "archive_page": "docs/archive/pre-system-plan-2026-11-04/docs/pl_monitor_progress.md",
+      "archive_sha256": "4ea47027fa378012bd77387f90b7169767b368837d5e64b52978ee3fd3b10b54",
+      "successors": [
+        "docs/system_status.md",
+        "docs/decisions.md",
+        "docs/open_issues.md"
+      ],
+      "issue_mapping": [
+        "U01",
+        "U02",
+        "U07",
+        "U09"
+      ],
+      "review": "Extraction prepared by Codex; Robert Klinkhammer time-separated acceptance pending"
+    },
+    {
+      "original_path": "docs/ps_monitor_progress.md",
+      "source_commit": "20f59728dce1076b44769efd3e597d66d38a3286",
+      "source_blob": "2854707502ea11c06cf57aa96f6499f6eb547fcd",
+      "original_sha256": "2a24ecf2483f85e8eefac153b085f5ff5bf2f66c418923c1d48c2b6a13547b2d",
+      "original_copy": "docs/archive/pre-system-plan-2026-11-04/docs/ps_monitor_progress.original.txt",
+      "archive_page": "docs/archive/pre-system-plan-2026-11-04/docs/ps_monitor_progress.md",
+      "archive_sha256": "4ebdc39c0a939db1656d71d313c8251d912d4906ecdcee3a74e5fd5f010fdeb5",
+      "successors": [
+        "docs/system_status.md",
+        "docs/decisions.md",
+        "docs/open_issues.md"
+      ],
+      "issue_mapping": [
+        "U02",
+        "U05",
+        "U09"
+      ],
+      "review": "Extraction prepared by Codex; Robert Klinkhammer time-separated acceptance pending"
+    },
+    {
+      "original_path": "docs/current_build_2026_11_04.md",
+      "source_commit": "20f59728dce1076b44769efd3e597d66d38a3286",
+      "source_blob": "82e88b9dd909c54960a40e3224d08771a3e40c67",
+      "original_sha256": "adbd8fe7b4f745c595abb211d564163bb965411438323bd4b9852db4cdd9b46a",
+      "original_copy": "docs/archive/pre-system-plan-2026-11-04/docs/current_build_2026_11_04.original.txt",
+      "archive_page": "docs/archive/pre-system-plan-2026-11-04/docs/current_build_2026_11_04.md",
+      "archive_sha256": "5344c4f8a9f69a2e8b9e426c01d911c9db8751ae16ea684533d868f72e852e80",
+      "successors": [
+        "docs/system_status.md",
+        "docs/decisions.md",
+        "docs/open_issues.md"
+      ],
+      "issue_mapping": [
+        "U02",
+        "U05",
+        "U09"
+      ],
+      "review": "Extraction prepared by Codex; Robert Klinkhammer time-separated acceptance pending"
+    }
+  ],
+  "companion_baselines": {
+    "edf-dev": {
+      "commit": "33b44fb6fff226188d72908a5cf79a5c35e91e3c",
+      "dirty": true,
+      "action": "read-only inventory identity; no companion files changed"
+    },
+    "esp32-dev": {
+      "commit": "c83ac469fa3c3c35293ea9c6991e2e9ee4c204ed",
+      "dirty": true,
+      "action": "read-only inventory identity; no companion files changed"
+    },
+    "motor-interface-integrated": {
+      "commit": "6bb5255d4d6d3bc44a89b5c3ca9390ba6a2e07d5",
+      "dirty": false,
+      "action": "read-only inventory identity; no companion files changed"
+    }
+  }
+}

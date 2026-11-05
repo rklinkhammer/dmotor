@@ -60,8 +60,8 @@ its actual FCLK_CLK0 connection; this does not change the clock generator.
 The bitstream and exported hardware/device-tree bundle must be regenerated
 together before deploying the UART. Linux needs UART Lite driver support and
 a node from the matched hardware description. It must not be configured as a
-console/getty when used for monitor recovery. UART transport and the full
-recovery exchange are still pending software work.
+console/getty when used for monitor recovery. The PS UART transport is implemented; the full recovery exchange remains pending.
+See [current status](system_status.md).
 
 ## Checks
 
@@ -82,7 +82,7 @@ directory `build/monitor_board_check/vivado`, preserving the user's open product
 project. Generated UART parameters confirm 115200/8/no parity and 100 MHz AXI
 clock. Revision 10 subsequently completed synthesis and routing with positive
 setup/hold margins and no critical CDC findings after registering drive-enable
-diagnostics. See [PL progress and retained reports](pl_monitor_progress.md#routed-revision-10-follow-up)
+diagnostics. See [PL progress and retained reports](archive/pre-system-plan-2026-11-04/docs/pl_monitor_progress.md#routed-revision-10-follow-up)
 for remaining methodology/I/O timing warnings and release limitations. The XDC
 assignment alone does not establish coast during configuration, power loss or
 stopped PL clocks.
