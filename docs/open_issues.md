@@ -32,6 +32,10 @@ remain unspecified where not accepted; this plan does not manufacture values.
 - **U11:** owner and review-method selection resolved by the user. Integrated powered
   procedure approval, named operators/spotters where required, and completed individual
   gate review records remain open. Self-review is not automatic gate acceptance.
+- **U02:** [source audit](g1a_cleanup_admission.md) finds per-motor lazy RESET_CONTEXT
+  initialization; no combined all-context cleanup-completion proof is exposed.
+  Proposed disabled cleanup plus observable completion requires review and implementation.
+  Passing adapter-stub reset tests do not close generated-HLS/AXI proof obligations.
 - **U01–U07/U09:** remain open as scoped above. Use the [G1 work package](g1_work_package.md)
   for the next concrete contract/proof tasks. Do not close them from historical review tables.
 

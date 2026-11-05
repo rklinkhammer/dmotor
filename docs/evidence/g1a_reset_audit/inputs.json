@@ -1,0 +1,32 @@
+{
+  "baseline_commit": "a334d99f6a4a057b5c070595d81b6f60a6791209",
+  "scope": "Source audit; adapter-stub, scheduler and HB tests only; no generated HLS or hardware qualification",
+  "tool": "Icarus Verilog 12.0, Ubuntu iverilog_12.0-3_amd64.deb",
+  "tool_package_sha256": "b3fd8becbaae83492c26b458e89a66fe3c0ad6547ababad9adda35388c381606",
+  "command": "ctest --test-dir build/g1-reset-check -R '^rtl_(motor_engine_adapter|shared_scheduler|monitor_heartbeat)$' --output-on-failure",
+  "negative_control": "Temporary adapter replaced first-context RESET_CONTEXT with TICK; expected failure observed",
+  "files": {
+    "rtl/controller_axi.sv": "abd629702a52a6e1003e6e49fcc5d627978d69f1c5258baae3585fdf08f02534",
+    "rtl/motor_io.sv": "8e74cb6b2286a9c1d5649b7370050802f297c4db4e842fe48dc0690cf2aac805",
+    "rtl/integrated_control.sv": "c211f867296840c05db77fc28e012e692df6592c771fbcad77c261943489d0b4",
+    "rtl/mailbox_control.sv": "eff813b49b8dc353ad52db567eb6c7ef05c629c3a6c04af596a108081e72806a",
+    "rtl/shared_control.sv": "a6ada46568bd1c303d5413b7ec33c4fef593de572ae5fc24e0301cd651e64d13",
+    "rtl/shared_scheduler.sv": "fcc09d1f83d1620f97571350029b1a047e7b4f7621486d58c597e1f2de62ab67",
+    "rtl/atomic_mailbox_arbiter.sv": "e9590b2c8a514a5338c72ac4bd417a69a930b3fa9ed01b707fcf995849785724",
+    "rtl/atomic_hls_adapter.sv": "e08c72ce5dbacb70b4d5ab5117ea847ea4d852c5dbd942f3b3dfedf71672fdbc",
+    "rtl/shared_engine_transport.sv": "bdcbbd106ae223de610c4a1cab10ea2b710daf1893a6bfb53db8b11677352816",
+    "rtl/motor_engine_adapter.sv": "69dfc9760a091dc57abb26733565565b63c2f2290eefff5a750afa9ca8ce1756",
+    "rtl/monitor_heartbeat.sv": "f192dac6d09b427046d7e1c70e8f297e08dfe948bd0e9290befb3b2d1b7f94c9",
+    "rtl/timing.sv": "be7f863db88f2ac7cc5a4925225da3ed10c32d14b2ada69b59aaf224e9862357",
+    "experiments/mailbox/shared_mailbox.cpp": "12adf66be10a65424c17f410410175be77a5ed725a53765b337c22a540693330",
+    "experiments/mailbox/mailbox.cpp": "a4ec09a081bda49b9aa5f51171a25a0561ada5ca286a24fdfe9c1ad06671fe13",
+    "src/atomic_mailbox.cpp": "5b0ef11b7356ee6eecc0601ec8810ca49ab9c9d7c2a1739a619ba9471349b1a7",
+    "src/atomic_mailbox_top.cpp": "101d7901d95ce9a2867f4e47fae0f2ff7d53c85528ea47c743c5ef6e4d4f2787",
+    "software/src/runtime.cpp": "4d2e35b9f714d8832051da0f3fb4f0dd79b717003ef99c1146201bd75dbf99b6",
+    "tests/motor_engine_adapter_tb.sv": "b7b69ecdaad6c57f0122659425e92205e8d9218d23cd645396853f1065d4ae88",
+    "tests/shared_scheduler_tb.sv": "e174280b4ebbf0ffecf1e03687da70a0dcf2420b728386b6d269a9fe7e51b4e4",
+    "tests/monitor_heartbeat_tb.sv": "e3afa24cb8cb96af098351a287d82645c32937e4592c6ee10fc2454e1e12cdd9",
+    "tools/rtl_test.py": "4fd7d0bacbc10e6d6ac9805d08e045418a66b046a55cb3e9d21cc758a607a978",
+    "CMakeLists.txt": "e54b79ba0e262ea6a2f3b44e52cf623ff117922d115bb05275e0fdd7d5338fda"
+  }
+}

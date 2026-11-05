@@ -7,6 +7,7 @@
 - [Open issues](open_issues.md): U01–U11 owners, remaining work and blocking gates.
 - [Integrated execution plan](system_bringup_plan.md): B1–B7 and deferred BV/GV.
 - [G1d preparation/review record](gates/G1d.md): evidence and pending acceptance checklist.
+- [G1a reset/cleanup audit and admission proposal](g1a_cleanup_admission.md).
 - [G1 work package](g1_work_package.md): concrete contract, proof and experiment tasks.
 - [Requirements-to-test matrix](system_requirements_matrix.md): acceptance traceability.
 

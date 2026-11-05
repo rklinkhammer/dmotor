@@ -29,7 +29,7 @@ scope, not qualification of the newly integrated monitor system.
 
 | Gate/work | State | Next evidence or disposition |
 |---|---|---|
-| G1a recovery/admission | Open | Resolve the proof/transport/persistence decisions in the G1 work package before adopting v4 |
+| G1a recovery/admission | Open | [Reset audit/admission proposal](g1a_cleanup_admission.md) prepared; adapter regression passes; all-context cleanup proof/observability and A5–A8 remain open |
 | G1b electrical/R4 | Open | Complete inhibited experiment setup, limits and candidate disposition; no hardware experiment executed |
 | G1c monitor design | Open | Acquisition budget, calibration/protection policies and IDF isolation design |
 | G1d documentation | [Prepared for self-review](gates/G1d.md) | Current records and initial archive created; matrix has 19 seed rows; extraction/self-review and full inventory migration remain open |

@@ -7,6 +7,12 @@ acceptance, hardware-test permission or motion authority.
 
 ## G1a — Recovery and admission proof
 
+The [reset/cleanup audit and admission specification](g1a_cleanup_admission.md)
+now traces A1–A4/A8. It identifies lazy context initialization as a barrier to
+claiming all-context cleanup from reset readback. An adapter reset regression
+passes; the proposed explicit disabled-cleanup mechanism remains to be reviewed
+and implemented. A5–A7 and G1a acceptance remain open.
+
 The [single proposed recovery contract](recovery_transition_contract.md) remains
 v4. Its wire layout exists in `software/protocol/monitor/wire.json`; PS framing
 and UART transport exist. A successful decode or `Runtime::prepare()` is not

@@ -1,0 +1,3 @@
+Expected failure: temporary adapter skips RESET_CONTEXT; production source unchanged.
+FATAL: /home/rklinkhammer/workspace/dmotor/tests/motor_engine_adapter_tb.sv:86: operation before context reset
+       Time: 185000  Scope: motor_engine_adapter_tb.dut.transport
