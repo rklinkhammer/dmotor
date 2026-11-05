@@ -9,11 +9,11 @@ namespace dmotor_sw {
 // Raw UIO bring-up mappings cannot recover every bus error: an AXI abort/removal
 // may terminate the process. They are not a production exception-safe backend.
 class IoError : public std::runtime_error {
-public:
+  public:
     using std::runtime_error::runtime_error;
 };
 class Device {
-public:
+  public:
     virtual ~Device() = default;
     virtual uint32_t read32(uint32_t offset) = 0;
     virtual void write32(uint32_t offset, uint32_t value) = 0;

@@ -1,5 +1,16 @@
 # Exclusive-access and velocity-runtime commissioning
 
+**Revision 9 integration update (2026-11-03):** current runtime preparation now
+requires the HB11 monitor capability and healthy HB. Use the matching driver
+and bitstream; explicit prepare waits up to 1.5 s while disabled/reset, requests
+monitor-fault acknowledgment, and verifies qualification. See
+[PL monitor progress](../../docs/pl_monitor_progress.md). Older procedures below
+retain historical context; a missing monitor can no longer be bypassed to enable
+direct duty. The driver now also requires HB11 at probe, checks ACK health/reset/
+session preconditions and verifies GPIO release readback. ACK still requires
+status verification by the caller. UART recovery/physical ARM integration is
+still pending; the transport library alone does not authorize rearm.
+
 Version 0.8.0 implements the first production-access/lifecycle foundation. It is
 not yet qualified for powered motor operation. The target configuration selects inspection or production; the current EDF
 checkout selects production commissioning. No service is started at boot and no driver is loaded by these tools.

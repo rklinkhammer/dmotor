@@ -2,6 +2,8 @@
 if {[llength $argv] != 1} {error "Expected output directory"}
 set root [file normalize [file join [file dirname [info script]] ../../..]]
 set output [file normalize [lindex $argv 0]]
+# Catch saved-BD parameter regressions before generating expensive build output.
+puts [exec python3 [file join $root tools check_arty_interface.py]]
 create_project -force dvrmc $output -part xc7z020clg400-1
 set_property target_language Verilog [current_project]
 set board_repos [glob -nocomplain [file normalize ~/.Xilinx/Vivado/[version -short]/xhub/board_store/xilinx_board_store/XilinxBoardStore/Vivado/[version -short]/boards]]

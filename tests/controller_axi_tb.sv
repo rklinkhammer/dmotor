@@ -8,8 +8,22 @@ module controller_axi_tb;
  wire awready,wready,bvalid,arready,rvalid;
  wire [1:0] bresp,rresp;wire [31:0] rdata;
  reg [3:0] qa=0,qb=0,physical_faults=0;reg halt_async=0;
- wire [3:0] pwm,drive_enable,direction;wire shared_halt;
+ reg hb_async=0,hb_run=1;
+ always begin repeat(4)@(negedge clk);if(hb_run)hb_async=~hb_async;end
+ wire [3:0] pwm,drive_enable,direction;wire shared_halt,coast_req;
  dmotor_controller_axi dut(.*);
+ reg [3:0] sampled_drive_enable;
+ always @(posedge clk) begin
+  sampled_drive_enable=reset ? 4'b0 : dut.drive_enable_raw;
+  #1;
+  if(drive_enable!==sampled_drive_enable)
+   $fatal(1,"GPIO diagnostic is not the registered raw drive state");
+ end
+ // Accelerate only the HB supervisor; retain real controller/HLS timing.
+ defparam dut.monitor.STARTUP_CYCLES=80;
+ defparam dut.monitor.TIMEOUT_CYCLES=40;
+ defparam dut.monitor.QUALIFY_CYCLES=32;
+ defparam dut.monitor.MIN_EDGE_CYCLES=2;
  task step;begin @(posedge clk);#1;end endtask
  task write_word(input [15:0] a,input [31:0] d,input [1:0] expected);begin
   @(negedge clk);awaddr=a;awvalid=1;wdata=d;wvalid=1;
@@ -17,7 +31,7 @@ module controller_axi_tb;
    begin @(posedge clk);while(!awready)@(posedge clk);@(negedge clk);awvalid=0;end
    begin @(posedge clk);while(!wready)@(posedge clk);@(negedge clk);wvalid=0;end
   join
-  wait(bvalid);#1;if(bresp!=expected)$fatal(1,"write %h response %d expected %d",a,bresp,expected);
+  wait(bvalid);#1;if(bresp!=expected)$fatal(1,"write %h response %d expected %d (HB=%b core_reset=%b shared_halt=%b fault=%b initialized=%b configured=%h stop=%h)",a,bresp,expected,dut.monitor_qualified,dut.core_reset,shared_halt,dut.fault,dut.protocol_initialized,dut.configured,dut.stop);
   repeat(2)step();@(negedge clk);bready=1;step();@(negedge clk);bready=0;
  end endtask
  reg [31:0] value;
@@ -47,7 +61,11 @@ module controller_axi_tb;
   cfg[0]=1;for(i=0;i<20;i=i+1)write_word('h2000+i*4,cfg[i],0);
   write_word('h2080,1,0);
   write_word('h1054,3,2);write_word('h1054,1,0);write_word('h1058,limit,0);
-  write_word('h1028,wd,0);write_word('h102c,age,0);write_word('h1020,0,0);
+  write_word('h1028,wd,0);write_word('h102c,age,0);
+  // Reset may sample HB high just before its next edge. Recover explicitly
+  // after qualification rather than depending on the stimulus phase.
+  wait(dut.monitor_healthy);write_word('h106c,1,0);
+  write_word('h1020,0,0);
   repeat(10)step();write_word('h100c,2,2);write_word('h100c,1,0);
   write_word('h1018,1,0);write_word('h1040,1,0);
  end endtask
@@ -122,14 +140,14 @@ module controller_axi_tb;
   wait(dut.controller.controller.engine_start);
   write_word('h1014,15,0);
   value=0;while((value & 32'hf000)!=32'hf000)read_word('h1004);
-  repeat(1200)step();if(drive_enable || dut.fault)$fatal(1,"STOP lifecycle failed");
+  repeat(1200)step();if(drive_enable || dut.fault || coast_req)$fatal(1,"STOP lifecycle failed or requested global coast");
   // Decoder capture is real: one Gray cycle, with independently synchronized pins.
   @(negedge clk);qb=1;repeat(8)step();@(negedge clk);qa=1;repeat(8)step();
   @(negedge clk);qb=0;repeat(8)step();@(negedge clk);qa=0;repeat(8)step();
   write_word('h1030,1,0);read_word('h3040);if(value!=4)$fatal(1,"encoder position %d",value);
   // Qualify a physical fault: all outputs inhibit, cause persists.
   @(negedge clk);physical_faults=4;repeat(8)step();
-  if(!shared_halt || drive_enable)$fatal(1,"physical fault not shared");
+  if(!shared_halt || !coast_req || drive_enable)$fatal(1,"physical fault not shared");
   @(negedge clk);physical_faults=0;repeat(8)step();if(!shared_halt)$fatal(1,"automatic recovery");
   read_word('h1004);if(!value[17])$fatal(1,"HALT status");
   // Reset only controller arithmetic/session while retaining the protective latch.
@@ -150,9 +168,13 @@ module controller_axi_tb;
    $fatal(1,"HALT was not simultaneous at shared second stage");
   step();if(dut.controller.external_latches!==15)$fatal(1,"HALT latches diverged");
   read_word(0,2);
+  if(!coast_req)$fatal(1,"software HALT did not request coast");
   if(drive_enable || shared_halt)$fatal(1,"external HALT echoed as local cause");
   @(negedge clk);halt_async=0;repeat(8)step();read_word(0,2);
+  if(!coast_req)$fatal(1,"coast cleared before acknowledgment");
+
   write_word('h1024,4,0);repeat(8)step();read_word(0);
+  if(coast_req)$fatal(1,"coast did not clear after explicit acknowledgment");
   if(value!=32'h444d4231)$fatal(1,"external HALT recovery");
   // Direct-duty path: no encoder pulses or HLS readiness required.
   direct_start(200000,200000);
@@ -186,6 +208,33 @@ module controller_axi_tb;
   write_word('h105c,32769,2);write_word('h105c,-32769,2);
   write_word('h105c,-32768,0);write_word('h1060,1,0);repeat(3200)step();
   if(drive_enable!=1 || !direction[0])$fatal(1,"configured ceiling boundary");
+  // HB loss during real direct drive inhibits independently of the engine.
+  write_word('h106c,1,2); // ACK cannot clear protection while enabled.
+  hb_run=0;repeat(55)step();
+  if(!coast_req || pwm || drive_enable || dut.enabled || !dut.monitor_fault)
+   $fatal(1,"HB loss did not coast and disable");
+  read_word('h1068);if(!value[1] || value[2])$fatal(1,"HB status");
+  read_word('h1004);if(!value[16] || !value[18])$fatal(1,"HB protection status");
+  write_word('h100c,1,2);write_word('h106c,1,2);
+  write_word('h1020,1,0);write_word('h106c,1,2); // stale HB cannot ACK
+  repeat(8)step();if(!dut.monitor_fault)$fatal(1,"CORE_RESET cleared HB fault");
+  hb_run=1;repeat(55)step();
+  if(!dut.monitor_healthy || !dut.monitor_fault || !coast_req)$fatal(1,"HB resume auto-cleared fault");
+  write_word('h106c,2,2);write_word('h106c,1,0);
+  read_word('h1068);if(value[1] || value[2] || !value[0])$fatal(1,"HB ack during core reset");
+  write_word('h1020,0,0);repeat(100)step();
+  if(dut.enabled || pwm || drive_enable || coast_req)$fatal(1,"HB recovery restarted drive");
+  read_word('h1064);if(value!=32'h48423131)$fatal(1,"HB capability");
+  // At cold boot, a static pin must not permit even direct-mode enable.
+  hb_run=0;@(negedge clk);reset=1;repeat(4)step();@(negedge clk);reset=0;
+  write_word('h1008,1,0);
+  cfg[0]=1;for(i=0;i<20;i=i+1)write_word('h2000+i*4,cfg[i],0);
+  write_word('h2080,1,0);write_word('h1054,1,0);write_word('h1058,32768,0);
+  write_word('h1020,0,0);repeat(100)step();
+  if(dut.configured!=1 || !dut.protocol_initialized)$fatal(1,"startup test preconditions");
+  write_word('h100c,1,2);repeat(90)step();
+  if(!dut.monitor_fault || !coast_req)$fatal(1,"HB startup not protected");
+  $display("monitor integration PASS: gating, loss, status, protected ACK, reset and no restart");
   $display("direct-duty PASS: 0/25/50/100 percent, signed ceiling, mode lock, replay rejection, STOP, expiry, watchdog, faults and HALT");
   $display("controller_axi PASS: real AXI, both HLS kernels, configuration, four-motor targets, encoder capture, telemetry shared physical fault, explicit recovery and watchdog expiration");$finish;
  end

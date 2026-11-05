@@ -20,8 +20,11 @@ reproduce those experiments and are not the current product build.
 | Linux/root filesystem | EDF recipes, consuming this same checkout |
 
 The board BD/XDC were migrated from the latest saved root `dvrmc/dvrmc.xpr`
-project, as selected by the user on 2026-10-17. It exposes two fault inputs and
-two shared-HALT outputs; the current revision-6 controller IP is regenerated automatically. The old checkout is retained as reference;
+project, as selected by the user on 2026-10-17, and subsequently updated for
+four motor channels and the ESP32 monitor. The current development controller
+IP is revision 10, with heartbeat input and global coast output. Physical-fault
+inputs remain on the controller, currently tied inactive in the saved BD;
+drive-enable diagnostics connect to internal GPIO. The old checkout is retained as reference;
 it is no longer the default build input. No .xpr, .xci or run outputs need to be
 copied into the new source directory. Vivado generates them from the tracked BD.
 
@@ -133,6 +136,15 @@ Digilent board repository before invoking Vivado. The required board identifier 
 to its own location; it does not use the legacy `~/workspace/dvrmc` checkout.
 
 ### Preserve GUI edits
+
+Project recreation now runs the strict interface check before creating output,
+so lost UART parameters or unassigned pins fail before synthesis.
+After motor/monitor connection edits, check the saved sources with
+`python3 tools/check_arty_interface.py`. While pin assignments are incomplete,
+`--allow-unassigned` checks wiring but reports missing pins without claiming
+release readiness. See [the Arty interface map](arty_monitor_interface.md) for
+motor channels, monitor UART and GPIO diagnostics. UART Lite must explicitly
+use 115200 baud to match the monitor protocol; its vendor default is 9600.
 
 Open `build/product/vivado/dvrmc.xpr` in Vivado. Edit the source XDC directly;
 it is referenced rather than imported. To retain block-design changes, save the

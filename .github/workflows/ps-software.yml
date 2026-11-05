@@ -1,0 +1,22 @@
+name: PS software
+on:
+  workflow_dispatch:
+  push:
+    paths: ['software/**', 'include/dmotor/**', 'src/atomic_mailbox.cpp', '.github/workflows/ps-software.yml']
+  pull_request:
+    paths: ['software/**', 'include/dmotor/**', 'src/atomic_mailbox.cpp', '.github/workflows/ps-software.yml']
+permissions:
+  contents: read
+jobs:
+  native:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Install developer tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake g++ python3 clang-format-18 clang-tidy-18
+      - run: python3 software/tools/format.py --check
+      - run: cmake -S software -B build/ps-dev -DCMAKE_BUILD_TYPE=Debug -DDMOTOR_SW_SANITIZE=ON -DDMOTOR_SW_CLANG_TIDY=ON
+      - run: cmake --build build/ps-dev -j2
+      - run: ctest --test-dir build/ps-dev --output-on-failure

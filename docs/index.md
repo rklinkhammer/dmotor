@@ -1,5 +1,21 @@
 # Documentation index
 
+[Controller programming guide](controller_programming.md): consolidated PS interfaces,
+lifecycle, units, ownership and failure rules.
+[PS development workflow](../software/DEVELOPMENT.md): formatting, analysis and tests.
+
+[Current hardware/Linux build — 2026-11-04](current_build_2026_11_04.md):
+matched revision-10 hardware, UART Lite kernel, ARM driver and verified SD export.
+
+[Arty motor/monitor interface](arty_monitor_interface.md): saved wiring, UART
+settings, pin-assignment status and the source interface check.
+
+Current implementation increment: [PL monitor integration](pl_monitor_progress.md)
+(revision 10: routed heartbeat/coast integration and registered GPIO diagnostics).
+
+[PS monitor development](ps_monitor_progress.md): shared framing codec, bounded
+UART transport, controller-driver checks and Yocto UART Lite integration.
+
 Start with [build.md](build.md) for current builds, [architecture](../DMOTOR_ARCH.md)
 and [software plan](../DMOTOR_SW.md) for requirements, and
 [commissioning](../software/linux/production.md) for board operation.

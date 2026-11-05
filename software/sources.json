@@ -48,5 +48,19 @@
   "software/config/inhibited-example.conf",
   "software/config/output-validation.conf",
   "software/linux/driver/dmotor_regs.h",
-  "software/config/powered-direct-duty.conf"
+  "software/config/powered-direct-duty.conf",
+  "software/include/dmotor_sw/monitor_protocol.hpp",
+  "software/src/monitor_protocol.cpp",
+  "software/include/dmotor_sw/monitor_uart.hpp",
+  "software/linux/monitor_uart.cpp",
+  "software/tests/monitor_protocol_test.cpp",
+  "software/tests/monitor_uart_test.cpp",
+  "software/protocol/monitor/wire.json",
+  "software/protocol/monitor/README.md",
+  "software/include/dmotor_sw/monitor_wire.hpp",
+  "software/protocol/monitor/generate.py",
+  "software/.clang-format",
+  "software/.clang-tidy",
+  "software/tools/format.py",
+  "software/tests/startup_test.py"
 ]

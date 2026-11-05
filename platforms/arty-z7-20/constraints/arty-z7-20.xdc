@@ -2,16 +2,26 @@ set_property -dict {PACKAGE_PIN Y18 IOSTANDARD LVCMOS33 SLEW FAST DRIVE 12} [get
 set_property -dict {PACKAGE_PIN Y19 IOSTANDARD LVCMOS33 SLEW FAST DRIVE 12} [get_ports mc0_pwm]
 set_property -dict {PACKAGE_PIN Y16 IOSTANDARD LVCMOS33} [get_ports mc0_qa]
 set_property -dict {PACKAGE_PIN Y17 IOSTANDARD LVCMOS33} [get_ports mc0_qb]
-set_property -dict {PACKAGE_PIN U18 IOSTANDARD LVCMOS33 SLEW FAST DRIVE 12 PULLUP true} [get_ports mc0_en]
-set_property -dict {PACKAGE_PIN U19 IOSTANDARD LVCMOS33 } [get_ports mc0_fault]
-set_property -dict {PACKAGE_PIN W18 IOSTANDARD LVCMOS33 PULLDOWN true} [get_ports mc0_halt]
-set_property -dict {PACKAGE_PIN W14 IOSTANDARD LVCMOS33 SLEW FAST DRIVE 12} [get_ports mc1_dir]
-set_property -dict {PACKAGE_PIN Y14 IOSTANDARD LVCMOS33 SLEW FAST DRIVE 12} [get_ports mc1_pwm]
-set_property -dict {PACKAGE_PIN T11 IOSTANDARD LVCMOS33} [get_ports mc1_qa]
-set_property -dict {PACKAGE_PIN T10 IOSTANDARD LVCMOS33} [get_ports mc1_qb]
-set_property -dict {PACKAGE_PIN V16 IOSTANDARD LVCMOS33 SLEW FAST DRIVE 12 PULLUP true} [get_ports mc1_en]
-set_property -dict {PACKAGE_PIN W16 IOSTANDARD LVCMOS33 } [get_ports mc1_fault]
-set_property -dict {PACKAGE_PIN V12 IOSTANDARD LVCMOS33 PULLDOWN true} [get_ports mc1_halt]
+set_property -dict {PACKAGE_PIN U18 IOSTANDARD LVCMOS33 SLEW FAST DRIVE 12} [get_ports mc1_dir]
+set_property -dict {PACKAGE_PIN U19 IOSTANDARD LVCMOS33 SLEW FAST DRIVE 12} [get_ports mc1_pwm]
+set_property -dict {PACKAGE_PIN W18 IOSTANDARD LVCMOS33 } [get_ports mc1_qa]
+set_property -dict {PACKAGE_PIN W19 IOSTANDARD LVCMOS33 } [get_ports mc1_qb]
+
+set_property -dict {PACKAGE_PIN W14 IOSTANDARD LVCMOS33 SLEW FAST DRIVE 12} [get_ports mc2_dir]
+set_property -dict {PACKAGE_PIN Y14 IOSTANDARD LVCMOS33 SLEW FAST DRIVE 12} [get_ports mc2_pwm]
+set_property -dict {PACKAGE_PIN T11 IOSTANDARD LVCMOS33} [get_ports mc2_qa]
+set_property -dict {PACKAGE_PIN T10 IOSTANDARD LVCMOS33} [get_ports mc2_qb]
+set_property -dict {PACKAGE_PIN V16 IOSTANDARD LVCMOS33 SLEW FAST DRIVE 12} [get_ports mc3_dir]
+set_property -dict {PACKAGE_PIN W16 IOSTANDARD LVCMOS33 SLEW FAST DRIVE 12} [get_ports mc3_pwm]
+set_property -dict {PACKAGE_PIN V12 IOSTANDARD LVCMOS33 } [get_ports mc3_qa]
+set_property -dict {PACKAGE_PIN W13 IOSTANDARD LVCMOS33 } [get_ports mc3_qb]
+
+set_property -dict { PACKAGE_PIN T14   IOSTANDARD LVCMOS33 } [get_ports { mon_tx  }]; #IO_L5P_T0_34            Sch=CK_IO0
+set_property -dict { PACKAGE_PIN U12   IOSTANDARD LVCMOS33 } [get_ports { mon_rx  }]; #IO_L2N_T0_34            Sch=CK_IO1
+set_property -dict { PACKAGE_PIN U13 IOSTANDARD LVCMOS33 } [get_ports mon_hb]; # CK_IO2: monitor J7-2 HB_OUT -> PL
+set_property -dict { PACKAGE_PIN V13 IOSTANDARD LVCMOS33 } [get_ports coast_req]; # CK_IO3: PL -> monitor J7-3 HALT_IN
+
+
 ## This file is a general .xdc for the ARTY Z7-20 Rev.B
 ## To use it in a project:
 ## - uncomment the lines corresponding to used pins
@@ -49,16 +59,15 @@ set_property -dict {PACKAGE_PIN V12 IOSTANDARD LVCMOS33 PULLDOWN true} [get_port
 # Reference: https://github.com/Digilent/digilent-xdc/blob/master/Arty-Z7-20-Master.xdc
 # Active assignments are at the top of this file; the following are commented templates.
 # Physical pins 5/11 = GND; 6/12 = 3.3 V.
-# Pin 9 is shared HALT OUTPUT. Do not connect an external driven signal to it.
-# Pin 10 is unused. No external HALT input is currently routed to this header.
 #set_property -dict { PACKAGE_PIN Y18 IOSTANDARD LVCMOS33 } [get_ports { ja_p[1] }]; # JA pin 1: mc0_dir OUT
 #set_property -dict { PACKAGE_PIN Y19 IOSTANDARD LVCMOS33 } [get_ports { ja_n[1] }]; # JA pin 2: mc0_pwm OUT
 #set_property -dict { PACKAGE_PIN Y16 IOSTANDARD LVCMOS33 } [get_ports { ja_p[2] }]; # JA pin 3: mc0_qa IN
 #set_property -dict { PACKAGE_PIN Y17 IOSTANDARD LVCMOS33 } [get_ports { ja_n[2] }]; # JA pin 4: mc0_qb IN
-#set_property -dict { PACKAGE_PIN U18 IOSTANDARD LVCMOS33 } [get_ports { ja_p[3] }]; # JA pin 7: mc0_en OUT
-#set_property -dict { PACKAGE_PIN U19 IOSTANDARD LVCMOS33 } [get_ports { ja_n[3] }]; # JA pin 8: mc0_fault IN (active high, pulldown)
-#set_property -dict { PACKAGE_PIN W18 IOSTANDARD LVCMOS33 } [get_ports { ja_p[4] }]; # JA pin 9: mc0_halt OUT (shared_halt)
-#set_property -dict { PACKAGE_PIN W19 IOSTANDARD LVCMOS33 } [get_ports { ja_n[4] }]; # JA pin 10: unused
+#set_property -dict { PACKAGE_PIN U18 IOSTANDARD LVCMOS33 } [get_ports { ja_p[3] }]; # JA pin 7: mc1_dir OUT
+#set_property -dict { PACKAGE_PIN U19 IOSTANDARD LVCMOS33 } [get_ports { ja_n[3] }]; # JA pin 8: mc1_pwm_OUT 
+#set_property -dict { PACKAGE_PIN W18 IOSTANDARD LVCMOS33 } [get_ports { ja_p[4] }]; # JA pin 9: mc1_qa_IN
+#set_property -dict { PACKAGE_PIN W19 IOSTANDARD LVCMOS33 } [get_ports { ja_n[4] }]; # JA pin 10:mc1_qb_IN
+
 
 ## Pmod JB: physical pin reference (Arty Z7-20 Rev.B)
 # Reference: https://github.com/Digilent/digilent-xdc/blob/master/Arty-Z7-20-Master.xdc
@@ -66,14 +75,14 @@ set_property -dict {PACKAGE_PIN V12 IOSTANDARD LVCMOS33 PULLDOWN true} [get_port
 # Physical pins 5/11 = GND; 6/12 = 3.3 V.
 # Pin 9 is shared HALT OUTPUT. Do not connect an external driven signal to it.
 # Pin 10 is unused. No external HALT input is currently routed to this header.
-#set_property -dict { PACKAGE_PIN W14 IOSTANDARD LVCMOS33 } [get_ports { jb_p[1] }]; # JB pin 1: mc1_dir OUT
-#set_property -dict { PACKAGE_PIN Y14 IOSTANDARD LVCMOS33 } [get_ports { jb_n[1] }]; # JB pin 2: mc1_pwm OUT
-#set_property -dict { PACKAGE_PIN T11 IOSTANDARD LVCMOS33 } [get_ports { jb_p[2] }]; # JB pin 3: mc1_qa IN
-#set_property -dict { PACKAGE_PIN T10 IOSTANDARD LVCMOS33 } [get_ports { jb_n[2] }]; # JB pin 4: mc1_qb IN
-#set_property -dict { PACKAGE_PIN V16 IOSTANDARD LVCMOS33 } [get_ports { jb_p[3] }]; # JB pin 7: mc1_en OUT
-#set_property -dict { PACKAGE_PIN W16 IOSTANDARD LVCMOS33 } [get_ports { jb_n[3] }]; # JB pin 8: mc1_fault IN (active high, pulldown)
-#set_property -dict { PACKAGE_PIN V12 IOSTANDARD LVCMOS33 } [get_ports { jb_p[4] }]; # JB pin 9: mc1_halt OUT (shared_halt)
-#set_property -dict { PACKAGE_PIN W13 IOSTANDARD LVCMOS33 } [get_ports { jb_n[4] }]; # JB pin 10: unused
+#set_property -dict { PACKAGE_PIN W14 IOSTANDARD LVCMOS33 } [get_ports { jb_p[1] }]; # JB pin 1: mc2_dir OUT
+#set_property -dict { PACKAGE_PIN Y14 IOSTANDARD LVCMOS33 } [get_ports { jb_n[1] }]; # JB pin 2: mc2_pwm OUT
+#set_property -dict { PACKAGE_PIN T11 IOSTANDARD LVCMOS33 } [get_ports { jb_p[2] }]; # JB pin 3: mc2_qa IN
+#set_property -dict { PACKAGE_PIN T10 IOSTANDARD LVCMOS33 } [get_ports { jb_n[2] }]; # JB pin 4: mc2_qb IN
+#set_property -dict { PACKAGE_PIN V16 IOSTANDARD LVCMOS33 } [get_ports { jb_p[3] }]; # JB pin 7: mc3_dir OUT
+#set_property -dict { PACKAGE_PIN W16 IOSTANDARD LVCMOS33 } [get_ports { jb_n[3] }]; # JB pin 8: mc3_pwm OUT
+#set_property -dict { PACKAGE_PIN V12 IOSTANDARD LVCMOS33 } [get_ports { jb_p[4] }]; # JB pin 9: mc3_qa IN
+#set_property -dict { PACKAGE_PIN W13 IOSTANDARD LVCMOS33 } [get_ports { jb_n[4] }]; # JB pin 10: mc3_qb IN
 
 ## Audio Out
 #set_property -dict { PACKAGE_PIN R18   IOSTANDARD LVCMOS33 } [get_ports { aud_pwm }]; #IO_L20N_T3_34 Sch=AUD_PWM

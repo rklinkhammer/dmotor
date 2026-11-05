@@ -18,44 +18,23 @@ Use the [component build guide](../docs/build.md) for native validation and EDF
 automatically; do not manually copy or stage a different checkout. User-mode QEMU
 validates software semantics, not the FPGA or kernel driver's physical behavior.
 
-## Model boundaries
+## Current interfaces and implementation
 
-- Timeouts are explicit test inputs in 1 ms control ticks. The initial 100-tick
-  target-age constant represents the architecture's 100 ms proposal. Test values
-  do not select the production authorization or maintenance-lease budgets.
-- The model clock is monotonic across rearm; it is a service/test clock, not the
-  FPGA encoder/time epoch that CORE_RESET resets.
-- The model executes all selected computations successfully within one tick.
-  It does not simulate HLS latency, warm-up, fault acknowledgment/reset sequencing,
-  AXI transactions, MMIO ordering, CDC, PWM, encoder signals or motor mechanics.
-- `MotorLimits` is only the mailbox admission subset, not the complete hardware
-  configuration. Snapshots contain requested velocity, not invented measured speed
-  or position. STOP/ramping, numerical configuration validation and full telemetry
-  decoding remain unimplemented.
-- Rearm is an explicit semantic operation requiring a new session. It does not
-  claim that writing CORE_RESET clears physical protective latches. Real recovery
-  must implement the documented hardware acknowledgment and external-HALT checks.
-- HALT clears modeled authorization/intent and latches a fault. It is an abstract
-  shared-HALT action, **not a nonexistent HALT MMIO register**. The production
-  backend still needs the qualified GPIO/shared-HALT binding and acknowledgment.
-- The model is single-threaded. Owner tokens represent service-level ownership,
-  not OS access controls. A virtual lease expires only when tests advance time;
-  independent hardware watchdogs must remain effective if the real service dies.
-- `MaintenanceSession` tests orderly scope exit. Crash behavior is tested through
-  separate lease expiry without invoking that destructor. The future service must
-  also monitor disconnects and enforce exclusive ownership independently of the UI.
+Start with the [controller programming guide](../docs/controller_programming.md)
+for service IPC, runtime APIs, kernel ioctls, PL configuration/telemetry, timing,
+ownership and monitor UART rules. See [DEVELOPMENT.md](DEVELOPMENT.md) for the
+clang-format/clang-tidy, editor and native-test workflow.
 
-`dmotor-maint` remains a separate debug/maintenance application, never an automated
-test harness. Its deployed version will use the sole-owner service, offer no mock
-motion mode, and HALT all motors on exit or ownership loss. No powered operation
-is enabled by this increment.
+The exclusive kernel driver, `dmotord`, `dmotor-maint`, typed protocol and runtime
+are implemented as a commissioning foundation. The monitor codec/UART library is
+implemented but is not connected to the daemon's recovery lifecycle. Joint monitor
+recovery and physical ARM admission remain pending. See
+[production access](linux/production.md) and [PS monitor progress](../docs/ps_monitor_progress.md).
 
-The [typed protocol](protocol.md) now provides full configuration serialization,
-status/telemetry decoding and an explicit backend interface. Next: implement the
-production backend and sole-owner service. The opt-in [Linux inspection backend](linux/README.md)
-is now implemented for inhibited bring-up, with advisory ownership only. Bind and test
-shared HALT before enabling maintenance motion; add the separate terminal UI using
-that service rather than giving it direct MMIO access.
+The semantic model remains a single-threaded reference/test model, not a simulation
+of HLS latency, AXI/CDC, electrical signals or mechanics. Fake-device and process
+tests do not qualify hardware behavior. UIO inspection/encoder tools use a separate
+inhibited binding with cooperative ownership only.
 
 ## Recorded validation
 
@@ -73,8 +52,8 @@ See [protocol validation](evidence/protocol_validation.txt).
 `dmotor-linux-tests` joins native CTest and EDF ARM QEMU validation. The recipe
 produces a separate opt-in `dmotor-inspect` package; it is never added to the
 production image or started automatically. See [Linux integration and remaining
-qualification](linux/README.md). The separate maintenance application is unchanged
-in scope and still awaits the sole-owner service and HALT lifecycle.
+qualification](linux/README.md). This is historical validation of the inspection increment; the current service
+and HALT lifecycle are described in the programming guide.
 Native UBSan and EDF ARM QEMU passed all three suites; the separate inspection
 package passed QA. See [Linux validation](evidence/linux_validation.txt).
 
@@ -123,7 +102,8 @@ board output measurements remain hardware acceptance checks.
 See [production-access commissioning](linux/production.md) for the exclusive
 kernel driver, `dmotord`, separate `dmotor-maint` menu and opt-in EDF binding.
 These additions require inhibited board qualification before powered operation.
-The existing UIO/encoder workflow remains the default image configuration.
+UIO/encoder and production commissioning use distinct image bindings; the current
+EDF configuration selects production commissioning.
 
 ### Software 0.8.0: direct PWM commissioning
 

@@ -22,6 +22,9 @@
 #define RESET DM_CORE_RESET
 #define PROFILE DM_PROFILE
 #define BLOCKED BIT(18)
+#define MONITOR_PROFILE 0x48423131U
+#define MONITOR_HEALTHY BIT(0)
+#define MONITOR_CORE_RESET BIT(3)
 #define HALT_POLL_US 10
 #define HALT_WAIT_US 10000
 struct dmotor {
@@ -71,6 +74,7 @@ static bool readable(u32 a)
  if (a & 3) return false;
  return a <= 0x40 || (a >= 0x100 && a < 0x140) ||
         (a >= DM_DIRECT_CAPABILITY && a <= DM_DIRECT_COMMIT) ||
+        a == DM_MONITOR_CAPABILITY || a == DM_MONITOR_STATUS ||
         a == ID || a == STATUS || a == SESSION || a == DM_SNAPSHOT ||
         (a >= DM_CONFIG_BASE && a < (DM_CONFIG_BASE + 4 * DM_CONFIG_STRIDE) && (a & (DM_CONFIG_STRIDE - 1)) < 80) ||
         (a >= DM_TELEMETRY_BASE && a < (DM_TELEMETRY_BASE + 4 * DM_TELEMETRY_STRIDE));
@@ -84,6 +88,7 @@ static bool writable(u32 a, u32 v, u32 status)
  if (a == DM_REFRESH_SESSION || (a >= DM_REFRESH_BASE && a < (DM_REFRESH_BASE + 4 * 4))) return v != 0;
  if (a == DM_DIRECT_DUTY || a == DM_DIRECT_COMMIT) return true;
  if (status & 15) return false;
+ if (a == DM_MONITOR_ACK) return v == 1;
  if (a == DM_DIRECT_MODE) return v == 0 || v == 1 || v == 2 || v == 4 || v == 8;
  if (a == DM_DIRECT_LIMIT) return v <= 65536;
  if (a == SESSION) return v != 0;
@@ -109,7 +114,13 @@ static long dm_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
  status = readl(d->base + STATUS);
  if (cmd == DMOTOR_RELEASE_HALT) {
   if (status & 15) ret = -EBUSY;
-  else gpiod_set_value_cansleep(d->halt, 0);
+  else {
+   gpiod_set_value_cansleep(d->halt, 0);
+   if (gpiod_get_value_cansleep(d->halt) != 0) {
+    gpiod_set_value_cansleep(d->halt, 1);
+    ret = -EIO;
+   }
+  }
   goto out;
  }
  if (a.offset < 0x1000 && (status & BLOCKED)) { ret = -EAGAIN; goto out; }
@@ -119,6 +130,16 @@ static long dm_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
   if (copy_to_user((void __user *)arg, &a, sizeof(a))) ret = -EFAULT;
  } else {
   if (!writable(a.offset, a.value, status)) { ret = -EINVAL; goto out; }
+  if (a.offset == DM_MONITOR_ACK) {
+   u32 monitor = readl(d->base + DM_MONITOR_STATUS);
+   /* Avoid issuing an invalid AXI write. Hardware remains authoritative if
+    * health expires between this check and the write; caller must read back. */
+   if ((monitor & (MONITOR_HEALTHY | MONITOR_CORE_RESET)) !=
+       (MONITOR_HEALTHY | MONITOR_CORE_RESET) || !readl(d->base + SESSION)) {
+    ret = -EAGAIN;
+    goto out;
+   }
+  }
   writel(a.value, d->base + a.offset);
   /* Ordered same-device completion read, not proof that an action was accepted. */
   if (readl(d->base + ID) != PROFILE) ret = -EIO;
@@ -154,6 +175,11 @@ static int dm_probe(struct platform_device *pdev)
  if (IS_ERR(d->base)) { ret = PTR_ERR(d->base); goto fail; }
  if (readl(d->base + ID) != PROFILE) { ret = -ENODEV; goto fail; }
  ret = halt_all(d); if (ret) goto fail;
+ if (readl(d->base + DM_MONITOR_CAPABILITY) != MONITOR_PROFILE) {
+  dev_err(&pdev->dev, "Controller lacks required HB11 monitor supervision\n");
+  ret = -ENODEV;
+  goto fail;
+ }
  d->misc.minor = MISC_DYNAMIC_MINOR; d->misc.name = "dmotor0";
  d->misc.fops = &ops; d->misc.parent = &pdev->dev; d->misc.mode = 0600;
  d->overlay_notifier.notifier_call = overlay_event;

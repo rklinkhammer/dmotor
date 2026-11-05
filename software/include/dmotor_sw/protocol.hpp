@@ -38,7 +38,7 @@ struct TelemetrySnapshot {
     std::array<MotorTelemetry, controller_motors> motors{};
 };
 class Protocol {
-public:
+  public:
     explicit Protocol(Device& device) : device_(device) {}
     // DMI2-only check works even when mailbox accesses are blocked by reset/HALT.
     bool compatible_controller();
@@ -50,7 +50,8 @@ public:
     // One bounded attempt; false on concurrent capture, output left unchanged.
     // Throws IoError on transport failure, also leaving output unchanged.
     bool capture(TelemetrySnapshot& output);
-private:
+
+  private:
     Device& device_;
 };
 } // namespace dmotor_sw

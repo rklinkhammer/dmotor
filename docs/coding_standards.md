@@ -16,3 +16,8 @@ must be synchronized by the wrapper. CDC attributes are hints, not CDC verificat
 Tests fail independently of C++ NDEBUG and include adverse boundary conditions.
 Run native/RTL tests after behavioral changes; HLS changes also require vendor
 simulation/synthesis. Record unavailable tools and untested integration explicitly.
+
+PS userspace uses the scoped clang-format 18 configuration under `software/`.
+See [PS development](../software/DEVELOPMENT.md) for formatting, static analysis,
+editor setup and test commands, and the [controller programming guide](controller_programming.md)
+for interface and lifecycle rules. Kernel C and generated files retain their own conventions.

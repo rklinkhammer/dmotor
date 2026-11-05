@@ -1,5 +1,14 @@
 # Joint recovery and coast-request transition contract — PROPOSED v4
 
+Implementation update, 2026-11-03: [controller revision 10](pl_monitor_progress.md)
+now implements HB qualification/inhibition, sticky fault, local status/ACK and
+coast_req, with explicit Linux preparation support. The
+[PS transport increment](ps_monitor_progress.md) adds a shared message-layout
+schema, framing codec and bounded UART transport. The complete UART exchange,
+monitor ARM interlock and ESP32 firmware specified below remain unimplemented.
+Read this contract's original “no implementation” status as the full joint
+protocol status, not as a description of those completed PL building blocks.
+
 Status: **PROPOSED v4, 2026-11-03; design corrections, no implementation or
 physical qualification.** Reviewed against v3 at dmotor `d1295a3`. This is the
 single current recovery design; prior review findings remain in the

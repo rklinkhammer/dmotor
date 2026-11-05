@@ -23,4 +23,7 @@ localparam logic [31:0] DIRECT_MODE = 32'd4180;
 localparam logic [31:0] DIRECT_LIMIT = 32'd4184;
 localparam logic [31:0] DIRECT_DUTY = 32'd4188;
 localparam logic [31:0] DIRECT_COMMIT = 32'd4192;
+localparam logic [31:0] MONITOR_CAPABILITY = 32'd4196;
+localparam logic [31:0] MONITOR_STATUS = 32'd4200;
+localparam logic [31:0] MONITOR_ACK = 32'd4204;
 endpackage

@@ -36,7 +36,7 @@ struct Snapshot {
 // Single-threaded deterministic service/device model. Not a Linux driver or
 // independent protection implementation. advance() is driven by the test clock.
 class Model {
-public:
+  public:
     explicit Model(Timeouts timeouts);
     uint64_t acquire(); // Exclusive maintenance lease; zero means refused.
     bool renew(uint64_t owner);
@@ -50,7 +50,8 @@ public:
     bool halt(uint64_t owner);
     void advance(uint32_t ticks = 1);
     Snapshot snapshot() const;
-private:
+
+  private:
     bool owns(uint64_t owner) const;
     void trip(Fault fault);
     Timeouts timeouts_;
@@ -65,13 +66,19 @@ private:
 // Models orderly client close. An actual service must separately detect socket
 // loss and lease expiry; destructors cannot handle SIGKILL or a dead service.
 class MaintenanceSession {
-public:
+  public:
     explicit MaintenanceSession(Model& model) : model_(model), token_(model.acquire()) {}
-    ~MaintenanceSession() { if (token_) model_.release(token_); }
+    ~MaintenanceSession() {
+        if (token_)
+            model_.release(token_);
+    }
     MaintenanceSession(const MaintenanceSession&) = delete;
     MaintenanceSession& operator=(const MaintenanceSession&) = delete;
-    uint64_t token() const { return token_; }
-private:
+    uint64_t token() const {
+        return token_;
+    }
+
+  private:
     Model& model_;
     uint64_t token_;
 };

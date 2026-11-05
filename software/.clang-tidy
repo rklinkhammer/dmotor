@@ -1,0 +1,5 @@
+# Deliberately focused baseline; broaden checks through reviewed changes.
+Checks: '-*,clang-analyzer-*,bugprone-sizeof-expression,bugprone-suspicious-memset-usage,bugprone-undefined-memory-manipulation'
+WarningsAsErrors: '*'
+HeaderFilterRegex: 'software/include/dmotor_sw/.*'
+FormatStyle: file

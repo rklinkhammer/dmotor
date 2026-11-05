@@ -1,0 +1,196 @@
+{
+  "version": 1,
+  "status": "development ABI; no deployed firmware compatibility promised",
+  "max_payload": 64,
+  "crc": "CRC-16/CCITT-FALSE; poly=0x1021, init=0xffff, refin=false, refout=false, xorout=0; CRC big-endian",
+  "endianness": "little-endian except CRC",
+  "framing": {
+    "boundary": 126,
+    "escape": 125,
+    "escape_xor": 32
+  },
+  "header": [
+    [
+      "version",
+      "u8"
+    ],
+    [
+      "source_session",
+      "u64"
+    ],
+    [
+      "peer_session",
+      "u64"
+    ],
+    [
+      "epoch",
+      "u32"
+    ],
+    [
+      "transaction",
+      "u32"
+    ],
+    [
+      "sequence",
+      "u32"
+    ],
+    [
+      "type",
+      "u8"
+    ],
+    [
+      "payload_length",
+      "u8"
+    ]
+  ],
+  "states": {
+    "boot": 0,
+    "safe": 1,
+    "arm_pending": 2,
+    "armed": 3,
+    "fault": 4
+  },
+  "cleanup_flags": {
+    "outputs_disabled": 1,
+    "reset_drain_complete": 2,
+    "causes_cleared": 4
+  },
+  "state_record": [
+    [
+      "state",
+      "u8"
+    ],
+    [
+      "causes",
+      "u32"
+    ],
+    [
+      "completed_transaction",
+      "u32"
+    ],
+    [
+      "completed_epoch",
+      "u32"
+    ],
+    [
+      "pl_session",
+      "u32"
+    ]
+  ],
+  "messages": [
+    {
+      "name": "hello",
+      "id": 1,
+      "length": 0,
+      "payload": []
+    },
+    {
+      "name": "hello_ack",
+      "id": 2,
+      "length": 0,
+      "payload": []
+    },
+    {
+      "name": "recover_req",
+      "id": 3,
+      "length": 8,
+      "payload": [
+        [
+          "pl_session",
+          "u32"
+        ],
+        [
+          "cleanup_flags",
+          "u32"
+        ]
+      ]
+    },
+    {
+      "name": "recover_state",
+      "id": 4,
+      "length": 17,
+      "payload": [
+        [
+          "state_record",
+          "state_record"
+        ]
+      ]
+    },
+    {
+      "name": "recover_commit",
+      "id": 5,
+      "length": 0,
+      "payload": []
+    },
+    {
+      "name": "commit_ack",
+      "id": 6,
+      "length": 17,
+      "payload": [
+        [
+          "state_record",
+          "state_record"
+        ]
+      ]
+    },
+    {
+      "name": "state_query",
+      "id": 7,
+      "length": 8,
+      "payload": [
+        [
+          "challenge",
+          "u64"
+        ]
+      ]
+    },
+    {
+      "name": "state_reply",
+      "id": 8,
+      "length": 25,
+      "payload": [
+        [
+          "challenge",
+          "u64"
+        ],
+        [
+          "state_record",
+          "state_record"
+        ]
+      ]
+    },
+    {
+      "name": "nak",
+      "id": 9,
+      "length": 2,
+      "payload": [
+        [
+          "reason",
+          "u16"
+        ]
+      ]
+    },
+    {
+      "name": "fault_evt",
+      "id": 10,
+      "length": 4,
+      "payload": [
+        [
+          "causes",
+          "u32"
+        ]
+      ]
+    }
+  ],
+  "cause_bits": "Reserved pending sensor/safety-core ABI; PS treats any nonzero mask as fault. No per-cause arming decisions permitted.",
+  "nak_reasons": {
+    "malformed": 1,
+    "wrong_state": 2,
+    "stale_session": 3,
+    "stale_epoch": 4,
+    "unknown_transaction": 5,
+    "unhealthy": 6,
+    "invalid_attestation": 7,
+    "exhausted": 8
+  }
+}

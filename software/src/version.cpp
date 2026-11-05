@@ -7,4 +7,4 @@ bool startup_version(const char* application, int argc, char** argv) {
     std::cout << application << ": " << DMOTOR_VERSION_BANNER << std::endl;
     return argc == 2 && std::strcmp(argv[1], "--version") == 0;
 }
-}
+} // namespace dmotor_sw

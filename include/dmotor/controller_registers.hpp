@@ -25,4 +25,7 @@ constexpr uint32_t DIRECT_MODE = 4180U;
 constexpr uint32_t DIRECT_LIMIT = 4184U;
 constexpr uint32_t DIRECT_DUTY = 4188U;
 constexpr uint32_t DIRECT_COMMIT = 4192U;
+constexpr uint32_t MONITOR_CAPABILITY = 4196U;
+constexpr uint32_t MONITOR_STATUS = 4200U;
+constexpr uint32_t MONITOR_ACK = 4204U;
 } }

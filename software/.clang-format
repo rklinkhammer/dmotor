@@ -1,0 +1,23 @@
+BasedOnStyle: LLVM
+Language: Cpp
+Standard: c++14
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+ColumnLimit: 100
+BreakBeforeBraces: Attach
+# Formatting must not insert control-flow tokens.
+InsertBraces: false
+AllowShortBlocksOnASingleLine: Never
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+PointerAlignment: Left
+ReferenceAlignment: Left
+DerivePointerAlignment: false
+NamespaceIndentation: None
+IndentCaseLabels: true
+SortIncludes: Never
+IncludeBlocks: Preserve
+ReflowComments: false
+BreakStringLiterals: false

@@ -5,148 +5,384 @@
 #include <vector>
 #include <iostream>
 #include <cstdlib>
-#define CHECK(x) do { if(!(x)) { std::cerr<<__LINE__<<": " #x "\n";std::exit(1); } } while(false)
+#define CHECK(x)                                                                                   \
+    do {                                                                                           \
+        if (!(x)) {                                                                                \
+            std::cerr << __LINE__ << ": " #x "\n";                                                 \
+            std::exit(1);                                                                          \
+        }                                                                                          \
+    } while (false)
 using namespace dmotor_sw;
-namespace reg=dmotor::controller_reg;
-namespace b=dmotor::batch_reg;
+namespace reg = dmotor::controller_reg;
+namespace b = dmotor::batch_reg;
 struct Fake : Platform {
-    std::map<uint32_t,uint32_t> words;
-    std::vector<std::pair<uint32_t,uint32_t>> writes;
-    uint64_t time=0;bool source=true,reset=true,fail=false,hold_ready=false,halt_failure=false;
-    unsigned halt_count=0;
-    Fake() { words[reg::DIRECT_CAPABILITY]=0x44445531;words[reg::IDENTITY]=reg::PROFILE_ID;words[reg::STATUS]=1U<<18;words[b::IDENTITY]=b::PROFILE_ID;words[b::SCHEMA]=1;words[b::MOTOR_COUNT]=4; }
-    uint32_t read32(uint32_t a) override { if(fail) throw IoError("bus");return words[a]; }
-    void write32(uint32_t a,uint32_t v) override {
-        if(fail) throw IoError("bus");
-        writes.emplace_back(a,v);
-        if(a==reg::SESSION) { CHECK(reset && !(words[reg::STATUS]&15));words[b::SESSION]=v; }
-        if(a==reg::CORE_RESET) { reset=v!=0;if(reset) words[reg::STATUS]|=1U<<18;else if(!source) words[reg::STATUS]&=~(1U<<18); }
-        if(a==reg::ENABLE) { CHECK(!reset && !source);words[reg::STATUS]|=v;if(!hold_ready) words[reg::STATUS]|=v<<8; }
-        if(a==reg::DISABLE) words[reg::STATUS]&=~(v|(v<<8));
-        if(a==reg::STOP && words[reg::DIRECT_MODE])words[reg::STATUS]&=~(v|(v<<8));
-        if(a==reg::STOP) { words[reg::STATUS]|=v<<12;words[reg::STATUS]&=~(v<<8);words[b::PENDING_MASK]=0; }
-        if(a==b::COMMIT) {
-            CHECK(v==1 && !source && !reset);
-            words[b::PUBLISHED_SEQUENCE]=words[b::STAGE_SEQUENCE];words[b::APPLIED_SEQUENCE]=words[b::STAGE_SEQUENCE];
-            words[b::APPLIED_MASK]=words[b::STAGE_MASK];words[b::PENDING_MASK]=0;
-        }
-        if(a==reg::ACKNOWLEDGE && !source) words[reg::STATUS]&=~((1U<<16)|(1U<<17));
-        words[a]=v;
+    std::map<uint32_t, uint32_t> words;
+    std::vector<std::pair<uint32_t, uint32_t>> writes;
+    uint64_t time = 0;
+    bool source = true, reset = true, fail = false, hold_ready = false, halt_failure = false;
+    unsigned halt_count = 0;
+    Fake() {
+        words[reg::MONITOR_CAPABILITY] = 0x48423131;
+        words[reg::MONITOR_STATUS] = 5;
+        words[reg::DIRECT_CAPABILITY] = 0x44445531;
+        words[reg::IDENTITY] = reg::PROFILE_ID;
+        words[reg::STATUS] = 1U << 18;
+        words[b::IDENTITY] = b::PROFILE_ID;
+        words[b::SCHEMA] = 1;
+        words[b::MOTOR_COUNT] = 4;
     }
-    void fence() override { if(fail) throw IoError("fence"); }
-    void halt(bool asserted) override { if(halt_failure) throw IoError("HALT confirmation unavailable");source=asserted;if(asserted) { ++halt_count;words[reg::STATUS]&=~15U;words[reg::STATUS]|=1U<<18; } }
-    uint64_t now_us() const override { return time; }
-    void sleep_us(uint32_t us) override { time+=us; }
+    uint32_t read32(uint32_t a) override {
+        if (fail)
+            throw IoError("bus");
+        return words[a];
+    }
+    void write32(uint32_t a, uint32_t v) override {
+        if (fail)
+            throw IoError("bus");
+        writes.emplace_back(a, v);
+        if (a == reg::MONITOR_ACK) {
+            CHECK(reset && !(words[reg::STATUS] & 15));
+            if (words[reg::MONITOR_STATUS] & 1U)
+                words[reg::MONITOR_STATUS] &= ~2U;
+        }
+        if (a == reg::SESSION) {
+            CHECK(reset && !(words[reg::STATUS] & 15));
+            words[b::SESSION] = v;
+        }
+        if (a == reg::CORE_RESET) {
+            reset = v != 0;
+            if (reset)
+                words[reg::STATUS] |= 1U << 18;
+            else if (!source)
+                words[reg::STATUS] &= ~(1U << 18);
+        }
+        if (a == reg::ENABLE) {
+            CHECK(!reset && !source);
+            words[reg::STATUS] |= v;
+            if (!hold_ready)
+                words[reg::STATUS] |= v << 8;
+        }
+        if (a == reg::DISABLE)
+            words[reg::STATUS] &= ~(v | (v << 8));
+        if (a == reg::STOP && words[reg::DIRECT_MODE])
+            words[reg::STATUS] &= ~(v | (v << 8));
+        if (a == reg::STOP) {
+            words[reg::STATUS] |= v << 12;
+            words[reg::STATUS] &= ~(v << 8);
+            words[b::PENDING_MASK] = 0;
+        }
+        if (a == b::COMMIT) {
+            CHECK(v == 1 && !source && !reset);
+            words[b::PUBLISHED_SEQUENCE] = words[b::STAGE_SEQUENCE];
+            words[b::APPLIED_SEQUENCE] = words[b::STAGE_SEQUENCE];
+            words[b::APPLIED_MASK] = words[b::STAGE_MASK];
+            words[b::PENDING_MASK] = 0;
+        }
+        if (a == reg::ACKNOWLEDGE && !source)
+            words[reg::STATUS] &= ~((1U << 16) | (1U << 17));
+        words[a] = v;
+    }
+    void fence() override {
+        if (fail)
+            throw IoError("fence");
+    }
+    void halt(bool asserted) override {
+        if (halt_failure)
+            throw IoError("HALT confirmation unavailable");
+        source = asserted;
+        if (asserted) {
+            ++halt_count;
+            words[reg::STATUS] &= ~15U;
+            words[reg::STATUS] |= 1U << 18;
+        }
+    }
+    uint64_t now_us() const override {
+        return time;
+    }
+    void sleep_us(uint32_t us) override {
+        time += us;
+    }
 };
-std::array<MotorConfiguration,4> config() {
-    std::array<MotorConfiguration,4> c{};
-    for(auto& m:c) m={7,400000,1000000,2000000,1560,1,1,100,2,655,65536,32768,16384,1000000,2000000,1000000,8192};
+std::array<MotorConfiguration, 4> config() {
+    std::array<MotorConfiguration, 4> c{};
+    for (auto& m : c)
+        m = {7,   400000, 1000000, 2000000, 1560,    1,       1,       100, 2,
+             655, 65536,  32768,   16384,   1000000, 2000000, 1000000, 8192};
     return c;
 }
-template<class F> bool rejects(F f) { try { f(); } catch(const std::exception&) { return true; }return false; }
-int main(int argc,char** argv) {
-    if(startup_version("dmotor-runtime-tests",argc,argv)) return 0;
+template <class F> bool rejects(F f) {
+    try {
+        f();
+    } catch (const std::exception&) {
+        return true;
+    }
+    return false;
+}
+int main(int argc, char** argv) {
+    if (startup_version("dmotor-runtime-tests", argc, argv))
+        return 0;
     {
-        Fake io;Runtime r(io);CHECK(io.source);
-        CHECK(rejects([&]{r.enable(1);}));r.prepare(config(),15);CHECK(!io.source && r.session()==1);
-        r.enable(3);r.tick();CHECK(io.words[reg::REFRESH_BASE]==1 && io.words[reg::REFRESH_BASE+4]==1);
-        r.velocity(3,{{400000,-400000,0,0}});r.tick();CHECK(io.words[b::STAGE_MASK]==3 && r.applied_sequence()==1);
-        CHECK(rejects([&]{r.velocity(1,{{400001,0,0,0}});}));
+        Fake io;
+        RuntimePolicy p;
+        p.monitor_wait_us = 1000;
+        Runtime r(io, p);
+        io.words[reg::MONITOR_CAPABILITY] = 0;
+        CHECK(rejects([&] { r.prepare(config(), 1); }));
+        CHECK(io.source);
+        io.words[reg::MONITOR_CAPABILITY] = 0x48423131;
+        io.words[reg::MONITOR_STATUS] = 2;
+        CHECK(rejects([&] { r.prepare(config(), 1); }));
+        CHECK(io.source && io.time >= 1000);
+        for (auto w : io.writes)
+            CHECK(w.first != reg::MONITOR_ACK);
+        io.words[reg::MONITOR_STATUS] = 7;
+        r.prepare(config(), 1);
+        CHECK(!(io.words[reg::MONITOR_STATUS] & 2U));
+        CHECK(!(io.words[reg::STATUS] & 15)); // recovery never enables
+    }
+    {
+        Fake io;
+        Runtime r(io);
+        CHECK(io.source);
+        CHECK(rejects([&] { r.enable(1); }));
+        r.prepare(config(), 15);
+        CHECK(!io.source && r.session() == 1);
+        r.enable(3);
+        r.tick();
+        CHECK(io.words[reg::REFRESH_BASE] == 1 && io.words[reg::REFRESH_BASE + 4] == 1);
+        r.velocity(3, {{400000, -400000, 0, 0}});
+        r.tick();
+        CHECK(io.words[b::STAGE_MASK] == 3 && r.applied_sequence() == 1);
+        CHECK(rejects([&] { r.velocity(1, {{400001, 0, 0, 0}}); }));
         // Different pending masks are never overwritten, even when disjoint.
-        io.words[b::PENDING_MASK]=1;r.velocity(2,{{0,1000,0,0}});r.tick();CHECK(io.words[b::PUBLISHED_SEQUENCE]==1);
-        io.words[b::PENDING_MASK]=0;io.time+=10000;r.tick();CHECK(io.words[b::PUBLISHED_SEQUENCE]==2);
-        r.stop(1);CHECK(io.words[reg::STOP]==1);CHECK(rejects([&]{r.velocity(1,{{1000,0,0,0}});}));
+        io.words[b::PENDING_MASK] = 1;
+        r.velocity(2, {{0, 1000, 0, 0}});
+        r.tick();
+        CHECK(io.words[b::PUBLISHED_SEQUENCE] == 1);
+        io.words[b::PENDING_MASK] = 0;
+        io.time += 10000;
+        r.tick();
+        CHECK(io.words[b::PUBLISHED_SEQUENCE] == 2);
+        r.stop(1);
+        CHECK(io.words[reg::STOP] == 1);
+        CHECK(rejects([&] { r.velocity(1, {{1000, 0, 0, 0}}); }));
         // STOP remains authorized/refreshed and must not fail readiness later.
-        for(int i=0;i<30;++i) { io.time+=20000;r.heartbeat();r.tick(); }
-        CHECK(!io.source);r.disable(2);CHECK(rejects([&]{r.enable(2);}));
-        r.halt();CHECK(io.source);r.prepare(config(),15);CHECK(r.session()==2 && !(io.words[reg::STATUS]&15));
+        for (int i = 0; i < 30; ++i) {
+            io.time += 20000;
+            r.heartbeat();
+            r.tick();
+        }
+        CHECK(!io.source);
+        r.disable(2);
+        CHECK(rejects([&] { r.enable(2); }));
+        r.halt();
+        CHECK(io.source);
+        r.prepare(config(), 15);
+        CHECK(r.session() == 2 && !(io.words[reg::STATUS] & 15));
     }
     {
-        Fake io;Runtime r(io);r.prepare(config(),1);r.enable(1);r.tick();
-        io.time+=500000;CHECK(rejects([&]{r.tick();}));CHECK(io.source);
-        r.heartbeat();r.tick();CHECK(io.source); // no automatic recovery
+        Fake io;
+        Runtime r(io);
+        r.prepare(config(), 1);
+        r.enable(1);
+        r.tick();
+        io.time += 500000;
+        CHECK(rejects([&] { r.tick(); }));
+        CHECK(io.source);
+        r.heartbeat();
+        r.tick();
+        CHECK(io.source); // no automatic recovery
     }
     {
-        Fake io;Runtime r(io);r.prepare(config(),1);r.enable(1);io.words[reg::STATUS]|=1U<<16;
-        CHECK(rejects([&]{r.tick();}));CHECK(io.source);
+        Fake io;
+        Runtime r(io);
+        r.prepare(config(), 1);
+        r.enable(1);
+        io.words[reg::STATUS] |= 1U << 16;
+        CHECK(rejects([&] { r.tick(); }));
+        CHECK(io.source);
     }
     {
-        Fake io;Runtime r(io);r.prepare(config(),1);r.enable(1);io.fail=true;
-        CHECK(rejects([&]{r.tick();}));CHECK(io.source);
+        Fake io;
+        Runtime r(io);
+        r.prepare(config(), 1);
+        r.enable(1);
+        io.fail = true;
+        CHECK(rejects([&] { r.tick(); }));
+        CHECK(io.source);
     }
     {
-        Fake io;io.hold_ready=true;Runtime r(io);r.prepare(config(),1);r.enable(1);
-        for(int i=0;i<24;++i) { io.time+=20000;r.heartbeat();r.tick(); }
-        io.time+=20000;r.heartbeat();CHECK(rejects([&]{r.tick();}));CHECK(io.source);
+        Fake io;
+        io.hold_ready = true;
+        Runtime r(io);
+        r.prepare(config(), 1);
+        r.enable(1);
+        for (int i = 0; i < 24; ++i) {
+            io.time += 20000;
+            r.heartbeat();
+            r.tick();
+        }
+        io.time += 20000;
+        r.heartbeat();
+        CHECK(rejects([&] { r.tick(); }));
+        CHECK(io.source);
     }
     {
-        Fake io;io.words[reg::SESSION]=UINT32_MAX;Runtime r(io);
-        CHECK(rejects([&]{r.prepare(config(),1);}));CHECK(io.source);
+        Fake io;
+        io.words[reg::SESSION] = UINT32_MAX;
+        Runtime r(io);
+        CHECK(rejects([&] { r.prepare(config(), 1); }));
+        CHECK(io.source);
     }
     {
-        Fake io;Runtime r(io);r.prepare(config(),1);r.enable(1);
-        io.halt_failure=true;CHECK(rejects([&]{r.halt();}));
-        CHECK(rejects([&]{r.enable(1);})); // Never report/reuse unconfirmed inhibition.
-        io.halt_failure=false;r.halt();CHECK(io.source);
+        Fake io;
+        Runtime r(io);
+        r.prepare(config(), 1);
+        r.enable(1);
+        io.halt_failure = true;
+        CHECK(rejects([&] { r.halt(); }));
+        CHECK(rejects([&] { r.enable(1); })); // Never report/reuse unconfirmed inhibition.
+        io.halt_failure = false;
+        r.halt();
+        CHECK(io.source);
     }
     {
-        Fake io;Runtime r(io);r.prepare(config(),1);r.enable(1);
-        r.velocity(1,{{1000,0,0,0}});r.tick();
-        CHECK(rejects([&]{r.inject_timeout(TimeoutInjection::target);}));
+        Fake io;
+        Runtime r(io);
+        r.prepare(config(), 1);
+        r.enable(1);
+        r.velocity(1, {{1000, 0, 0, 0}});
+        r.tick();
+        CHECK(rejects([&] { r.inject_timeout(TimeoutInjection::target); }));
     }
-    for(auto injection:{TimeoutInjection::target,TimeoutInjection::watchdog}) {
-        Fake io;RuntimePolicy policy;policy.commissioning=true;Runtime r(io,policy);
-        CHECK(rejects([&]{r.inject_timeout(injection);}));
-        r.prepare(config(),1);r.enable(1);r.velocity(1,{{1000,0,0,0}});r.tick();
-        const auto refresh=io.words[reg::REFRESH_BASE];
-        const auto published=io.words[b::PUBLISHED_SEQUENCE];
+    for (auto injection : {TimeoutInjection::target, TimeoutInjection::watchdog}) {
+        Fake io;
+        RuntimePolicy policy;
+        policy.commissioning = true;
+        Runtime r(io, policy);
+        CHECK(rejects([&] { r.inject_timeout(injection); }));
+        r.prepare(config(), 1);
+        r.enable(1);
+        r.velocity(1, {{1000, 0, 0, 0}});
+        r.tick();
+        const auto refresh = io.words[reg::REFRESH_BASE];
+        const auto published = io.words[b::PUBLISHED_SEQUENCE];
         r.inject_timeout(injection);
-        CHECK(rejects([&]{r.inject_timeout(injection);}));
-        for(int i=0;i<5;++i) { io.time+=20000;r.heartbeat();r.tick(); }
-        CHECK((io.words[reg::REFRESH_BASE]==refresh)==(injection==TimeoutInjection::watchdog));
-        CHECK((io.words[b::PUBLISHED_SEQUENCE]==published)==(injection==TimeoutInjection::target));
-        io.time+=20000;CHECK(rejects([&]{r.tick();}));CHECK(io.source);
+        CHECK(rejects([&] { r.inject_timeout(injection); }));
+        for (int i = 0; i < 5; ++i) {
+            io.time += 20000;
+            r.heartbeat();
+            r.tick();
+        }
+        CHECK((io.words[reg::REFRESH_BASE] == refresh) ==
+              (injection == TimeoutInjection::watchdog));
+        CHECK((io.words[b::PUBLISHED_SEQUENCE] == published) ==
+              (injection == TimeoutInjection::target));
+        io.time += 20000;
+        CHECK(rejects([&] { r.tick(); }));
+        CHECK(io.source);
         // A fake without FPGA timers must hit the host fallback; never auto-resume.
-        r.tick();CHECK(io.source);r.prepare(config(),1);r.enable(1);
-        r.velocity(1,{{1000,0,0,0}});r.tick();CHECK(!io.source);
-        r.inject_timeout(injection);io.words[reg::STATUS]|=1U<<16;
-        CHECK(rejects([&]{r.tick();}));CHECK(io.source);
+        r.tick();
+        CHECK(io.source);
+        r.prepare(config(), 1);
+        r.enable(1);
+        r.velocity(1, {{1000, 0, 0, 0}});
+        r.tick();
+        CHECK(!io.source);
+        r.inject_timeout(injection);
+        io.words[reg::STATUS] |= 1U << 16;
+        CHECK(rejects([&] { r.tick(); }));
+        CHECK(io.source);
     }
     {
-        Fake io;RuntimePolicy p;p.commissioning=true;p.direct_mask=1;
-        p.duty_limit_q16=32768;p.duty_floor_q16=6554;Runtime r(io,p);
-        r.prepare(config(),1);r.enable(1);r.tick();
-        CHECK(rejects([&]{r.velocity(1,{{1000,0,0,0}});}));
-        CHECK(rejects([&]{r.duty(6553);}));CHECK(rejects([&]{r.duty(32769);}));
-        r.duty(32768);r.tick();CHECK(io.words[reg::DIRECT_DUTY]==32768 && r.applied_sequence()==1);
-        r.duty(-6554);r.tick();CHECK(io.words[reg::DIRECT_DUTY]==static_cast<uint32_t>(-6554));
-        r.duty(0);r.tick();CHECK(io.words[reg::DIRECT_DUTY]==0);
-        r.stop(1);r.tick();CHECK(rejects([&]{r.duty(32768);}));CHECK(rejects([&]{r.enable(1);}));
-        r.prepare(config(),1);r.enable(1);r.duty(16384);r.tick();r.inject_timeout(TimeoutInjection::target);
-        const auto seq=r.applied_sequence();io.time+=20000;r.heartbeat();r.tick();CHECK(r.applied_sequence()==seq);
+        Fake io;
+        RuntimePolicy p;
+        p.commissioning = true;
+        p.direct_mask = 1;
+        p.duty_limit_q16 = 32768;
+        p.duty_floor_q16 = 6554;
+        Runtime r(io, p);
+        r.prepare(config(), 1);
+        r.enable(1);
+        r.tick();
+        CHECK(rejects([&] { r.velocity(1, {{1000, 0, 0, 0}}); }));
+        CHECK(rejects([&] { r.duty(6553); }));
+        CHECK(rejects([&] { r.duty(32769); }));
+        r.duty(32768);
+        r.tick();
+        CHECK(io.words[reg::DIRECT_DUTY] == 32768 && r.applied_sequence() == 1);
+        r.duty(-6554);
+        r.tick();
+        CHECK(io.words[reg::DIRECT_DUTY] == static_cast<uint32_t>(-6554));
+        r.duty(0);
+        r.tick();
+        CHECK(io.words[reg::DIRECT_DUTY] == 0);
+        r.stop(1);
+        r.tick();
+        CHECK(rejects([&] { r.duty(32768); }));
+        CHECK(rejects([&] { r.enable(1); }));
+        r.prepare(config(), 1);
+        r.enable(1);
+        r.duty(16384);
+        r.tick();
+        r.inject_timeout(TimeoutInjection::target);
+        const auto seq = r.applied_sequence();
+        io.time += 20000;
+        r.heartbeat();
+        r.tick();
+        CHECK(r.applied_sequence() == seq);
     }
     {
-        Fake io;RuntimePolicy p;p.commissioning=true;p.direct_mask=1;
-        p.direct_pulse_us=100000;p.duty_limit_q16=32768;Runtime r(io,p);
-        r.prepare(config(),1);r.enable(1);r.duty(16384);r.tick();
-        CHECK(rejects([&]{r.inject_timeout(TimeoutInjection::target);}));
-        io.time+=50000;r.heartbeat();r.duty(-16384);r.tick();
-        CHECK(!io.source && (io.words[reg::STATUS]&1));
-        io.time+=50000;r.heartbeat();r.tick();
-        CHECK(!(io.words[reg::STATUS]&1) && io.words[reg::STOP]==1);
-        CHECK(rejects([&]{r.duty(16384);}));CHECK(rejects([&]{r.enable(1);}));
-        r.prepare(config(),1);r.enable(1);r.duty(16384);r.tick();
-        r.duty(0);CHECK(!(io.words[reg::STATUS]&1));
-        CHECK(rejects([&]{r.duty(16384);}));
-        r.prepare(config(),1);r.enable(1);r.duty(16384);r.tick();
+        Fake io;
+        RuntimePolicy p;
+        p.commissioning = true;
+        p.direct_mask = 1;
+        p.direct_pulse_us = 100000;
+        p.duty_limit_q16 = 32768;
+        Runtime r(io, p);
+        r.prepare(config(), 1);
+        r.enable(1);
+        r.duty(16384);
+        r.tick();
+        CHECK(rejects([&] { r.inject_timeout(TimeoutInjection::target); }));
+        io.time += 50000;
+        r.heartbeat();
+        r.duty(-16384);
+        r.tick();
+        CHECK(!io.source && (io.words[reg::STATUS] & 1));
+        io.time += 50000;
+        r.heartbeat();
+        r.tick();
+        CHECK(!(io.words[reg::STATUS] & 1) && io.words[reg::STOP] == 1);
+        CHECK(rejects([&] { r.duty(16384); }));
+        CHECK(rejects([&] { r.enable(1); }));
+        r.prepare(config(), 1);
+        r.enable(1);
+        r.duty(16384);
+        r.tick();
+        r.duty(0);
+        CHECK(!(io.words[reg::STATUS] & 1));
+        CHECK(rejects([&] { r.duty(16384); }));
+        r.prepare(config(), 1);
+        r.enable(1);
+        r.duty(16384);
+        r.tick();
         // A command arriving after deadline cannot restart or extend a pulse,
         // even before the next periodic tick.
-        io.time+=100000;CHECK(rejects([&]{r.duty(16384);}));
-        CHECK(!(io.words[reg::STATUS]&1));
-        r.prepare(config(),1);r.enable(1);r.duty(16384);r.tick();
-        r.halt();r.prepare(config(),1);r.enable(1);r.tick();
-        CHECK(io.words[reg::DIRECT_COMMIT]==r.applied_sequence() || r.applied_sequence()==0);
+        io.time += 100000;
+        CHECK(rejects([&] { r.duty(16384); }));
+        CHECK(!(io.words[reg::STATUS] & 1));
+        r.prepare(config(), 1);
+        r.enable(1);
+        r.duty(16384);
+        r.tick();
+        r.halt();
+        r.prepare(config(), 1);
+        r.enable(1);
+        r.tick();
+        CHECK(io.words[reg::DIRECT_COMMIT] == r.applied_sequence() || r.applied_sequence() == 0);
         CHECK(!io.source); // Rearm alone must not start another pulse.
     }
-    std::cout<<"PASS: lifecycle, 400RPM limits, atomic masks, STOP/rearm, watchdog refresh, lease/fault/access loss and readiness deadlines\n";
+    std::cout
+        << "PASS: lifecycle, 400RPM limits, atomic masks, STOP/rearm, watchdog refresh, lease/fault/access loss and readiness deadlines\n";
 }

@@ -3,7 +3,8 @@
 `dmotor_sw::Protocol` is the first hardware-facing software layer. It uses a
 `Device` interface and the existing generated register definitions and controller
 host helpers. An opt-in inhibited [Linux mapping backend](linux/README.md) is available; the
-production backend is still pending. The protocol never enables a
+production `KernelDevice` backend is implemented; see the
+[consolidated programming guide](../docs/controller_programming.md). The protocol never enables a
 motor, acknowledges a fault or resets the controller automatically.
 
 ## Configuration
@@ -22,8 +23,8 @@ validation, not evidence that gains or electrical limits suit the physical motor
 HLS numeric validation and readiness remain authoritative after commit.
 
 `configure()` rejects enabled controllers and invalid input before staging. The
-caller must already hold core reset; the current ABI has no readable core-reset
-bit, and the software does not infer reset from the broader blocked status. A
+caller must already hold core reset; HB11 exposes core-reset in MONITOR_STATUS bit 3; this method does not itself
+verify that bit and must not infer reset from the broader blocked status. A
 backend must surface the hardware's rejection if that precondition is violated.
 No generation advancement or lifecycle orchestration is implemented here.
 
@@ -68,7 +69,7 @@ A changed capture sequence returns false; an I/O failure throws. Both leave the
 caller's snapshot unchanged. Configuration failures may leave partial staging, or
 an effective commit if its final fence failed. Do not blindly retry, enable or
 report configuration success after an exception. Lifecycle reconciliation belongs
-to the future sole-owner service.
+to the sole-owner runtime/service.
 
 ## Validation and next work
 
@@ -77,6 +78,6 @@ EDF's `do_semantics` ARM QEMU task. It verifies wire layout, status/telemetry
 decoding, signed extremes, rejection and injected failures at every access/fence.
 These tests do not establish Linux mapping, AXI error delivery or fence semantics.
 
-Next is the inhibited Linux backend and OS-enforced sole owner, followed by
-service/client IPC and maintenance lifecycle. Shared-HALT GPIO binding and
-acknowledgment must be qualified before any maintenance motion is enabled.
+The inhibited Linux backend, exclusive kernel backend, service/client IPC and
+commissioning lifecycle are implemented. Joint monitor recovery/ARM admission and
+board qualification remain pending; see the consolidated programming guide.

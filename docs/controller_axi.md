@@ -218,3 +218,13 @@ clear protective latches; acknowledgment/rearm is still required.
 The host's optional nonzero duty floor is not an FPGA interlock. Zero is always
 allowed; limit and floor changes require service restart/rearm. See
 [commissioning](../software/linux/direct-duty.md).
+
+## Revision 9 monitor supervision
+
+The controller now requires qualified `hb_async` before enable, and combines its
+sticky monitor fault into the outward `coast_req` output. Existing physical
+faults and drive_enable remain. Revision 10 registers drive_enable for GPIO
+diagnostics, adding one controller-clock delay to that readout while leaving
+PWM/coast protection unchanged. See [PL monitor integration](pl_monitor_progress.md)
+for MONITOR_CAPABILITY/STATUS/ACK (0x1064/0x1068/0x106C), disabled/reset recovery,
+software compatibility and test evidence. This is not the UART/ARM interlock.

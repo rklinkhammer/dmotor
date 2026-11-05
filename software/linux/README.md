@@ -1,4 +1,13 @@
-# Inhibited Linux inspection backend
+# Linux access: production driver and inhibited inspection
+
+For current PS programming interfaces, read the
+[controller programming guide](../../docs/controller_programming.md).
+The exclusive `/dev/dmotor0` driver and sole-owner daemon are implemented; see
+[production commissioning](production.md). [Development tooling](../DEVELOPMENT.md)
+covers formatting, analysis and tests. The remainder of this document describes
+the separate UIO inspection path.
+
+## Inhibited Linux inspection backend
 
 This is an opt-in UIO bring-up path, **not the motion-capable production backend**.
 `dmotor-inspect` identifies DMI2 and reads status/captured telemetry while all
@@ -58,9 +67,8 @@ binding. No production overlay or image was changed by this increment.
 
 The option acknowledges a physical precondition; it does not drive a HALT GPIO.
 The tool performs one bounded inspection and exits. It cannot clear faults or
-start motion. It does not provide the HALT-on-exit lifecycle of the future
-maintenance application; that application must use the sole-owner service and a
-qualified shared-HALT binding.
+start motion. It does not provide the HALT-on-exit lifecycle of the maintenance
+application, which uses the sole-owner service and shared-HALT binding.
 
 These integration fragments are provided for board bring-up, not claimed as a
 built or board-tested kernel/overlay combination. No automatic boot service,
@@ -75,9 +83,9 @@ EDF's existing recipe also runs it under ARM QEMU user emulation. The fixtures
 exercise Linux calls and decoding, not UIO driver behavior, FPGA register side
 effects, device-memory attributes, physical inhibition or AXI completion.
 
-For production, prefer a small kernel driver with exclusive-open ownership,
-restricted operations and a defined FPGA removal/reset policy, unless UIO's
-remaining limitations are explicitly resolved. Kernel mediation alone does not
+Use the implemented `dmotor_access` kernel driver for the production-access
+commissioning path: it provides exclusive-open ownership, restricted operations
+and a defined FPGA removal/reset policy. UIO remains an inhibited diagnostic path. Kernel mediation alone does not
 make a nonresponding AXI slave recoverable; bus timeout/error behavior still needs
-qualification. The next software step is sole-owner service/lifecycle integration
-and the shared-HALT platform contract, with powered motion gated on those results.
+qualification. The driver/service lifecycle now exists; the joint monitor recovery/ARM coordinator
+and target qualification remain outstanding.

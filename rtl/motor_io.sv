@@ -18,6 +18,7 @@ module dmotor_motor_io #(
     output wire [255:0] positions,watchdog_fault_times,
     output wire [127:0] watchdog_faults,
     output wire shared_halt,
+    output wire coast_req,
     output wire target_inhibit,
     output wire [3:0] enabled,
     input wire [3:0] authorized, invalidate_mask,
@@ -107,6 +108,10 @@ module dmotor_motor_io #(
       .direction(direct_direction),.applied_duty_q16(direct_applied),.reversing(),.timestamp(),.application_timestamp());
     assign global_inhibit=inhibit || aggregated || |halt_detected || |external_latches || |physical_sync || ctrl_fault || |(enabled & safety_inhibits);
     assign shared_halt=aggregated || |safety_requests || ctrl_halt;
+    // Dedicated outward coast request. Keep external/PS HALT out of local
+    // fault attribution, but retain coast until explicit external acknowledge.
+    // Uses the existing shared synchronizer; never add an independent CDC chain.
+    assign coast_req=shared_halt || halt_sync || |external_latches;
     assign fault=ctrl_fault || |watchdog_faults;
     assign halt_request=shared_halt;
     always @(posedge clk)begin

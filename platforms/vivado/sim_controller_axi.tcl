@@ -5,7 +5,7 @@ if {[info exists ::env(DMOTOR_ENGINE_PROFILE)]} {
 }
 set out [file join $root build controller_axi_sim]
 create_project -force controller_axi_sim $out -part xc7z020clg400-1
-foreach f {timing controller_registers batch_registers atomic_hls_adapter atomic_mailbox_arbiter shared_scheduler target_age pwm shared_control mailbox_control shared_engine_transport motor_engine_adapter integrated_control safety qcencoder encoder_snapshot motor_io axi_host controller_axi} {add_files [file join $root rtl ${f}.sv]}
+foreach f {timing controller_registers batch_registers atomic_hls_adapter atomic_mailbox_arbiter shared_scheduler target_age pwm shared_control mailbox_control shared_engine_transport motor_engine_adapter integrated_control safety qcencoder encoder_snapshot motor_io monitor_heartbeat axi_host controller_axi} {add_files [file join $root rtl ${f}.sv]}
 foreach dir [list [file join $root build vitis_atomic hls syn verilog] [file join $engine_profile build vitis_dispatcher hls syn verilog]] {
     add_files [glob [file join $dir *.v]]
     foreach pat {*.dat *.mem} {foreach f [glob -nocomplain [file join $dir $pat]] {add_files $f}}

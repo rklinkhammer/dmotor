@@ -1,0 +1,16 @@
+{
+  "tool": "Vivado 2026.1",
+  "controller_revision": 10,
+  "hls_source": "Existing build/vitis_atomic and build/product/engine/build/vitis_dispatcher; not fingerprint-qualified release rebuild",
+  "sha256": {
+    "rtl/controller_axi.sv": "abd629702a52a6e1003e6e49fcc5d627978d69f1c5258baae3585fdf08f02534",
+    "rtl/motor_io.sv": "8e74cb6b2286a9c1d5649b7370050802f297c4db4e842fe48dc0690cf2aac805",
+    "rtl/monitor_heartbeat.sv": "f192dac6d09b427046d7e1c70e8f297e08dfe948bd0e9290befb3b2d1b7f94c9",
+    "constraints/controller_halt.xdc": "746e6a9938419995e038fa3b33ea667dde08e51fd05af44e7c48ffd1dfe63bcf",
+    "platforms/arty-z7-20/vivado/design_1.bd": "4a6b8b0e510111985269bcd1cadcf678d472517bcebdc5444eb2b1a1095e9053",
+    "platforms/arty-z7-20/constraints/arty-z7-20.xdc": "9cae71a5f0c64b5a768e276de185efbd82381c9a36a39e1dd897724f4778bb81",
+    "platforms/vivado/export_current.tcl": "8ae8ac381d38f750a1728af074bb30b07357826521edc7f6bad9b365321e877c",
+    "tests/controller_axi_tb.sv": "fd5f04b139a5bee8d48012ba0d350578c0faee18564cfc188b789f5d7afadb2e",
+    "build/current_ip/controller_axi/ip/component.xml": "09e22c6e31fe16879696ba4fc1339c4be3b6328b5a61f337a7037997c5c8440f"
+  }
+}
