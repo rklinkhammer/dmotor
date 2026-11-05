@@ -1,5 +1,10 @@
 # Documentation index
 
+**For review:** [integrated Zynq/ESP32 development and bring-up plan](system_bringup_plan.md)
+and [documentation consolidation/archive proposal](documentation_consolidation_plan.md).
+The [initial requirements-to-test matrix](system_requirements_matrix.md) provides
+traceability for gate review. These are drafts; the archive migration has not been executed.
+
 [Daemon client library](../software/CLIENT.md): required typed API for all daemon callers.
 
 [Controller programming guide](controller_programming.md): consolidated PS interfaces,
