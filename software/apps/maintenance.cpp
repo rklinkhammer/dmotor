@@ -1,13 +1,11 @@
-#include "dmotor_sw/service_protocol.hpp"
+#include "dmotor_sw/client.hpp"
 #include "dmotor_sw/version.hpp"
-#include <sys/socket.h>
-#include <sys/un.h>
 #include <poll.h>
 #include <unistd.h>
 #include <termios.h>
 #include <csignal>
 #include <chrono>
-#include <cstring>
+#include <functional>
 #include <cstdlib>
 #include <iostream>
 #include <sstream>
@@ -19,30 +17,14 @@ volatile std::sig_atomic_t exiting = 0;
 void stop(int) {
     exiting = 1;
 }
-struct Connection {
-    int fd = -1;
+struct Terminal {
     termios original{};
     bool terminal = false;
-    ~Connection() {
+    ~Terminal() {
         if (terminal)
             tcsetattr(STDIN_FILENO, TCSANOW, &original);
-        if (fd >= 0)
-            close(fd);
     }
 };
-Response exchange(int fd, const Request& r) {
-    if (send(fd, &r, sizeof(r), MSG_NOSIGNAL) != sizeof(r))
-        throw std::runtime_error("Service disconnected; HALT not confirmed");
-    pollfd p{fd, POLLIN, 0};
-    constexpr int response_timeout_ms = 250;
-    if (poll(&p, 1, response_timeout_ms) <= 0)
-        throw std::runtime_error("Service response timeout; HALT not confirmed");
-    Response reply{};
-    if (recv(fd, &reply, sizeof(reply), MSG_TRUNC) != sizeof(reply) ||
-        reply.schema != service_schema)
-        throw std::runtime_error("Invalid service response; HALT not confirmed");
-    return reply;
-}
 int32_t rpm(std::string s) {
     bool negative = false;
     if (!s.empty() && (s[0] == '-' || s[0] == '+')) {
@@ -91,10 +73,7 @@ int main(int argc, char** argv) {
         return 2;
     }
     try {
-        Connection c;
-        c.fd = socket(AF_UNIX, SOCK_SEQPACKET | SOCK_CLOEXEC, 0);
-        sockaddr_un address{};
-        address.sun_family = AF_UNIX;
+        Terminal c;
 #ifdef DMOTOR_TEST_SERVICE
         const char* test_directory = std::getenv("DMOTOR_TEST_DIRECTORY");
         if (!test_directory || !*test_directory)
@@ -103,13 +82,7 @@ int main(int argc, char** argv) {
 #else
         const std::string socket_name = "/run/dmotor/control.sock";
 #endif
-        if (socket_name.size() >= sizeof(address.sun_path))
-            throw std::runtime_error("Socket path too long");
-        std::memcpy(address.sun_path, socket_name.c_str(), socket_name.size() + 1);
-        if (c.fd < 0 || connect(c.fd, reinterpret_cast<sockaddr*>(&address), sizeof(address)))
-            throw std::runtime_error("Cannot connect to dmotord");
-        // Initial reply establishes ownership; a second client is disconnected.
-        exchange(c.fd, Request{});
+        Client client(socket_name);
         if (isatty(STDIN_FILENO)) {
             if (tcgetattr(STDIN_FILENO, &c.original))
                 throw std::runtime_error("Cannot read terminal mode");
@@ -130,7 +103,7 @@ int main(int argc, char** argv) {
         auto ping = std::chrono::steady_clock::now();
         while (!exiting) {
             pollfd input{STDIN_FILENO, POLLIN, 0};
-            poll(&input, 1, static_cast<int>(client_ping_ms));
+            poll(&input, 1, static_cast<int>(Client::recommended_ping_ms));
             if (exiting)
                 break;
             if (input.revents & (POLLIN | POLLHUP)) {
@@ -140,9 +113,7 @@ int main(int argc, char** argv) {
                     break;
                 }
                 if (ch == '!') {
-                    Request r;
-                    r.operation = Operation::halt;
-                    const auto reply = exchange(c.fd, r);
+                    const auto reply = client.halt();
                     line.clear();
                     std::cout << (reply.okay ? "\nHALT confirmed\n" : "\nHALT failed\n") << "> "
                               << std::flush;
@@ -151,8 +122,7 @@ int main(int argc, char** argv) {
                         std::istringstream in(line);
                         char op = 0;
                         in >> op;
-                        Request r;
-                        r.mask = mask;
+                        std::function<ClientResult()> command;
                         if (op == 'm') {
                             uint32_t selected = 0;
                             std::string extra;
@@ -163,10 +133,10 @@ int main(int argc, char** argv) {
                         } else if (op) {
                             switch (op) {
                                 case 's':
-                                    r.operation = Operation::status;
+                                    command = [&] { return client.status(); };
                                     break;
                                 case 'r':
-                                    r.operation = Operation::prepare;
+                                    command = [&] { return client.prepare(); };
                                     break;
                                 case 'p': {
                                     std::string value;
@@ -175,39 +145,43 @@ int main(int argc, char** argv) {
                                     const auto milli = rpm(value);
                                     if (milli > 100000 || milli < -100000)
                                         throw std::runtime_error("Duty exceeds 100 percent");
-                                    r.operation = Operation::duty;
-                                    r.velocity[0] = static_cast<int32_t>(
+                                    const auto duty = static_cast<int32_t>(
                                         (int64_t{milli} * 65536 + (milli >= 0 ? 50000 : -50000)) /
                                         100000);
+                                    command = [&, duty] { return client.duty(duty); };
                                     break;
                                 }
                                 case 'x':
-                                    r.operation = Operation::inject_target;
+                                    command = [&] { return client.inject_target_timeout(); };
                                     break;
                                 case 'w':
-                                    r.operation = Operation::inject_watchdog;
+                                    command = [&] { return client.inject_watchdog_timeout(); };
                                     break;
                                 case 'e':
-                                    r.operation = Operation::enable;
+                                    command = [&] { return client.enable(mask); };
                                     break;
                                 case 't':
-                                    r.operation = Operation::stop;
+                                    command = [&] { return client.stop(mask); };
                                     break;
                                 case 'd':
-                                    r.operation = Operation::disable;
+                                    command = [&] { return client.disable(mask); };
                                     break;
                                 case 'q':
                                     exiting = 1;
                                     break;
-                                case 'v':
-                                    r.operation = Operation::velocity;
-                                    for (auto& v : r.velocity) {
+                                case 'v': {
+                                    std::array<int32_t, 4> targets{};
+                                    for (auto& v : targets) {
                                         std::string value;
                                         if (!(in >> value))
                                             throw std::runtime_error("Four RPM values required");
                                         v = rpm(value);
                                     }
+                                    command = [&, targets] {
+                                        return client.velocity(mask, targets);
+                                    };
                                     break;
+                                }
                                 default:
                                     throw std::runtime_error("Unknown menu command");
                             }
@@ -215,24 +189,22 @@ int main(int argc, char** argv) {
                             if (in >> extra)
                                 throw std::runtime_error("Unexpected input");
                             if (!exiting) {
-                                auto reply = exchange(c.fd, r);
+                                auto reply = command();
                                 std::cout << (reply.okay ? "Accepted" : "Rejected; HALT requested")
                                           << " status=0x" << std::hex << reply.status << std::dec
                                           << " applied=" << reply.applied << " " << reply.message
                                           << '\n';
                                 if (op == 's')
                                     for (unsigned m = 0; m < 4; ++m) {
-                                        uint64_t p = (uint64_t{reply.position_hi[m]} << 32) |
-                                                     reply.position_lo[m];
-                                        const auto signed_p =
-                                            p <= uint64_t{INT64_MAX}
-                                                ? static_cast<int64_t>(p)
-                                                : -1 - static_cast<int64_t>(UINT64_MAX - p);
-                                        std::cout << "motor " << m << " position=" << signed_p
-                                                  << " measured_mrpm=" << reply.measured[m] << '\n';
+                                        std::cout << "motor " << m
+                                                  << " position=" << reply.position_counts[m]
+                                                  << " measured_mrpm=" << reply.measured_mrpm[m]
+                                                  << '\n';
                                     }
                             }
                         }
+                    } catch (const ClientError&) {
+                        throw;
                     } catch (const std::exception& e) {
                         std::cerr << e.what() << '\n';
                     }
@@ -247,16 +219,13 @@ int main(int argc, char** argv) {
                     throw std::runtime_error("Input line too long");
             }
             const auto now = std::chrono::steady_clock::now();
-            if (now - ping >= std::chrono::milliseconds(client_ping_ms)) {
-                Request r;
-                r.operation = Operation::ping;
-                exchange(c.fd, r);
+            if (now - ping >= std::chrono::milliseconds(Client::recommended_ping_ms)) {
+                if (!client.ping().okay)
+                    throw ClientError("Lease renewal rejected");
                 ping = now;
             }
         }
-        Request quit;
-        quit.operation = Operation::quit;
-        if (!exchange(c.fd, quit).okay)
+        if (!client.quit().okay)
             throw std::runtime_error("HALT not confirmed");
         std::cout << "HALT ALL confirmed; maintenance closed.\n";
     } catch (const std::exception& e) {

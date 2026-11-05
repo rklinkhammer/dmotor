@@ -20,6 +20,9 @@ validates software semantics, not the FPGA or kernel driver's physical behavior.
 
 ## Current interfaces and implementation
 
+All daemon callers must use the [client library](CLIENT.md), including the migrated
+`dmotor-maint`. It exposes typed C++ calls and an installable `dmotor::client` target.
+
 Start with the [controller programming guide](../docs/controller_programming.md)
 for service IPC, runtime APIs, kernel ioctls, PL configuration/telemetry, timing,
 ownership and monitor UART rules. See [DEVELOPMENT.md](DEVELOPMENT.md) for the

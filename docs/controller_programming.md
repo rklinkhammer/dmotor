@@ -16,7 +16,7 @@ The ESP32 implementation belongs in `software/esp32/` in this repository.
 
 | Interface | Owner and intended caller | Source of truth |
 |---|---|---|
-| Maintenance client → daemon | One local client; daemon owns all motion intent | `software/include/dmotor_sw/service_protocol.hpp` |
+| Application → client library → daemon | One local client; daemon owns all motion intent | Public `software/include/dmotor_sw/client.hpp`; internal `service_protocol.hpp` |
 | Runtime lifecycle API | One serialized executor in `dmotord` | `software/include/dmotor_sw/runtime.hpp` |
 | Typed configuration/status/telemetry | Runtime → `Protocol` → `Device` | `software/include/dmotor_sw/protocol.hpp` |
 | Platform timing/HALT/MMIO | `KernelDevice` implements `Platform` | `software/linux/kernel_device.cpp` |
@@ -25,7 +25,10 @@ The ESP32 implementation belongs in `software/esp32/` in this repository.
 | PS → monitor UART | Dedicated owner of `monitor::Uart`; not yet used by daemon | `software/protocol/monitor/wire.json` |
 | Inhibited diagnostic UIO | Separate inspection/encoder workflow; cannot coexist with driver binding | `software/linux/README.md` |
 
-Applications should use the service interface. Extend `Runtime` for lifecycle
+All applications communicating with the daemon must use the
+[`dmotor_client` library](../software/CLIENT.md), exposed as `dmotor::client` and
+`dmotor_sw::Client`. `dmotor-maint` uses it; new clients must not duplicate socket
+serialization or bypass the daemon through the driver. Extend `Runtime` for lifecycle
 behavior and `Protocol` for typed serialization; do not add raw register writes to
 clients. `Device` requires aligned, peripheral-relative 32-bit reads/writes and a
 completion fence. Access failure throws `IoError`; never substitute zero or stale
@@ -43,6 +46,9 @@ software. Check capability IDs, not just a software version string.
 The daemon listens on `/run/dmotor/control.sock`, AF_UNIX/SOCK_SEQPACKET, in a
 0700 directory with a 0600 socket. Only one client is admitted. Connect/open does
 not prepare or enable anything. There is no TCP or remote-control protocol.
+
+The following wire details are for protocol maintenance and testing. Applications
+call typed Client methods; the internal wire header is not an application SDK.
 
 Schema 1 uses the native local C++ ABI with fixed-width fields and size assertions:
 `Request` is 28 bytes; `Response` is 192 bytes. It is **not** a portable serialized
@@ -78,9 +84,11 @@ expose all telemetry validity/fault fields; extend the versioned API if needed.
 
 `okay=1` means the handler completed, not that motion has physically occurred or a
 new target has already applied. Track the global applied sequence separately.
-`okay=0` reports a rejected command and the daemon attempts HALT. A disconnect or
-missing response leaves outcome unknown; reconnect never resumes motion. Use the
-header's enum names in C++ rather than embedding the numeric values above.
+`okay=0` reports a rejected command and the daemon attempts HALT. The client
+library returns this as `ClientResult::okay=false`; transport/protocol failures
+throw `ClientError` and permanently close that connection. A disconnect or
+missing response leaves outcome unknown; reconnect never resumes motion. Use typed client methods rather than embedding operation numbers or constructing
+wire requests in applications.
 
 The maintenance client sends a ping every 100 ms while idle. Current policy permits
 500 ms without client activity. All structurally valid requests renew the lease;

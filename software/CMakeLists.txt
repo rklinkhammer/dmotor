@@ -26,6 +26,30 @@ add_test(NAME software_protocol COMMAND dmotor-protocol-tests)
 install(TARGETS dmotor-protocol-tests RUNTIME DESTINATION bin)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+  include(GNUInstallDirs)
+  include(CMakePackageConfigHelpers)
+  add_library(dmotor_client STATIC linux/client.cpp)
+  add_library(dmotor::client ALIAS dmotor_client)
+  set_target_properties(dmotor_client PROPERTIES EXPORT_NAME client POSITION_INDEPENDENT_CODE ON)
+  target_compile_features(dmotor_client PUBLIC cxx_std_14)
+  target_include_directories(dmotor_client PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+  target_compile_options(dmotor_client PRIVATE -Wall -Wextra -Werror -Wconversion)
+  if(DMOTOR_SW_SANITIZE)
+    target_compile_options(dmotor_client PUBLIC -fsanitize=undefined -fno-sanitize-recover=all)
+    target_link_options(dmotor_client PUBLIC -fsanitize=undefined)
+  endif()
+  install(TARGETS dmotor_client EXPORT dmotorClientTargets
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+  install(FILES include/dmotor_sw/client.hpp DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/dmotor_sw)
+  install(EXPORT dmotorClientTargets NAMESPACE dmotor::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/dmotorClient)
+  configure_package_config_file(cmake/dmotorClientConfig.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/dmotorClientConfig.cmake
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/dmotorClient)
+  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/dmotorClientConfig.cmake
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/dmotorClient)
   add_library(dmotor_linux linux/inspection.cpp linux/kernel_device.cpp linux/monitor_uart.cpp)
   target_link_libraries(dmotor_linux PUBLIC dmotor_semantics)
   target_compile_options(dmotor_linux PRIVATE -Wall -Wextra -Werror -Wconversion)
@@ -36,7 +60,11 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
       set(executable dmotor-maint)
     endif()
     add_executable(${executable} apps/${app}.cpp)
-    target_link_libraries(${executable} PRIVATE dmotor_linux)
+    if(app STREQUAL "maintenance")
+      target_link_libraries(${executable} PRIVATE dmotor_client dmotor_semantics)
+    else()
+      target_link_libraries(${executable} PRIVATE dmotor_linux)
+    endif()
     target_compile_options(${executable} PRIVATE -Wall -Wextra -Werror -Wconversion)
     install(TARGETS ${executable} RUNTIME DESTINATION bin)
   endforeach()
@@ -75,7 +103,18 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND NOT CMAKE_CROSSCOMPILING)
   target_link_libraries(dmotord-fixture PRIVATE dmotor_semantics)
   add_executable(dmotor-maint-fixture apps/maintenance.cpp)
   target_compile_definitions(dmotor-maint-fixture PRIVATE DMOTOR_TEST_SERVICE)
-  target_link_libraries(dmotor-maint-fixture PRIVATE dmotor_semantics)
+  target_link_libraries(dmotor-maint-fixture PRIVATE dmotor_client dmotor_semantics)
+  add_executable(dmotor-client-tests tests/client_test.cpp)
+  target_link_libraries(dmotor-client-tests PRIVATE dmotor_client)
+  target_compile_options(dmotor-client-tests PRIVATE -Wall -Wextra -Werror -Wconversion)
+  add_test(NAME software_client COMMAND ${Python3_EXECUTABLE}
+    ${CMAKE_CURRENT_SOURCE_DIR}/tests/client_test.py $<TARGET_FILE:dmotor-client-tests>)
+  add_test(NAME software_client_package COMMAND ${CMAKE_COMMAND}
+    -DPROJECT_BUILD=${CMAKE_CURRENT_BINARY_DIR}
+    -DTEST_SOURCE=${CMAKE_CURRENT_SOURCE_DIR}/tests/client_consumer
+    -DTEST_ROOT=${CMAKE_CURRENT_BINARY_DIR}/client-package-test
+    -DTEST_COMPILER=${CMAKE_CXX_COMPILER}
+    -P ${CMAKE_CURRENT_SOURCE_DIR}/tests/client_package_test.cmake)
   add_test(NAME software_startup COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/startup_test.py $<TARGET_FILE:dmotord-fixture> $<TARGET_FILE:dmotor-maint-fixture>)
   add_test(NAME software_powered COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/service_test.py $<TARGET_FILE:dmotord-fixture> $<TARGET_FILE:dmotor-maint-fixture> --powered)
   add_test(NAME software_direct COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/service_test.py $<TARGET_FILE:dmotord-fixture> $<TARGET_FILE:dmotor-maint-fixture> --direct)

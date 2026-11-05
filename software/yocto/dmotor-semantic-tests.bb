@@ -33,3 +33,11 @@ RDEPENDS:dmotor-encoder += "dmotor-version"
 PACKAGES =+ "dmotor-runtime"
 FILES:dmotor-runtime = "${bindir}/dmotord ${bindir}/dmotor-maint ${datadir}/dmotor/inhibited-example.conf ${datadir}/dmotor/output-validation.conf ${datadir}/dmotor/powered-direct-duty.conf ${datadir}/dmotor/monitor"
 RDEPENDS:dmotor-runtime += "dmotor-version"
+
+# Client SDK: static library and standalone public header/CMake imported target.
+# Runtime clients link this library; no daemon internals or MMIO headers are exported.
+PACKAGES =+ "dmotor-client-staticdev dmotor-client-dev"
+FILES:dmotor-client-staticdev = "${libdir}/libdmotor_client.a"
+FILES:dmotor-client-dev = "${includedir}/dmotor_sw/client.hpp ${libdir}/cmake/dmotorClient"
+RDEPENDS:dmotor-client-staticdev = "dmotor-client-dev (= ${EXTENDPKGV})"
+RDEPENDS:dmotor-client-dev = ""

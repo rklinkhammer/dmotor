@@ -1,5 +1,8 @@
 # Typed controller protocol
 
+Application-to-daemon calls use the [client library](CLIENT.md); all daemon callers
+must use it. This document describes the separate daemon-to-PL typed protocol.
+
 `dmotor_sw::Protocol` is the first hardware-facing software layer. It uses a
 `Device` interface and the existing generated register definitions and controller
 host helpers. An opt-in inhibited [Linux mapping backend](linux/README.md) is available; the

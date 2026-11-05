@@ -62,5 +62,13 @@
   "software/.clang-format",
   "software/.clang-tidy",
   "software/tools/format.py",
-  "software/tests/startup_test.py"
+  "software/tests/startup_test.py",
+  "software/include/dmotor_sw/client.hpp",
+  "software/linux/client.cpp",
+  "software/cmake/dmotorClientConfig.cmake.in",
+  "software/tests/client_test.cpp",
+  "software/tests/client_test.py",
+  "software/tests/client_package_test.cmake",
+  "software/tests/client_consumer/CMakeLists.txt",
+  "software/tests/client_consumer/main.cpp"
 ]

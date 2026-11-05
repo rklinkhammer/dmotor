@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.16)
+project(client_consumer LANGUAGES CXX)
+find_package(dmotorClient CONFIG REQUIRED)
+add_executable(client-consumer main.cpp)
+target_link_libraries(client-consumer PRIVATE dmotor::client)

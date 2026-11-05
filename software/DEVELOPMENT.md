@@ -77,3 +77,11 @@ scripts/configs there so EDF's isolated source archive remains buildable. For a
 new release, use the current EDF staging/build workflow in [build.md](../docs/build.md)
 and EDF's build guide; never edit installed source-version metadata to claim a
 new source tree matches an old binary. Formatting changes also change source hashes.
+
+## Daemon application development
+
+Use the [client library](CLIENT.md) for all daemon calls. Link `dmotor::client`;
+do not include the internal wire header or duplicate socket/MMIO access in an app.
+CTest includes client transport failures, daemon integration through maintenance,
+and a separate installed CMake consumer. The client is packaged independently of
+the daemon's runtime/MMIO implementation.

@@ -1,5 +1,7 @@
 # Documentation index
 
+[Daemon client library](../software/CLIENT.md): required typed API for all daemon callers.
+
 [Controller programming guide](controller_programming.md): consolidated PS interfaces,
 lifecycle, units, ownership and failure rules.
 [PS development workflow](../software/DEVELOPMENT.md): formatting, analysis and tests.
