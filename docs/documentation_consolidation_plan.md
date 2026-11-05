@@ -7,7 +7,8 @@ while reviewers decide the replacement content and requirement ownership.
 
 G1d accepts ownership rules and the initial [requirements-to-test matrix](system_requirements_matrix.md).
 Archive extraction/migration proceeds in parallel with B2–B4 work and completes
-before G7. It is not a prerequisite for starting independently approved software
+before G7 acceptance; any remaining migration is a B7 work item, not a B7 entry
+prerequisite. It is not a prerequisite for starting independently approved software
 or inhibited electrical work. Preserve the B1–B7/BV identifiers and separate GV
 vehicle gate when extracting the older PS-only phase plan.
 

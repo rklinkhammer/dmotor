@@ -60,7 +60,8 @@ scope, not qualification of the newly integrated monitor system.
    Global HALT requests all-channel coast through the monitor gate.
 7. **Current commissioning timing:** 100 ms authorization, 20 ms refresh, 100 Hz
    target publication, 100 ms target timeout and 500 ms client lease are the initial
-   policy. They require target measurements, not merely matching constants.
+   policy. They require target measurements, not merely matching constants; see
+  SYS-18 in the requirements matrix.
 8. **Development baseline:** PS C++14, clang-format/clang-tidy 18, native UBSan/tests;
    ESP-IDF tools stay separate. No build, connection or service start automatically
    arms, enables motion or flashes hardware.
@@ -132,7 +133,8 @@ G1 is a planning group, not an all-or-nothing barrier or a blanket approval to p
   command admission, cleanup proof, freshness and uncertainty behavior for every
   transition; determine any remaining PL observability/ABI changes explicitly.
 - Select a conditional R4 candidate: independent PL-progress supervision or an
-  explicitly bounded narrower supported failure model, to be tested before final adoption. Distinguish clock stop, reset, unconfigured fabric,
+  explicitly bounded narrower supported failure model, to be tested before final
+  adoption. Distinguish clock stop, reset, unconfigured fabric,
   reconfiguration and power loss. No XDC-only fix or HB-based inference closes R4.
   Identify any required rev-A rework, test fixture, harness change or new board.
 - Finish the absolute monitor acquisition budget, timeout/early-abort rules, sensor
@@ -208,7 +210,8 @@ FPGA reconfiguration; software HALT may disappear when fabric is reconfigured.
   candidate disposition where required, without energizing motors.
 - Verify encoders manually and synthetic signals with drive disconnected. Check
   direction/count mapping, channel independence, PWM/PH/HB/coast logic and UART
-  framing with a scope/logic analyzer. Internal drive_enable is diagnostic only.
+  framing with a scope/logic analyzer. Record encoder sign/count/CPR mapping under
+  SYS-19 before using it for commissioning. Internal drive_enable is diagnostic only.
 
 **Deliverables:** board/harness checklist, rail/logic measurements, encoder mapping,
 UART loop/exchange evidence, correct software/hardware identities and defect list.
@@ -330,6 +333,7 @@ from B5, with operator/battery/bystander controls and review mode assigned.
    and configuration identity; do not weaken sensor protection to achieve a pass.
 3. Expand to simultaneous channels, load changes and selected STOP/disable while
    peers run; verify supply interactions, global faults and global rearm effects.
+
 **Deliverables:** motor profiles, measured single-/multi-motor commissioning records
 and the accepted motor operating envelope.
 
@@ -364,8 +368,11 @@ out of release scope and retain U08 as deferred, not resolved.
 
 ## 9. B7 — Release, deployment and maintenance qualification
 
-**Entry:** G2–G6 closed, G1d documentation migration complete, and GV closed for a
-full-vehicle release. No unresolved issue is silently excluded from the release scope.
+**Entry:** G1a–G1d and G2–G6 accepted, with the final G5 R4 disposition recorded;
+GV is additionally required for a full-vehicle release. G1d acceptance covers the
+initial mapping and migration rules, not completed migration. Remaining archive
+migration is a B7 work item and must finish before G7 acceptance. No unresolved
+issue is silently excluded from the release scope.
 
 - Build matched PL/XSA/device tree, ARM kernel/driver/daemon/client packages and
   ESP32 firmware from recorded revisions. Re-run native and target tests; include
@@ -379,12 +386,16 @@ full-vehicle release. No unresolved issue is silently excluded from the release 
 - Define inhibited update/rollback, FPGA reconfiguration with physical STOP held,
   calibration migration/refusal, log retrieval and recovery from interrupted updates.
   Rollback must preserve protocol compatibility and session-freshness guarantees.
+- Complete the documentation migration and its requirement/issue mapping, link and
+  staged-input checks under G1d/U10; verify that the current index leads to the
+  accepted release documents and historical evidence remains traceable.
 - Archive released artifacts/evidence, current restrictions and reviewer acceptance;
   freeze released interfaces and document any subsequent migration explicitly.
 
 **G7 acceptance:** another operator can reproduce, identify, deploy and recover the
 matched release from the published procedure. All acceptance records are attached;
-remaining restrictions are explicit. Build success alone is not a gate sign-off.
+remaining restrictions are explicit, and documentation migration has passed its
+acceptance checks. Build success alone is not a gate sign-off.
 
 The Zynq build entry point remains:
 
