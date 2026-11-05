@@ -141,6 +141,47 @@ install(FILES protocol/monitor/wire.json protocol/monitor/README.md DESTINATION 
 
 add_test(NAME software_monitor_schema COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/protocol/monitor/generate.py --check)
 
+# Post-pairing recovery model: deliberately not linked into daemon/runtime or installed.
+add_executable(dmotor-recovery-model-tests tests/recovery_model_test.cpp src/recovery_model.cpp)
+target_include_directories(dmotor-recovery-model-tests PRIVATE include)
+target_compile_options(dmotor-recovery-model-tests PRIVATE -Wall -Wextra -Werror -Wconversion)
+if(DMOTOR_SW_SANITIZE)
+  target_compile_options(dmotor-recovery-model-tests PRIVATE -fsanitize=undefined -fno-sanitize-recover=all)
+  target_link_options(dmotor-recovery-model-tests PRIVATE -fsanitize=undefined)
+endif()
+add_test(NAME software_recovery_model COMMAND dmotor-recovery-model-tests)
+
+# Isolated Linux session-store tests; not linked into the service or installed.
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+  add_executable(dmotor-endpoint-session-tests tests/endpoint_session_test.cpp linux/endpoint_session.cpp)
+  target_include_directories(dmotor-endpoint-session-tests PRIVATE include)
+  target_compile_options(dmotor-endpoint-session-tests PRIVATE -Wall -Wextra -Werror -Wconversion)
+  target_link_options(dmotor-endpoint-session-tests PRIVATE -Wl,--wrap=write -Wl,--wrap=fsync)
+  if(DMOTOR_SW_SANITIZE)
+    target_compile_options(dmotor-endpoint-session-tests PRIVATE -fsanitize=undefined -fno-sanitize-recover=all)
+    target_link_options(dmotor-endpoint-session-tests PRIVATE -fsanitize=undefined)
+  endif()
+  add_test(NAME software_endpoint_session COMMAND dmotor-endpoint-session-tests)
+endif()
+
+# Symmetric pairing/replay model only; no service installation or live admission.
+add_executable(dmotor-session-link-tests tests/session_link_test.cpp src/session_link.cpp)
+target_link_libraries(dmotor-session-link-tests PRIVATE dmotor_semantics)
+target_compile_options(dmotor-session-link-tests PRIVATE -Wall -Wextra -Werror -Wconversion)
+add_test(NAME software_session_link COMMAND dmotor-session-link-tests)
+
+# Isolated PS adapter with scripted monitor fixture; never installed.
+add_executable(dmotor-recovery-link-tests tests/recovery_link_test.cpp src/recovery_link.cpp src/recovery_model.cpp src/session_link.cpp)
+target_link_libraries(dmotor-recovery-link-tests PRIVATE dmotor_semantics)
+target_compile_options(dmotor-recovery-link-tests PRIVATE -Wall -Wextra -Werror -Wconversion)
+add_test(NAME software_recovery_link COMMAND dmotor-recovery-link-tests)
+
+# Host-only behavioral monitor and joint recovery simulation; never installed.
+add_executable(dmotor-monitor-simulator-tests tests/monitor_simulator_test.cpp tests/support/monitor_simulator.cpp src/recovery_link.cpp src/recovery_model.cpp src/session_link.cpp)
+target_link_libraries(dmotor-monitor-simulator-tests PRIVATE dmotor_semantics)
+target_compile_options(dmotor-monitor-simulator-tests PRIVATE -Wall -Wextra -Werror -Wconversion)
+add_test(NAME software_monitor_simulator COMMAND dmotor-monitor-simulator-tests)
+
 # Developer tools are opt-in and are not dependencies of an EDF target build.
 option(DMOTOR_SW_CLANG_TIDY "Run clang-tidy 18 while compiling PS software" OFF)
 if(DMOTOR_SW_CLANG_TIDY)

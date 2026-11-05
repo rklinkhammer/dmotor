@@ -1,0 +1,41 @@
+[  6%] Built target dmotor_client
+[  8%] Built target dmotor-recovery-model-tests
+[ 13%] Built target dmotor-endpoint-session-tests
+[ 16%] Built target dmotor-client-tests
+[ 16%] Built target dmotor_version
+[ 18%] Building CXX object CMakeFiles/dmotor_semantics.dir/src/version.cpp.o
+[ 20%] Linking CXX static library libdmotor_semantics.a
+[ 28%] Built target dmotor_semantics
+[ 30%] Linking CXX executable dmotor-semantic-tests
+[ 36%] Linking CXX executable dmotor-protocol-tests
+[ 36%] Linking CXX executable dmotor-maint
+[ 40%] Built target dmotor_linux
+[ 41%] Linking CXX executable dmotor-runtime-tests
+[ 43%] Built target dmotor-semantic-tests
+[ 45%] Built target dmotor-protocol-tests
+[ 46%] Linking CXX executable dmotord-fixture
+[ 48%] Built target dmotor-maint
+[ 50%] Linking CXX executable dmotor-maint-fixture
+[ 51%] Built target dmotor-runtime-tests
+[ 53%] Linking CXX executable dmotor-monitor-tests
+[ 55%] Linking CXX executable dmotor-monitor-uart-tests
+[ 60%] Built target dmotord-fixture
+[ 60%] Built target dmotor-maint-fixture
+[ 61%] Linking CXX executable dmotor-session-link-tests
+[ 63%] Built target dmotor-monitor-tests
+[ 65%] Linking CXX executable dmotor-recovery-link-tests
+[ 66%] Built target dmotor-monitor-uart-tests
+[ 68%] Building CXX object CMakeFiles/dmotor-monitor-simulator-tests.dir/tests/monitor_simulator_test.cpp.o
+[ 70%] Linking CXX executable dmotord
+[ 73%] Built target dmotor-session-link-tests
+[ 80%] Built target dmotor-recovery-link-tests
+[ 81%] Linking CXX executable dmotor-encoder
+[ 83%] Linking CXX executable dmotor-inspect
+[ 85%] Built target dmotord
+[ 86%] Linking CXX executable dmotor-linux-tests
+[ 88%] Built target dmotor-inspect
+[ 90%] Building CXX object CMakeFiles/dmotor-monitor-simulator-tests.dir/tests/support/monitor_simulator.cpp.o
+[ 91%] Built target dmotor-encoder
+[ 93%] Built target dmotor-linux-tests
+[ 95%] Linking CXX executable dmotor-monitor-simulator-tests
+[100%] Built target dmotor-monitor-simulator-tests

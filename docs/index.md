@@ -36,3 +36,10 @@ extraction is in progress; unresolved conflicts belong in the issue register.
 [Consolidation/migration tracker](documentation_consolidation_plan.md) records the
 remaining extraction work. [Historical archive, evidence and remaining inventory](archive/index.md)
 is the entry point for previous review rounds, milestones and build records.
+
+- [G1a post-pairing recovery model and remaining integration obligations](g1a_recovery_model.md)
+
+- [G1a PS endpoint-session allocator and storage qualification limits](g1a_endpoint_sessions.md)
+- [G1a endpoint pairing, replay validation and integration obligations](g1a_session_link.md)
+- [G1a recovery wire adapter and scripted exchange evidence](g1a_recovery_link.md)
+- [G1a behavioral monitor simulator, timing assumptions and evidence](g1a_monitor_simulator.md)

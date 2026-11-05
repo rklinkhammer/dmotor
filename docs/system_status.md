@@ -15,7 +15,7 @@ is inferred from starting the plan.
 |---|---|---|
 | Zynq PL | Revision-11 CLN1 cleanup, HB supervision/coast and motor control built and routed; actual atomic/motor HLS lifecycle and interrupted-cleanup tests pass; setup +2.406 ns, hold +0.024 ns, no DRC errors | Electrical response on the assembled system; independent shutdown for PL-only failures |
 | Zynq PS | CLN1-aware exclusive driver/runtime, daemon/client/tools and monitor transport built for ARM; driver compilation and five QEMU semantic executables pass | Full monitor recovery/ARM coordinator, persistent endpoint sessions, bounded diagnostic draining, vehicle planner |
-| Client API | `dmotor_client`, installed `dmotor::client` CMake target and Yocto SDK packaging; maintenance migrated; 14 native tests pass including installed/staged consumer | Client/runtime are in the matched ARM build; physical board/client qualification remains |
+| Client API | `dmotor_client`, installed `dmotor::client` CMake target and Yocto SDK packaging; maintenance migrated; 19 native PS tests pass including installed/staged consumer and recovery model | Client/runtime are in the matched ARM build; physical board/client qualification remains |
 | ESP32 | Native ESP-IDF v6.1 container pinned by digest in `esp32-dev`; ESP32-S3/C3 environment smoke builds | DMOTOR application, safety core, board drivers and target qualification are not implemented |
 | Integration | Shared monitor wire schema and proposed recovery v4; saved wiring map | Joint state-machine tests, measured timing and accepted system release |
 | Build evidence | [Current matched hardware/ARM build and SD export](evidence/g1a_product_build/inputs.json); source hashes and export checksums verified | Exported artifacts have not been programmed, booted or electrically qualified |
@@ -47,17 +47,33 @@ Current EDF artifacts (under `edf-dev/artifacts/`):
   [image build info](evidence/g1a_product_build/build-info.json) and
   [software identity](evidence/g1a_product_build/dmotor-source-version.json).
 
-All 72 software-source hashes and both hardware fingerprints match this uncommitted
-checkout. UART Lite is built in; UART Lite console is disabled. I/O confirms HB on
+At export, all 72 software-source hashes and both hardware fingerprints matched
+the recorded build checkout. Later source changes are not included in that image. UART Lite is built in; UART Lite console is disabled. I/O confirms HB on
 CK_IO2/U13, coast on CK_IO3/V13 and UART TX/RX on T14/U12. The build corrected
 prepared-profile test packaging, replaced fixed startup delays with completion
 polling and preserved external-HALT attribution when cleanup is canceled. No board
 was programmed and no SD card was written. Prior builds remain in the archive.
 
-Next development: finish the G1a recovery-admission/session/outcome model and its
-remaining proof cases. Robert's evidence review and the G1b/G1c decisions remain
+The [post-pairing G1a model](g1a_recovery_model.md) now implements host-tested
+admission/uncertain-outcome semantics, isolated from the daemon. The native PS
+suite now has 19 tests, including the isolated [PS session allocator](g1a_endpoint_sessions.md)
+and [pairing/replay link](g1a_session_link.md), now connected through an isolated
+[recovery wire adapter](g1a_recovery_link.md) with scripted monitor exchange tests and a
+[behavioral monitor simulator](g1a_monitor_simulator.md) exercising ARM/fault/expiry
+ordering through the real codec. The matched image above predates
+these isolated model/allocator/link/adapter increments;
+its recorded source hashes remain the authority for what it contains.
+
+Next development: the A1 runtime admission/command-queue hold boundary and its
+integration tests. Target provisioning, ESP32 persistence, storage power-cut qualification,
+remaining G1a proof cases and live admission integration remain open. Robert's evidence review and the G1b/G1c decisions remain
 prerequisites for system qualification; a successful image build does not accept
 those gates.
+
+Physical UART testing belongs to B2/G2 after G1b conditional acceptance, with
+motor drive power disconnected and an inhibited ESP32 diagnostic image. It can
+precede full recovery firmware; no target UART test is recorded yet. See the
+[serial bring-up sequence](system_bringup_plan.md#serial-link-checkpoint).
 
 The first archive pass covers the plan baseline and chronological review/PL/PS/build
 records. [Archive manifest and original copies](archive/index.md) preserve provenance.

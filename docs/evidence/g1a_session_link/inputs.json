@@ -1,0 +1,24 @@
+{
+  "baseline_commit": "b204240a36c0b99afcb212654c4f00bc1578e63c",
+  "scope": "Isolated symmetric pairing/replay host tests through existing framing codec; no daemon integration, installed image update, hardware test or gate acceptance. Includes prior uncommitted recovery-model and allocator work.",
+  "commands": [
+    "cmake -S software -B build/ps-dev -DDMOTOR_SW_SANITIZE=ON",
+    "cmake --build build/ps-dev -j4",
+    "ctest --test-dir build/ps-dev --output-on-failure",
+    "python3 software/tools/format.py --check",
+    "python3 tools/check_documentation_archive.py",
+    "git diff --check"
+  ],
+  "result": "17 native tests passed with UBSan; duplicate-reexecution negative control exited 1 at duplicate assertion; 43 C++ files formatted; 5 archived originals verified.",
+  "negative_control": "Compile session_link_test.cpp and monitor_protocol.cpp with a temporary session_link.cpp replacing the replay return Delivery::duplicate with Delivery::accepted; g++ -std=c++17 -Wall -Wextra -Werror -Wconversion -fsanitize=undefined -fno-sanitize-recover=undefined -Isoftware/include. Repository source not mutated.",
+  "files_sha256": {
+    "software/CMakeLists.txt": "8e85cd430a2f2e7687e910a3ac07dfaecd0ad875a186ec59d49a018c59b85ba0",
+    "software/sources.json": "f737abfa79ba9a96e689bbdc2cef968f9ca7686f88c5da514855a2313d2f81ff",
+    "software/include/dmotor_sw/session_link.hpp": "dff1e115eed81356e15f9ca577f99943f6dd72392a8ca24fe8207b525d3363f9",
+    "software/src/session_link.cpp": "4a807bdc2fa5ffafdb972e5520746f2a192e8d1603e723b11c1e558b200e9b24",
+    "software/tests/session_link_test.cpp": "cf14fd25334101b491bde2decd83f1fe384150b560e90887ea0d0722e5e2d59e",
+    "software/include/dmotor_sw/monitor_protocol.hpp": "8404af9b0d672a7e9a8dcb522c6dbb535789c40e40da4dbea37e52f9ed1d9884",
+    "software/include/dmotor_sw/monitor_wire.hpp": "a6f5cea9fe6272465cbb630b0658c4c96ec56defaff43ca83b41921fd02609d2",
+    "software/src/monitor_protocol.cpp": "fbcc0f7f216e64bb318df28b4e2b754f2ead8b3bc44c8e6b6f24f94e8cf7ba2c"
+  }
+}

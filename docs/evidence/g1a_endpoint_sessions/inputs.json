@@ -1,0 +1,13 @@
+{
+  "baseline_commit": "b204240a36c0b99afcb212654c4f00bc1578e63c",
+  "scope": "Linux allocator host tests only, temporary stores. Not installed, linked into daemon, physically power-cut tested, or qualified for ESP32/rollback resistance.",
+  "command": "cmake -S software -B build/ps-dev -DDMOTOR_SW_SANITIZE=ON; cmake --build build/ps-dev -j4; ctest --test-dir build/ps-dev --output-on-failure",
+  "result": "16 native tests passed under UBSan; skipped-sync negative control failed as expected",
+  "files_sha256": {
+    "software/CMakeLists.txt": "f27feaa3c133c9bf6a0f8ee80ef323937e772b4661f61a384fd1965f2a7ff779",
+    "software/sources.json": "b1104d67b6b15d9b0ec7a2290ff7a00930193ede0e4c340b0ab5637b69354b02",
+    "software/include/dmotor_sw/endpoint_session.hpp": "07055e1a13a56600a4e6669ab86658e8231bd9b45b2387702a2c26f41c6463aa",
+    "software/linux/endpoint_session.cpp": "b237df7f2405ddb2f023e72b2f0246d0203b9252dcbbb7fc905416e39f9cd6a4",
+    "software/tests/endpoint_session_test.cpp": "87db5fbcbad1f751461444568d16f0cd70237db781a2ee909139cd313d8ad7e1"
+  }
+}

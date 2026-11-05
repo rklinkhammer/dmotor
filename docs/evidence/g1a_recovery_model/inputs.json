@@ -1,0 +1,15 @@
+{
+  "baseline_commit": "b204240a36c0b99afcb212654c4f00bc1578e63c",
+  "scope": "Host-only post-pairing semantic model. No daemon/runtime linking, installation, UART/MMIO, storage, ESP32 or hardware qualification.",
+  "command": "cmake -S software -B build/ps-dev -DDMOTOR_SW_SANITIZE=ON; cmake --build build/ps-dev -j4; ctest --test-dir build/ps-dev --output-on-failure",
+  "files_sha256": {
+    "software/CMakeLists.txt": "0f6120c9d89b9705e5198c0292320145a0814e1e74f4405c45701a0ac254acb0",
+    "software/sources.json": "56796085634d8e9355b1e2f264d8aa936a0d018c7c3e9ad3c733adbc0e3c867c",
+    "software/include/dmotor_sw/recovery_model.hpp": "964ce59c2390201bacdbf7cb7d6a1571cbf8f2546546b964de184f980ceef5b2",
+    "software/src/recovery_model.cpp": "398e855ec2c8fe314b8b8da32c6ba945688c763d3bb48829471bb47aa7d4ce5d",
+    "software/tests/recovery_model_test.cpp": "7dc3465f6ef79032231c2a33a69cc5f1b2187b5f245e3279075fae9f5a41ca8e",
+    "software/include/dmotor_sw/monitor_wire.hpp": "a6f5cea9fe6272465cbb630b0658c4c96ec56defaff43ca83b41921fd02609d2"
+  },
+  "negative_control": "COMMIT_ACK opens admission: test rejects mutation",
+  "results": "15 native tests passed with UBSan; review and adapter integration remain open"
+}

@@ -1,0 +1,3 @@
+Mutation: allocate a new wire sequence on each logical retry.
+Exit: 1
+104: identical(commit, retry)

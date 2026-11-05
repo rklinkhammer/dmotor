@@ -1,0 +1,43 @@
+Test project /home/rklinkhammer/workspace/dmotor/build/ps-dev
+      Start  1: software_semantics
+ 1/19 Test  #1: software_semantics ...............   Passed    0.00 sec
+      Start  2: software_protocol
+ 2/19 Test  #2: software_protocol ................   Passed    0.00 sec
+      Start  3: software_linux
+ 3/19 Test  #3: software_linux ...................   Passed    0.00 sec
+      Start  4: software_runtime
+ 4/19 Test  #4: software_runtime .................   Passed    0.00 sec
+      Start  5: software_client
+ 5/19 Test  #5: software_client ..................   Passed    0.65 sec
+      Start  6: software_client_package
+ 6/19 Test  #6: software_client_package ..........   Passed    0.09 sec
+      Start  7: software_startup
+ 7/19 Test  #7: software_startup .................   Passed    0.04 sec
+      Start  8: software_powered
+ 8/19 Test  #8: software_powered .................   Passed    2.86 sec
+      Start  9: software_direct
+ 9/19 Test  #9: software_direct ..................   Passed    2.11 sec
+      Start 10: software_commissioning
+10/19 Test #10: software_commissioning ...........   Passed    2.12 sec
+      Start 11: software_service
+11/19 Test #11: software_service .................   Passed    1.72 sec
+      Start 12: software_monitor
+12/19 Test #12: software_monitor .................   Passed    0.00 sec
+      Start 13: software_monitor_uart
+13/19 Test #13: software_monitor_uart ............   Passed    0.00 sec
+      Start 14: software_monitor_schema
+14/19 Test #14: software_monitor_schema ..........   Passed    0.03 sec
+      Start 15: software_recovery_model
+15/19 Test #15: software_recovery_model ..........   Passed    0.00 sec
+      Start 16: software_endpoint_session
+16/19 Test #16: software_endpoint_session ........   Passed    0.00 sec
+      Start 17: software_session_link
+17/19 Test #17: software_session_link ............   Passed    0.00 sec
+      Start 18: software_recovery_link
+18/19 Test #18: software_recovery_link ...........   Passed    0.00 sec
+      Start 19: software_monitor_simulator
+19/19 Test #19: software_monitor_simulator .......   Passed    0.00 sec
+
+100% tests passed, 0 tests failed out of 19
+
+Total Test time (real) =   9.66 sec

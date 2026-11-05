@@ -70,5 +70,20 @@
   "software/tests/client_test.py",
   "software/tests/client_package_test.cmake",
   "software/tests/client_consumer/CMakeLists.txt",
-  "software/tests/client_consumer/main.cpp"
+  "software/tests/client_consumer/main.cpp",
+  "software/include/dmotor_sw/recovery_model.hpp",
+  "software/src/recovery_model.cpp",
+  "software/tests/recovery_model_test.cpp",
+  "software/include/dmotor_sw/endpoint_session.hpp",
+  "software/linux/endpoint_session.cpp",
+  "software/tests/endpoint_session_test.cpp",
+  "software/include/dmotor_sw/session_link.hpp",
+  "software/src/session_link.cpp",
+  "software/tests/session_link_test.cpp",
+  "software/include/dmotor_sw/recovery_link.hpp",
+  "software/src/recovery_link.cpp",
+  "software/tests/recovery_link_test.cpp",
+  "software/tests/support/monitor_simulator.hpp",
+  "software/tests/support/monitor_simulator.cpp",
+  "software/tests/monitor_simulator_test.cpp"
 ]

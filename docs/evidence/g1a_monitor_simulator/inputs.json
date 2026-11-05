@@ -1,0 +1,35 @@
+{
+  "baseline_commit": "b204240a36c0b99afcb212654c4f00bc1578e63c",
+  "scope": "Host-only behavioral monitor and joint PS exchange simulation. No firmware deployment, physical UART evidence or gate acceptance. Includes prior uncommitted candidates.",
+  "commands": [
+    "cmake -S software -B build/ps-dev -DDMOTOR_SW_SANITIZE=ON",
+    "cmake --build build/ps-dev -j4",
+    "ctest --test-dir build/ps-dev --output-on-failure",
+    "python3 software/tools/format.py --check",
+    "python3 tools/check_documentation_archive.py",
+    "git diff --check"
+  ],
+  "result": "19 native tests pass with UBSan; nine-check ARM negative control exits 1 at permit boundary assertion; 49 C++ files formatted, 5 archive originals verified.",
+  "negative_control": "Temporary copy changes ++healthy_checks_ == 10 to == 9; g++ C++14 UBSan builds monitor_simulator_test.cpp and simulator/recovery_link/recovery_model/session_link/monitor_protocol sources, then runs expected-failure executable. Repository source unchanged.",
+  "review_assumptions": [
+    "300 ms staged lifetime, retries never extend it",
+    "10 ms maximum sample age and ARM scheduling gap",
+    "fault sample precedes message at same timestamp; no proof of firmware atomicity"
+  ],
+  "files_sha256": {
+    "software/CMakeLists.txt": "898fd446756534b039e2f706213572a555c9fe6d99456704281800bb4b8e77d6",
+    "software/sources.json": "ab2e9d61325d06f1ee4e7401d2348da029ecd8657d5495762351f18e1142af06",
+    "software/tests/support/monitor_simulator.hpp": "3b3a1920aed41279fffb8a1d1e3a387e85386b71b19184635feb4f5689dd9322",
+    "software/tests/support/monitor_simulator.cpp": "acb1053499a2ddf805371056273fb9fc64b9cb89d72d4665c6781d078e76362c",
+    "software/tests/monitor_simulator_test.cpp": "4a604d2f14daf3e4a1742c4e5802fd200e7a310115b4620a4bbdce712c77369c",
+    "software/include/dmotor_sw/recovery_model.hpp": "964ce59c2390201bacdbf7cb7d6a1571cbf8f2546546b964de184f980ceef5b2",
+    "software/include/dmotor_sw/recovery_link.hpp": "b82659662d9528b1109a29da13226d2e0c873e0c452668d039415406d67a9b49",
+    "software/include/dmotor_sw/session_link.hpp": "dff1e115eed81356e15f9ca577f99943f6dd72392a8ca24fe8207b525d3363f9",
+    "software/include/dmotor_sw/monitor_protocol.hpp": "8404af9b0d672a7e9a8dcb522c6dbb535789c40e40da4dbea37e52f9ed1d9884",
+    "software/include/dmotor_sw/monitor_wire.hpp": "a6f5cea9fe6272465cbb630b0658c4c96ec56defaff43ca83b41921fd02609d2",
+    "software/src/recovery_link.cpp": "489df9e4dca5fb3505a36c983b2e12f9f110c07c595c20822d4456c13a10be69",
+    "software/src/recovery_model.cpp": "398e855ec2c8fe314b8b8da32c6ba945688c763d3bb48829471bb47aa7d4ce5d",
+    "software/src/session_link.cpp": "4a807bdc2fa5ffafdb972e5520746f2a192e8d1603e723b11c1e558b200e9b24",
+    "software/src/monitor_protocol.cpp": "fbcc0f7f216e64bb318df28b4e2b754f2ead8b3bc44c8e6b6f24f94e8cf7ba2c"
+  }
+}

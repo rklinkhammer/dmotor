@@ -1,0 +1,3 @@
+Mutation: replay exact duplicate as accepted (re-execution).
+Exit: 1
+67: duplicate.delivery == Delivery::duplicate && !duplicate.respond

@@ -1,0 +1,28 @@
+{
+  "baseline_commit": "b204240a36c0b99afcb212654c4f00bc1578e63c",
+  "scope": "Isolated PS recovery adapter and scripted monitor exchange fixture through actual codec; no installed image, daemon integration, physical serial qualification or gate acceptance. Prior model/allocator/link increments remain uncommitted.",
+  "commands": [
+    "cmake -S software -B build/ps-dev -DDMOTOR_SW_SANITIZE=ON",
+    "cmake --build build/ps-dev -j4",
+    "ctest --test-dir build/ps-dev --output-on-failure",
+    "python3 software/tools/format.py --check",
+    "python3 tools/check_documentation_archive.py",
+    "git diff --check"
+  ],
+  "result": "18 native tests passed with UBSan; retry-renumbering mutant exited 1 at byte-identity assertion; 46 handwritten C++ files formatted; 5 archive originals verified.",
+  "negative_control": "Temporary recovery_link.cpp replaces cached retry return with link_.send of copied cached frame; g++ C++14 UBSan compiles recovery_link_test.cpp with mutated adapter plus recovery_model.cpp/session_link.cpp/monitor_protocol.cpp. Repository code is not mutated.",
+  "files_sha256": {
+    "software/CMakeLists.txt": "f45279fabfddebc6846e3abe008c47cc8414d36edb99b82e77f596054916218f",
+    "software/sources.json": "ea96b1c56d5e75bd8a717ab99df32c025b580284a977774892b5c4f75773413d",
+    "software/include/dmotor_sw/recovery_link.hpp": "b82659662d9528b1109a29da13226d2e0c873e0c452668d039415406d67a9b49",
+    "software/src/recovery_link.cpp": "489df9e4dca5fb3505a36c983b2e12f9f110c07c595c20822d4456c13a10be69",
+    "software/tests/recovery_link_test.cpp": "dc0bf121a0cfbf291e20dcb23ce8937f4a3dd3ee0817b6414ec07ee77148c2f7",
+    "software/src/recovery_model.cpp": "398e855ec2c8fe314b8b8da32c6ba945688c763d3bb48829471bb47aa7d4ce5d",
+    "software/src/session_link.cpp": "4a807bdc2fa5ffafdb972e5520746f2a192e8d1603e723b11c1e558b200e9b24",
+    "software/src/monitor_protocol.cpp": "fbcc0f7f216e64bb318df28b4e2b754f2ead8b3bc44c8e6b6f24f94e8cf7ba2c",
+    "software/include/dmotor_sw/recovery_model.hpp": "964ce59c2390201bacdbf7cb7d6a1571cbf8f2546546b964de184f980ceef5b2",
+    "software/include/dmotor_sw/session_link.hpp": "dff1e115eed81356e15f9ca577f99943f6dd72392a8ca24fe8207b525d3363f9",
+    "software/include/dmotor_sw/monitor_wire.hpp": "a6f5cea9fe6272465cbb630b0658c4c96ec56defaff43ca83b41921fd02609d2",
+    "software/include/dmotor_sw/monitor_protocol.hpp": "8404af9b0d672a7e9a8dcb522c6dbb535789c40e40da4dbea37e52f9ed1d9884"
+  }
+}

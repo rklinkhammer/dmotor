@@ -1,0 +1,3 @@
+Mutation: permit ARM after nine healthy checks instead of ten.
+Exit: 1
+59: !mon.permits()

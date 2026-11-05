@@ -223,3 +223,7 @@ executables passed. UART Lite is built in with console support disabled. See
 [current system status](system_status.md) for the exported artifact identities. Continue the remaining boundary/race
 qualification and A1/A5–A8 admission, endpoint lifetime and recovery outcome work
 before using CLN1 as part of a monitor attestation. G1a remains open.
+
+The next isolated implementation increment is the [post-pairing recovery model](g1a_recovery_model.md).
+It tests A1/A7 admission/outcome semantics without changing Runtime or emitting
+wire attestations; pairing, persistence and live admission integration remain open.

@@ -27,14 +27,22 @@ proof of completed recovery. Complete these tasks before G1a acceptance:
 | A2: outputs disabled | STATUS bits 0–3; driver/MMIO path and runtime HALT | Specify repeated/race-aware disabled verification across cleanup and completion; tests inject new fault/enable attempts; no single stale read treated as perpetual proof |
 | A3: reset/drain/PI cleanup | CLN1 disabled sweep/completion plus session/request binding; actual-HLS reset interruption and full controller tests pass; see [evidence](g1a_cleanup_admission.md#8-combined-cln1-integration) | Trace reset into mailbox/HLS/PI state and outstanding AXI/HLS results; derive minimum assertion/completion conditions and prove with RTL tests. Review CLN1 completion semantics and complete the remaining boundary/race cases. CORE_RESET readback alone does not prove drain |
 | A4: session/configuration/causes | Nonzero session and configuration readback; local/HB status and ACK operations | Map each attestation flag to exact reads, ordering, reset guarantees and failure exits; verify expiration/new fault wins ACK and no unverified flag is sent |
-| A5: endpoint sessions | Contract requires monotonic persistent 64-bit allocation; no allocator implemented | PS/ESP32 storage format, integrity/atomic-update strategy, power-loss/exhaustion handling and inhibited allocation ordering; never reuse a lifetime identifier |
-| A6: pairing/freshness | Decoder checks field shape only; schema contains sessions/epoch/txn/seq | Specify HELLO confirmation, explicit re-pair inhibition, duplicate cache and sequence advancement; cover stale/mutated frames and peer restart in deterministic tests |
+| A5: endpoint sessions | [PS journal allocator](g1a_endpoint_sessions.md) implemented and host-tested in isolation; ESP32 backend and deployment policy remain open | PS/ESP32 storage format, integrity/atomic-update strategy, power-loss/exhaustion handling and inhibited allocation ordering; never reuse a lifetime identifier |
+| A6: pairing/freshness | [Symmetric link candidate](g1a_session_link.md) host-tests HELLO confirmation, restart, duplicate caching and sequence checks; not connected to recovery/runtime | Specify HELLO confirmation, explicit re-pair inhibition, duplicate cache and sequence advancement; cover stale/mutated frames and peer restart in deterministic tests |
 | A7: outcome uncertainty | COMMIT_ACK and challenged STATE_REPLY layouts exist | Transition table for lost ACK, SAFE/ARM_PENDING/ARMED responses, changed epoch/session and bounded retry/query exhaustion; preserve hold on ambiguity |
 | A8: observable client semantics | Current Client.prepare is PL-only; schema-1 service replies lack recovery state | Decide explicit recovery/status API and wire versioning, client admission/error behavior and how UI reports pending physical ARM; do not silently relabel prepare success as full recovery |
 
-**Next coding boundary:** first write a deterministic host recovery model/tests after
-A1/A6/A7 transition semantics are reviewed. Keep it disconnected from deployed
-motion admission until A2–A5/A8 proof and integration are accepted. This does not
+**Model increment:** the [post-pairing host model](g1a_recovery_model.md) now exercises
+admission hold, challenged ARM, lost ACK and bounded UNKNOWN handling. Its design
+choices remain for review. It is disconnected from deployed motion admission.
+The [PS allocator candidate](g1a_endpoint_sessions.md) now supplies the host-tested
+A5 storage primitive. The [A6 link candidate](g1a_session_link.md) now supplies
+isolated pairing/replay checks. The [wire adapter](g1a_recovery_link.md) now joins these to the model with a
+scripted two-endpoint exchange test. The [behavioral simulator](g1a_monitor_simulator.md) now exercises fault epochs,
+staged expiry and physical ARM gestures through the real codec. Next implement
+the A1 runtime admission/command-queue boundary and finish A5
+target provisioning/ESP32/storage qualification and complete
+A2–A5/A8 proof and integration before connecting the model to live admission. This does not
 create an alternate protocol or relax any live daemon precondition.
 
 Acceptance record: link the amended/adopted v4 revision, A1–A8 dispositions and

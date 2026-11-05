@@ -1,0 +1,2 @@
+Mutation: skip durability sync. Expected assertion failure observed.
+170: rejects([&] { s.allocate(); })

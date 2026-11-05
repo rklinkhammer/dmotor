@@ -179,6 +179,40 @@ UART loop/exchange evidence, correct software/hardware identities and defect lis
 energizing path, initial permit-low behavior measured, and all unresolved startup/
 PL-failure cases tracked under the G1 failure model. This gate does not authorize motors.
 
+### Serial link checkpoint
+
+Test the physical Zynq–ESP32 serial connection during **B2/G2**, after G1b
+conditional approval of the inhibited wiring/test envelope. Do not wait for full
+recovery firmware. G1b is currently open; the inhibited ESP32 diagnostic build
+and target evidence must be supplied before this checkpoint can be completed.
+
+1. Keep motor drive power disconnected and physical STOP asserted. Confirm the
+   diagnostic ESP32 image initializes permits low and has no ARM path. Verify
+   rails, shared ground and 3.3 V signal levels before connecting the harness.
+2. Check the reviewed harness mapping: Zynq TX CK_IO0/T14 to monitor J7-5 RX;
+   monitor J7-4 TX to Zynq RX CK_IO1/U12; J7-1/6 ground. J7 carries no supply.
+   Confirm the actual board revision against the harness drawing.
+3. Boot the matched PL/kernel/device-tree image. Identify the UART Lite device
+   from its binding/address (0x42C00000), not a guessed tty number. Confirm
+   115200 8N1 at both ends, no flow control, and no console/getty or competing
+   process using that device. Keep the PS console separate.
+4. With a bounded diagnostic sender/receiver at each end, send known counted
+   patterns in both directions, including 0x7d/0x7e and maximum-size protocol
+   frames. Record sent/received counts, mismatches, CRC/framing errors and analyzer
+   captures. Separate local loopback from the actual two-board exchange; loopback
+   alone does not establish the harness/peer connection. Diagnostic tools must
+   not treat traffic or HELLO as permission to arm.
+5. Repeat the exchange after each endpoint resets and after UART cable removal
+   and reconnection within the approved test envelope. Record image hashes,
+   device node, pins, configuration, durations, counts and permit-low observations.
+   Stop and resolve unexplained corruption, back-powering or permit transitions.
+
+This checkpoint establishes basic electrical/transport operation. G3/G4 then
+qualify the actual monitor/coordinator protocol, durable sessions and recovery;
+G5 tests system fault timing and UART-loss/reset behavior. Host codec, replay and
+scripted exchange tests are useful prerequisites, but do not replace this physical
+test or authorize motor drive power.
+
 ## 5. B3 — Implement and qualify ESP32 safety firmware
 
 **Entry:** G1a + G1c for complete firmware implementation; G1a alone permits

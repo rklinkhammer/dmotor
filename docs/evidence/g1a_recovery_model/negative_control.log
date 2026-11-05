@@ -1,0 +1,2 @@
+Mutation: open admission on COMMIT_ACK. Expected hold-assertion failure observed.
+28: !m.admission_open()
