@@ -1,0 +1,20 @@
+{
+  "source_commit": "58cc209060d86da2cdc4a789925f3291bffb98fe",
+  "source_dirty": false,
+  "edf_commit": "88df49f9eefdf5e0f7dc73f451ad91d84a6fb98f",
+  "export": "arty-z7-20/20261106T005035Z-4c9ce75c",
+  "commands": [
+    "EDF_DMOTOR_SOURCE=../dmotor ./edf --target arty-z7-20 image",
+    "EDF_DMOTOR_SOURCE=../dmotor ./edf --target arty-z7-20 export",
+    "sha256sum -c SHA256SUMS"
+  ],
+  "result": "Boot build 2910 tasks and Linux image 9178 tasks succeeded. Export verifies boot firmware read-back, unchanged source WIC and xz integrity; host SHA256SUMS check passes. Rootfs contains ARM ELF usr/bin/dmotor-uart-test.",
+  "uart_executable_sha256": "0a5f14a6815fbc043058666f1b1e9371d447376008df2a55e07e2f9b522ee7ac",
+  "limits": [
+    "No SD card written or physical boot/UART test",
+    "Existing matched revision-11 PL bundle reused; no PL source change",
+    "Final documentation commit records this source image, not a newer rebuilt executable"
+  ],
+  "log_format": "Trailing whitespace removed from saved image/export console logs.",
+  "source_verification": "All 96 exported software source hashes match current source files."
+}

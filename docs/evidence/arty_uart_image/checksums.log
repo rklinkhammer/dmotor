@@ -1,0 +1,14 @@
+README.txt: OK
+boot.bin: OK
+build-info.json: OK
+container-packages.tsv: OK
+dmotor-source-version.json: OK
+dvrmc-hardware-inputs.json: OK
+packages.manifest: OK
+partitions.txt: OK
+rootfs.tar.gz: OK
+sdcard.wic.bmap: OK
+sdcard.wic.xz: OK
+source-manifest.xml: OK
+system.dtb: OK
+uImage: OK

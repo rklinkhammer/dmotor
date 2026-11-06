@@ -4,7 +4,8 @@ Implemented: `dmotor-uart-test` for Linux and the
 [ESP32-S3 bench application](../software/esp32/diagnostics/bench/README.md).
 Host tests and an ESP-IDF build are recorded in
 [evidence](evidence/uart_bench/inputs.json). No board has been flashed or tested by
-this implementation. The previously exported SD image does not contain this tool.
+this implementation. Current SD export `arty-z7-20/20261106T005035Z-4c9ce75c`
+contains the ARM tool; see [image evidence](evidence/arty_uart_image/inputs.json).
 
 ## Build and deploy
 

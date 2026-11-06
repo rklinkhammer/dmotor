@@ -31,8 +31,8 @@ Scope: commissioning-only first. Source baseline supplied by Robert:
 | Harnesses | [Saved connector/pin mapping](../arty_monitor_interface.md); monitor MON headers map to motor J4; unused MON STOP-chain positions need the documented 9–10 jumper | Continuity check the actual cables; a photo plus deviations from the map is enough |
 | Rework | **None**, as entered by Robert | Update only if changes are actually made |
 | Built Zynq PL | **Revision 11 / CLN1**, hardware bundle `arty-hardware/20261105T032708Z-6227df62` | Record if a different or diagnostic bitstream is loaded |
-| Built Linux/PS image | Matched export `arty-z7-20/20261105T034755Z-c38af1d1`; UART Lite built in, not its console; [existing manifest](../evidence/g1a_product_build/inputs.json) | Record the image directory/name used; reuse its manifest rather than transcribing hashes |
-| Newer PS source | `48601b3` includes later recovery/session host work; it is **not** automatically in that older SD export | Rebuild/package new diagnostic tools before trying them on the Arty |
+| Built Linux/PS image | Matched export `arty-z7-20/20261106T005035Z-4c9ce75c`; UART Lite built in, not its console; [current image evidence](../evidence/arty_uart_image/inputs.json) | Record the image directory/name used; reuse its manifest rather than transcribing hashes |
+| Built PS source | Clean `58cc209` includes the UART diagnostic; EDF pin/package commit `88df49f` | Current SD export contains the tool; deploy it before trying the Arty test |
 | ESP32 application | UART-only diagnostic built; operational firmware not implemented; [firmware location](../../software/esp32/README.md); `esp32-dev` pins ESP-IDF v6.1 | Use the diagnostic image below; no flashing has been performed |
 
 Hardware source is already recorded in `motor-interface-integrated`; this table

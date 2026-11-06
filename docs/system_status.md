@@ -39,20 +39,20 @@ scope, not qualification of the newly integrated monitor system.
 
 Current EDF artifacts (under `edf-dev/artifacts/`):
 
-- Hardware bundle: `arty-hardware/20261105T032708Z-6227df62/`.
-- Matched SD export: `arty-z7-20/20261105T034755Z-c38af1d1/`, including
-  `sdcard.wic.xz`, `sdcard.wic.bmap`, manifests and `SHA256SUMS`.
-- [Build/test evidence and provenance](evidence/g1a_product_build/inputs.json),
-  [hardware manifest](evidence/g1a_product_build/hardware_manifest.json),
-  [image build info](evidence/g1a_product_build/build-info.json) and
-  [software identity](evidence/g1a_product_build/dmotor-source-version.json).
+- Hardware bundle remains `arty-hardware/20261105T032708Z-6227df62` (revision 11).
+- Current SD export: **`arty-z7-20/20261106T005035Z-4c9ce75c/`**, including
+  `sdcard.wic.xz`, block map, manifests and SHA256SUMS.
+- Built DMOTOR source: **`58cc209060d86da2cdc4a789925f3291bffb98fe`**, clean.
+- EDF packaging/pin commit: **`88df49f`**.
+- [Image rebuild/export evidence](evidence/arty_uart_image/inputs.json): boot and
+  Linux image builds pass; checksums verified and ARM `dmotor-uart-test` found in
+  the exported root filesystem. No SD card written, board flashed or physical boot tested.
 
-At export, all 72 software-source hashes and both hardware fingerprints matched
-the recorded build checkout. Later source changes are not included in that image. UART Lite is built in; UART Lite console is disabled. I/O confirms HB on
-CK_IO2/U13, coast on CK_IO3/V13 and UART TX/RX on T14/U12. The build corrected
-prepared-profile test packaging, replaced fixed startup delays with completion
-polling and preserved external-HALT attribution when cleanup is canceled. No board
-was programmed and no SD card was written. Prior builds remain in the archive.
+The revision-11 hardware source match passed; unchanged PL was reused. UART Lite
+is built in and is not its console. HB is CK_IO2/U13, coast CK_IO3/V13,
+UART TX/RX T14/U12. The [earlier hardware/ARM evidence](evidence/g1a_product_build/inputs.json)
+retains timing and CLN1 verification. The previous SD export
+`20261105T034755Z-c38af1d1` is superseded for deployment by this UART-enabled image.
 
 The [post-pairing G1a model](g1a_recovery_model.md) now implements host-tested
 admission/uncertain-outcome semantics, isolated from the daemon. The native PS
@@ -63,9 +63,9 @@ and [pairing/replay link](g1a_session_link.md), now connected through an isolate
 ordering through the real codec. The [Runtime admission boundary](g1a_runtime_admission.md)
 now blocks held motion and discards buffered targets. The
 [coordinator integration](g1a_recovery_coordinator.md) now tests owner/generation
-command admission against the behavioral monitor and Runtime; daemon hookup remains open. The matched image above predates
-these model/allocator/link/adapter and Runtime admission increments;
-its recorded source hashes remain the authority for what it contains.
+command admission against the behavioral monitor and Runtime; daemon hookup remains open. The current image includes the committed software baseline. Host-only coordinator
+models remain test candidates; their source inclusion does not enable live daemon
+recovery. Its recorded source hashes remain the authority for image contents.
 
 The [MMIO attestation path](g1a_cleanup_attestation.md) now supplies coordinator
 proof from repeated Runtime register checks, with mid-read fault tests.
@@ -90,6 +90,5 @@ Other mixed architecture/component documents are still awaiting extraction; this
 is not completion of U10. Update this page in place rather than appending progress rounds.
 
 U0 diagnostic increment: Linux/PTY tests, ESP32-S3 ESP-IDF v6.1 build and
-Arty ARM `dmotor-runtime` package/QA pass. This does not update the older SD
-export above. [Bench instructions and evidence](uart_bench.md); no board flashed
+Arty ARM `dmotor-runtime` package/QA pass. The current SD export now includes the ARM diagnostic utility. [Bench instructions and evidence](uart_bench.md); no board flashed
 or tested. GPIO/HB diagnostic modes and simultaneous-stream stress remain open.

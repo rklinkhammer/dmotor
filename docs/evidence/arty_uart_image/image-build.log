@@ -1,0 +1,429 @@
+DMOTOR staged: 58cc209060d86da2cdc4a789925f3291bffb98fe source=b7121826896da37fbad25aa00c5d3aafadaa77e9dcb7d7a7bb8dd17350351595
+ Image edf-dev-next:26.06.1 Building
+#1 [internal] load local bake definitions
+#1 reading from stdin 593B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 2.51kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/ubuntu:22.04@sha256:b1066385161d28ddf6bc7e7b28a9170eec11484c821d1a5150d176cbde41d7f7
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 116B done
+#4 DONE 0.0s
+
+#5 [ 1/10] FROM docker.io/library/ubuntu:22.04@sha256:b1066385161d28ddf6bc7e7b28a9170eec11484c821d1a5150d176cbde41d7f7
+#5 resolve docker.io/library/ubuntu:22.04@sha256:b1066385161d28ddf6bc7e7b28a9170eec11484c821d1a5150d176cbde41d7f7 0.0s done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 114B done
+#6 DONE 0.0s
+
+#7 [ 5/10] WORKDIR /opt/edf
+#7 CACHED
+
+#8 [ 6/10] COPY config/sources.lock.xml /tmp/edf-manifest.xml
+#8 CACHED
+
+#9 [ 9/10] COPY --chmod=755 container-entrypoint.sh /usr/local/bin/container-entrypoint
+#9 CACHED
+
+#10 [ 3/10] RUN apt-get update && apt-get install -y --no-install-recommends util-linux && rm -rf /var/lib/apt/lists/*
+#10 CACHED
+
+#11 [ 4/10] RUN chmod 0755 /home/amd-edf && install -d -o 1000 -g 1000 /opt/edf
+#11 CACHED
+
+#12 [ 8/10] RUN find /opt/edf -name .git -prune -exec sh -c 'git config --system --add safe.directory "$(dirname "$1")"' sh {} \; && chown -R root:root /opt/edf && chmod -R a+rX /opt/edf
+#12 CACHED
+
+#13 [ 2/10] RUN apt-get update && apt-get install -y --no-install-recommends     ca-certificates locales tzdata build-essential gcc-multilib g++-multilib     libc6-dev-i386 autoconf automake bison flex patch gawk wget curl gperf     git git-lfs libgl1 subversion diffstat unzip zip sysstat texinfo chrpath socat cpio     xz-utils lz4 zstd bmap-tools file rsync bc debianutils iproute2 iputils-ping     python3 python3-pip python3-pexpect python3-venv python3-virtualenv     python3-git python3-jinja2 python3-yaml python3-subunit pylint     repo tmux screen openssh-client graphviz xterm libegl1-mesa libsdl1.2-dev     libssl-dev libncurses-dev libacl1 acl liblz4-tool     && locale-gen en_US.UTF-8     && groupadd --gid 1000 amd-edf     && useradd --uid 1000 --gid 1000 --create-home --shell /bin/bash amd-edf     && install -d /usr/local/share/edf-dev     && dpkg-query -W -f='${Package}\t${Version}\t${Architecture}\n'        > /usr/local/share/edf-dev/packages.tsv     && rm -rf /var/lib/apt/lists/*
+#13 CACHED
+
+#14 [ 7/10] RUN git config --global user.name "EDF container" && git config --global user.email "edf@localhost" && repo init -u https://github.com/Xilinx/yocto-manifests.git -b db9ad19553f9acdd5dfc92228e5a0ca10de760db -m default-edf.xml --depth=1     && cmp /tmp/edf-manifest.xml .repo/manifests/default-edf.xml     && repo sync -j4     && repo manifest -r -o /opt/edf/source-manifest.xml
+#14 CACHED
+
+#15 [10/10] WORKDIR /project
+#15 CACHED
+
+#16 exporting to image
+#16 exporting layers done
+#16 exporting manifest sha256:6d64a34e4e7efb9f9a3e10da8b7015750e991bcfe13f4c29fe0653bc42ce6de2 done
+#16 exporting config sha256:b34bae9f5b60d0a7991c13656a12b851a52d8a7cdd7848382ef23ff099cb72bf done
+#16 exporting attestation manifest sha256:3e94a233984bb47e54c12aca5136be4db807be359bff5444fe0abc2d80fef1e6 0.0s done
+#16 exporting manifest list sha256:dc6308614a1a7cf4466fbc41a1298b32cd407e48938e589505d8f01c9ab4c3cd
+#16 exporting manifest list sha256:dc6308614a1a7cf4466fbc41a1298b32cd407e48938e589505d8f01c9ab4c3cd 0.0s done
+#16 naming to docker.io/library/edf-dev-next:26.06.1 done
+#16 unpacking to docker.io/library/edf-dev-next:26.06.1 done
+#16 DONE 0.1s
+
+#17 resolving provenance for metadata file
+#17 DONE 0.0s
+ Image edf-dev-next:26.06.1 Built
+ Container edf-dev-next-hashserv-1 Running
+ Container edf-dev-next-hashserv-1 Waiting
+ Container edf-dev-next-hashserv-1 Healthy
+Build log: /home/rklinkhammer/workspace/edf-dev/artifacts/logs/arty-z7-20/edf-dev-next-arty-z7-20-b13a3554fcb5.log
+ Container edf-dev-next-arty-z7-20-b13a3554fcb5 Creating
+ Container edf-dev-next-arty-z7-20-b13a3554fcb5 Created
+PASS storage: /home/amd-edf/edf
+PASS storage: /home/amd-edf/edf/downloads
+PASS storage: /home/amd-edf/edf/sstate-cache
+PASS storage: /artifacts
+PASS hashserv; UID/GID 1000:1000; groups [4, 24, 27, 30, 46, 100, 111, 114, 119, 973, 991, 1000, 1001]
+PASS native compiler, executable build storage and UTF-8 locale
+PASS matched Arty hardware bundle
+PASS matched Arty hardware bundle
+NOTE: Started PRServer with DBfile: /home/amd-edf/edf/builds/arty-z7-20/cache/prserv.sqlite3, Address: 127.0.0.1:42357, PID: 79
+Loading cache...done.
+Loaded 20950 entries from dependency cache.
+Parsing recipes...done.
+Parsing of 15234 .bb files complete (15210 cached, 24 parsed). 20978 targets, 9474 skipped, 16 masked, 0 errors.
+NOTE: Resolving any missing task queue dependencies
+NOTE: Resolving any missing task queue dependencies
+NOTE: Resolving any missing task queue dependencies
+NOTE: Resolving any missing task queue dependencies
+NOTE: Resolving any missing task queue dependencies
+NOTE: Resolving any missing task queue dependencies
+
+Build Configuration (mc:default):
+BB_VERSION           = "2.8.1"
+BUILD_SYS            = "x86_64-linux"
+NATIVELSBSTRING      = "universal"
+TARGET_SYS           = "arm-amd-linux-gnueabi"
+MACHINE              = "arty-z7-20"
+DISTRO               = "amd-edf"
+DISTRO_VERSION       = "26.06+release-cb75a4c061568fe7fecd552a60b17af9c9e64cf1"
+TUNE_FEATURES        = "arm vfp cortexa9 neon thumb callconvention-hard"
+TARGET_FPU           = "hard"
+XILINX_RELEASE_VERSION = "v2026.1"
+DISTRO_NAME          = "AMD Embedded Development Framework Linux distribution"
+ROS_DISTRO           = "jazzy"
+ROS_VERSION          = "2"
+ROS_PYTHON_VERSION   = "3"
+HW_BOOT_MODE         = "5"
+HW_BOOT_MODE_TYPE    = "SD"
+SOC_ON_DISK_BOOT_BIN = "1"
+SYSTEM_DTFILE        = "/home/amd-edf/edf/builds/arty-z7-20/tmp/work/cortexa9t2hf-neon-amd-linux-gnueabi/defaultpkgname/1.0/recipe-sysroot/usr/share/sdt/arty-z7-20/system-top.dts"
+CONFIG_DTFILE        = "/project/meta-edf-dev/conf/dts/arty-z7-20/cortexa9-linux.dts"
+meta
+meta-poky            = "HEAD:1d54d1c4736a114e1cecbe85a0306e3814d5ce70"
+meta-oe
+meta-python
+meta-filesystems
+meta-networking
+meta-multimedia
+meta-webserver       = "HEAD:4d3e2639dec542b58708244662d5ce36810fc510"
+meta-virtualization  = "HEAD:6415d786379505f3af2849bc56baa5246250f729"
+meta-security
+meta-tpm             = "HEAD:b13f1705d723650de61277670c8a76aadea4cfdd"
+meta-xilinx-core
+meta-xilinx-standalone
+meta-xilinx-standalone-sdt
+meta-xilinx-multimedia
+meta-xilinx-demos
+meta-xilinx-virtualization
+meta-xilinx-mali400
+meta-xilinx-gpu-malig78ae
+meta-microblaze
+meta-amd-zephyr      = "HEAD:7967c6c8882d43518e8ec84eaadad797b190e6a1"
+meta-xilinx-tsn      = "HEAD:2049bfdc0d2bf7788afe0df8797b9eda7052619d"
+meta-openamp         = "HEAD:b2e2e8083235b6c9a673b0a4d0219ddca0701b12"
+meta-amd-edf
+meta-amd-edf-bsp     = "HEAD:cb75a4c061568fe7fecd552a60b17af9c9e64cf1"
+meta-kria            = "HEAD:9a35e64910908a42a338cf5ddef37094c82649bd"
+meta-amd-adaptive-socs-core
+meta-amd-adaptive-socs-bsp = "HEAD:eb06eb73417a86fa649573dc4513fa84ffd0ca7a"
+meta-xilinx-imgrcvry = "HEAD:7967c6c8882d43518e8ec84eaadad797b190e6a1"
+meta-arm
+meta-arm-toolchain   = "HEAD:a81c19915b5b9e71ed394032e9a50fd06919e1cd"
+meta-jupyter         = "HEAD:5e47ac5efa4c9f7a36912253acbca0cdb2a812e6"
+meta-ros-common
+meta-ros2
+meta-ros2-jazzy      = "HEAD:d149a6264d084665b43790c020109bcfbcd54740"
+meta-qt5             = "HEAD:227cf5e7b64c93dfc1a45f235c466db8c3fd8707"
+meta-vitis           = "HEAD:4e8d979f9eb1dd10a98d7668f092be079d257e78"
+meta-zephyr-core
+meta-zephyr-bsp      = "HEAD:b1f6967a3f9d6a543409714e7fb1c542994e3413"
+meta-embedded-plus   = "HEAD:061037409a56bcf8b1ca2f95e859483578bf3e17"
+meta-edf-dev         = "main:5f8ad4d7e5dc013a43a1a5be6c0f5fb5923873d4"
+
+
+Build Configuration (mc:arty-z7-20-cortexa9-fsbl):
+BB_VERSION           = "2.8.1"
+BUILD_SYS            = "x86_64-linux"
+NATIVELSBSTRING      = "universal"
+TARGET_SYS           = "arm-xilinx-eabi"
+MACHINE              = "arty-z7-20"
+DISTRO               = "xilinx-standalone"
+DISTRO_VERSION       = "1.0"
+TUNE_FEATURES        = "arm vfp cortexa9"
+TARGET_FPU           = "softfp"
+XILINX_RELEASE_VERSION = "v2026.1"
+DISTRO_NAME          = "AMD Xilinx Standalone distribution (LTO)"
+ROS_DISTRO           = "jazzy"
+ROS_VERSION          = "2"
+ROS_PYTHON_VERSION   = "3"
+HW_BOOT_MODE         = "5"
+HW_BOOT_MODE_TYPE    = "SD"
+SOC_ON_DISK_BOOT_BIN = "1"
+SYSTEM_DTFILE        = "/home/amd-edf/edf/builds/arty-z7-20/tmp-arty-z7-20-cortexa9-fsbl/work/cortexa9-vfp-xilinx-eabi/defaultpkgname/1.0/recipe-sysroot/usr/share/sdt/arty-z7-20/system-top.dts"
+CONFIG_DTFILE        = "/project/meta-edf-dev/conf/dts/arty-z7-20/arty-z7-20-cortexa9-fsbl.dts"
+meta
+meta-poky            = "HEAD:1d54d1c4736a114e1cecbe85a0306e3814d5ce70"
+meta-oe
+meta-python
+meta-filesystems
+meta-networking
+meta-multimedia
+meta-webserver       = "HEAD:4d3e2639dec542b58708244662d5ce36810fc510"
+meta-virtualization  = "HEAD:6415d786379505f3af2849bc56baa5246250f729"
+meta-security
+meta-tpm             = "HEAD:b13f1705d723650de61277670c8a76aadea4cfdd"
+meta-xilinx-core
+meta-xilinx-standalone
+meta-xilinx-standalone-sdt
+meta-xilinx-multimedia
+meta-xilinx-demos
+meta-xilinx-virtualization
+meta-xilinx-mali400
+meta-xilinx-gpu-malig78ae
+meta-microblaze
+meta-amd-zephyr      = "HEAD:7967c6c8882d43518e8ec84eaadad797b190e6a1"
+meta-xilinx-tsn      = "HEAD:2049bfdc0d2bf7788afe0df8797b9eda7052619d"
+meta-openamp         = "HEAD:b2e2e8083235b6c9a673b0a4d0219ddca0701b12"
+meta-amd-edf
+meta-amd-edf-bsp     = "HEAD:cb75a4c061568fe7fecd552a60b17af9c9e64cf1"
+meta-kria            = "HEAD:9a35e64910908a42a338cf5ddef37094c82649bd"
+meta-amd-adaptive-socs-core
+meta-amd-adaptive-socs-bsp = "HEAD:eb06eb73417a86fa649573dc4513fa84ffd0ca7a"
+meta-xilinx-imgrcvry = "HEAD:7967c6c8882d43518e8ec84eaadad797b190e6a1"
+meta-arm
+meta-arm-toolchain   = "HEAD:a81c19915b5b9e71ed394032e9a50fd06919e1cd"
+meta-jupyter         = "HEAD:5e47ac5efa4c9f7a36912253acbca0cdb2a812e6"
+meta-ros-common
+meta-ros2
+meta-ros2-jazzy      = "HEAD:d149a6264d084665b43790c020109bcfbcd54740"
+meta-qt5             = "HEAD:227cf5e7b64c93dfc1a45f235c466db8c3fd8707"
+meta-vitis           = "HEAD:4e8d979f9eb1dd10a98d7668f092be079d257e78"
+meta-zephyr-core
+meta-zephyr-bsp      = "HEAD:b1f6967a3f9d6a543409714e7fb1c542994e3413"
+meta-embedded-plus   = "HEAD:061037409a56bcf8b1ca2f95e859483578bf3e17"
+meta-edf-dev         = "main:5f8ad4d7e5dc013a43a1a5be6c0f5fb5923873d4"
+
+Initialising tasks...Sstate summary: Wanted 271 Local 271 Mirrors 0 Missed 0 Current 642 (100% match, 100% complete)
+done.
+NOTE: Executing Tasks
+NOTE: Tasks Summary: Attempted 2910 tasks of which 2910 didn't need to be rerun and all succeeded.
+NOTE: Started PRServer with DBfile: /home/amd-edf/edf/builds/arty-z7-20/cache/prserv.sqlite3, Address: 127.0.0.1:36541, PID: 1176
+Loading cache...done.
+Loaded 10478 entries from dependency cache.
+Parsing recipes...done.
+Parsing of 7617 .bb files complete (7606 cached, 11 parsed). 10489 targets, 2062 skipped, 8 masked, 0 errors.
+NOTE: Resolving any missing task queue dependencies
+
+Build Configuration:
+BB_VERSION           = "2.8.1"
+BUILD_SYS            = "x86_64-linux"
+NATIVELSBSTRING      = "universal"
+TARGET_SYS           = "arm-amd-linux-gnueabi"
+MACHINE              = "amd-cortexa9thf-neon-common"
+DISTRO               = "amd-edf"
+DISTRO_VERSION       = "26.06+release-cb75a4c061568fe7fecd552a60b17af9c9e64cf1"
+TUNE_FEATURES        = "arm vfp cortexa9 neon thumb callconvention-hard"
+TARGET_FPU           = "hard"
+XILINX_RELEASE_VERSION = "v2026.1"
+DISTRO_NAME          = "AMD Embedded Development Framework Linux distribution"
+ROS_DISTRO           = "jazzy"
+ROS_VERSION          = "2"
+ROS_PYTHON_VERSION   = "3"
+HW_BOOT_MODE         = ""
+HW_BOOT_MODE_TYPE    = ""
+SOC_ON_DISK_BOOT_BIN = ""
+meta
+meta-poky            = "HEAD:1d54d1c4736a114e1cecbe85a0306e3814d5ce70"
+meta-oe
+meta-python
+meta-filesystems
+meta-networking
+meta-multimedia
+meta-webserver       = "HEAD:4d3e2639dec542b58708244662d5ce36810fc510"
+meta-virtualization  = "HEAD:6415d786379505f3af2849bc56baa5246250f729"
+meta-security
+meta-tpm             = "HEAD:b13f1705d723650de61277670c8a76aadea4cfdd"
+meta-xilinx-core
+meta-xilinx-standalone
+meta-xilinx-standalone-sdt
+meta-xilinx-multimedia
+meta-xilinx-demos
+meta-xilinx-virtualization
+meta-xilinx-mali400
+meta-xilinx-gpu-malig78ae
+meta-microblaze
+meta-amd-zephyr      = "HEAD:7967c6c8882d43518e8ec84eaadad797b190e6a1"
+meta-xilinx-tsn      = "HEAD:2049bfdc0d2bf7788afe0df8797b9eda7052619d"
+meta-openamp         = "HEAD:b2e2e8083235b6c9a673b0a4d0219ddca0701b12"
+meta-amd-edf
+meta-amd-edf-bsp     = "HEAD:cb75a4c061568fe7fecd552a60b17af9c9e64cf1"
+meta-kria            = "HEAD:9a35e64910908a42a338cf5ddef37094c82649bd"
+meta-amd-adaptive-socs-core
+meta-amd-adaptive-socs-bsp = "HEAD:eb06eb73417a86fa649573dc4513fa84ffd0ca7a"
+meta-xilinx-imgrcvry = "HEAD:7967c6c8882d43518e8ec84eaadad797b190e6a1"
+meta-arm
+meta-arm-toolchain   = "HEAD:a81c19915b5b9e71ed394032e9a50fd06919e1cd"
+meta-jupyter         = "HEAD:5e47ac5efa4c9f7a36912253acbca0cdb2a812e6"
+meta-ros-common
+meta-ros2
+meta-ros2-jazzy      = "HEAD:d149a6264d084665b43790c020109bcfbcd54740"
+meta-qt5             = "HEAD:227cf5e7b64c93dfc1a45f235c466db8c3fd8707"
+meta-vitis           = "HEAD:4e8d979f9eb1dd10a98d7668f092be079d257e78"
+meta-zephyr-core
+meta-zephyr-bsp      = "HEAD:b1f6967a3f9d6a543409714e7fb1c542994e3413"
+meta-embedded-plus   = "HEAD:061037409a56bcf8b1ca2f95e859483578bf3e17"
+meta-edf-dev         = "main:5f8ad4d7e5dc013a43a1a5be6c0f5fb5923873d4"
+
+Initialising tasks...Sstate summary: Wanted 1103 Local 1084 Mirrors 0 Missed 19 Current 3361 (98% match, 99% complete)
+Removing 12 stale sstate objects for arch amd_cortexa9thf_neon_common...done.
+Removing 7 stale sstate objects for arch cortexa9t2hf-neon...done.
+NOTE: Executing Tasks
+NOTE: Running task 3900 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-semantic-tests/dmotor-semantic-tests.bb:do_fetch)
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_fetch: Started
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_fetch: Succeeded
+NOTE: Running task 4057 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-semantic-tests/dmotor-semantic-tests.bb:do_unpack)
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_unpack: Started
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_unpack: Succeeded
+NOTE: Running task 4208 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-semantic-tests/dmotor-semantic-tests.bb:do_patch)
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_patch: Started
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_patch: Succeeded
+NOTE: Running task 4567 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-access/dmotor-access.bb:do_fetch)
+NOTE: recipe dmotor-access-1.0-r0: task do_fetch: Started
+NOTE: recipe dmotor-access-1.0-r0: task do_fetch: Succeeded
+NOTE: Running task 4895 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-access/dmotor-access.bb:do_unpack)
+NOTE: recipe dmotor-access-1.0-r0: task do_unpack: Started
+NOTE: recipe dmotor-access-1.0-r0: task do_unpack: Succeeded
+NOTE: Running task 5114 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-access/dmotor-access.bb:do_patch)
+NOTE: Running task 5168 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-semantic-tests/dmotor-semantic-tests.bb:do_deploy_source_date_epoch)
+NOTE: recipe dmotor-access-1.0-r0: task do_patch: Started
+NOTE: recipe dmotor-access-1.0-r0: task do_patch: Succeeded
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_deploy_source_date_epoch: Started
+NOTE: Running task 5194 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-semantic-tests/dmotor-semantic-tests.bb:do_generate_toolchain_file)
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_deploy_source_date_epoch: Succeeded
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_generate_toolchain_file: Started
+NOTE: Running task 5195 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-semantic-tests/dmotor-semantic-tests.bb:do_prepare_recipe_sysroot)
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_generate_toolchain_file: Succeeded
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_prepare_recipe_sysroot: Started
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_prepare_recipe_sysroot: Succeeded
+NOTE: Running task 5301 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-semantic-tests/dmotor-semantic-tests.bb:do_configure)
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_configure: Started
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_configure: Succeeded
+NOTE: Running task 5795 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-semantic-tests/dmotor-semantic-tests.bb:do_compile)
+NOTE: Running task 5860 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-access/dmotor-access.bb:do_deploy_source_date_epoch)
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_compile: Started
+NOTE: recipe dmotor-access-1.0-r0: task do_deploy_source_date_epoch: Started
+NOTE: recipe dmotor-access-1.0-r0: task do_deploy_source_date_epoch: Succeeded
+NOTE: Running task 5972 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-access/dmotor-access.bb:do_prepare_recipe_sysroot)
+NOTE: recipe dmotor-access-1.0-r0: task do_prepare_recipe_sysroot: Started
+NOTE: recipe dmotor-access-1.0-r0: task do_prepare_recipe_sysroot: Succeeded
+NOTE: Running task 6009 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-access/dmotor-access.bb:do_configure)
+NOTE: recipe dmotor-access-1.0-r0: task do_configure: Started
+NOTE: recipe dmotor-access-1.0-r0: task do_configure: Succeeded
+NOTE: Running task 6042 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-access/dmotor-access.bb:do_compile)
+NOTE: recipe dmotor-access-1.0-r0: task do_compile: Started
+NOTE: recipe dmotor-access-1.0-r0: task do_compile: Succeeded
+NOTE: Running task 6075 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-access/dmotor-access.bb:do_install)
+NOTE: recipe dmotor-access-1.0-r0: task do_install: Started
+NOTE: recipe dmotor-access-1.0-r0: task do_install: Succeeded
+NOTE: Running task 6110 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-access/dmotor-access.bb:do_package)
+NOTE: recipe dmotor-access-1.0-r0: task do_package: Started
+NOTE: recipe dmotor-access-1.0-r0: task do_package: Succeeded
+NOTE: Running setscene task 4463 of 4467 (/project/meta-edf-dev/recipes-dmotor/dmotor-access/dmotor-access.bb:do_package_qa_setscene)
+NOTE: recipe dmotor-access-1.0-r0: task do_package_qa_setscene: Started
+NOTE: recipe dmotor-access-1.0-r0: task do_package_qa_setscene: Succeeded
+NOTE: Running setscene task 4465 of 4467 (/project/meta-edf-dev/recipes-dmotor/dmotor-access/dmotor-access.bb:do_package_write_rpm_setscene)
+NOTE: recipe dmotor-access-1.0-r0: task do_package_write_rpm_setscene: Started
+NOTE: recipe dmotor-access-1.0-r0: task do_package_write_rpm_setscene: Succeeded
+NOTE: Running setscene task 4467 of 4467 (/project/meta-edf-dev/recipes-dmotor/dmotor-access/dmotor-access.bb:do_packagedata_setscene)
+NOTE: recipe dmotor-access-1.0-r0: task do_packagedata_setscene: Started
+NOTE: recipe dmotor-access-1.0-r0: task do_packagedata_setscene: Succeeded
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_compile: Succeeded
+NOTE: Running task 6363 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-semantic-tests/dmotor-semantic-tests.bb:do_semantics)
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_semantics: Started
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_semantics: Succeeded
+NOTE: Running task 6685 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-semantic-tests/dmotor-semantic-tests.bb:do_install)
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_install: Started
+NOTE: Running task 6795 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-access/dmotor-access.bb:do_collect_spdx_deps)
+NOTE: recipe dmotor-access-1.0-r0: task do_collect_spdx_deps: Started
+NOTE: recipe dmotor-access-1.0-r0: task do_collect_spdx_deps: Succeeded
+NOTE: Running task 6796 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-semantic-tests/dmotor-semantic-tests.bb:do_collect_spdx_deps)
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_install: Succeeded
+NOTE: Running task 6797 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-semantic-tests/dmotor-semantic-tests.bb:do_package)
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_collect_spdx_deps: Started
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_collect_spdx_deps: Succeeded
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_package: Started
+NOTE: Running task 6845 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-access/dmotor-access.bb:do_create_spdx)
+NOTE: recipe dmotor-access-1.0-r0: task do_create_spdx: Started
+NOTE: recipe dmotor-access-1.0-r0: task do_create_spdx: Succeeded
+NOTE: Running task 7630 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-access/dmotor-access.bb:do_populate_lic)
+NOTE: recipe dmotor-access-1.0-r0: task do_populate_lic: Started
+NOTE: recipe dmotor-access-1.0-r0: task do_populate_lic: Succeeded
+NOTE: Running task 7631 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-semantic-tests/dmotor-semantic-tests.bb:do_populate_lic)
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_populate_lic: Started
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_populate_lic: Succeeded
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_package: Succeeded
+NOTE: Running task 7655 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-semantic-tests/dmotor-semantic-tests.bb:do_packagedata)
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_packagedata: Started
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_packagedata: Succeeded
+NOTE: Running task 7931 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-semantic-tests/dmotor-semantic-tests.bb:do_create_spdx)
+NOTE: Running task 7932 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-semantic-tests/dmotor-semantic-tests.bb:do_package_write_rpm)
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_create_spdx: Started
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_package_write_rpm: Started
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_create_spdx: Succeeded
+NOTE: Running task 7933 of 9178 (/opt/edf/sources/poky/../meta-amd-edf/recipes-extended/images/edf-linux-disk-image.bb:do_create_runtime_spdx)
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_package_write_rpm: Succeeded
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_create_runtime_spdx: Started
+NOTE: Running task 8958 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-access/dmotor-access.bb:do_create_runtime_spdx)
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_create_runtime_spdx: Succeeded
+NOTE: Running task 8959 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-semantic-tests/dmotor-semantic-tests.bb:do_package_qa)
+NOTE: recipe dmotor-access-1.0-r0: task do_create_runtime_spdx: Started
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_package_qa: Started
+NOTE: recipe dmotor-access-1.0-r0: task do_create_runtime_spdx: Succeeded
+NOTE: Running task 8960 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-semantic-tests/dmotor-semantic-tests.bb:do_create_runtime_spdx)
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_create_runtime_spdx: Started
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_create_runtime_spdx: Succeeded
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_package_qa: Succeeded
+NOTE: Running task 9168 of 9178 (/opt/edf/sources/poky/../meta-amd-edf/recipes-extended/images/edf-linux-disk-image.bb:do_rootfs)
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_rootfs: Started
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_rootfs: Succeeded
+NOTE: Running task 9169 of 9178 (/opt/edf/sources/poky/../meta-amd-edf/recipes-extended/images/edf-linux-disk-image.bb:do_flush_pseudodb)
+NOTE: Running task 9170 of 9178 (/opt/edf/sources/poky/../meta-amd-edf/recipes-extended/images/edf-linux-disk-image.bb:do_write_qemuboot_conf)
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_flush_pseudodb: Started
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_flush_pseudodb: Succeeded
+NOTE: Running task 9171 of 9178 (/opt/edf/sources/poky/../meta-amd-edf/recipes-extended/images/edf-linux-disk-image.bb:do_image_qa)
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_write_qemuboot_conf: Started
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_write_qemuboot_conf: Succeeded
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_image_qa: Started
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_image_qa: Succeeded
+NOTE: Running task 9172 of 9178 (/opt/edf/sources/poky/../meta-amd-edf/recipes-extended/images/edf-linux-disk-image.bb:do_image)
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_image: Started
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_image: Succeeded
+NOTE: Running task 9173 of 9178 (/opt/edf/sources/poky/../meta-amd-edf/recipes-extended/images/edf-linux-disk-image.bb:do_rootfs_wicenv)
+NOTE: Running task 9174 of 9178 (/opt/edf/sources/poky/../meta-amd-edf/recipes-extended/images/edf-linux-disk-image.bb:do_image_tar)
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_rootfs_wicenv: Started
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_rootfs_wicenv: Succeeded
+NOTE: Running task 9175 of 9178 (/opt/edf/sources/poky/../meta-amd-edf/recipes-extended/images/edf-linux-disk-image.bb:do_image_wic)
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_image_tar: Started
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_image_wic: Started
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_image_tar: Succeeded
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_image_wic: Succeeded
+NOTE: Running task 9176 of 9178 (/opt/edf/sources/poky/../meta-amd-edf/recipes-extended/images/edf-linux-disk-image.bb:do_image_complete)
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_image_complete: Started
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_image_complete: Succeeded
+NOTE: Running task 9177 of 9178 (/opt/edf/sources/poky/../meta-amd-edf/recipes-extended/images/edf-linux-disk-image.bb:do_populate_lic_deploy)
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_populate_lic_deploy: Started
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_populate_lic_deploy: Succeeded
+NOTE: Running noexec task 9178 of 9178 (/opt/edf/sources/poky/../meta-amd-edf/recipes-extended/images/edf-linux-disk-image.bb:do_build)
+NOTE: Tasks Summary: Attempted 9178 tasks of which 9135 didn't need to be rerun and all succeeded.
