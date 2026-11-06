@@ -1,0 +1,10 @@
+{
+  "change": "Native USB Serial/JTAG primary console, no secondary UART console; protocol UART1 remains TX17/RX18.",
+  "command": "../esp32-dev/esp32 --project software/esp32/diagnostics/bench build",
+  "result": "ESP32-S3 build passed; generated sdkconfig selects USB_SERIAL_JTAG, SECONDARY_NONE and UART_NUM=-1. No flash performed.",
+  "files_sha256": {
+    "software/esp32/diagnostics/bench/sdkconfig.defaults": "b53872d4f4c4ff26bcd903994251d7f063e8a60b75599e0e1c4739ae2f4b6672",
+    "software/esp32/diagnostics/bench/sdkconfig": "c2a97f2cdc024696761a01ac2d8b8ecec16615abc0d558955aa9232e97629f50",
+    "software/esp32/diagnostics/bench/build/dmotor_uart_bench.bin": "da77edb62de85b4d9403e934cd9c2d9c6a1f64703d3b31cfe44856895d91c90b"
+  }
+}

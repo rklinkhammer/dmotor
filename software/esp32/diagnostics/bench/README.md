@@ -12,15 +12,19 @@ From the dmotor repository, with esp32-dev beside it:
 ```
 
 After checking the inhibited bench setup and selecting the actual USB device,
-flash explicitly (replace `/dev/ttyUSB0` if different):
+flash explicitly (replace `/dev/ttyACM0` if different):
 
 ```sh
-../esp32-dev/esp32 --project software/esp32/diagnostics/bench --target esp32s3 --port /dev/ttyUSB0 flash monitor
+../esp32-dev/esp32 --project software/esp32/diagnostics/bench --target esp32s3 --port /dev/ttyACM0 flash monitor
 ```
 
-Build never flashes automatically. GPIO43/44 is the default console UART; test
-traffic uses UART1 GPIO17 TX / GPIO18 RX, 115200 8N1. Use the module's console
-USB connection for logs, not the J7 test UART. Do not parallel USB and external
+Build never flashes automatically. Logging and the IDF console use the ESP32-S3
+native USB Serial/JTAG port (normally `/dev/ttyACM0`), with no secondary UART
+console. GPIO43/44 are not used for application logging. Test traffic alone uses
+UART1 GPIO17 TX / GPIO18 RX, 115200 8N1, to the Zynq through J7.
+Use the native USB connector for both programming and `monitor`; exit monitor
+with Ctrl+]. If USB re-enumerates after reset, select its new device and restart
+monitor. Do not parallel USB and external
 supplies without checking the actual board power arrangement.
 
 Firmware answers diagnostic requests only. Each response contains its own
@@ -33,3 +37,8 @@ with permits/HB still low. Frames and I/O work are bounded; maximum run sequence
 is 1000. The endpoint listens for another explicitly started run while idle.
 
 See [bench instructions](../../../../docs/uart_bench.md) from the repository docs.
+
+For an existing build configured for UART console, use `menuconfig` → Component
+config → ESP System Settings → Channel for console output → USB Serial/JTAG;
+select no secondary console, then rebuild. Fresh builds use sdkconfig.defaults.
+Defaults alone do not override an existing sdkconfig.

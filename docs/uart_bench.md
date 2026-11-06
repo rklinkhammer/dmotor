@@ -49,7 +49,9 @@ command; no flashing is performed by a build.
 
    `/dev/ttyUL0` is an example, not an established assignment. Count is 1–1000,
    default 100. Configuration is fixed at 115200 8N1 without flow control.
-5. Save the Linux summary and ESP32 console summary (printed after idle). Linux
+5. ESP32 logging uses its native USB Serial/JTAG connector (normally `/dev/ttyACM0`);
+   GPIO17/18 carries only diagnostic protocol traffic to the Zynq. No GPIO43/44
+   console adapter is needed. Save the Linux summary and ESP32 console summary (printed after idle). Linux
    must report `PASS`, sent=verified=count, rejected=0 and mismatched=0. Compare
    ESP32 cumulative counter changes for this run; investigate any error increment.
 6. Start new runs after resetting either endpoint, and after disconnect/reconnect.
