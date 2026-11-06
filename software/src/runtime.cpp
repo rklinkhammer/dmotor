@@ -45,6 +45,7 @@ Runtime::Runtime(Platform& io, RuntimePolicy policy) : io_(io), protocol_(io), p
     require(!policy.direct_pulse_us ||
                 (policy.direct_mask && policy.direct_pulse_us <= powered_pulse_limit_us),
             "Bounded pulse requires direct duty and at most one second");
+    recovery_required_ = policy.recovery_required;
     halt();
 }
 Runtime::~Runtime() {
@@ -64,7 +65,73 @@ void Runtime::wait_status(uint32_t mask, uint32_t expected) {
         io_.sleep_us(poll_us);
     }
 }
+void Runtime::hold_for_recovery() {
+    recovery_required_ = true; // Sticky for this Runtime lifetime.
+    halt();
+}
+recovery::Cleanup Runtime::attest_cleanup(uint64_t generation) {
+    require(recovery_required_ && recovery_held_ && prepared_ && !halted_ && generation &&
+                generation != UINT64_MAX && generation == recovery_generation_,
+            "Stale or unavailable recovery attestation");
+    try {
+        require(!policy_.direct_mask, "Direct-duty recovery is not qualified");
+        const auto started = io_.now_us();
+        require(started >= lease_ && started - lease_ < policy_.client_lease_us,
+                "Maintenance lease expired");
+        auto check_identity = [&] {
+            io_.fence();
+            require(protocol_.compatible_controller() &&
+                        io_.read32(reg::CLEANUP_CAPABILITY) == 0x434c4e31U &&
+                        io_.read32(reg::MONITOR_CAPABILITY) == 0x48423131U &&
+                        io_.read32(reg::CORE_RESET) == 0 && io_.read32(reg::SESSION) == session_ &&
+                        io_.read32(reg::CLEANUP_STATUS) == 2U && cleanup_request_ &&
+                        io_.read32(reg::CLEANUP_REQUEST) == cleanup_request_ &&
+                        io_.read32(reg::CLEANUP_SESSION) == session_ &&
+                        (io_.read32(reg::MONITOR_STATUS) & 7U) == 5U,
+                    "Recovery cleanup proof invalidated");
+            const auto s = status();
+            require(!s.enabled && !s.fault && !s.shared_halt && !s.blocked,
+                    "Recovery requires disabled healthy controller");
+        };
+        check_identity();
+        // Two configuration passes bracketed by identity/protection checks. This
+        // detects persistent mid-read changes, not arbitrary hardware ABA races.
+        for (unsigned pass = 0; pass < 2; ++pass) {
+            for (unsigned m = 0; m < 4; ++m)
+                if (configured_ & (1U << m)) {
+                    const auto words = encode_configuration(configs_[m]);
+                    for (unsigned w = 0; w < configuration_words; ++w)
+                        require(io_.read32(reg::CONFIG_BASE + m * reg::CONFIG_STRIDE + w * 4) ==
+                                    words[w],
+                                "Recovery configuration changed");
+                }
+            check_identity();
+        }
+        const auto ended = io_.now_us();
+        require(ended >= started && ended - started < policy_.transition_us &&
+                    ended - lease_ < policy_.client_lease_us,
+                "Recovery attestation deadline exceeded");
+        // The generation identifies this immutable selected configuration/mask
+        // within this Runtime lifetime; it is not a content hash or wire field.
+        return {session_, cleanup_request_, generation, true, true, true};
+    } catch (...) {
+        try {
+            halt();
+        } catch (...) {
+        }
+        throw;
+    }
+}
+void Runtime::complete_recovery(uint64_t generation) {
+    attest_cleanup(generation);
+    recovery_held_ = false; // No enable, refresh or command is emitted here.
+}
 void Runtime::halt() {
+    recovery_held_ = true;
+    // Saturation is permanent fail-closed; no completion can reuse a generation.
+    if (recovery_generation_ != UINT64_MAX)
+        ++recovery_generation_;
+    cleanup_request_ = 0;
     pulse_active_ = false;
     injection_ = TimeoutInjection::none;
     halted_ = true;
@@ -75,6 +142,7 @@ void Runtime::halt() {
         true); // Platform must confirm inhibition or throw; never claim success on access loss.
 }
 void Runtime::inject_timeout(TimeoutInjection injection) {
+    require(!recovery_held(), "Recovery admission held");
     require(policy_.commissioning && !policy_.direct_pulse_us,
             "Timeout injection requires inhibited commissioning");
     require(prepared_ && !halted_ && enabled_ && tracking_ && applied_ &&
@@ -191,6 +259,7 @@ void Runtime::prepare(const std::array<MotorConfiguration, 4>& configs, uint32_t
                         io_.read32(reg::CLEANUP_REQUEST) == cleanup_request + 1 &&
                         io_.read32(reg::CLEANUP_SESSION) == session_,
                     "Cleanup completion invalidated");
+        cleanup_request_ = policy_.direct_mask ? 0 : cleanup_request + 1;
         configs_ = configs;
         configured_ = mask;
         sequence_ = applied_ = 0;
@@ -208,6 +277,7 @@ void Runtime::prepare(const std::array<MotorConfiguration, 4>& configs, uint32_t
     }
 }
 void Runtime::enable(uint32_t mask) {
+    require(!recovery_held(), "Recovery admission held");
     require(prepared_ && !halted_ && mask && !(mask & ~configured_) && !(mask & stopped_),
             "Prepare/rearm required before enable");
     const auto added = mask & ~enabled_;
@@ -220,6 +290,7 @@ void Runtime::enable(uint32_t mask) {
     next_refresh_ = io_.now_us();
 }
 void Runtime::velocity(uint32_t mask, const std::array<int32_t, 4>& targets) {
+    require(!recovery_held(), "Recovery admission held");
     require(!policy_.direct_mask, "Velocity command unavailable in direct-duty mode");
     require(prepared_ && !halted_ && mask && !(mask & ~enabled_) && !(mask & stopped_),
             "Motor unavailable");
@@ -239,6 +310,7 @@ void Runtime::velocity(uint32_t mask, const std::array<int32_t, 4>& targets) {
     next_target_ = io_.now_us();
 }
 void Runtime::duty(int32_t value) {
+    require(!recovery_held(), "Recovery admission held");
     require(policy_.direct_mask && prepared_ && !halted_ &&
                 (enabled_ & policy_.direct_mask) == policy_.direct_mask && !stopped_,
             "Direct-duty motor unavailable");
@@ -268,6 +340,7 @@ void Runtime::duty(int32_t value) {
     next_target_ = io_.now_us();
 }
 void Runtime::stop(uint32_t mask) {
+    require(!recovery_held(), "Recovery admission held");
     require(mask && !(mask & ~enabled_), "Invalid STOP mask");
     if (policy_.direct_mask)
         pulse_active_ = false;
@@ -321,6 +394,11 @@ void Runtime::tick() {
         for (unsigned m = 0; m < 4; ++m)
             if ((stopped_ & enabled_ & (1U << m)) && !(s.stopped & (1U << m)))
                 require(now < stop_deadline_[m], "Controlled STOP timeout");
+        if (recovery_held()) {
+            require(!s.enabled && !enabled_ && !tracking_,
+                    "Unexpected enable during recovery hold");
+            return; // Continue lease/protection supervision, never refresh or publish intent.
+        }
         if (injection_ != TimeoutInjection::watchdog && enabled_ && now >= next_refresh_) {
             refresh(enabled_);
             next_refresh_ = now + policy_.refresh_period_us;

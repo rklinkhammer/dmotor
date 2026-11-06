@@ -1,0 +1,4 @@
+Mutation: scan configuration once instead of twice.
+Exit: 1
+dmotor-runtime-tests: DMOTOR 0.9.0 commit=5b1b69bcd427df856e485ad1641e0fea1efac9f5 dirty=true source=5a2f79e60491437e816e6573a4d8df2eec01d3cc269763bcb661eeda29eb53f5 ABI=DMI2/DMB1-schema1
+135: rejects([&] { r.attest_cleanup(generation); })

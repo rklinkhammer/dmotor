@@ -49,7 +49,8 @@ Existing installed/ARM exports predate these isolated candidates.
 
 The [behavioral monitor simulator](g1a_monitor_simulator.md) now tests fault epochs,
 staged expiry, ARM gestures and reset ordering through this adapter. Its timing
-choices remain for review. Next implement the runtime admission/queue hold, then
+choices remain for review. The [Runtime hold boundary](g1a_runtime_admission.md) now exists; the [host coordinator](g1a_recovery_coordinator.md) now connects it in deterministic
+tests. Next implement trusted cleanup attestation and
 integrate durable lifetime allocation, cleanup proof acquisition and public recovery API.
 Discovery retry scheduling and physical UART transport integration remain open.
 The scripted fixture does not qualify these missing behaviors.

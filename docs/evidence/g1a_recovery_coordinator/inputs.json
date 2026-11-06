@@ -1,0 +1,35 @@
+{
+  "baseline_commit": "5b1b69bcd427df856e485ad1641e0fea1efac9f5",
+  "scope": "Host coordinator/Runtime/monitor integration and retained-ticket dispatch tests; no daemon socket hookup, real MMIO attestation acquisition, hardware qualification or image update.",
+  "commands": [
+    "cmake -S software -B build/ps-dev -DDMOTOR_SW_SANITIZE=ON",
+    "cmake --build build/ps-dev -j4",
+    "ctest --test-dir build/ps-dev --output-on-failure",
+    "python3 software/tools/format.py --check",
+    "python3 tools/check_documentation_archive.py",
+    "git diff --check"
+  ],
+  "result": "20 native tests pass with UBSan. Ticket-generation negative control fails stale enable assertion. 53 C++ files formatted; 5 archive originals verified.",
+  "negative_control": "Temporary coordinator.cpp removes t.generation comparison. Compile joint test plus monitor/coordinator/link/model/session sources against current libdmotor_semantics.a with g++ C++14 UBSan. Expected failure; no repository source mutated.",
+  "files_sha256": {
+    "software/CMakeLists.txt": "821fac47de693e1dca1cdf716561ab566ad4ca0863b54d96d53688c90befd868",
+    "software/sources.json": "f1ec48b7979c19b098be9f05a3589c4642a7cb0246d36c0c779cc4e32dacf7d2",
+    "software/include/dmotor_sw/recovery_coordinator.hpp": "2e7723a9ac11aae1a8445f407a6939f21fd569ec5ba8f221697c3cf421253e55",
+    "software/src/recovery_coordinator.cpp": "5d7dc13a50fe9ff0e7fcbf0ddb9c32f0fa80d5e56b75654bb974c9c16743b1cd",
+    "software/tests/recovery_coordinator_test.cpp": "3f3464273b1b0efda59d389a0d0c60747d56df741863ab1dbd3350214379cae5",
+    "software/tests/support/runtime_fixture.hpp": "83168f8ec4ebc6a8b05ede92cdb3bc59424d6044bf76c91447796fc0f4f423fd",
+    "software/tests/runtime_test.cpp": "8f4b9e67bae971e313b957cb87eaa6311aaeffe16557a3e0ddb449a763160aea",
+    "software/tests/support/monitor_simulator.cpp": "acb1053499a2ddf805371056273fb9fc64b9cb89d72d4665c6781d078e76362c",
+    "software/tests/support/monitor_simulator.hpp": "3b3a1920aed41279fffb8a1d1e3a387e85386b71b19184635feb4f5689dd9322",
+    "software/src/runtime.cpp": "5a98b79626a927ddd28e20da1cbaaea96073bd04555ce9e456be8ba858ac77be",
+    "software/include/dmotor_sw/runtime.hpp": "7756abbbdd20f2c4955ab758214ac3b8c3c962429675223ba23d9c6cab927539",
+    "software/src/recovery_link.cpp": "489df9e4dca5fb3505a36c983b2e12f9f110c07c595c20822d4456c13a10be69",
+    "software/include/dmotor_sw/recovery_link.hpp": "b82659662d9528b1109a29da13226d2e0c873e0c452668d039415406d67a9b49",
+    "software/src/recovery_model.cpp": "398e855ec2c8fe314b8b8da32c6ba945688c763d3bb48829471bb47aa7d4ce5d",
+    "software/include/dmotor_sw/recovery_model.hpp": "964ce59c2390201bacdbf7cb7d6a1571cbf8f2546546b964de184f980ceef5b2",
+    "software/src/session_link.cpp": "4a807bdc2fa5ffafdb972e5520746f2a192e8d1603e723b11c1e558b200e9b24",
+    "software/include/dmotor_sw/session_link.hpp": "dff1e115eed81356e15f9ca577f99943f6dd72392a8ca24fe8207b525d3363f9",
+    "software/src/monitor_protocol.cpp": "fbcc0f7f216e64bb318df28b4e2b754f2ead8b3bc44c8e6b6f24f94e8cf7ba2c",
+    "software/include/dmotor_sw/monitor_protocol.hpp": "8404af9b0d672a7e9a8dcb522c6dbb535789c40e40da4dbea37e52f9ed1d9884"
+  }
+}

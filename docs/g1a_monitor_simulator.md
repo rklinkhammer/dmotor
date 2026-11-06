@@ -67,8 +67,10 @@ All 19 native tests pass with UBSan. A negative control permitting ARM after nin
 checks fails the qualification-boundary assertion. [Evidence and input hashes](evidence/g1a_monitor_simulator/inputs.json)
 record the run. Target UART and physical fault/permit timing remain untested.
 
-Next: implement the runtime admission/command-queue hold boundary (A1) and its
-integration tests, preserving the explicit recovery-completion requirement.
+The [Runtime admission boundary](g1a_runtime_admission.md) is now host-tested.
+The [host coordinator](g1a_recovery_coordinator.md) now connects it to the model
+and tests ownership and retained command tickets. Trusted attestation acquisition
+and the real socket queue integration remain open.
 Durable allocator hookup, verified MMIO cleanup acquisition, public recovery/status
 API (A8), ESP32 implementation and G1b/G1c decisions remain open. No existing
 installed image is updated by this test-only increment.

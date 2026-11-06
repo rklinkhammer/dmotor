@@ -1,0 +1,4 @@
+Mutation: remove Runtime::enable recovery admission guard.
+Exit: 1
+dmotor-runtime-tests: DMOTOR 0.9.0 commit=5b1b69bcd427df856e485ad1641e0fea1efac9f5 dirty=true source=afc1699ef2f2b114ec79c6457df0b748a93130cfcefae5bc876a1796fc0cc5aa ABI=DMI2/DMB1-schema1
+151: rejects([&] { r.enable(1); })

@@ -23,10 +23,10 @@ proof of completed recovery. Complete these tasks before G1a acceptance:
 
 | Task | Existing implementation/evidence | Required deliverable and acceptance |
 |---|---|---|
-| A1: recovery admission hold | Runtime has prepared/halted state, but no monitor-coordinator hold | State/command table for every public Runtime/client operation during hold; queued targets discarded; only explicit completion opens admission; simulator tests tied to SYS-07/09 |
+| A1: recovery admission hold | [Runtime hold boundary](g1a_runtime_admission.md) host-tested; [coordinator/ticket integration](g1a_recovery_coordinator.md) host-tested; real socket queue integration remains open | State/command table for every public Runtime/client operation during hold; queued targets discarded; only explicit completion opens admission; simulator tests tied to SYS-07/09 |
 | A2: outputs disabled | STATUS bits 0–3; driver/MMIO path and runtime HALT | Specify repeated/race-aware disabled verification across cleanup and completion; tests inject new fault/enable attempts; no single stale read treated as perpetual proof |
 | A3: reset/drain/PI cleanup | CLN1 disabled sweep/completion plus session/request binding; actual-HLS reset interruption and full controller tests pass; see [evidence](g1a_cleanup_admission.md#8-combined-cln1-integration) | Trace reset into mailbox/HLS/PI state and outstanding AXI/HLS results; derive minimum assertion/completion conditions and prove with RTL tests. Review CLN1 completion semantics and complete the remaining boundary/race cases. CORE_RESET readback alone does not prove drain |
-| A4: session/configuration/causes | Nonzero session and configuration readback; local/HB status and ACK operations | Map each attestation flag to exact reads, ordering, reset guarantees and failure exits; verify expiration/new fault wins ACK and no unverified flag is sent |
+| A4: session/configuration/causes | [Runtime attestation](g1a_cleanup_attestation.md) checks session/configuration/CLN1 and local/HB state with mid-read mutation tests; atomic hardware races remain open | Map each attestation flag to exact reads, ordering, reset guarantees and failure exits; verify expiration/new fault wins ACK and no unverified flag is sent |
 | A5: endpoint sessions | [PS journal allocator](g1a_endpoint_sessions.md) implemented and host-tested in isolation; ESP32 backend and deployment policy remain open | PS/ESP32 storage format, integrity/atomic-update strategy, power-loss/exhaustion handling and inhibited allocation ordering; never reuse a lifetime identifier |
 | A6: pairing/freshness | [Symmetric link candidate](g1a_session_link.md) host-tests HELLO confirmation, restart, duplicate caching and sequence checks; not connected to recovery/runtime | Specify HELLO confirmation, explicit re-pair inhibition, duplicate cache and sequence advancement; cover stale/mutated frames and peer restart in deterministic tests |
 | A7: outcome uncertainty | COMMIT_ACK and challenged STATE_REPLY layouts exist | Transition table for lost ACK, SAFE/ARM_PENDING/ARMED responses, changed epoch/session and bounded retry/query exhaustion; preserve hold on ambiguity |
@@ -39,8 +39,12 @@ The [PS allocator candidate](g1a_endpoint_sessions.md) now supplies the host-tes
 A5 storage primitive. The [A6 link candidate](g1a_session_link.md) now supplies
 isolated pairing/replay checks. The [wire adapter](g1a_recovery_link.md) now joins these to the model with a
 scripted two-endpoint exchange test. The [behavioral simulator](g1a_monitor_simulator.md) now exercises fault epochs,
-staged expiry and physical ARM gestures through the real codec. Next implement
-the A1 runtime admission/command-queue boundary and finish A5
+staged expiry and physical ARM gestures through the real codec. The [Runtime admission boundary](g1a_runtime_admission.md) now blocks held motion
+and discards buffered targets. The [coordinator](g1a_recovery_coordinator.md) now checks retained owner/generation
+tickets in joint tests. The [MMIO attestation path](g1a_cleanup_attestation.md) now acquires the proof
+with repeated identity/configuration/protection reads. [Durable PS reservation](g1a_session_integration.md)
+now runs before PL preparation with allocation failures tested while inhibited.
+Next implement A8 recovery/status semantics and finish A5
 target provisioning/ESP32/storage qualification and complete
 A2–A5/A8 proof and integration before connecting the model to live admission. This does not
 create an alternate protocol or relax any live daemon precondition.
@@ -51,6 +55,9 @@ implemented before attestation code is accepted; do not populate cleanup flags
 with unconditional `7` as a substitute for proof.
 
 ## G1b — Inhibited R4 experiment design
+
+Complete the [editable G1b record](gates/G1b.md) for the operator/reviewer.
+It separates test-plan approval from later B2 execution results.
 
 U01 is open. Candidate choices remain independent PL-progress supervision versus
 an explicitly restricted supported failure model; no choice is adopted here.

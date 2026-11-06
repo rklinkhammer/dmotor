@@ -1,5 +1,6 @@
 #pragma once
 #include "dmotor_sw/protocol.hpp"
+#include "dmotor_sw/recovery_model.hpp"
 #include "dmotor/batch_host.hpp"
 namespace dmotor_sw {
 struct Platform : Device {
@@ -11,6 +12,8 @@ enum class TimeoutInjection { none, target, watchdog };
 constexpr uint32_t powered_pulse_limit_us = 1000000;
 struct RuntimePolicy {
     bool commissioning = false;
+    // Internal coordinator integration; existing commissioning profiles stay PL-only.
+    bool recovery_required = false;
     // Zero preserves continuous inhibited commissioning. Nonzero bounds one
     // direct-duty pulse per rearm; refreshed commands cannot extend it.
     uint32_t direct_pulse_us = 0;
@@ -31,6 +34,17 @@ class Runtime {
     Runtime(Platform& platform, RuntimePolicy policy = {});
     ~Runtime();
     void prepare(const std::array<MotorConfiguration, 4>& configs, uint32_t mask);
+    // Serialized coordinator-only API; never expose completion directly to clients.
+    void hold_for_recovery();
+    uint64_t recovery_generation() const {
+        return recovery_generation_;
+    }
+    bool recovery_held() const {
+        return recovery_required_ && recovery_held_;
+    }
+    // Coordinator must first validate challenged ARM and fresh local cleanup proof.
+    recovery::Cleanup attest_cleanup(uint64_t generation);
+    void complete_recovery(uint64_t generation);
     void enable(uint32_t mask);
     void velocity(uint32_t mask, const std::array<int32_t, 4>& targets);
     void duty(int32_t value_q16);
@@ -42,6 +56,9 @@ class Runtime {
     void tick();
     ControllerStatus status();
     TelemetrySnapshot capture();
+    uint64_t now_us() const {
+        return io_.now_us();
+    }
     uint32_t session() const {
         return session_;
     }
@@ -68,5 +85,8 @@ class Runtime {
     uint64_t pulse_started_ = 0;
     bool pulse_active_ = false;
     bool prepared_ = false, halted_ = true;
+    bool recovery_required_ = false, recovery_held_ = true;
+    uint64_t recovery_generation_ = 0;
+    uint32_t cleanup_request_ = 0;
 };
 } // namespace dmotor_sw

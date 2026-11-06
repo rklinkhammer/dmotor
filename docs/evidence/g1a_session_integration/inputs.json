@@ -1,0 +1,26 @@
+{
+  "baseline_commit": "5b1b69bcd427df856e485ad1641e0fea1efac9f5",
+  "scope": "Host coordinator durable PS reservation using real temporary journal and fake platform; no daemon/image/hardware change. Prior uncommitted increments retained.",
+  "commands": [
+    "cmake -S software -B build/ps-dev -DDMOTOR_SW_SANITIZE=ON",
+    "cmake --build build/ps-dev -j4",
+    "ctest --test-dir build/ps-dev --output-on-failure",
+    "python3 software/tools/format.py --check",
+    "python3 tools/check_documentation_archive.py",
+    "git diff --check"
+  ],
+  "result": "21 native tests pass with UBSan; allocation-order mutant fails inhibition assertion. 54 C++ files formatted, 5 archived originals verified.",
+  "negative_control": "Temporary coordinator.cpp inserts Runtime::prepare before reserve_session_. Build coordinator_session_test.cpp plus allocator/coordinator/link/model/session sources against semantics archive, C++14 UBSan with --wrap=fsync. Expected failure; repository source unchanged.",
+  "files_sha256": {
+    "software/include/dmotor_sw/recovery_coordinator.hpp": "1c19fc8604836aaee1d10873e30f7894d158cbf7d8ab5c53fbdf43d199c1eb73",
+    "software/src/recovery_coordinator.cpp": "767126f47d44f1bb9877272a5eb42548eec3b9fad6616bb6785bda42dd3b53c8",
+    "software/include/dmotor_sw/endpoint_session.hpp": "07055e1a13a56600a4e6669ab86658e8231bd9b45b2387702a2c26f41c6463aa",
+    "software/linux/endpoint_session.cpp": "b237df7f2405ddb2f023e72b2f0246d0203b9252dcbbb7fc905416e39f9cd6a4",
+    "software/tests/coordinator_session_test.cpp": "35b05daef3ded5df9cb4e3124d403976685eea61a8ed32377bcbe73311f90876",
+    "software/tests/recovery_coordinator_test.cpp": "4a25826972823a785d299e72c4fd6dc79c1e202cd969ee3220593a5bf4f40f2e",
+    "software/tests/support/runtime_fixture.hpp": "d5a22328c21ca054b46d6d3b9c2f827cf9965061bc4a81a76f2d634512560eca",
+    "software/src/runtime.cpp": "bd603ab0da7fb4da719414b5932752f2dfad94eef2bfb49d6374b9ac4de8a3ec",
+    "software/CMakeLists.txt": "c7c8fd5b1b79e22ef83a160de4a9d8302625bc8b5b1091fa2d29fc3388e24cf0",
+    "software/sources.json": "efec0896247aefdae2e711afe6db31237f6abdf2f582e465bbcd5c7ea9ceb749"
+  }
+}

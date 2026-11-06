@@ -6,6 +6,7 @@
 - [Active decisions](decisions.md): commissioning-only release and accepted technical choices.
 - [Open issues](open_issues.md): U01–U11 owners, remaining work and blocking gates.
 - [Integrated execution plan](system_bringup_plan.md): B1–B7 and deferred BV/GV.
+- [G1b editable test-plan and review record](gates/G1b.md): operator worksheets and pending conditional acceptance.
 - [G1d preparation/review record](gates/G1d.md): evidence and pending acceptance checklist.
 - [G1a reset/cleanup audit and admission proposal](g1a_cleanup_admission.md).
 - [G1 work package](g1_work_package.md): concrete contract, proof and experiment tasks.
@@ -43,3 +44,7 @@ is the entry point for previous review rounds, milestones and build records.
 - [G1a endpoint pairing, replay validation and integration obligations](g1a_session_link.md)
 - [G1a recovery wire adapter and scripted exchange evidence](g1a_recovery_link.md)
 - [G1a behavioral monitor simulator, timing assumptions and evidence](g1a_monitor_simulator.md)
+- [G1a Runtime admission hold](g1a_runtime_admission.md)
+- [G1a recovery coordinator and queued command admission](g1a_recovery_coordinator.md)
+- [G1a MMIO cleanup attestation acquisition and limits](g1a_cleanup_attestation.md)
+- [G1a durable PS sessions in coordinator discovery](g1a_session_integration.md)

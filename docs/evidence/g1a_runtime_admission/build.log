@@ -1,0 +1,46 @@
+[  6%] Built target dmotor_client
+[  8%] Built target dmotor-endpoint-session-tests
+[ 13%] Built target dmotor-recovery-model-tests
+[ 16%] Built target dmotor-client-tests
+[ 16%] Built target dmotor_version
+[ 20%] Building CXX object CMakeFiles/dmotor_semantics.dir/src/version.cpp.o
+[ 20%] Building CXX object CMakeFiles/dmotor_semantics.dir/src/runtime.cpp.o
+[ 21%] Linking CXX static library libdmotor_semantics.a
+[ 28%] Built target dmotor_semantics
+[ 30%] Building CXX object CMakeFiles/dmotor_linux.dir/linux/kernel_device.cpp.o
+[ 35%] Linking CXX executable dmotor-semantic-tests
+[ 35%] Linking CXX executable dmotor-maint
+[ 35%] Linking CXX executable dmotor-protocol-tests
+[ 36%] Built target dmotor-semantic-tests
+[ 38%] Built target dmotor-protocol-tests
+[ 40%] Built target dmotor-maint
+[ 41%] Building CXX object CMakeFiles/dmotor-runtime-tests.dir/tests/runtime_test.cpp.o
+[ 43%] Building CXX object CMakeFiles/dmotord-fixture.dir/apps/daemon.cpp.o
+[ 45%] Linking CXX executable dmotor-maint-fixture
+[ 46%] Built target dmotor-maint-fixture
+[ 48%] Linking CXX executable dmotor-monitor-tests
+[ 50%] Built target dmotor-monitor-tests
+[ 51%] Linking CXX executable dmotor-session-link-tests
+[ 55%] Built target dmotor-session-link-tests
+[ 56%] Linking CXX executable dmotor-recovery-link-tests
+[ 63%] Built target dmotor-recovery-link-tests
+[ 65%] Linking CXX executable dmotor-monitor-simulator-tests
+[ 73%] Built target dmotor-monitor-simulator-tests
+[ 75%] Building CXX object CMakeFiles/dmotord-fixture.dir/tests/fake_kernel.cpp.o
+[ 76%] Linking CXX static library libdmotor_linux.a
+[ 80%] Built target dmotor_linux
+[ 81%] Building CXX object CMakeFiles/dmotord.dir/apps/daemon.cpp.o
+[ 83%] Linking CXX executable dmotor-encoder
+[ 85%] Built target dmotor-encoder
+[ 86%] Linking CXX executable dmotor-inspect
+[ 88%] Linking CXX executable dmotor-runtime-tests
+[ 90%] Built target dmotor-inspect
+[ 91%] Linking CXX executable dmotor-linux-tests
+[ 91%] Built target dmotor-runtime-tests
+[ 93%] Built target dmotor-linux-tests
+[ 95%] Linking CXX executable dmotor-monitor-uart-tests
+[ 96%] Built target dmotor-monitor-uart-tests
+[ 98%] Linking CXX executable dmotord-fixture
+[ 98%] Built target dmotord-fixture
+[100%] Linking CXX executable dmotord
+[100%] Built target dmotord

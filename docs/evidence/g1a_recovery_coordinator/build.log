@@ -1,0 +1,43 @@
+[  4%] Built target dmotor-recovery-model-tests
+[  8%] Built target dmotor-endpoint-session-tests
+[ 11%] Built target dmotor_client
+[ 14%] Built target dmotor-client-tests
+[ 14%] Built target dmotor_version
+[ 16%] Building CXX object CMakeFiles/dmotor_semantics.dir/src/version.cpp.o
+[ 17%] Linking CXX static library libdmotor_semantics.a
+[ 25%] Built target dmotor_semantics
+[ 26%] Linking CXX executable dmotor-maint
+[ 29%] Linking CXX executable dmotor-semantic-tests
+[ 29%] Linking CXX executable dmotor-protocol-tests
+[ 35%] Built target dmotor_linux
+[ 37%] Linking CXX executable dmotor-runtime-tests
+[ 38%] Built target dmotor-semantic-tests
+[ 40%] Built target dmotor-protocol-tests
+[ 41%] Built target dmotor-maint
+[ 43%] Linking CXX executable dmotord-fixture
+[ 44%] Linking CXX executable dmotor-maint-fixture
+[ 46%] Built target dmotor-runtime-tests
+[ 47%] Linking CXX executable dmotor-monitor-tests
+[ 49%] Linking CXX executable dmotor-monitor-uart-tests
+[ 50%] Built target dmotor-maint-fixture
+[ 52%] Built target dmotor-monitor-tests
+[ 55%] Built target dmotord-fixture
+[ 56%] Linking CXX executable dmotor-session-link-tests
+[ 58%] Linking CXX executable dmotor-recovery-link-tests
+[ 59%] Built target dmotor-monitor-uart-tests
+[ 61%] Linking CXX executable dmotor-monitor-simulator-tests
+[ 62%] Building CXX object CMakeFiles/dmotor-recovery-coordinator-tests.dir/src/recovery_coordinator.cpp.o
+[ 65%] Built target dmotor-session-link-tests
+[ 71%] Built target dmotor-recovery-link-tests
+[ 73%] Building CXX object CMakeFiles/dmotor-recovery-coordinator-tests.dir/tests/recovery_coordinator_test.cpp.o
+[ 74%] Linking CXX executable dmotord
+[ 82%] Built target dmotor-monitor-simulator-tests
+[ 83%] Linking CXX executable dmotor-encoder
+[ 85%] Built target dmotord
+[ 86%] Linking CXX executable dmotor-inspect
+[ 88%] Built target dmotor-encoder
+[ 89%] Linking CXX executable dmotor-linux-tests
+[ 91%] Built target dmotor-inspect
+[ 92%] Built target dmotor-linux-tests
+[ 94%] Linking CXX executable dmotor-recovery-coordinator-tests
+[100%] Built target dmotor-recovery-coordinator-tests

@@ -1,0 +1,21 @@
+{
+  "baseline_commit": "5b1b69bcd427df856e485ad1641e0fea1efac9f5",
+  "scope": "Compiled Runtime admission API and fake-platform tests. No coordinator/daemon queue hookup, new installed image, hardware qualification or gate acceptance. Prior uncommitted increments retained.",
+  "commands": [
+    "cmake --build build/ps-dev -j4",
+    "ctest --test-dir build/ps-dev --output-on-failure",
+    "python3 software/tools/format.py --check",
+    "python3 tools/check_documentation_archive.py",
+    "git diff --check"
+  ],
+  "result": "19 native tests pass with UBSan, including expanded software_runtime. Removing enable admission guard fails expected rejection assertion. 49 C++ files formatted and 5 archived originals verified.",
+  "negative_control": "Temporary runtime.cpp removes enable recovery guard; g++ C++14 UBSan links runtime_test.cpp and mutant against current libdmotor_semantics.a. Expected nonzero exit; original source unchanged.",
+  "files_sha256": {
+    "software/include/dmotor_sw/runtime.hpp": "7756abbbdd20f2c4955ab758214ac3b8c3c962429675223ba23d9c6cab927539",
+    "software/src/runtime.cpp": "5a98b79626a927ddd28e20da1cbaaea96073bd04555ce9e456be8ba858ac77be",
+    "software/tests/runtime_test.cpp": "f201c55dd3434c92016e8c374a85a8a2a2aaee089861385f7c44fa8fae8648c2",
+    "software/CMakeLists.txt": "898fd446756534b039e2f706213572a555c9fe6d99456704281800bb4b8e77d6",
+    "software/src/protocol.cpp": "4a2f54b4abd2c1b209e36dc9ef153692460f291e05c544f349bf3a834a5474ab",
+    "software/include/dmotor_sw/protocol.hpp": "1986293ac1497d1d024428e316ec62af006fe777f3761fee590a1e8de1fe0a1f"
+  }
+}

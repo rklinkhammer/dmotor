@@ -85,5 +85,10 @@
   "software/tests/recovery_link_test.cpp",
   "software/tests/support/monitor_simulator.hpp",
   "software/tests/support/monitor_simulator.cpp",
-  "software/tests/monitor_simulator_test.cpp"
+  "software/tests/monitor_simulator_test.cpp",
+  "software/include/dmotor_sw/recovery_coordinator.hpp",
+  "software/src/recovery_coordinator.cpp",
+  "software/tests/recovery_coordinator_test.cpp",
+  "software/tests/support/runtime_fixture.hpp",
+  "software/tests/coordinator_session_test.cpp"
 ]

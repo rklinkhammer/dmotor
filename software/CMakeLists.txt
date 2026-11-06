@@ -182,6 +182,20 @@ target_link_libraries(dmotor-monitor-simulator-tests PRIVATE dmotor_semantics)
 target_compile_options(dmotor-monitor-simulator-tests PRIVATE -Wall -Wextra -Werror -Wconversion)
 add_test(NAME software_monitor_simulator COMMAND dmotor-monitor-simulator-tests)
 
+# Host coordinator integration only; no daemon registration or installation.
+add_executable(dmotor-recovery-coordinator-tests tests/recovery_coordinator_test.cpp tests/support/monitor_simulator.cpp src/recovery_coordinator.cpp src/recovery_link.cpp src/recovery_model.cpp src/session_link.cpp)
+target_link_libraries(dmotor-recovery-coordinator-tests PRIVATE dmotor_semantics)
+target_compile_options(dmotor-recovery-coordinator-tests PRIVATE -Wall -Wextra -Werror -Wconversion)
+add_test(NAME software_recovery_coordinator COMMAND dmotor-recovery-coordinator-tests)
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+  add_executable(dmotor-coordinator-session-tests tests/coordinator_session_test.cpp linux/endpoint_session.cpp src/recovery_coordinator.cpp src/recovery_link.cpp src/recovery_model.cpp src/session_link.cpp)
+  target_link_libraries(dmotor-coordinator-session-tests PRIVATE dmotor_semantics)
+  target_compile_options(dmotor-coordinator-session-tests PRIVATE -Wall -Wextra -Werror -Wconversion)
+  target_link_options(dmotor-coordinator-session-tests PRIVATE -Wl,--wrap=fsync)
+  add_test(NAME software_coordinator_session COMMAND dmotor-coordinator-session-tests)
+endif()
+
 # Developer tools are opt-in and are not dependencies of an EDF target build.
 option(DMOTOR_SW_CLANG_TIDY "Run clang-tidy 18 while compiling PS software" OFF)
 if(DMOTOR_SW_CLANG_TIDY)

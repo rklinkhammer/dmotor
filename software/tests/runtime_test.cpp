@@ -15,129 +15,127 @@
 using namespace dmotor_sw;
 namespace reg = dmotor::controller_reg;
 namespace b = dmotor::batch_reg;
-struct Fake : Platform {
-    std::map<uint32_t, uint32_t> words;
-    std::vector<std::pair<uint32_t, uint32_t>> writes;
-    uint64_t time = 0;
-    bool source = true, reset = true, fail = false, hold_ready = false, halt_failure = false;
-    unsigned halt_count = 0, cleanup_failure = 0, cleanup_reads = 0;
-    Fake() {
-        words[reg::CLEANUP_CAPABILITY] = 0x434c4e31;
-        words[reg::MONITOR_CAPABILITY] = 0x48423131;
-        words[reg::MONITOR_STATUS] = 5;
-        words[reg::DIRECT_CAPABILITY] = 0x44445531;
-        words[reg::IDENTITY] = reg::PROFILE_ID;
-        words[reg::STATUS] = 1U << 18;
-        words[b::IDENTITY] = b::PROFILE_ID;
-        words[b::SCHEMA] = 1;
-        words[b::MOTOR_COUNT] = 4;
-    }
-    uint32_t read32(uint32_t a) override {
-        if (fail)
-            throw IoError("bus");
-        if (a == reg::CLEANUP_STATUS && cleanup_failure == 5 && ++cleanup_reads > 1)
-            return 4; // A new fault between the first proof read and final check.
-        return words[a];
-    }
-    void write32(uint32_t a, uint32_t v) override {
-        if (fail)
-            throw IoError("bus");
-        writes.emplace_back(a, v);
-        if (a == reg::MONITOR_ACK) {
-            CHECK(reset && !(words[reg::STATUS] & 15));
-            if (words[reg::MONITOR_STATUS] & 1U)
-                words[reg::MONITOR_STATUS] &= ~2U;
-        }
-        if (a == reg::SESSION) {
-            CHECK(reset && !(words[reg::STATUS] & 15));
-            words[b::SESSION] = v;
-        }
-        if (a == reg::CORE_RESET) {
-            reset = v != 0;
-            words[reg::CLEANUP_STATUS] = reset ? 0 : 2;
-            words[reg::CLEANUP_SESSION] = reset ? 0 : words[reg::SESSION];
-            if (!reset)
-                ++words[reg::CLEANUP_REQUEST];
-            if (!reset) {
-                if (cleanup_failure == 1)
-                    words[reg::CLEANUP_STATUS] = 4;
-                if (cleanup_failure == 2)
-                    words[reg::CLEANUP_STATUS] = 1;
-                if (cleanup_failure == 3)
-                    words[reg::CLEANUP_SESSION] = 0;
-                if (cleanup_failure == 4)
-                    --words[reg::CLEANUP_REQUEST];
-            }
-            if (reset)
-                words[reg::STATUS] |= 1U << 18;
-            else if (!source)
-                words[reg::STATUS] &= ~(1U << 18);
-        }
-        if (a == reg::ENABLE) {
-            CHECK(!reset && !source);
-            words[reg::STATUS] |= v;
-            if (!hold_ready)
-                words[reg::STATUS] |= v << 8;
-        }
-        if (a == reg::DISABLE)
-            words[reg::STATUS] &= ~(v | (v << 8));
-        if (a == reg::STOP && words[reg::DIRECT_MODE])
-            words[reg::STATUS] &= ~(v | (v << 8));
-        if (a == reg::STOP) {
-            words[reg::STATUS] |= v << 12;
-            words[reg::STATUS] &= ~(v << 8);
-            words[b::PENDING_MASK] = 0;
-        }
-        if (a == b::COMMIT) {
-            CHECK(v == 1 && !source && !reset);
-            words[b::PUBLISHED_SEQUENCE] = words[b::STAGE_SEQUENCE];
-            words[b::APPLIED_SEQUENCE] = words[b::STAGE_SEQUENCE];
-            words[b::APPLIED_MASK] = words[b::STAGE_MASK];
-            words[b::PENDING_MASK] = 0;
-        }
-        if (a == reg::ACKNOWLEDGE && !source)
-            words[reg::STATUS] &= ~((1U << 16) | (1U << 17));
-        words[a] = v;
-    }
-    void fence() override {
-        if (fail)
-            throw IoError("fence");
-    }
-    void halt(bool asserted) override {
-        if (halt_failure)
-            throw IoError("HALT confirmation unavailable");
-        source = asserted;
-        if (asserted) {
-            ++halt_count;
-            words[reg::STATUS] &= ~15U;
-            words[reg::STATUS] |= 1U << 18;
-        }
-    }
-    uint64_t now_us() const override {
-        return time;
-    }
-    void sleep_us(uint32_t us) override {
-        time += us;
-    }
-};
-std::array<MotorConfiguration, 4> config() {
-    std::array<MotorConfiguration, 4> c{};
-    for (auto& m : c)
-        m = {7,   400000, 1000000, 2000000, 1560,    1,       1,       100, 2,
-             655, 65536,  32768,   16384,   1000000, 2000000, 1000000, 8192};
-    return c;
-}
-template <class F> bool rejects(F f) {
-    try {
-        f();
-    } catch (const std::exception&) {
-        return true;
-    }
-    return false;
-}
+#include "support/runtime_fixture.hpp"
 int main(int argc, char** argv) {
     if (startup_version("dmotor-runtime-tests", argc, argv))
         return 0;
+    {
+        Fake io;
+        RuntimePolicy p;
+        p.recovery_required = true;
+        p.commissioning = true;
+        Runtime r(io, p);
+        CHECK(r.recovery_held());
+        r.prepare(config(), 1);
+        const auto first = r.recovery_generation();
+        const auto writes = io.writes.size();
+        CHECK(rejects([&] { r.enable(1); }));
+        CHECK(rejects([&] { r.velocity(1, {{1000, 0, 0, 0}}); }));
+        CHECK(rejects([&] { r.duty(1000); }));
+        CHECK(rejects([&] { r.stop(1); }));
+        CHECK(rejects([&] { r.inject_timeout(TimeoutInjection::target); }));
+        r.heartbeat();
+        r.status();
+        r.tick();
+        CHECK(io.writes.size() == writes && r.recovery_held());
+        r.complete_recovery(first); // Trusted coordinator event, not a client command.
+        CHECK(!r.recovery_held() && io.writes.size() == writes);
+        CHECK(rejects([&] { r.complete_recovery(first); }));
+        r.enable(1);
+        r.velocity(1, {{1234, 0, 0, 0}}); // Buffered but not yet published.
+        r.hold_for_recovery();
+        CHECK(r.recovery_held() && io.source);
+        r.prepare(config(), 1);
+        CHECK(rejects([&] { r.complete_recovery(first); }));
+        CHECK(r.recovery_held());
+        r.complete_recovery(r.recovery_generation());
+        r.enable(1);
+        r.tick();
+        CHECK(io.words[b::PUBLISHED_SEQUENCE] == 0); // Old buffered target discarded.
+        r.velocity(1, {{5678, 0, 0, 0}});
+        r.tick();
+        CHECK(io.words[b::PUBLISHED_SEQUENCE] == 1);
+        r.halt();
+        r.prepare(config(), 1);
+        r.disable(1); // Inhibiting commands remain available during hold.
+        CHECK(r.recovery_held());
+        io.time += p.client_lease_us;
+        CHECK(rejects([&] { r.tick(); }));
+        CHECK(io.source && r.recovery_held());
+    }
+    for (unsigned fault = 0; fault < 7; ++fault) {
+        Fake io;
+        Runtime r(io);
+        r.hold_for_recovery(); // Dynamically opt in; subsequent prepare cannot bypass.
+        r.prepare(config(), 1);
+        auto generation = r.recovery_generation();
+        if (fault == 0)
+            ++io.words[reg::SESSION];
+        if (fault == 1)
+            ++io.words[reg::CLEANUP_REQUEST];
+        if (fault == 2)
+            io.words[reg::MONITOR_STATUS] = 7;
+        if (fault == 3)
+            ++io.words[reg::CONFIG_BASE];
+        if (fault == 4)
+            io.words[reg::STATUS] |= 1;
+        if (fault == 5)
+            io.fail = true;
+        if (fault == 6)
+            io.time += 500000;
+        CHECK(rejects([&] { r.complete_recovery(generation); }));
+        CHECK(r.recovery_held() && io.source);
+        CHECK(rejects([&] { r.enable(1); }));
+    }
+    {
+        Fake io;
+        RuntimePolicy p;
+        p.recovery_required = true;
+        Runtime r(io, p);
+        r.prepare(config(), 1);
+        io.words[reg::STATUS] |= 1;
+        CHECK(rejects([&] { r.tick(); }));
+        CHECK(io.source && r.recovery_held());
+    }
+    for (unsigned change = 0; change < 9; ++change) {
+        Fake io;
+        RuntimePolicy policy;
+        policy.recovery_required = true;
+        Runtime r(io, policy);
+        r.prepare(config(), 1);
+        auto generation = r.recovery_generation();
+        auto proof = r.attest_cleanup(generation);
+        CHECK(proof.session == r.session() && proof.request == io.words[reg::CLEANUP_REQUEST]);
+        CHECK(proof.configuration == generation && proof.disabled && proof.drained &&
+              proof.causes_clear);
+        bool injected = false;
+        io.after_read = [&](uint32_t address) {
+            if (injected || address != reg::CONFIG_BASE)
+                return;
+            injected = true; // Change after returning the old first configuration word.
+            if (change == 0)
+                ++io.words[reg::CONFIG_BASE];
+            if (change == 1)
+                ++io.words[reg::SESSION];
+            if (change == 2)
+                ++io.words[reg::CLEANUP_REQUEST];
+            if (change == 3)
+                io.words[reg::CLEANUP_STATUS] = 4;
+            if (change == 4)
+                io.words[reg::MONITOR_STATUS] = 7;
+            if (change == 5)
+                io.words[reg::STATUS] |= 1;
+            if (change == 6)
+                io.words[reg::CORE_RESET] = 1;
+            if (change == 7)
+                io.time += policy.transition_us;
+            if (change == 8)
+                io.fail = true;
+        };
+        CHECK(rejects([&] { r.attest_cleanup(generation); }));
+        CHECK(injected && r.recovery_held() && io.source);
+        CHECK(rejects([&] { r.enable(1); }));
+    }
     for (unsigned failure = 0; failure < 7; ++failure) {
         Fake io;
         RuntimePolicy policy;

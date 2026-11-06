@@ -1,0 +1,23 @@
+{
+  "baseline_commit": "5b1b69bcd427df856e485ad1641e0fea1efac9f5",
+  "scope": "Runtime repeated-read MMIO attestation and host coordinator integration. Fake MMIO mutations; no atomic snapshot, physical qualification, daemon hookup or installed image update.",
+  "commands": [
+    "cmake --build build/ps-dev -j4",
+    "ctest --test-dir build/ps-dev --output-on-failure",
+    "python3 software/tools/format.py --check",
+    "python3 tools/check_documentation_archive.py",
+    "git diff --check"
+  ],
+  "result": "20 native tests pass with UBSan. Single-configuration-pass mutant fails expected attestation rejection. 53 C++ files formatted; 5 archived originals verified.",
+  "negative_control": "Temporary runtime.cpp replaces pass < 2 with pass < 1. Compile runtime_test.cpp plus mutant against current semantics archive using g++ C++14 UBSan. Original code unchanged.",
+  "files_sha256": {
+    "software/include/dmotor_sw/runtime.hpp": "7ae67f84c71fd17268bedafc13bd3f3b30c243a3196e11c715448b3dce93c5dd",
+    "software/src/runtime.cpp": "bd603ab0da7fb4da719414b5932752f2dfad94eef2bfb49d6374b9ac4de8a3ec",
+    "software/tests/runtime_test.cpp": "3cf060ebfac330f904ee969ebb02cdd1daef142e8c50a6619c67dfcefb6c436f",
+    "software/tests/support/runtime_fixture.hpp": "d5a22328c21ca054b46d6d3b9c2f827cf9965061bc4a81a76f2d634512560eca",
+    "software/include/dmotor_sw/recovery_coordinator.hpp": "b1d1dadb0e7e4ff1283d958aa181a4dfcc5fe8d7c7366b277fff1fe6b575a4ea",
+    "software/src/recovery_coordinator.cpp": "487af57a5e4e8721fa1b9a90c3e9fbacf60be294d89f4784793d4477c535e501",
+    "software/tests/recovery_coordinator_test.cpp": "e3c4e244fbaf1cb0ceda79954b6a8a6215cec9529501088cb0ee2c51972d62ae",
+    "software/CMakeLists.txt": "821fac47de693e1dca1cdf716561ab566ad4ca0863b54d96d53688c90befd868"
+  }
+}

@@ -97,7 +97,8 @@ are compiled only into uninstalled test executables.
 
 The isolated [A6 pairing/replay link](g1a_session_link.md) is now host-tested.
 The [wire adapter](g1a_recovery_link.md) now connects confirmed IDs to the
-post-pairing model in scripted exchanges; actual allocator hookup remains open. The
+post-pairing model in scripted exchanges; the [coordinator integration](g1a_session_integration.md) now uses the real allocator
+in Linux tests while HALT is confirmed. The
 [behavioral monitor simulator](g1a_monitor_simulator.md) now extends joint coverage. A5 remains open for target provisioning,
 ESP32 implementation and storage fault qualification. Live admission/daemon wiring
 and public recovery API remain separate A1/A8 work.
