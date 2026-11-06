@@ -15,8 +15,8 @@ is inferred from starting the plan.
 |---|---|---|
 | Zynq PL | Revision-11 CLN1 cleanup, HB supervision/coast and motor control built and routed; actual atomic/motor HLS lifecycle and interrupted-cleanup tests pass; setup +2.406 ns, hold +0.024 ns, no DRC errors | Electrical response on the assembled system; independent shutdown for PL-only failures |
 | Zynq PS | CLN1-aware exclusive driver/runtime, daemon/client/tools and monitor transport built for ARM; driver compilation and five QEMU semantic executables pass | Full monitor recovery/ARM coordinator, persistent endpoint sessions, bounded diagnostic draining, vehicle planner |
-| Client API | `dmotor_client`, installed `dmotor::client` CMake target and Yocto SDK packaging; maintenance migrated; 21 native PS tests pass including installed/staged consumer and recovery model | Client/runtime are in the matched ARM build; physical board/client qualification remains |
-| ESP32 | Native ESP-IDF v6.1 container pinned by digest in `esp32-dev`; ESP32-S3/C3 environment smoke builds | DMOTOR application, safety core, board drivers and target qualification are not implemented |
+| Client API | `dmotor_client`, installed `dmotor::client` CMake target and Yocto SDK packaging; maintenance migrated; 23 native PS tests pass including installed/staged consumer and recovery model | Client/runtime are in the matched ARM build; physical board/client qualification remains |
+| ESP32 | Native ESP-IDF v6.1 container pinned by digest in `esp32-dev`; ESP32-S3/C3 environment smoke builds | UART-only diagnostic builds; operational application, safety core and target qualification remain open |
 | Integration | Shared monitor wire schema and proposed recovery v4; saved wiring map | Joint state-machine tests, measured timing and accepted system release |
 | Build evidence | [Current matched hardware/ARM build and SD export](evidence/g1a_product_build/inputs.json); source hashes and export checksums verified | Exported artifacts have not been programmed, booted or electrically qualified |
 
@@ -30,7 +30,7 @@ scope, not qualification of the newly integrated monitor system.
 | Gate/work | State | Next evidence or disposition |
 |---|---|---|
 | G1a recovery/admission | Open | [Cleanup/admission specification](g1a_cleanup_admission.md): CLN1, actual-HLS integration and matched build pass; remaining race/boundary qualification, admission hold, persistent sessions and A6–A8 recovery semantics remain open |
-| G1b electrical/R4 | Open | Complete the [G1b record](gates/G1b.md): inhibited setup, experiment limits and candidate disposition; draft only, no hardware experiment executed |
+| G1b electrical/R4 | Open | [G1b bench record](gates/G1b.md) references rev-A designs; [diagnostic programs](bench_diagnostic_plan.md) planned, [UART pair built/tested](uart_bench.md); deployment, bench hookup and physical run pending |
 | G1c monitor design | Open | Acquisition budget, calibration/protection policies and IDF isolation design |
 | G1d documentation | [Prepared for self-review](gates/G1d.md) | Current records and initial archive created; matrix has 19 seed rows; extraction/self-review and full inventory migration remain open |
 | G2–G6 | Not accepted | No new board/powered evidence produced by this increment |
@@ -56,7 +56,7 @@ was programmed and no SD card was written. Prior builds remain in the archive.
 
 The [post-pairing G1a model](g1a_recovery_model.md) now implements host-tested
 admission/uncertain-outcome semantics, isolated from the daemon. The native PS
-suite now has 21 tests, including the isolated [PS session allocator](g1a_endpoint_sessions.md)
+suite now has 23 tests, including the isolated [PS session allocator](g1a_endpoint_sessions.md)
 and [pairing/replay link](g1a_session_link.md), now connected through an isolated
 [recovery wire adapter](g1a_recovery_link.md) with scripted monitor exchange tests and a
 [behavioral monitor simulator](g1a_monitor_simulator.md) exercising ARM/fault/expiry
@@ -88,3 +88,8 @@ The first archive pass covers the plan baseline and chronological review/PL/PS/b
 records. [Archive manifest and original copies](archive/index.md) preserve provenance.
 Other mixed architecture/component documents are still awaiting extraction; this
 is not completion of U10. Update this page in place rather than appending progress rounds.
+
+U0 diagnostic increment: Linux/PTY tests, ESP32-S3 ESP-IDF v6.1 build and
+Arty ARM `dmotor-runtime` package/QA pass. This does not update the older SD
+export above. [Bench instructions and evidence](uart_bench.md); no board flashed
+or tested. GPIO/HB diagnostic modes and simultaneous-stream stress remain open.

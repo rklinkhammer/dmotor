@@ -6,7 +6,9 @@
 - [Active decisions](decisions.md): commissioning-only release and accepted technical choices.
 - [Open issues](open_issues.md): U01–U11 owners, remaining work and blocking gates.
 - [Integrated execution plan](system_bringup_plan.md): B1–B7 and deferred BV/GV.
-- [G1b editable test-plan and review record](gates/G1b.md): operator worksheets and pending conditional acceptance.
+- [G1b bench record](gates/G1b.md): current board versions, software dependencies and editable hobby-bench checklist.
+- [UART bench instructions](uart_bench.md): implemented Linux/ESP32 diagnostic pair and build evidence.
+- [Bench diagnostic program plan](bench_diagnostic_plan.md): Linux/ESP32 UART pair and GPIO/PL test tools to implement.
 - [G1d preparation/review record](gates/G1d.md): evidence and pending acceptance checklist.
 - [G1a reset/cleanup audit and admission proposal](g1a_cleanup_admission.md).
 - [G1 work package](g1_work_package.md): concrete contract, proof and experiment tasks.

@@ -179,6 +179,22 @@ UART loop/exchange evidence, correct software/hardware identities and defect lis
 energizing path, initial permit-low behavior measured, and all unresolved startup/
 PL-failure cases tracked under the G1 failure model. This gate does not authorize motors.
 
+### Bench software to implement before its tests
+
+Use the [bench diagnostic program plan](bench_diagnostic_plan.md) as the concrete
+implementation list: first the Zynq Linux UART utility and ESP32-S3 UART-only
+image, then inhibited GPIO/HB modes. The dedicated PL clock-stop variant and
+isolated core-reset support are later, independent tasks. Existing UART transport
+and host simulations are building blocks, not ready-to-run two-board diagnostics.
+Full operational ESP32 firmware is not a prerequisite for the UART pair.
+
+For this hobby project, use the [G1b bench record](gates/G1b.md): reference existing
+board revisions/drawings, note the actual hookup and save useful logs/captures.
+Robert's dated second look at the setup is sufficient; no separate operator,
+signature package or duplicate board inventory is required. Missing software
+blocks its experiment, not unrelated bench work. Keep motor drive power
+disconnected and preserve the meaningful electrical checks.
+
 ### Serial link checkpoint
 
 Test the physical Zynq–ESP32 serial connection during **B2/G2**, after G1b

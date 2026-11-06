@@ -31,7 +31,7 @@ RDEPENDS:dmotor-encoder += "dmotor-version"
 
 # Opt-in commissioning service and separate maintenance client; no autostart.
 PACKAGES =+ "dmotor-runtime"
-FILES:dmotor-runtime = "${bindir}/dmotord ${bindir}/dmotor-maint ${datadir}/dmotor/inhibited-example.conf ${datadir}/dmotor/output-validation.conf ${datadir}/dmotor/powered-direct-duty.conf ${datadir}/dmotor/monitor"
+FILES:dmotor-runtime = "${bindir}/dmotord ${bindir}/dmotor-maint ${bindir}/dmotor-uart-test ${datadir}/dmotor/inhibited-example.conf ${datadir}/dmotor/output-validation.conf ${datadir}/dmotor/powered-direct-duty.conf ${datadir}/dmotor/monitor"
 RDEPENDS:dmotor-runtime += "dmotor-version"
 
 # Client SDK: static library and standalone public header/CMake imported target.

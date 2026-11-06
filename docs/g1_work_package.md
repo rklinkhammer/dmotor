@@ -57,7 +57,10 @@ with unconditional `7` as a substitute for proof.
 ## G1b — Inhibited R4 experiment design
 
 Complete the [editable G1b record](gates/G1b.md) for the operator/reviewer.
-It separates test-plan approval from later B2 execution results.
+It now references the recorded rev-A hardware and uses a short hobby-bench
+checklist. The [bench diagnostic program plan](bench_diagnostic_plan.md) identifies
+the Linux/ESP32 UART pair, GPIO/HB modes and later PL/reset injection work; missing
+software blocks only its dependent experiment.
 
 U01 is open. Candidate choices remain independent PL-progress supervision versus
 an explicitly restricted supported failure model; no choice is adopted here.
@@ -72,8 +75,9 @@ disconnected and the approved fixture must remain inhibited independently of PL.
 | B4: individual rail loss/restoration | Rail voltage, back-power paths, signals while observer/driver powered | Does a low observed voltage merely reflect an unpowered observer? |
 
 Before running, fill in exact fault-injection method, permitted rails/levels,
-instrument grounding/isolation, fixture schematic, abort conditions, expected
-response/limit (or characterization-only objective), operator and review record.
+instrument grounding/reference, a sketch/photo of any wiring changes, abort
+actions, and expected response (or a characterization question). Robert can record
+these in the bench checklist; no duplicate design dossier is required.
 Record traces against SYS-02; an experiment is not closed by “no movement” with
 motor power absent. Review whether results require rev-A rework/harness changes,
 a new board or a restricted scope; do not silently exclude a failed case.

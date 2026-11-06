@@ -1,8 +1,8 @@
 # DMOTOR ESP32-S3 firmware — planned repository location
 
 The ESP32-S3 monitor firmware **will be included in this dmotor repository**.
-`software/esp32/` is its implementation root. This file establishes ownership
-and scope; no firmware executable or ESP-IDF build is implemented yet.
+`software/esp32/` is its implementation root. The operational monitor application is not implemented yet. A standalone
+[UART bench diagnostic](diagnostics/bench/README.md) now builds with ESP-IDF.
 
 The firmware owns sensor acquisition, protection policy, physical ARM/STOP,
 permit outputs, health-qualified heartbeat and monitor telemetry/recovery.
@@ -10,6 +10,14 @@ Zynq Linux owns motion intent; PL owns deterministic motor control. The
 [joint recovery contract](../../docs/recovery_transition_contract.md) is the
 current proposed cross-device behavior. The earlier monitor/FIRMWARE.md in
 motor-interface-integrated is historical design input where it conflicts.
+
+An independent inhibited diagnostic project is implemented at
+`diagnostics/bench/` for early UART connectivity and then GPIO/HB observations.
+It initializes all permits low and has no ARM path; default UART mode leaves HB
+off. See the [bench program plan](../../docs/bench_diagnostic_plan.md). This small
+application can be implemented before full acquisition/calibration/protection
+policy is finished; it cannot stand in for operational firmware qualification.
+UART-only mode is implemented and built; GPIO/HB modes remain planned.
 
 Planned layout:
 

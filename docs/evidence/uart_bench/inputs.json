@@ -1,0 +1,28 @@
+{
+  "baseline_commit": "48601b371cce9c59e1fa8ed8de689500155513b0",
+  "scope": "UART-only diagnostic request/reply pair. Real ESP32-S3 compile, native PTY/codec tests, ARM package build/QA. No flashing, physical UART testing or SD image rebuild. GPIO/HB modes and simultaneous streams are not implemented.",
+  "commands": [
+    "cmake -S software -B build/ps-dev -DDMOTOR_SW_SANITIZE=ON",
+    "cmake --build build/ps-dev -j4",
+    "ctest --test-dir build/ps-dev --output-on-failure",
+    "../esp32-dev/esp32 --project software/esp32/diagnostics/bench build",
+    "(in edf-dev) EDF_DMOTOR_SOURCE=../dmotor ./edf --target arty-z7-20 bitbake dmotor-semantic-tests"
+  ],
+  "result": "23 native tests pass under UBSan; ESP-IDF build succeeds; all 1034 BitBake tasks succeeded including ARM package QA.",
+  "idf_image": "espressif/idf:v6.1@sha256:81893c71bb5e570088901f21def8684c25cd2a9020281bd01b843a7655edb18c",
+  "files_sha256": {
+    "software/include/dmotor_diag/uart.hpp": "ef45d977984cebc9e1b5d9eadc541c881f15e89faad40883cef01c27c32aab9a",
+    "software/apps/uart_test.cpp": "a44086bff4589cedff77fbfe36ca1079389beb28f771cb0ef4354b08a90e196b",
+    "software/tests/uart_diagnostic_codec_test.cpp": "ae2e71d015ab71a520773527062974294c5733261bcf1e9bfc7eff41e137b937",
+    "software/tests/uart_diagnostic_test.py": "163f4e1048812b476079edce91f25f60740289f629087862c9da7d800427cd52",
+    "software/esp32/diagnostics/bench/main/main.cpp": "0a12d3d50680dbcaa1e5387337aad50e686dae6245e0344293e175ee1c2e202a",
+    "software/esp32/diagnostics/bench/main/CMakeLists.txt": "06d4e68b2b61ede8063cb46ca03d064f825b055d5803f06ade191caa0d8b4f39",
+    "software/esp32/diagnostics/bench/CMakeLists.txt": "97f8e6a3bd2082271acaa547c1075ac80a6f7e26061dd89dad8a79873874d2bb",
+    "software/esp32/diagnostics/bench/sdkconfig.defaults": "6ca05aa007dcc43363c0bb66227a42e94874502cbed38b3ec83c9f0408b9634e",
+    "software/CMakeLists.txt": "d3d9244310839afb7ec6c89799f4c112be28b22a4a60a60819689261c533717c",
+    "software/sources.json": "9d54a69d1ebbdc003a4d9388911597d1df59bd0db0d5e9ddf608a39fdd46c364",
+    "software/yocto/dmotor-semantic-tests.bb": "858cbaa62292636dfe2cd9c204d7205b33d85120f6c17da412e33dfab3596129"
+  },
+  "esp32_binary_sha256": "d1c054801a19e057e870eae1bee665f0a5a6257e8df63bac335871ac53888a1e",
+  "idf_sdkconfig_sha256": "d9f8d1f3b7f88cfbbc76e5dfd490393065d0c966fe797cdb448032ba663bb3cd"
+}

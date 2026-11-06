@@ -90,5 +90,9 @@
   "software/src/recovery_coordinator.cpp",
   "software/tests/recovery_coordinator_test.cpp",
   "software/tests/support/runtime_fixture.hpp",
-  "software/tests/coordinator_session_test.cpp"
+  "software/tests/coordinator_session_test.cpp",
+  "software/apps/uart_test.cpp",
+  "software/include/dmotor_diag/uart.hpp",
+  "software/tests/uart_diagnostic_test.py",
+  "software/tests/uart_diagnostic_codec_test.cpp"
 ]
