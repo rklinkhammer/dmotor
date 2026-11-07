@@ -1,8 +1,9 @@
-# ESP32-S3 UART bench diagnostic
+# ESP32-S3 UART / GPIO / HB bench diagnostic
 
 This is a standalone ESP-IDF application, not the operational monitor firmware.
 GPIO8/9/10/11 permits and GPIO21 HB are driven low before UART startup. There is
-no ARM path, sensor acquisition or synthetic heartbeat mode. External pulldowns
+no ARM path or sensor acquisition. Explicit native-USB commands now support
+raw GPIO reporting and a bounded synthetic heartbeat. External pulldowns
 cover the period before app_main runs. Physical startup levels still need measurement.
 
 From the dmotor repository, with esp32-dev beside it:
@@ -27,13 +28,13 @@ with Ctrl+]. If USB re-enumerates after reset, select its new device and restart
 monitor. Do not parallel USB and external
 supplies without checking the actual board power arrangement.
 
-Firmware answers diagnostic requests only. Each response contains its own
+UART1 answers diagnostic requests only. Each response contains its own
 sequence-dependent reverse-direction pattern, not an echo. Runs have random
 64-bit IDs chosen by the Linux utility; a new run must start at sequence 1.
 Within a run, repeated/skipped sequences are rejected. Counters are cumulative
 since ESP32 boot, printed after 1.5 seconds without a valid request. A new run
 never clears observed error counters. TX failure stops service until reboot,
-with permits/HB still low. Frames and I/O work are bounded; maximum run sequence
+with permits low and synthetic HB revoked. Frames and I/O work are bounded; maximum run sequence
 is 1000. The endpoint listens for another explicitly started run while idle.
 
 See [bench instructions](../../../../docs/uart_bench.md) from the repository docs.
@@ -42,3 +43,20 @@ For an existing build configured for UART console, use `menuconfig` → Componen
 config → ESP System Settings → Channel for console output → USB Serial/JTAG;
 select no secondary console, then rebuild. Fresh builds use sdkconfig.defaults.
 Defaults alone do not override an existing sdkconfig.
+
+## U1 commands on native USB
+
+Type `help`, `gpio`, `hb10`, `stop` or `quiet`, followed by Enter. No input echo.
+`hb10` explicitly starts a nominal 50 Hz synthetic GPIO21 heartbeat for 10 seconds;
+repeated starts cannot extend it. All permits remain LOW. `stop` cancels it;
+`quiet` only hides reports. USB disconnect, missed edge deadline, expiry or terminal
+UART TX failure stops HB. Raw STOP/HALT inputs do not gate this diagnostic HB.
+
+U1 requires `CONFIG_FREERTOS_HZ=1000`. Fresh defaults select it; an existing
+sdkconfig must be updated using menuconfig if the compile-time check fails.
+See the [U1 procedure](../../../../docs/u1_gpio_bench.md) for wiring, expected
+reports and the distinction between bare-node tests and assembled-board tests.
+
+Physical U1 testing is paused pending assembled monitor/motor boards at Robert's
+request (2026-11-06). Build evidence is recorded; no U1 flash/measurement result
+is recorded. Retain these commands for resumption; U0 results remain valid.

@@ -229,3 +229,9 @@ add_custom_target(ps-format
 add_custom_target(ps-format-check
   COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tools/format.py --check
   COMMENT "Check handwritten PS userspace C++ formatting")
+
+# Pure U1 diagnostic policy; no IDF dependency or hardware access.
+add_executable(dmotor-gpio-diagnostic-tests tests/gpio_diagnostic_test.cpp)
+target_link_libraries(dmotor-gpio-diagnostic-tests PRIVATE dmotor_semantics)
+target_compile_options(dmotor-gpio-diagnostic-tests PRIVATE -Wall -Wextra -Werror -Wconversion)
+add_test(NAME software_gpio_diagnostic COMMAND dmotor-gpio-diagnostic-tests)

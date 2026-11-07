@@ -1,5 +1,10 @@
 # U0 UART bench test
 
+**Current scheduling (2026-11-06):** Further physical testing is paused until
+assembled monitor and motor boards are available, at Robert's request ([D04](decisions.md)).
+Completed U0 results remain valid; U1 is implemented/build-tested, with no physical
+U1 acceptance recorded. Procedures below are retained for resumption.
+
 Implemented: `dmotor-uart-test` for Linux and the
 [ESP32-S3 bench application](../software/esp32/diagnostics/bench/README.md).
 Host tests and an ESP-IDF build are recorded in

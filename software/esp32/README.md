@@ -17,7 +17,8 @@ It initializes all permits low and has no ARM path; default UART mode leaves HB
 off. See the [bench program plan](../../docs/bench_diagnostic_plan.md). This small
 application can be implemented before full acquisition/calibration/protection
 policy is finished; it cannot stand in for operational firmware qualification.
-UART-only mode is implemented and built; GPIO/HB modes remain planned.
+UART mode and native-USB GPIO/bounded synthetic-HB modes are implemented.
+See the [U1 procedure](../../docs/u1_gpio_bench.md); physical U1 results remain pending.
 
 Planned layout:
 

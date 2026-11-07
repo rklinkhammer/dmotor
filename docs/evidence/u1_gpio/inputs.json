@@ -1,0 +1,30 @@
+{
+  "recorded_date": "2026-11-06",
+  "baseline_commit": "67cb5dad1cdfeaf27eed65bb435150134d818f29",
+  "scope": "U1 native USB GPIO reporting and bounded synthetic HB in existing UART diagnostic; no flash or physical U1 test performed",
+  "idf_image": "espressif/idf:v6.1@sha256:81893c71bb5e570088901f21def8684c25cd2a9020281bd01b843a7655edb18c",
+  "results": {
+    "native": "24/24 CTests passed with UBSan and clang-tidy enabled",
+    "idf": "ESP32-S3 build PASS; native USB console and CONFIG_FREERTOS_HZ=1000",
+    "format": "59 handwritten PS C++ files checked; ESP32 sources formatted separately",
+    "physical": "pending"
+  },
+  "commands": [
+    "cmake --build build/ps-dev -j4",
+    "ctest --test-dir build/ps-dev --output-on-failure",
+    "../esp32-dev/esp32 --project software/esp32/diagnostics/bench --target esp32s3 build"
+  ],
+  "sha256": {
+    "software/include/dmotor_diag/gpio.hpp": "3afa865a1c7b1df8b878a39cba2fdd2f01325c5f84839f9a99e35531dc11860e",
+    "software/tests/gpio_diagnostic_test.cpp": "8399f236e7e6eea4cce5a8cfd96e5d51fdbd684bb734cc7ad0502fc6f00de3c7",
+    "software/esp32/diagnostics/bench/main/main.cpp": "014d176f8fd46be166beac16e81e71ea7e5dbb835e195ddbc7c56a0cbe5e4da3",
+    "software/esp32/diagnostics/bench/main/gpio_diagnostic.cpp": "23325a2739d9cd26f86a634b11799c354e79212a5fb681de1ae292dfdc5c5569",
+    "software/esp32/diagnostics/bench/main/gpio_diagnostic.hpp": "85cf33e912d35f51d2fe3da078b33434e5a854bda3000a86052a8691e518c3ef",
+    "software/esp32/diagnostics/bench/main/CMakeLists.txt": "30831bdfdc01e1d99c118c703718b1af0903f16abd072f6c39d5a53c6c5b7e5f",
+    "software/esp32/diagnostics/bench/sdkconfig.defaults": "b831b1bb73214286d801451f552164b48d915bb23b228366685af65ec2b192fc",
+    "software/esp32/diagnostics/bench/sdkconfig": "44854e7cb94773e01e07577e12d969546356beba16ff2003be97dc9045e24465",
+    "software/esp32/diagnostics/bench/build/dmotor_uart_bench.bin": "a18ae7a162042b0cf96bbb1b64db9676f699d4a4cb3670e05ab9d0464905c32c",
+    "software/CMakeLists.txt": "6de3caefdfbc71406a1d82035ef16d7e0e8272057b4be6e8cb39af089a8fb4b9",
+    "software/sources.json": "c9ca6098ce27f6e1dcc23b7306454586ca34afdbf7185061ed3e86ded63facdc"
+  }
+}

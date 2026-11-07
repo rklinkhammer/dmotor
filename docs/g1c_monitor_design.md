@@ -136,9 +136,10 @@ battery/motor limits before operational configuration can be implemented.
 
 Inspected ESP-IDF v6.1 image digest
 `81893c71bb5e570088901f21def8684c25cd2a9020281bd01b843a7655edb18c`.
-The **UART diagnostic** sdkconfig has 100 Hz ticks, 5 s task WDT with panic disabled,
+The **original U0 UART diagnostic** sdkconfig audited here had 100 Hz ticks, 5 s task WDT with panic disabled,
 300 ms interrupt WDT, GPIO control IRAM disabled and no PSRAM. These defaults are
-not an operational safety configuration. Leave the diagnostic profile unchanged.
+not an operational safety configuration. The subsequent [U1 diagnostic](u1_gpio_bench.md)
+uses 1000 Hz ticks for synthetic HB; this does not qualify operational isolation.
 
 | Resource | Operational design requirement | Verification still required |
 |---|---|---|

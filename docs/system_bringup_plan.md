@@ -1,5 +1,16 @@
 # Integrated Zynq and ESP32 development and bring-up plan
 
+## Current work direction — 2026-11-06
+
+Further physical testing is **paused at Robert's request until the assembled
+monitor and motor boards are available**. U0 UART exchange/restart/reconnection
+checks passed. U1 GPIO/HB modes are implemented, with 24 native tests and an
+ESP32-S3 build passing; U1 flashing and physical measurements are not recorded.
+The next focus is [autonomous-motion architecture](autonomous_motion_architecture.md),
+not another bench test. Commissioning remains the first release; no hardware gate
+is closed or waived by this pause.
+
+
 **Status: IMPLEMENTATION STARTED — 2026-11-04; technical gates remain open.** Baseline inspected: dmotor `63d5cdb`.
 This amended proposal incorporates the supplied plan review and retains the seven
 bring-up stages B1–B7, with a separate optional vehicle-development workstream BV.
@@ -350,9 +361,14 @@ and the accepted motor operating envelope.
 approved motor requirements. G6 does not accept vehicle planning or loaded vehicle
 behavior. A commissioning-only release may proceed to G7 with that restriction.
 
-### BV — Separate vehicle-development workstream (full-vehicle scope only)
+### BV — Separate vehicle-development workstream (subsequent vehicle release)
 
-**Entry:** full-vehicle scope selected; G1a admission contract and reviewed BV
+**Architecture exploration:** active at Robert's request while board testing is
+paused; see the [autonomy proposal](autonomous_motion_architecture.md). This does
+not change the commissioning-first release or authorize implementation against
+unreviewed motion contracts.
+
+**Implementation entry:** vehicle-development scope selected; G1a admission contract and reviewed BV
 requirements for coordinate frames, command/queue ownership, localization freshness,
 planner-stall behavior, wheel geometry and measurable completion/error limits.
 Software and simulation may start before G6; no loaded vehicle acceptance occurs early.

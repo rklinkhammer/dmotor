@@ -1,5 +1,10 @@
 # Bench diagnostic programs — G1b / B2
 
+**Current scheduling (2026-11-06):** Further physical testing is paused until
+assembled monitor and motor boards are available, at Robert's request ([D04](decisions.md)).
+Completed U0 results remain valid; U1 is implemented/build-tested, with no physical
+U1 acceptance recorded. Procedures below are retained for resumption.
+
 The UART-only diagnostic pair is implemented; [build/run instructions](uart_bench.md)
 and evidence distinguish it from the remaining tasks. Their purpose
 is to make the [G1b bench checklist](gates/G1b.md) runnable without waiting for the
@@ -52,9 +57,10 @@ corruption/escape cases, partial I/O and absent peer; ESP-IDF compile; native Li
 build and ARM/Yocto packaging check. Then run the actual Arty–ESP32 test and save
 counts. Host results do not replace that physical test.
 
-## Then: U1 inhibited GPIO / HB modes
+## U1 inhibited GPIO / HB modes — implemented, physical checks pending
 
-Extend the same bench app, not a second firmware fork:
+The same bench app now implements the following modes; see the
+[U1 procedure](u1_gpio_bench.md) for USB commands and bench steps:
 
 - Read/report ARM GPIO41, STOP_SENSE GPIO40, HALT_IN GPIO39 and optional nFAULT/ALERT
   levels using the rev-A map. Label readings as raw diagnostic inputs, not calibrated
@@ -93,7 +99,7 @@ those to implement U0, and do not claim those functions have passed from U0/U1.
 | 1 | Shared diagnostic envelope/vectors and Linux UART utility with host tests | Implemented; codec and independent Python PTY tests pass |
 | 2 | ESP32-S3 UART-only diagnostic image; native ESP-IDF build | Implemented; pinned ESP-IDF v6.1 build passes |
 | 3 | ARM packaging/build plus bench instructions; physical U0 run | ARM package/QA pass; physical U0 PASS 2026-11-06: 1,000-exchange runs, endpoint restarts and expected failure/recovery after disconnection; [G2 record](gates/G2.md) |
-| 4 | Inhibited GPIO/HB modes and U1 observations | Not implemented |
+| 4 | Inhibited GPIO/HB modes and U1 observations | Implemented; native/IDF validation recorded in [U1 procedure](u1_gpio_bench.md); flashing and physical checks pending |
 | 5 | Separate B1 injection variant, isolated B2 reset support and bench procedures | Not implemented; basic Vivado reload tooling already exists |
 
 This work can proceed alongside G1a. Robert chooses which ready cases to run in

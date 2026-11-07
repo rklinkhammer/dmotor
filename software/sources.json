@@ -94,5 +94,7 @@
   "software/apps/uart_test.cpp",
   "software/include/dmotor_diag/uart.hpp",
   "software/tests/uart_diagnostic_test.py",
-  "software/tests/uart_diagnostic_codec_test.cpp"
+  "software/tests/uart_diagnostic_codec_test.cpp",
+  "software/include/dmotor_diag/gpio.hpp",
+  "software/tests/gpio_diagnostic_test.cpp"
 ]

@@ -1,5 +1,10 @@
 # G1 execution work package
 
+**Current scheduling (2026-11-06):** Further physical testing is paused until
+assembled monitor and motor boards are available, at Robert's request ([D04](decisions.md)).
+Completed U0 results remain valid; U1 is implemented/build-tested, with no physical
+U1 acceptance recorded. Procedures below are retained for resumption.
+
 Status: in progress; Robert Klinkhammer is accountable owner/reviewer, using
 separate preparation and self-review records. This document makes the first
 [system-plan](system_bringup_plan.md) contract work concrete; it grants no gate

@@ -1,4 +1,5 @@
 #include "dmotor_diag/uart.hpp"
+#include "gpio_diagnostic.hpp"
 #include "driver/gpio.h"
 #include "driver/uart.h"
 #include "esp_log.h"
@@ -16,6 +17,7 @@ extern "C" void app_main() {
         pins.pin_bit_mask |= 1ULL << pin;
     pins.mode = GPIO_MODE_OUTPUT;
     ESP_ERROR_CHECK(gpio_config(&pins));
+    start_gpio_diagnostic();
     uart_config_t config{};
     config.baud_rate = 115200;
     config.data_bits = UART_DATA_8_BITS;
@@ -26,8 +28,9 @@ extern "C" void app_main() {
     ESP_ERROR_CHECK(uart_param_config(UART_NUM_1, &config));
     ESP_ERROR_CHECK(uart_set_pin(UART_NUM_1, 17, 18, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE));
     ESP_ERROR_CHECK(uart_driver_install(UART_NUM_1, 512, 512, 0, nullptr, 0));
-    ESP_LOGW("bench",
-             "UART DIAGNOSTIC v1 only: permits LOW, HB LOW, no ARM. UART1 TX17 RX18 115200 8N1");
+    ESP_LOGW(
+        "bench",
+        "UART DIAGNOSTIC v1 + U1: permits LOW, HB default LOW, no ARM. UART1 TX17 RX18 115200 8N1");
     Decoder decoder;
     uint64_t run = 0;
     uint32_t expected = 1, received = 0, sent = 0, rejected = 0, mismatch = 0;
@@ -71,6 +74,7 @@ extern "C" void app_main() {
             const int wrote = uart_write_bytes(UART_NUM_1, reply.data(), size);
             if (wrote != static_cast<int>(size) ||
                 uart_wait_tx_done(UART_NUM_1, pdMS_TO_TICKS(100)) != ESP_OK) {
+                fail_gpio_diagnostic();
                 ESP_LOGE("bench", "TX failure; reboot required");
                 for (;;)
                     vTaskDelay(pdMS_TO_TICKS(1000));

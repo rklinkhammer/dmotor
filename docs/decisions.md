@@ -16,6 +16,12 @@ Current accepted user/project choices, not a list of unresolved alternatives.
 - **D03 — Execution:** begin B1/G1d extraction and G1 work-package preparation.
   Starting the plan does not adopt v4, select an R4 circuit or approve unknown limits.
 
+- **D04 — Hardware-test pause and next focus (2026-11-06):** Robert pauses
+  further physical testing until the monitor and motor boards are available.
+  Preserve U0 PASS; U1 is implemented/build-tested but not physically qualified.
+  Begin autonomous-motion architecture discussion. D01 commissioning-first scope
+  remains unchanged; this does not select middleware, sensors or an external host.
+
 ## Technical baseline retained from the reviewed plan
 
 The following decisions were consolidated in the plan at `20f5972`; implementation

@@ -25,7 +25,14 @@ remain unspecified where not accepted; this plan does not manufacture values.
 
 ## Current dispositions
 
-- **U08:** deferred to the subsequent vehicle release. First release is commissioning-only.
+Physical tests for U01/U03/U04/U06/U07 are paused pending assembled monitor and
+motor boards (D04); none is closed. Software/design work can continue. U0 UART
+checks passed; U1 build/test evidence exists but physical results are pending.
+
+
+- **U08:** [architecture discussion](autonomous_motion_architecture.md) active;
+  implementation/qualification remains for the subsequent vehicle release. First
+  release is commissioning-only.
 - **U10:** in progress; five source documents snapshotted with hashes and exact
   originals. Current status/decisions/issues are extracted. Mixed component/architecture
   content and companion-repository inventories still require review and migration.

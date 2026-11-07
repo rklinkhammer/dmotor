@@ -1,5 +1,10 @@
 # G1b — hobby bench bring-up record
 
+**Current scheduling (2026-11-06):** Further physical testing is paused until
+assembled monitor and motor boards are available, at Robert's request ([D04](../decisions.md)).
+Completed U0 results remain valid; U1 is implemented/build-tested, with no physical
+U1 acceptance recorded. Procedures below are retained for resumption.
+
 **U0 UART run recorded PASS on 2026-11-06; remaining bench cases open.**
 
 This is a practical checklist for bringing up the boards with motor drive power
@@ -51,7 +56,7 @@ what is available. Other tools remain planned unless marked existing.
 |---|---|---|---|
 | Power/continuity/STOP wiring inspection | None; meter/scope | None; no claim of firmware protection | Can prepare now; decide the actual supply hookup first |
 | UART connectivity (U0) | **`dmotor-uart-test` implemented** Linux utility; reuse existing UART transport/codec and UART Lite driver | **`software/esp32/diagnostics/bench/` implemented** ESP-IDF app, UART test mode, permits always low | Physical U0 PASS: 1,000-exchange runs, both endpoint restarts and disconnect/reconnect checks; [G2 record](G2.md) |
-| Read HB/HALT/STOP and diagnostic GPIO (U1) | Existing daemon/client status tools for existing readings; extend the bench utility/client tooling only for missing diagnostics | Same bench app: input reporting and separately selected bounded HB test mode; permits stay low | GPIO/HB modes missing; synthetic HB must be clearly reported as diagnostic, not sensor health |
+| Read HB/HALT/STOP and diagnostic GPIO (U1) | Existing daemon/client status tools for existing readings; extend the bench utility/client tooling only for missing diagnostics | Same bench app: input reporting and separately selected bounded HB test mode; permits stay low | GPIO/HB modes implemented; [U1 procedure](../u1_gpio_bench.md); flash and physical observations pending |
 | CORE_RESET / PS HALT observations (B2a) | Existing `dmotor-maint` uses the client library for HALT and prepare; add a separate reset-only diagnostic command/path if isolated reset edges are needed | Bench app for HB/input reporting when needed | Existing prepare is a multi-step sequence, **not** an isolated reset injector |
 | Fabric reset / unconfigured / reload (B2b/B3) | Existing Vivado Hardware Manager/JTAG; a short saved procedure for the actual reset/reload operation | No firmware needed to observe static electrical levels; bench app if observing monitor behavior | No new FPGA-reset application required; exact operation and probe setup still to choose |
 | Frozen active PL output (B1) | **New diagnostic PL build + control procedure** to stop only the controller clock with a known output; keep AXI/control observable | Bench app for inputs/HB as needed; actual PL-failure protection later needs its implemented detector | Injection design/build missing; a software HALT or CORE_RESET is not this experiment |
@@ -87,7 +92,7 @@ so unfinished fault-injection software does not delay a basic UART check.
 | Case | Practical sequence / observation | Remaining preparation |
 |---|---|---|
 | U0: UART | Verify ground and crossed TX/RX; run counted bidirectional packets at **115200 8N1**; save summary; repeat after each endpoint reset and cable reconnect | Initial and 1,000-exchange runs passed on `/dev/ttyUL0`; restart/disconnect/reconnect checks complete |
-| U1: GPIO/HB | With permits low, report HALT/STOP/ARM inputs; observe explicitly selected diagnostic HB on GPIO21 and Arty qualification/status | Implement bench GPIO/HB modes; no need for sensor calibration to test this synthetic signal |
+| U1: GPIO/HB | With permits low, report HALT/STOP/ARM inputs; observe explicitly selected diagnostic HB on GPIO21 and Arty qualification/status | [U1 modes and procedure](../u1_gpio_bench.md) ready for bench deployment; no sensor calibration needed for synthetic signal |
 | B1: frozen clock | Establish known active PWM/PH logic with motor power absent; stop the controller clock; scope PWM/PH, coast, permits and DRVOFF; restore the clock/reset | Design the diagnostic clock-stop mechanism and document how to restore it; characterize behavior, do not assume shutdown |
 | B2a: core reset | Observe core reset separately from PS HALT and ordinary prepare; scope output/coast behavior and monitor input | Add isolated reset mode if needed; label which source was exercised |
 | B2b/B3: fabric/configuration | Hold physical STOP; record levels before, during and after the chosen JTAG reset/unconfigure/reload operation | Save exact Vivado operation and image name; don't infer unconfigured behavior from CORE_RESET |
@@ -114,7 +119,7 @@ A dated note is enough; no separate reviewer or signature ceremony is required.
 Keep the previously agreed second look at the plan before running a new setup.
 
 - Executed case: **U0 UART — PASS**, supplied by Robert; [G2 evidence](G2.md). No retrospective pre-run checklist completion is inferred.
-- Pending cases / reason: **U1 modes and B1 injection missing; other cases need the bench hookup/procedure noted**.
+- Pending cases / reason: **U1 flash/observations pending; B1 injection missing; other cases need the bench hookup/procedure noted**.
 - Second-look date and changes: **fill in**.
 - Bench supply hookup, populated motor channels and deviations from drawings: **fill in**.
 
