@@ -1,0 +1,1 @@
+PASS: experimental identity guard, snapshot decoding, signed four-duty packing, acceptance distinct from application, no implicit ARM

@@ -58,3 +58,5 @@ is the entry point for previous review rounds, milestones and build records.
 - [G1c monitor design tables and implementation gate](g1c_monitor_design.md)
 
 - [G2 bring-up record — U0 UART PASS](gates/G2.md)
+
+- [Experimental PS executor and coherent four-wheel endpoint: slice measurements and adoption gaps](../experiments/ps_executor/REPORT.txt)

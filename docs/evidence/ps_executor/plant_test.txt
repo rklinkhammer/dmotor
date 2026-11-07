@@ -1,0 +1,9 @@
+hz=1000 jitter=0 stall=0 tracking_rms_rpm=7.87522 max_speed_rpm=90.1097 inhibit_s=0 end_speed_rpm=1.76755
+hz=1000 jitter=0 stall=1 tracking_rms_rpm=0 max_speed_rpm=87.6997 inhibit_s=2.019 end_speed_rpm=0.00278559
+hz=1000 jitter=1 stall=0 tracking_rms_rpm=11.1901 max_speed_rpm=91.7579 inhibit_s=0 end_speed_rpm=1.84902
+hz=1000 jitter=1 stall=1 tracking_rms_rpm=0 max_speed_rpm=86.8314 inhibit_s=2.0193 end_speed_rpm=0.00203357
+hz=200 jitter=0 stall=0 tracking_rms_rpm=5.27568 max_speed_rpm=90.1723 inhibit_s=0 end_speed_rpm=0.365426
+hz=200 jitter=0 stall=1 tracking_rms_rpm=0 max_speed_rpm=88.383 inhibit_s=2.015 end_speed_rpm=0.00277743
+hz=200 jitter=1 stall=0 tracking_rms_rpm=5.11795 max_speed_rpm=90.4175 inhibit_s=0 end_speed_rpm=0.000111702
+hz=200 jitter=1 stall=1 tracking_rms_rpm=0 max_speed_rpm=88.2964 inhibit_s=2.0149 end_speed_rpm=0.00277803
+PASS: actual C++ executor, eight fictional four-motor plant/jitter/stall scenarios

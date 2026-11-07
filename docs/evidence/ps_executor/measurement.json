@@ -1,0 +1,20 @@
+{
+  "date": "2026-11-07",
+  "part": "xc7z020clg400-1",
+  "tool": "Vivado 2026.1",
+  "mode": "out-of-context routed prototype, not feature-equivalent replacement",
+  "clock_MHz": 20,
+  "slices": 1354,
+  "available_slices": 13300,
+  "LUT": 2746,
+  "FF": 4458,
+  "DSP": 4,
+  "BRAM_tiles": 0,
+  "WNS_ns": 25.741,
+  "WHS_ns": 0.1,
+  "retained_controller_slices": 13250,
+  "hardware_tested": false,
+  "target_loop_ms": 5,
+  "target_end_to_end_ms": 10,
+  "target_timing_measured": false
+}

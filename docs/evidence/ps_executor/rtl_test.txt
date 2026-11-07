@@ -1,0 +1,2 @@
+PASS: AXI four-wheel atomic duties, range/session/sequence/token/age checks, independent auth expiry, disable, HALT/HB/physical/encoder faults
+/home/rklinkhammer/workspace/dmotor-mipi-opt/experiments/ps_executor/ps_controller_tb.sv:120: $finish called at 223820 (1s)
