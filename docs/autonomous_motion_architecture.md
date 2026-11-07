@@ -109,5 +109,5 @@ reviewed should we select dependencies and implement a normal executor.
 
 Hardware validation resumes with the [U1 procedure](u1_gpio_bench.md) and the
 remaining [G2 checks](gates/G2.md) when assembled boards are available. Physical
-vehicle claims wait for G6 and GV. See [PS Phase 5](../DMOTOR_SW.md#phase-5--processor-owned-motion-and-vehicle-state)
+vehicle claims wait for G6 and GV. See [archived PS Phase 5](archive/pre-ps-executor-2026-11-07/DMOTOR_SW.md#phase-5--processor-owned-motion-and-vehicle-state)
 and [BV in the system plan](system_bringup_plan.md) for the retained scope.
