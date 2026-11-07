@@ -35,7 +35,9 @@ and qualification status is maintained separately in [system status](system_stat
    `mon_tx` CK_IO0/T14: **PL TX → monitor RX**;
    `mon_rx` CK_IO1/U12: **monitor TX → PL RX**, 115200/8N1. Earlier CK_IO4/5 choices are superseded.
    U13's PUDC_B relationship is not a configuration-time safety guarantee.
-3. **Preserved interfaces:** physical_faults[3:0] remains in the controller, currently
+3. **Preserved interfaces:** physical_faults[3:0] names system-level fault sources,
+   not motor identities; input 0 is assigned to bumper contact (D07). It remains
+   in the controller, currently
    tied inactive in the saved BD; future routing is separate work. drive_enable
    remains internal GPIO diagnostic readback, not an external permission signal.
 4. **Software ownership:** the daemon exclusively owns the controller. Every
@@ -68,3 +70,36 @@ User authorized promotion to main, documentation reconciliation and rebuild/rete
 to the existing software/FPGA/ARM-image baseline. The 5 ms profile remains historical
 experimentation. Preserve D04's physical-test pause, U0 evidence, pending U1 physical
 acceptance and commissioning-first scope. No operational live recovery is implied.
+
+## D06 — Planned Zybo Z7-20 sensor platform (2026-11-07)
+
+Robert selected the Digilent **Zybo Z7-20** as the future Zynq platform, to be
+deployed when additional platform sensors are integrated. Its 1 GiB DDR3L is
+confirmed in the [Digilent reference manual](https://digilent.com/reference/_media/reference/programmable-logic/zybo-z7/zybo-z7_rm.pdf).
+Arty Z7-20 remains the current build and commissioning target. This selection
+records the migration direction; no Zybo board target or qualified image exists
+in the current build flow.
+
+Migration needs a board-specific PS/DDR configuration, pin/clock constraints,
+monitor/motor harness mapping, and matched EDF boot/Linux artifacts. Preserve the
+logical controller/ESP32 contracts and 1 ms control loop; verify their physical
+mapping and timing on the new board. Added sensor/DDR traffic must be included in
+loaded 1 ms/800 us deadline measurements. More PS memory does not increase PL
+logic capacity. Sensor selection and PL acquisition/DMA implementation remain
+separate integration work. D01 commissioning-first scope, D04's physical-test
+pause and the requirement for all daemon clients to use dmotor_client remain.
+
+## D07 — System physical-fault sources and bumper assignment (2026-11-07)
+
+Robert assigns `physical_faults[0]` to **bumper contact**. All four physical-fault
+inputs are system-level sources; inputs 1–3 remain reserved/unassigned. Any source
+inhibits all motors. The MCP23017 interrupt supplies bumper notification to PL;
+PS I2C reads identify the contact location independently of the protection path.
+Use active-high polarity at the controller boundary and retain latched protection
+through expander interrupt clearing. Explicit recovery remains required.
+
+The current per-channel telemetry storage is retained for compatibility; it does
+not imply that source 0 is a motor-0 failure. See the authoritative
+[controller source assignments and telemetry mapping](controller_axi.md#system-physical-fault-sources).
+Arty inputs remain tied low in the saved BD; Zybo wiring/PS notification and
+physical qualification are pending. This decision changes documentation only.

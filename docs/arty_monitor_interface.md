@@ -43,7 +43,10 @@ without consuming external pins. Revision 10 registers the source in the 20 MHz
 controller domain before GPIO synchronizes it to 100 MHz. The readout trails the
 raw drive state by one controller clock plus GPIO synchronization latency;
 individual bits are diagnostic, not an atomic snapshot or physical-permit measurement.
-The controller retains physical_faults[3:0]; the saved BD currently drives all
+The controller retains four system-level `physical_faults[3:0]` inputs, independent
+of motor identity; source 0 is assigned to bumper contact and 1–3 are reserved.
+See [source assignments and telemetry mapping](controller_axi.md#system-physical-fault-sources).
+The saved BD currently drives all
 four low with a constant. Future external fault routing requires active-high
 sources and defined inactive levels. Motor-board nFAULT goes to the ESP32.
 

@@ -22,6 +22,16 @@ board/ARM rebuild recorded in [system status](system_status.md).
 separate workstream; no new physical bench run was performed. Commissioning remains the first release; no hardware gate
 is closed or waived by this pause.
 
+The planned next sensor-integration platform is **Zybo Z7-20 with 1 GiB DDR3L**
+([D06](decisions.md#d06--planned-zybo-z7-20-sensor-platform-2026-11-07)). Deployment
+is deferred until additional platform sensors are integrated. Arty Z7-20 remains
+the current build/test platform; Zybo porting and qualification have not started.
+
+Physical fault source 0 is assigned to **bumper contact**; sources 1–3 are
+reserved system sources, not motor identities ([D07](decisions.md#d07--system-physical-fault-sources-and-bumper-assignment-2026-11-07)).
+This is a documentation assignment: the saved Arty inputs remain tied low,
+and bumper routing/PS notification and qualification are pending.
+
 ## Implementation and evidence
 
 | Area | Current state | What is not established |

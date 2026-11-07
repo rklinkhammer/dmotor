@@ -68,6 +68,15 @@ pipeline automatically, runs board implementation and timing/DRC gates, then
 creates a portable matched hardware bundle. Ordinary software-only EDF builds do
 not invoke HLS/Vivado. A Mac consumes the bundle with Docker/OrbStack.
 
+## Planned platform: Zybo Z7-20
+
+The Zybo Z7-20 with 1 GiB DDR3L is selected for later platform-sensor integration;
+see [D06](decisions.md#d06--planned-zybo-z7-20-sensor-platform-2026-11-07).
+Arty Z7-20 remains the current default and matched build/test target. There is no
+Zybo build command or deployable Zybo image yet. Migration will require its own
+PS/DDR settings, BD/XDC and harness mapping, then matched EDF boot/Linux generation
+and target verification. Existing Arty bitstreams/images are not Zybo artifacts.
+
 ## Additional platform: DVRZ / MYIR Z-Turn
 
 `--platform` selects the board project; Arty remains the default. Both platforms

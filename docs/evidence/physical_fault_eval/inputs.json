@@ -1,0 +1,43 @@
+{
+  "product_commit": "38f2f9efd3d92376de5b0050e97f8765a6ad5a09",
+  "product_RTL_changed": false,
+  "scope": "Isolated four-channel protection cone; differential simulation and out-of-context synthesis/placement only",
+  "part": "xc7z020clg400-1",
+  "tool": "Vivado 2026.1",
+  "period_ns": 50,
+  "simulation": {
+    "seeds": [
+      1668099,
+      2,
+      3,
+      4
+    ],
+    "cycles_per_seed": 30259,
+    "total_cycles": 121036,
+    "candidate": "PASS",
+    "simplified_clear_rule": "Rejected in all seeds"
+  },
+  "synthesis": {
+    "baseline": {
+      "LUT": 678,
+      "FF": 935
+    },
+    "candidate": {
+      "LUT": 681,
+      "FF": 935
+    }
+  },
+  "placement": {
+    "baseline": {
+      "slices": 331,
+      "LUT": 677,
+      "FF": 935
+    },
+    "candidate": {
+      "slices": 330,
+      "LUT": 679,
+      "FF": 935
+    }
+  },
+  "recommendation": "Do not promote for resource savings; negligible isolated placement difference with more LUTs and unchanged registers. Retain source assignment documentation."
+}

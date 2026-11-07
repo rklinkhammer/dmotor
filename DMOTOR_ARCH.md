@@ -50,6 +50,12 @@ Late or cancelled replies cannot refresh output or advance committed PS state.
 No FPGA position/dwell interpreter is restored. Vehicle kinematics, navigation and
 position planning remain higher-level PS work. No additional ESP32 offload is added.
 
+The four `physical_faults` inputs represent system-level sources, not motor
+identities. Source 0 is assigned to bumper contact; sources 1–3 are reserved.
+Any source inhibits all motors. The existing telemetry storage remains unchanged;
+see [source assignments](docs/controller_axi.md#system-physical-fault-sources).
+External bumper wiring is pending; the saved Arty BD ties these inputs low.
+
 ## Build and evidence
 
 Normal sources now contain the prepared 400 RPM fixed-point implementation;

@@ -81,6 +81,45 @@ explicit: disable, hold controller reset, correct sources, acknowledge local cau
 acknowledge shared HALT, release external HALT, acknowledge external latches, select
 a drained session, release controller reset, and explicitly enable.
 
+### System physical-fault sources
+
+An [isolated RTL evaluation](physical_fault_evaluation.md) found no meaningful
+resource benefit from moving these latches into a shared register; current product
+RTL is retained. System-source assignments below do not require that refactor.
+
+`physical_faults[3:0]` identifies four **system-level fault sources**, not four
+motor-specific fault wires. Any asserted source inhibits all motors and requests
+shared HALT/coast. Source numbers must not be interpreted as motor numbers.
+
+| Controller input | Assigned system source | Integration status |
+|---|---|---|
+| `physical_faults[0]` | Bumper contact, reported by MCP23017 interrupt | Assigned; external routing pending |
+| `physical_faults[1]` | Reserved / unassigned | Keep inactive until assigned |
+| `physical_faults[2]` | Reserved / unassigned | Keep inactive until assigned |
+| `physical_faults[3]` | Reserved / unassigned | Keep inactive until assigned |
+
+The controller boundary is active-high and includes input synchronization. For an
+active-low MCP23017 interrupt, invert polarity at the board adapter boundary.
+The PS reads the expander over I2C to identify the contact location; that read may
+clear the expander interrupt but must not clear the controller's latched fault or
+restart motion. PS interrupt notification is a separate integration connection.
+Bumper-input configuration, initial-state checks and physical timing qualification
+remain required before deployment. HALT/coast removes drive; it is not a measured
+braking-distance guarantee.
+
+**Existing telemetry layout is unchanged:** source `i` is stored in bit 2 of
+telemetry word 18 in channel bank `i`, with that bank's existing first-fault time.
+This is a storage mapping, not motor attribution. For example, bank 0's physical
+fault bit means **bumper contact**, not a motor-0 fault. Other bits in the bank
+retain their existing meanings; the bank's first-fault timestamp is shared with
+its other fault causes, not a new dedicated bumper timestamp. Local and shared
+HALT acknowledgement remain explicit, with asserted sources taking precedence.
+
+The saved Arty BD still ties all four inputs low. This assignment changes the
+documented system meaning; it does not claim the bumper is already wired or
+implemented on Zybo. No RTL, register layout or external port name changes are
+introduced by this documentation update.
+
 The top-level `reset` is a cold/protective reset and clears the protection state;
 it requires external inhibition and coordinated bus reset. It is not an arbitrary
 software peripheral reset. MMIO CORE_RESET preserves protection but resets motor,
@@ -131,7 +170,8 @@ Telemetry words 1–13 preserve engine reply fields, including applied sequence,
 duty, ramp, measured velocity, validity/acquisition flags, faults and rejection
 bits. Word 0 is the last requested velocity (zero after STOP request); words 14–15
 are the effective sample tick. Words 16–17 are signed encoder position, 18 watchdog/
-physical fault bits, 19–20 first-fault time. Capture once, then read the bank. Access
+physical fault bits, 19–20 first-fault time. Physical source `i` uses bit 2
+of word 18 in bank `i`; see [system source assignments](#system-physical-fault-sources). Capture once, then read the bank. Access
 requires a single serialized host owner; hardware does not arbitrate multiple
 software snapshot writers.
 
