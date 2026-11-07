@@ -15,6 +15,7 @@
 - [Requirements-to-test matrix](system_requirements_matrix.md): acceptance traceability.
 
 - [Sandbox LUT optimization](lut_optimization.md): measured implementation changes, tradeoffs and preserved contracts.
+- [Control partition evaluation](../experiments/control_partition/REPORT.txt): prepared velocity-only HLS audit, residual specialization and simulated 200 Hz PS control.
 
 ## Current contracts and interfaces
 

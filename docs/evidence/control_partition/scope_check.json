@@ -1,0 +1,8 @@
+{
+  "original_checkout_clean": true,
+  "production_sources_unchanged_from_6423b0d": true,
+  "candidate_not_promoted": true,
+  "hardware_tests_run": false,
+  "zynq_timing_measured": false,
+  "ps_replacement_rtl_synthesized": false
+}

@@ -1,0 +1,2 @@
+PASS: atomic frames, replay/session/sample checks, expiry priority, sticky inhibit
+PASS: 108 fictional four-wheel plant scenarios; results: build/partition/ps_results.json

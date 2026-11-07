@@ -1,0 +1,17 @@
+{
+  "production_preparation_chain": [
+    "tools/build.py",
+    "tools/prepare_shared_mailbox.py",
+    "tools/prepare_velocity_mailbox.py",
+    "tools/prepare_bounded_velocity.py",
+    "tools/prepare_velocity_profile.py",
+    "docs/evidence/velocity_only/profile.patch"
+  ],
+  "prepared_position_state_absent": true,
+  "prepared_dwell_state_absent": true,
+  "prepared_open_loop_state_absent": true,
+  "prepared_protocol_rejects_non_velocity_stop": true,
+  "mailbox_only_constructs_opcode_1": true,
+  "remaining_candidate": "specialize internal opcode state away for shared-mailbox entry point only",
+  "prepared_motion_sha256": "2497ccbaf991b3c470af30d26d34f8d7b5f1d4158badc6355231099f873e88ce"
+}

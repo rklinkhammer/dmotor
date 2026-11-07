@@ -1,0 +1,230 @@
+Control partition evaluation: velocity HLS versus a PS loop
+2026-11-07 | dmotor_mipi_opt | baseline commit 6423b0d
+
+Conclusion
+----------
+Option 1 is already largely present in the production preparation pipeline.
+The general src/motion.cpp is not the source that ultimately reaches product HLS:
+prepare_velocity_profile.py applies the velocity-only patch, and later stages
+apply bounded exact-milliRPM arithmetic. Position, dwell, open-loop motion state
+and braking-distance computation are absent in the prepared product. Prior chat
+analysis that identified these as remaining product savings was incorrect.
+
+A smaller experimental specialization removes internal opcode state for the
+shared-mailbox entry point, which constructs only opcode 1. Controlled STOP
+still uses immediate_stop/stopping_. Its native behavior and HLS integration
+pass the checks below, but the candidate loses on complete-controller LUT count
+and is not promoted. HLS estimates alone again predict the wrong LUT direction.
+
+Option 4 is plausible at a millisecond timing budget and merits a Zynq execution
+prototype once target testing is available. The simulation does not establish
+Zynq runtime, physical motor stability, electrical safety, or actual FPGA savings.
+Default production software, RTL, interfaces, timing and release scope remain
+unchanged. Hardware testing is paused. No device, daemon or board was accessed.
+No live recovery or automatic resume is implemented.
+
+Option 1: evidence and boundaries
+--------------------------------
+The actual build chain is:
+  tools/build.py -> prepare_shared_mailbox.py -> prepare_velocity_mailbox.py
+  -> prepare_bounded_velocity.py -> prepare_velocity_profile.py
+  -> docs/evidence/velocity_only/profile.patch and bounded arithmetic patches.
+
+The prepared profile accepts generic velocity opcode 1 and stop opcode 6. The
+public shared-mailbox kernel creates only opcode 1; STOP is an independent input.
+prepare_specialized.py specializes that closed entry point and removes opcode
+storage. It is NOT valid for generic dmotor_motion/dispatcher callers that submit
+opcode 6. The candidate is experimental and is not installed by tools/build.py.
+No default source is changed, and it must not be promoted as a generic library.
+
+Validation:
+  - Independent baseline/candidate native comparison: 13,189 services, all 16
+    reply words identical, UBSan enabled. Includes the existing boundary suite,
+    interleaved motors, repeated reversals, STOP, faults, configuration/session
+    changes, disable and resets. This is not formal equivalence.
+  - HLS C simulation and C/RTL co-simulation: existing 2,449-service suite passed
+    (also includes invalid-selector calls beyond that reported service count).
+  - Actual-HLS controller_axi and controller_cleanup integration benches passed.
+  - HLS estimate: 25,909 -> 25,632 LUTs; 32,423 -> 32,309 FFs; DSP estimate 20 -> 20.
+    Initiation interval remains 337 cycles, latency 336 cycles. These estimates
+    must not be compared to or added to Vivado complete-controller measurements.
+
+Matched complete-controller OOC synthesis, Vivado 2026.1, XC7Z020,
+AreaOptimized_high, unchanged atomic HLS and retained RTL:
+                        Retained baseline   Candidate     Difference
+  LUTs                         37,795          37,899         +104 (+0.28%)
+  FFs                          55,847          55,714         -133
+  DSPs                             21              21            0
+  BRAM tiles                        2               2            0
+Synthesis completed and combinational-loop DRC passed. No route was run for this
+losing-LUT candidate; no timing, slice occupancy or physical packing improvement
+is claimed. The retained implementation remains unchanged. This experiment does
+not exclude other HLS optimizations, but rejects this specialization as a LUT win.
+
+Option 4: executable simulation
+------------------------------
+simulate_ps.py is an offline floating-point PI/ramp controller and four-wheel
+plant simulation, not a port of dmotor's exact integer controller. The current
+production estimator requires uniform 1 kHz samples and integral arithmetic is
+explicitly specialized to 1 kHz. Moving it to 200 Hz requires deliberate changes
+and new numerical/behavioral tests; changing a single timing constant is invalid.
+
+Model assumptions (fictional, not measured vehicle properties):
+  - 100 mm wheels; L+W=0.30 m; ideal mecanum body mapping, no roller slip.
+  - Four wheel response constants: 0.85/0.95/1.05/1.15 times each tested base
+    time constant of 20, 100 or 300 ms. Wheel speed limit 2 m/s.
+  - Derivative bounded to 4 m/s^2; inhibited output coasts with a separate assumed
+    400 ms time constant. An opposing load disturbance is injected.
+  - Feedback is either ideal wheel speed, or count-difference estimation with
+    2,048 counts/wheel revolution. The latter is deliberately simple and is NOT
+    the existing edge-interval estimator. Neither represents calibrated sensors.
+  - Same PI gains at every rate (Kp=0.5, Ki=2), feedforward, bounded integral,
+    anti-windup, reversal through zero, acceleration 1 and deceleration 1.5 m/s^2.
+    PI/ramp integration uses actual sample intervals.
+  - Forward, strafe/turn, reverse/turn and controlled stop over six seconds.
+  - 100 us integration grid; nominal 500 us capture-to-duty delivery. Event times
+    are quantized to that grid; microsecond protection behavior is not modeled.
+
+108 runs cover 100/200/1,000 Hz, three plant response constants, two feedback
+models, nominal timing, release jitter +/-1 ms, 8 ms delivery delay, 25 ms delivery
+delay, a 100 ms PS stall, and an external fault. Eighteen additional jitter runs
+use seeds 2/3/4 at 200 Hz. A 50 us refinement check probes integration error.
+Another 24 runs compare 200 Hz and 1 kHz at requested forward speeds of 1 and
+2 m/s, across all three plant constants, with count feedback and nominal/jittered
+releases. Their trajectories are lengthened to allow acceleration to finish;
+wheel targets are uniformly saturated at the assumed 2 m/s wheel limit.
+Total rate/plant/failure/speed scenarios: 150, plus two timestep-refinement runs.
+All completed without unexpected inhibition. The 1 m/s cases reach up to about
+1.10 m/s, exposing roughly 10% overshoot in this gain/plant envelope. The 2 m/s
+cases reach approximately 1.96-2.00 m/s. These are not tuned performance targets.
+
+Nominal RMS wheel tracking error against the ramp, mm/s (NOT position error):
+  Base response  Feedback         1,000 Hz     200 Hz     100 Hz
+  20 ms          ideal              10.615     10.283     10.058
+  20 ms          count difference   11.784     10.142     10.098
+  100 ms         ideal              27.459     26.952     26.325
+  100 ms         count difference   27.338     26.448     25.486
+  300 ms         ideal              73.144     72.688     71.971
+  300 ms         count difference   73.074     72.416     71.509
+
+These similar results support testing 200 Hz; they do not establish that slower
+control is intrinsically better. Sample/hold phase and measurement quantization
+change with rate. This particular gain/plant envelope is not a stability proof
+for unknown motors, higher gains, traction loss, current limiting or resonance.
+No independent current loop or motor electrical dynamics are modeled.
+
+At 200 Hz with the 100 ms base response and ideal feedback:
+  - Nominal maximum applied-feedback age is 5.4 ms (grid-sampled maximum).
+  - +/-1 ms release jitter yields a maximum sample interval of 6.9 ms and applied
+    feedback age of 7.3 ms. A release offset bound is not an interval-jitter bound:
+    consecutive releases may differ by almost 2 ms in the worst direction.
+  - 8 ms delivery produces 12.9 ms maximum applied-feedback age. This violates
+    the proposed 10 ms normal-response budget even though it remains below the
+    separate 20 ms fault deadline; absence of a fault is not normal-budget success.
+  - 25 ms delivery is rejected: the fabric model inhibits at 20 ms.
+  - A PS stall starting at 2.5 s causes inhibit at 2.515 s and cannot automatically
+    restart when computation resumes at 2.6 s.
+  - The external-fault case inhibits at its 2.5 s event on the simulation grid;
+    it does not validate a 10 us physical inhibit path.
+  - Inhibit removes commanded drive; it does not instantaneously stop motion.
+    The separate coast dynamics continue after inhibit.
+
+Proposed hardware/software boundary (not an adopted interface)
+------------------------------------------------------------
+PL retains encoder capture, coherent snapshots, PWM/dead-time/reversal handling,
+a common four-channel application boundary, independent watchdog/inhibit paths,
+monitor interaction, and authoritative session/enable/fault state.
+
+The model checks a complete four-duty frame against a fabric-issued capture token,
+session and monotonic sequence. Age is measured from capture, not receipt, and
+capture requests alone do not refresh the duty watchdog. Malformed, replayed,
+unknown-token, future/stale-sample and wrong-session frames cannot update outputs.
+Expiry wins a simultaneous new frame and inhibition is sticky. Atomic application
+is instantaneous in the model; real RTL must prove the common PWM-boundary behavior.
+
+The proposed 20 ms capture-age limit is an EXPERIMENT parameter, not a change to
+the accepted 100 ms target timeout or other production policies. A real design
+also needs independently enforced authorization/target freshness, counter wrap,
+clock/reset behavior, enable/disable and STOP transitions, and recovery handling.
+Those protocols are not implemented by this model. The fabric-issued token must
+bind to actual coherent feedback; trusting a PS-provided fresh timestamp is not
+sufficient. A production implementation would use bounded hardware state, not
+the Python dictionary used to express the model contract.
+
+PS retains target planning and would additionally execute wheel estimation,
+ramp/PI, acquisition, controlled STOP and fault reporting inside dmotor. The
+normal application interface remains dmotor_client; a fast internal executor
+would access the driver through dmotor's exclusive ownership. The driver should
+provide coherent transactions and event/timestamp access rather than become an
+unnecessarily large motion-policy implementation.
+
+The existing direct-duty interface is NOT a four-wheel runtime API: RTL has one
+scalar duty/PWM replicated under a mask, and commissioning software restricts it
+to an explicit single-motor bounded pulse. It must not be repurposed by bypassing
+that policy. Option 4 needs a separately designed four-duty commit interface and
+new driver/runtime semantics. Public client compatibility might be preserved,
+but hardware interfaces and control behavior would change and need review.
+
+Resource and timing decision
+----------------------------
+The retained synthesis attributes 17,479 LUTs and 24,395 FFs to the motor HLS core.
+That is the gross contribution targeted by option 4, not a savings prediction:
+feedback transport, commit logic, PWM, protection and telemetry still need logic.
+There is no synthesized option-4 RTL replacement, so no 6-8k-LUT residual claim or
+physical placement/headroom claim is justified. Current occupied slices are 99.62%.
+
+An initial PS target is a 5 ms loop, ordinary release offsets within +/-1 ms, and
+an independently measured worst-case end-to-end response below 10 ms. Capture,
+calculation, transport and PWM application must all fit the end-to-end budget.
+If allocating 1 ms per four-motor calculation, that is 20% of one core at 200 Hz.
+At an ASSUMED 667 MHz it permits about 166,750 CPU cycles per motor, excluding
+other reserved work. This is a budget calculation, not a Cortex-A9 benchmark.
+
+Required next measurements when target work is available:
+  1. C++ implementation with physical units, interval handling, integer/rounding
+     equivalence where required, estimator/acquisition and controlled-stop tests.
+  2. Timestamped Zynq capture-to-common-PWM latency distribution and maximum under
+     navigation, camera/memory traffic and driver stress; deliberately missed
+     deadlines, process death and clock/reset faults. Average CPU time is not enough.
+  3. If a Linux real-time execution thread misses the budget, evaluate a dedicated
+     core/RTOS partition; CPU isolation alone is not a timing proof.
+  4. Four-duty hardware prototype with the complete preserved protection boundary,
+     synthesis/place/route and failure tests before quoting FPGA savings.
+  5. Once assembled boards permit testing, identify loaded motor response, encoder
+     scaling, traction and coast/braking behavior, then choose gains/rate/timeouts.
+
+Recommendation
+--------------
+Keep the current production implementation unchanged. Option 1's large advertised
+simplification is already in the build; evaluate its remaining specialization
+only on measured complete-controller results: this candidate is rejected for
+the LUT objective. Prioritize option 4 as the larger
+architectural feasibility path, with 200 Hz as a test point, not an approved
+replacement. The software scheduling requirement can be milliseconds while
+encoder/PWM/electrical protection keep their independent hardware timing.
+
+Reproduction
+------------
+From the dmotor-mipi-opt repository root (generated artifacts under build/partition):
+  python3 experiments/control_partition/prepare_specialized.py --output build/partition/engine
+  cmake -S build/partition/engine -B build/partition/engine/build
+  cmake --build build/partition/engine/build -j4
+  python3 tools/prepare_shared_mailbox.py --output build/partition/baseline
+  cmake -S build/partition/baseline -B build/partition/baseline/build
+  cmake --build build/partition/baseline/build -j4
+  python3 experiments/control_partition/compare_specialized.py --baseline build/partition/baseline --candidate build/partition/engine
+  python3 build/partition/engine/tools/vitis_check.py --kernel dispatcher
+  python3 experiments/control_partition/simulate_ps.py --output build/partition/ps_results.json
+  python3 experiments/control_partition/check_simulation.py
+  python3 experiments/control_partition/summarize.py
+
+For complete-controller measurement, use experiments/lut_opt/measure.tcl with the
+retained RTL, unchanged atomic HLS, the new engine HLS and AreaOptimized_high.
+Use DMOTOR_ENGINE_PROFILE=build/partition/engine with the existing
+platforms/vivado/sim_controller_axi.tcl integration benches (controller_axi and
+controller_cleanup). The generic prepared motion tests are not applicable to the
+mailbox-only candidate; do not advertise full generic-library equivalence.
+
+Curated inputs, simulation results, synthesis reports and verification evidence
+are in docs/evidence/control_partition/. Full generated profiles/logs remain
+under ignored build/partition/. No production changes are selected by these scripts.

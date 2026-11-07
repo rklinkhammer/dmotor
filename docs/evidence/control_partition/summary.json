@@ -1,0 +1,213 @@
+{
+  "simulation_only": true,
+  "nominal_tracking": [
+    {
+      "tau_s": 0.02,
+      "feedback": "ideal",
+      "1000hz_rms_mm_s": 10.615,
+      "200hz_rms_mm_s": 10.283,
+      "100hz_rms_mm_s": 10.058
+    },
+    {
+      "tau_s": 0.02,
+      "feedback": "counts",
+      "1000hz_rms_mm_s": 11.784,
+      "200hz_rms_mm_s": 10.142,
+      "100hz_rms_mm_s": 10.098
+    },
+    {
+      "tau_s": 0.1,
+      "feedback": "ideal",
+      "1000hz_rms_mm_s": 27.459,
+      "200hz_rms_mm_s": 26.952,
+      "100hz_rms_mm_s": 26.325
+    },
+    {
+      "tau_s": 0.1,
+      "feedback": "counts",
+      "1000hz_rms_mm_s": 27.338,
+      "200hz_rms_mm_s": 26.448,
+      "100hz_rms_mm_s": 25.486
+    },
+    {
+      "tau_s": 0.3,
+      "feedback": "ideal",
+      "1000hz_rms_mm_s": 73.144,
+      "200hz_rms_mm_s": 72.688,
+      "100hz_rms_mm_s": 71.971
+    },
+    {
+      "tau_s": 0.3,
+      "feedback": "counts",
+      "1000hz_rms_mm_s": 73.074,
+      "200hz_rms_mm_s": 72.416,
+      "100hz_rms_mm_s": 71.509
+    }
+  ],
+  "scenarios_200hz_tau100ms": [
+    {
+      "hz": 200,
+      "tau_s": 0.1,
+      "scenario": "nominal",
+      "feedback": "ideal",
+      "seed": 1,
+      "speed_scale": 1.0,
+      "duration_s": 6.0,
+      "max_body_speed_m_s": 0.6305155355162421,
+      "wheel_tracking_rms_m_s": 0.02695180742895282,
+      "wheel_tracking_max_m_s": 0.08103958353379404,
+      "pose": [
+        0.21971481312494792,
+        0.5933795800933762,
+        0.02242065640205256
+      ],
+      "max_sample_interval_ms": 5.000000000000782,
+      "max_applied_sample_age_ms": 5.4000000000007375,
+      "inhibited_at_s": null,
+      "inhibit_reason": null,
+      "rejected_frames": 0,
+      "intervals_above_two_periods": 0,
+      "distance_after_inhibit_m": 0.0,
+      "max_wheel_speed_1s_after_stop_m_s": 0.019564082667689008
+    },
+    {
+      "hz": 200,
+      "tau_s": 0.1,
+      "scenario": "jitter",
+      "feedback": "ideal",
+      "seed": 1,
+      "speed_scale": 1.0,
+      "duration_s": 6.0,
+      "max_body_speed_m_s": 0.6305210890908076,
+      "wheel_tracking_rms_m_s": 0.02691840603721219,
+      "wheel_tracking_max_m_s": 0.08108790365342577,
+      "pose": [
+        0.2202180032693594,
+        0.592708926258196,
+        0.020326991449171817
+      ],
+      "max_sample_interval_ms": 6.900000000000794,
+      "max_applied_sample_age_ms": 7.30000000000075,
+      "inhibited_at_s": null,
+      "inhibit_reason": null,
+      "rejected_frames": 0,
+      "intervals_above_two_periods": 0,
+      "distance_after_inhibit_m": 0.0,
+      "max_wheel_speed_1s_after_stop_m_s": 0.019605037785646724
+    },
+    {
+      "hz": 200,
+      "tau_s": 0.1,
+      "scenario": "delay8ms",
+      "feedback": "ideal",
+      "seed": 1,
+      "speed_scale": 1.0,
+      "duration_s": 6.0,
+      "max_body_speed_m_s": 0.6337368201736222,
+      "wheel_tracking_rms_m_s": 0.02920990122538509,
+      "wheel_tracking_max_m_s": 0.08748641568844984,
+      "pose": [
+        0.21951328183539967,
+        0.592865764079519,
+        0.02239693782220637
+      ],
+      "max_sample_interval_ms": 5.000000000000782,
+      "max_applied_sample_age_ms": 12.900000000000134,
+      "inhibited_at_s": null,
+      "inhibit_reason": null,
+      "rejected_frames": 0,
+      "intervals_above_two_periods": 0,
+      "distance_after_inhibit_m": 0.0,
+      "max_wheel_speed_1s_after_stop_m_s": 0.02077509159019314
+    },
+    {
+      "hz": 200,
+      "tau_s": 0.1,
+      "scenario": "delay25ms",
+      "feedback": "ideal",
+      "seed": 1,
+      "speed_scale": 1.0,
+      "duration_s": 6.0,
+      "max_body_speed_m_s": 0.0,
+      "wheel_tracking_rms_m_s": 0.0,
+      "wheel_tracking_max_m_s": 0.0,
+      "pose": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "max_sample_interval_ms": 5.000000000000001,
+      "max_applied_sample_age_ms": 19.900000000000002,
+      "inhibited_at_s": 0.02,
+      "inhibit_reason": "stale_duty",
+      "rejected_frames": 4,
+      "intervals_above_two_periods": 0,
+      "distance_after_inhibit_m": 0.0,
+      "max_wheel_speed_1s_after_stop_m_s": 0.0
+    },
+    {
+      "hz": 200,
+      "tau_s": 0.1,
+      "scenario": "stall",
+      "feedback": "ideal",
+      "seed": 1,
+      "speed_scale": 1.0,
+      "duration_s": 6.0,
+      "max_body_speed_m_s": 0.6305155355162421,
+      "wheel_tracking_rms_m_s": 0.027972728528557925,
+      "wheel_tracking_max_m_s": 0.07825979219579193,
+      "pose": [
+        0.9121819483289912,
+        0.24001423895452684,
+        0.1487282880507946
+      ],
+      "max_sample_interval_ms": 5.0000000000003375,
+      "max_applied_sample_age_ms": 19.899999999999807,
+      "inhibited_at_s": 2.515,
+      "inhibit_reason": "stale_duty",
+      "rejected_frames": 0,
+      "intervals_above_two_periods": 0,
+      "distance_after_inhibit_m": 0.1307507543117645,
+      "max_wheel_speed_1s_after_stop_m_s": 6.73739545072156e-05
+    },
+    {
+      "hz": 200,
+      "tau_s": 0.1,
+      "scenario": "fault",
+      "feedback": "ideal",
+      "seed": 1,
+      "speed_scale": 1.0,
+      "duration_s": 6.0,
+      "max_body_speed_m_s": 0.6305155355162421,
+      "wheel_tracking_rms_m_s": 0.028060688328504793,
+      "wheel_tracking_max_m_s": 0.07825979219579193,
+      "pose": [
+        0.9150259669944276,
+        0.23292697072910543,
+        0.14670152993559774
+      ],
+      "max_sample_interval_ms": 5.0000000000003375,
+      "max_applied_sample_age_ms": 5.4000000000002935,
+      "inhibited_at_s": 2.5,
+      "inhibit_reason": "external_fault",
+      "rejected_frames": 0,
+      "intervals_above_two_periods": 0,
+      "distance_after_inhibit_m": 0.1289769354890456,
+      "max_wheel_speed_1s_after_stop_m_s": 6.612533888091593e-05
+    }
+  ],
+  "synthesis": {
+    "baseline": {
+      "lut": 37795.0,
+      "ff": 55847.0,
+      "dsp": 21.0,
+      "bram_tiles": 2.0
+    },
+    "candidate": {
+      "lut": 37899.0,
+      "ff": 55714.0,
+      "dsp": 21.0,
+      "bram_tiles": 2.0
+    }
+  }
+}
