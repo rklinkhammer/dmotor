@@ -1,0 +1,18 @@
+2026-11-07 — acquisition candidate on esp32 branch
+Baseline: fdd36d8 (main at checkout)
+
+Command:
+g++ -std=c++14 -Wall -Wextra -Werror -Wconversion \
+  -fsanitize=undefined,address -fno-omit-frame-pointer \
+  -Isoftware/esp32/components/acquisition/include \
+  software/esp32/tests/acquisition_test.cpp -o /tmp/dmotor-acquisition-test
+ASAN_OPTIONS=detect_leaks=0 /tmp/dmotor-acquisition-test
+
+Result: exit 0, acquisition deterministic tests passed.
+Address/undefined behavior sanitizers active; leak detection disabled because
+LeakSanitizer cannot run under this environment's ptrace. Core uses fixed storage.
+
+CMake/CTest not run: cmake unavailable. Equivalent direct compiler command above ran.
+ESP-IDF target compile/link not run: idf.py/toolchain unavailable.
+No hardware connected/flashed, no electrical measurements, no motor permits enabled.
+No timing/threshold/gate acceptance claimed.

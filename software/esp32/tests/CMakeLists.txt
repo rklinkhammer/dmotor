@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.16)
+project(dmotor_acquisition_tests LANGUAGES CXX)
+enable_testing()
+add_executable(acquisition_test acquisition_test.cpp)
+target_include_directories(acquisition_test PRIVATE ../components/acquisition/include)
+target_compile_features(acquisition_test PRIVATE cxx_std_14)
+target_compile_options(acquisition_test PRIVATE -Wall -Wextra -Werror -Wconversion -UNDEBUG)
+add_test(NAME acquisition COMMAND acquisition_test)

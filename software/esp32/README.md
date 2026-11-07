@@ -51,3 +51,11 @@ electrical timing or powered-motor qualification.
 
 PCB, fabrication and assembly sources remain in motor-interface-integrated.
 That repository may link here, but must not carry an independent firmware fork.
+
+A first operational acquisition **component candidate** now exists in
+`components/acquisition/` (portable clock/bus/deadline core) and
+`components/monitor_i2c/` (ESP-IDF adapter). This is not the operational application.
+See [deadline contract, tick analysis, build/test and target qualification](../../docs/g1c_i2c_deadline_adapter.md).
+`tests/` is host-only; `build_check/` is a non-deployable IDF compile/link harness.
+No component writes HB or motor permits. Supervisor/output and freshness/policy
+integration remain mandatory before operational use.
