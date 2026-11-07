@@ -17,6 +17,8 @@ do_semantics() {
     ${@qemu_wrapper_cmdline(d, d.getVar('RECIPE_SYSROOT'), [d.getVar('RECIPE_SYSROOT') + d.getVar('libdir'), d.getVar('RECIPE_SYSROOT') + d.getVar('base_libdir')])} ${B}/dmotor-ps-worker-tests
     ${@qemu_wrapper_cmdline(d, d.getVar('RECIPE_SYSROOT'), [d.getVar('RECIPE_SYSROOT') + d.getVar('libdir'), d.getVar('RECIPE_SYSROOT') + d.getVar('base_libdir')])} ${B}/dmotor-ps-cadence-tests
     ${@qemu_wrapper_cmdline(d, d.getVar('RECIPE_SYSROOT'), [d.getVar('RECIPE_SYSROOT') + d.getVar('libdir'), d.getVar('RECIPE_SYSROOT') + d.getVar('base_libdir')])} ${B}/dmotor-ps-fused-tests
+    ${@qemu_wrapper_cmdline(d, d.getVar('RECIPE_SYSROOT'), [d.getVar('RECIPE_SYSROOT') + d.getVar('libdir'), d.getVar('RECIPE_SYSROOT') + d.getVar('base_libdir')])} ${B}/esp32-tests/acquisition_test
+    ${@qemu_wrapper_cmdline(d, d.getVar('RECIPE_SYSROOT'), [d.getVar('RECIPE_SYSROOT') + d.getVar('libdir'), d.getVar('RECIPE_SYSROOT') + d.getVar('base_libdir')])} ${B}/esp32-tests/timing_cycle_test
 }
 addtask semantics after do_compile before do_install
 

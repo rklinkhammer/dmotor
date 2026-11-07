@@ -257,3 +257,14 @@ foreach(test worker cadence fused)
  target_link_libraries(dmotor-ps-${test}-tests PRIVATE dmotor_ps_engine)
  add_test(NAME software_ps_${test} COMMAND dmotor-ps-${test}-tests)
 endforeach()
+
+
+# Portable ESP32 acquisition policy: also exercise it in native CI and ARM QEMU.
+# ESP-IDF hardware adapters remain separate target projects.
+add_subdirectory(esp32/tests esp32-tests)
+if(DMOTOR_SW_SANITIZE)
+ foreach(test acquisition_test timing_cycle_test)
+  target_compile_options(${test} PRIVATE -fsanitize=undefined -fno-sanitize-recover=all)
+  target_link_options(${test} PRIVATE -fsanitize=undefined)
+ endforeach()
+endif()
