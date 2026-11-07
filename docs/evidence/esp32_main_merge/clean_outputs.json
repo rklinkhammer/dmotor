@@ -1,0 +1,9 @@
+{
+  "archived_to": "build/pre_esp32_merge_20261107T071716",
+  "removed_from_active_build": [
+    "build/product",
+    "build/current_ip",
+    "build/vitis_atomic"
+  ],
+  "preserved": "previous release evidence and exports"
+}

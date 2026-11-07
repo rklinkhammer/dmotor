@@ -4,7 +4,7 @@
 
 Further physical testing is **paused at Robert's request until the assembled
 monitor and motor boards are available**. U0 UART exchange/restart/reconnection
-checks passed. U1 GPIO/HB modes are implemented, covered by the current 27-test native PS suite
+checks passed. U1 GPIO/HB modes are implemented, covered by the current 29-test native PS suite
 and a passing ESP32-S3 build; U1 flashing and physical measurements are not recorded.
 Main now uses the [1 ms PS motor executor](ps_executor.md), with the matched
 board/ARM rebuild recorded in [system status](system_status.md).

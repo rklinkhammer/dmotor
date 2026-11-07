@@ -1,0 +1,2085 @@
+DMOTOR hardware/software source: /home/rklinkhammer/workspace/dmotor
+Input: /home/rklinkhammer/workspace/dmotor/build/product/vivado/dvrmc.xpr
++ /usr/bin/python3 /home/rklinkhammer/workspace/dmotor/tools/build.py project --amd-root /opt/vitis/2026.1 --force
+DMOTOR source: /home/rklinkhammer/workspace/dmotor
+Hardware fingerprint: 7e28234255e27d08697de89e35091e641f1f21a96707d8f939149dae7625c904
++ /usr/bin/python3 tools/vitis_check.py --kernel atomic --vitis /opt/vitis/2026.1/Vitis
+csim: /home/rklinkhammer/workspace/dmotor/build/vitis_atomic_csim.log
+synth: /home/rklinkhammer/workspace/dmotor/build/vitis_atomic_synth.log
+cosim: /home/rklinkhammer/workspace/dmotor/build/vitis_atomic_cosim.log
++ cmake -S /home/rklinkhammer/workspace/dmotor -B /home/rklinkhammer/workspace/dmotor/build/product/native -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DIVERILOG=/home/rklinkhammer/workspace/dmotor/build/tools/usr/bin/iverilog -DVVP=/home/rklinkhammer/workspace/dmotor/build/tools/usr/bin/vvp -DIVERILOG_BASE=/home/rklinkhammer/workspace/dmotor/build/tools/usr/lib/x86_64-linux-gnu/ivl
+-- The CXX compiler identification is GNU 15.2.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found Python3: /usr/bin/python3 (found version "3.14.4") found components: Interpreter
+-- Configuring done (0.3s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/rklinkhammer/workspace/dmotor/build/product/native
++ cmake --build /home/rklinkhammer/workspace/dmotor/build/product/native -j4
+[  8%] Building CXX object CMakeFiles/dmotor.dir/src/control.cpp.o
+[  8%] Building CXX object CMakeFiles/dmotor.dir/src/command_engine.cpp.o
+[  8%] Building CXX object CMakeFiles/dmotor.dir/src/arithmetic.cpp.o
+[  8%] Building CXX object CMakeFiles/dmotor.dir/src/protocol.cpp.o
+[ 11%] Building CXX object CMakeFiles/dmotor.dir/src/peripheral.cpp.o
+[ 13%] Building CXX object CMakeFiles/dmotor.dir/src/configuration.cpp.o
+[ 15%] Building CXX object CMakeFiles/dmotor.dir/src/motion.cpp.o
+[ 17%] Building CXX object CMakeFiles/dmotor.dir/src/velocity.cpp.o
+[ 20%] Building CXX object CMakeFiles/dmotor.dir/src/controller.cpp.o
+[ 22%] Building CXX object CMakeFiles/dmotor.dir/src/dispatcher.cpp.o
+[ 24%] Building CXX object CMakeFiles/dmotor.dir/src/atomic_mailbox.cpp.o
+[ 26%] Building CXX object CMakeFiles/dmotor.dir/src/atomic_mailbox_top.cpp.o
+[ 28%] Building CXX object CMakeFiles/dmotor.dir/src/mailbox.cpp.o
+[ 31%] Building CXX object CMakeFiles/dmotor.dir/src/shared_mailbox.cpp.o
+[ 33%] Linking CXX static library libdmotor.a
+[ 33%] Built target dmotor
+[ 42%] Building CXX object CMakeFiles/control_test.dir/tests/control_test.cpp.o
+[ 42%] Building CXX object CMakeFiles/arithmetic_test.dir/tests/arithmetic_test.cpp.o
+[ 42%] Building CXX object CMakeFiles/protocol_test.dir/tests/protocol_test.cpp.o
+[ 42%] Building CXX object CMakeFiles/command_engine_test.dir/tests/command_engine_test.cpp.o
+[ 44%] Linking CXX executable arithmetic_test
+[ 46%] Linking CXX executable control_test
+[ 46%] Built target arithmetic_test
+[ 48%] Building CXX object CMakeFiles/peripheral_test.dir/tests/peripheral_test.cpp.o
+[ 51%] Linking CXX executable protocol_test
+[ 51%] Built target control_test
+[ 53%] Linking CXX executable command_engine_test
+[ 55%] Building CXX object CMakeFiles/configuration_test.dir/tests/configuration_test.cpp.o
+[ 55%] Built target protocol_test
+[ 57%] Building CXX object CMakeFiles/motion_test.dir/tests/motion_test.cpp.o
+[ 57%] Built target command_engine_test
+[ 60%] Building CXX object CMakeFiles/velocity_test.dir/tests/velocity_test.cpp.o
+[ 62%] Linking CXX executable configuration_test
+[ 64%] Linking CXX executable peripheral_test
+[ 64%] Built target configuration_test
+[ 66%] Building CXX object CMakeFiles/controller_test.dir/tests/controller_test.cpp.o
+[ 68%] Linking CXX executable velocity_test
+[ 68%] Built target peripheral_test
+[ 71%] Building CXX object CMakeFiles/dispatcher_test.dir/tests/dispatcher_test.cpp.o
+[ 71%] Built target velocity_test
+[ 73%] Building CXX object CMakeFiles/atomic_mailbox_test.dir/tests/atomic_mailbox_test.cpp.o
+[ 75%] Linking CXX executable motion_test
+[ 75%] Built target motion_test
+[ 77%] Building CXX object CMakeFiles/atomic_mailbox_top_test.dir/tests/atomic_mailbox_top_test.cpp.o
+[ 80%] Linking CXX executable controller_test
+[ 82%] Linking CXX executable dispatcher_test
+[ 82%] Built target controller_test
+[ 84%] Building CXX object CMakeFiles/controller_host_test.dir/tests/controller_host_test.cpp.o
+[ 84%] Built target dispatcher_test
+[ 86%] Linking CXX executable atomic_mailbox_test
+[ 88%] Building CXX object CMakeFiles/mailbox_test.dir/tests/mailbox_test.cpp.o
+[ 91%] Linking CXX executable atomic_mailbox_top_test
+[ 91%] Built target atomic_mailbox_test
+[ 93%] Building CXX object CMakeFiles/shared_mailbox_test.dir/tests/shared_mailbox_test.cpp.o
+[ 93%] Built target atomic_mailbox_top_test
+[ 95%] Linking CXX executable mailbox_test
+[ 97%] Linking CXX executable controller_host_test
+[ 97%] Built target mailbox_test
+[ 97%] Built target controller_host_test
+[100%] Linking CXX executable shared_mailbox_test
+[100%] Built target shared_mailbox_test
++ ctest --test-dir /home/rklinkhammer/workspace/dmotor/build/product/native --output-on-failure
+Test project /home/rklinkhammer/workspace/dmotor/build/product/native
+      Start  1: arithmetic
+ 1/36 Test  #1: arithmetic .......................   Passed    0.03 sec
+      Start  2: protocol
+ 2/36 Test  #2: protocol .........................   Passed    0.00 sec
+      Start  3: generated_abi
+ 3/36 Test  #3: generated_abi ....................   Passed    0.05 sec
+      Start  4: rtl_cleanup_sequencer
+ 4/36 Test  #4: rtl_cleanup_sequencer ............   Passed    0.06 sec
+      Start  5: rtl_monitor_heartbeat
+ 5/36 Test  #5: rtl_monitor_heartbeat ............   Passed    0.07 sec
+      Start  6: rtl_safety
+ 6/36 Test  #6: rtl_safety .......................   Passed    0.08 sec
+      Start  7: rtl_scheduler
+ 7/36 Test  #7: rtl_scheduler ....................   Passed    0.06 sec
+      Start  8: rtl_qcencoder
+ 8/36 Test  #8: rtl_qcencoder ....................   Passed    0.08 sec
+      Start  9: rtl_pwm
+ 9/36 Test  #9: rtl_pwm ..........................   Passed    0.06 sec
+      Start 10: rtl_latency
+10/36 Test #10: rtl_latency ......................   Passed    0.07 sec
+      Start 11: rtl_axi_bridge
+11/36 Test #11: rtl_axi_bridge ...................   Passed    0.08 sec
+      Start 12: rtl_encoder_snapshot
+12/36 Test #12: rtl_encoder_snapshot .............   Passed    0.07 sec
+      Start 13: rtl_target_age
+13/36 Test #13: rtl_target_age ...................   Passed    0.08 sec
+      Start 14: rtl_shared_scheduler
+14/36 Test #14: rtl_shared_scheduler .............   Passed    0.13 sec
+      Start 15: rtl_vivado_dev
+15/36 Test #15: rtl_vivado_dev ...................   Passed    0.05 sec
+      Start 16: control
+16/36 Test #16: control ..........................   Passed    0.00 sec
+      Start 17: command_engine
+17/36 Test #17: command_engine ...................   Passed    0.00 sec
+      Start 18: peripheral
+18/36 Test #18: peripheral .......................   Passed    0.00 sec
+      Start 19: configuration
+19/36 Test #19: configuration ....................   Passed    0.00 sec
+      Start 20: motion
+20/36 Test #20: motion ...........................   Passed    0.01 sec
+      Start 21: velocity
+21/36 Test #21: velocity .........................   Passed    0.00 sec
+      Start 22: controller
+22/36 Test #22: controller .......................   Passed    0.00 sec
+      Start 23: dispatcher
+23/36 Test #23: dispatcher .......................   Passed    0.00 sec
+      Start 24: atomic_mailbox
+24/36 Test #24: atomic_mailbox ...................   Passed    0.00 sec
+      Start 25: generated_mailbox_abi
+25/36 Test #25: generated_mailbox_abi ............   Passed    0.04 sec
+      Start 26: atomic_mailbox_top
+26/36 Test #26: atomic_mailbox_top ...............   Passed    0.00 sec
+      Start 27: rtl_atomic_adapter
+27/36 Test #27: rtl_atomic_adapter ...............   Passed    0.47 sec
+      Start 28: rtl_mailbox_control
+28/36 Test #28: rtl_mailbox_control ..............   Passed    2.28 sec
+      Start 29: controller_host
+29/36 Test #29: controller_host ..................   Passed    0.00 sec
+      Start 30: generated_controller_abi
+30/36 Test #30: generated_controller_abi .........   Passed    0.05 sec
+      Start 31: mailbox
+31/36 Test #31: mailbox ..........................   Passed    0.00 sec
+      Start 32: shared_mailbox
+32/36 Test #32: shared_mailbox ...................   Passed    0.01 sec
+      Start 33: ps_executor_native
+33/36 Test #33: ps_executor_native ...............   Passed    2.34 sec
+      Start 34: ps_transport
+34/36 Test #34: ps_transport .....................   Passed    0.07 sec
+      Start 35: ps_controller_axi
+35/36 Test #35: ps_controller_axi ................   Passed   53.90 sec
+      Start 36: ps_controller_cleanup
+36/36 Test #36: ps_controller_cleanup ............   Passed    1.30 sec
+
+100% tests passed, 0 tests failed out of 36
+
+Total Test time (real) =  61.46 sec
++ cmake -S /home/rklinkhammer/workspace/dmotor/software -B /home/rklinkhammer/workspace/dmotor/build/product/software -DDMOTOR_SW_SANITIZE=ON
+-- The CXX compiler identification is GNU 15.2.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found Python3: /usr/bin/python3 (found version "3.14.4") found components: Interpreter
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Configuring done (0.4s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/rklinkhammer/workspace/dmotor/build/product/software
++ cmake --build /home/rklinkhammer/workspace/dmotor/build/product/software -j4
+[  1%] Building CXX object CMakeFiles/dmotor-recovery-model-tests.dir/tests/recovery_model_test.cpp.o
+[  3%] Building CXX object CMakeFiles/dmotor_ps_engine.dir/home/rklinkhammer/workspace/dmotor/src/protocol.cpp.o
+[  3%] Building CXX object CMakeFiles/dmotor_client.dir/linux/client.cpp.o
+[  3%] Built target dmotor_version
+[  4%] Building CXX object CMakeFiles/dmotor-endpoint-session-tests.dir/tests/endpoint_session_test.cpp.o
+[  5%] Building CXX object CMakeFiles/dmotor_ps_engine.dir/home/rklinkhammer/workspace/dmotor/src/arithmetic.cpp.o
+[  6%] Building CXX object CMakeFiles/dmotor_ps_engine.dir/home/rklinkhammer/workspace/dmotor/src/control.cpp.o
+[  7%] Building CXX object CMakeFiles/dmotor_ps_engine.dir/home/rklinkhammer/workspace/dmotor/src/command_engine.cpp.o
+[  8%] Building CXX object CMakeFiles/dmotor-recovery-model-tests.dir/src/recovery_model.cpp.o
+[  9%] Building CXX object CMakeFiles/dmotor_ps_engine.dir/home/rklinkhammer/workspace/dmotor/src/motion.cpp.o
+[ 10%] Linking CXX executable dmotor-recovery-model-tests
+[ 11%] Linking CXX static library libdmotor_client.a
+[ 12%] Building CXX object CMakeFiles/dmotor_ps_engine.dir/home/rklinkhammer/workspace/dmotor/src/velocity.cpp.o
+[ 13%] Building CXX object CMakeFiles/dmotor-endpoint-session-tests.dir/linux/endpoint_session.cpp.o
+[ 13%] Built target dmotor-recovery-model-tests
+[ 13%] Built target dmotor_client
+[ 13%] Building CXX object esp32-tests/CMakeFiles/acquisition_test.dir/acquisition_test.cpp.o
+[ 14%] Building CXX object CMakeFiles/dmotor_ps_engine.dir/home/rklinkhammer/workspace/dmotor/src/controller.cpp.o
+[ 15%] Building CXX object esp32-tests/CMakeFiles/timing_cycle_test.dir/timing_cycle_test.cpp.o
+[ 16%] Building CXX object CMakeFiles/dmotor_ps_engine.dir/home/rklinkhammer/workspace/dmotor/src/mailbox.cpp.o
+[ 17%] Linking CXX static library libdmotor_ps_engine.a
+[ 18%] Linking CXX executable dmotor-endpoint-session-tests
+[ 19%] Linking CXX executable timing_cycle_test
+[ 19%] Built target dmotor_ps_engine
+[ 20%] Building CXX object CMakeFiles/dmotor_semantics.dir/src/model.cpp.o
+[ 20%] Built target dmotor-endpoint-session-tests
+[ 21%] Building CXX object CMakeFiles/dmotor-client-tests.dir/tests/client_test.cpp.o
+[ 21%] Built target timing_cycle_test
+[ 22%] Linking CXX executable acquisition_test
+[ 23%] Building CXX object CMakeFiles/dmotor-ps-worker-tests.dir/home/rklinkhammer/workspace/dmotor/tests/ps_worker_test.cpp.o
+[ 23%] Built target acquisition_test
+[ 24%] Building CXX object CMakeFiles/dmotor-ps-cadence-tests.dir/home/rklinkhammer/workspace/dmotor/tests/ps_cadence_test.cpp.o
+[ 25%] Building CXX object CMakeFiles/dmotor_semantics.dir/src/runtime.cpp.o
+[ 26%] Linking CXX executable dmotor-client-tests
+[ 26%] Built target dmotor-client-tests
+[ 27%] Building CXX object CMakeFiles/dmotor-ps-fused-tests.dir/home/rklinkhammer/workspace/dmotor/tests/ps_fused_test.cpp.o
+[ 28%] Linking CXX executable dmotor-ps-cadence-tests
+[ 28%] Built target dmotor-ps-cadence-tests
+[ 29%] Building CXX object CMakeFiles/dmotor_semantics.dir/src/protocol.cpp.o
+[ 30%] Linking CXX executable dmotor-ps-fused-tests
+[ 31%] Building CXX object CMakeFiles/dmotor_semantics.dir/src/monitor_protocol.cpp.o
+[ 31%] Built target dmotor-ps-fused-tests
+[ 32%] Building CXX object CMakeFiles/dmotor_semantics.dir/src/version.cpp.o
+[ 33%] Linking CXX executable dmotor-ps-worker-tests
+[ 34%] Building CXX object CMakeFiles/dmotor_semantics.dir/home/rklinkhammer/workspace/dmotor/src/atomic_mailbox.cpp.o
+[ 34%] Built target dmotor-ps-worker-tests
+[ 35%] Linking CXX static library libdmotor_semantics.a
+[ 35%] Built target dmotor_semantics
+[ 39%] Building CXX object CMakeFiles/dmotor-uart-test.dir/apps/uart_test.cpp.o
+[ 39%] Building CXX object CMakeFiles/dmotor_linux.dir/linux/inspection.cpp.o
+[ 39%] Building CXX object CMakeFiles/dmotor-semantic-tests.dir/tests/model_test.cpp.o
+[ 39%] Building CXX object CMakeFiles/dmotor-protocol-tests.dir/tests/protocol_test.cpp.o
+[ 40%] Linking CXX executable dmotor-semantic-tests
+[ 41%] Linking CXX executable dmotor-uart-test
+[ 41%] Built target dmotor-semantic-tests
+[ 42%] Building CXX object CMakeFiles/dmotor_linux.dir/linux/kernel_device.cpp.o
+[ 42%] Built target dmotor-uart-test
+[ 43%] Building CXX object CMakeFiles/dmotor-maint.dir/apps/maintenance.cpp.o
+[ 44%] Linking CXX executable dmotor-protocol-tests
+[ 45%] Building CXX object CMakeFiles/dmotor_linux.dir/linux/monitor_uart.cpp.o
+[ 45%] Built target dmotor-protocol-tests
+[ 46%] Building CXX object CMakeFiles/dmotor-runtime-tests.dir/tests/runtime_test.cpp.o
+[ 47%] Building CXX object CMakeFiles/dmotord-fixture.dir/apps/daemon.cpp.o
+[ 48%] Linking CXX static library libdmotor_linux.a
+[ 48%] Built target dmotor_linux
+[ 50%] Building CXX object CMakeFiles/dmotor-maint-fixture.dir/apps/maintenance.cpp.o
+[ 51%] Linking CXX executable dmotor-maint
+[ 52%] Building CXX object CMakeFiles/dmotord-fixture.dir/tests/fake_kernel.cpp.o
+[ 52%] Built target dmotor-maint
+[ 53%] Building CXX object CMakeFiles/dmotor-monitor-tests.dir/tests/monitor_protocol_test.cpp.o
+[ 54%] Linking CXX executable dmotord-fixture
+[ 55%] Linking CXX executable dmotor-monitor-tests
+[ 55%] Built target dmotord-fixture
+[ 56%] Linking CXX executable dmotor-maint-fixture
+[ 57%] Building CXX object CMakeFiles/dmotor-monitor-uart-tests.dir/tests/monitor_uart_test.cpp.o
+[ 57%] Built target dmotor-monitor-tests
+[ 58%] Building CXX object CMakeFiles/dmotor-session-link-tests.dir/tests/session_link_test.cpp.o
+[ 58%] Built target dmotor-maint-fixture
+[ 58%] Building CXX object CMakeFiles/dmotor-recovery-link-tests.dir/tests/recovery_link_test.cpp.o
+[ 59%] Linking CXX executable dmotor-monitor-uart-tests
+[ 60%] Linking CXX executable dmotor-runtime-tests
+[ 60%] Built target dmotor-monitor-uart-tests
+[ 61%] Building CXX object CMakeFiles/dmotor-monitor-simulator-tests.dir/tests/monitor_simulator_test.cpp.o
+[ 61%] Built target dmotor-runtime-tests
+[ 62%] Building CXX object CMakeFiles/dmotor-session-link-tests.dir/src/session_link.cpp.o
+[ 63%] Building CXX object CMakeFiles/dmotor-recovery-coordinator-tests.dir/tests/recovery_coordinator_test.cpp.o
+[ 64%] Linking CXX executable dmotor-session-link-tests
+[ 65%] Building CXX object CMakeFiles/dmotor-recovery-link-tests.dir/src/recovery_link.cpp.o
+[ 65%] Built target dmotor-session-link-tests
+[ 66%] Building CXX object CMakeFiles/dmotor-coordinator-session-tests.dir/tests/coordinator_session_test.cpp.o
+[ 67%] Building CXX object CMakeFiles/dmotor-monitor-simulator-tests.dir/tests/support/monitor_simulator.cpp.o
+[ 68%] Building CXX object CMakeFiles/dmotor-recovery-link-tests.dir/src/recovery_model.cpp.o
+[ 69%] Building CXX object CMakeFiles/dmotor-monitor-simulator-tests.dir/src/recovery_link.cpp.o
+[ 70%] Building CXX object CMakeFiles/dmotor-recovery-link-tests.dir/src/session_link.cpp.o
+[ 71%] Linking CXX executable dmotor-recovery-link-tests
+[ 71%] Built target dmotor-recovery-link-tests
+[ 72%] Building CXX object CMakeFiles/dmotor-recovery-coordinator-tests.dir/tests/support/monitor_simulator.cpp.o
+[ 73%] Building CXX object CMakeFiles/dmotor-uart-codec-tests.dir/tests/uart_diagnostic_codec_test.cpp.o
+[ 74%] Building CXX object CMakeFiles/dmotor-monitor-simulator-tests.dir/src/recovery_model.cpp.o
+[ 75%] Building CXX object CMakeFiles/dmotor-recovery-coordinator-tests.dir/src/recovery_coordinator.cpp.o
+[ 76%] Building CXX object CMakeFiles/dmotor-monitor-simulator-tests.dir/src/session_link.cpp.o
+[ 77%] Linking CXX executable dmotor-monitor-simulator-tests
+[ 78%] Linking CXX executable dmotor-uart-codec-tests
+[ 79%] Building CXX object CMakeFiles/dmotor-coordinator-session-tests.dir/linux/endpoint_session.cpp.o
+[ 79%] Built target dmotor-monitor-simulator-tests
+[ 79%] Built target dmotor-uart-codec-tests
+[ 80%] Building CXX object CMakeFiles/dmotor-gpio-diagnostic-tests.dir/tests/gpio_diagnostic_test.cpp.o
+[ 81%] Building CXX object CMakeFiles/dmotord.dir/apps/daemon.cpp.o
+[ 82%] Building CXX object CMakeFiles/dmotor-coordinator-session-tests.dir/src/recovery_coordinator.cpp.o
+[ 83%] Building CXX object CMakeFiles/dmotor-recovery-coordinator-tests.dir/src/recovery_link.cpp.o
+[ 84%] Linking CXX executable dmotor-gpio-diagnostic-tests
+[ 84%] Built target dmotor-gpio-diagnostic-tests
+[ 85%] Building CXX object CMakeFiles/dmotor-encoder.dir/apps/encoder.cpp.o
+[ 86%] Building CXX object CMakeFiles/dmotor-recovery-coordinator-tests.dir/src/recovery_model.cpp.o
+[ 87%] Building CXX object CMakeFiles/dmotor-coordinator-session-tests.dir/src/recovery_link.cpp.o
+[ 88%] Building CXX object CMakeFiles/dmotord.dir/linux/ps_device.cpp.o
+[ 89%] Building CXX object CMakeFiles/dmotor-recovery-coordinator-tests.dir/src/session_link.cpp.o
+[ 90%] Building CXX object CMakeFiles/dmotor-coordinator-session-tests.dir/src/recovery_model.cpp.o
+[ 91%] Linking CXX executable dmotor-recovery-coordinator-tests
+[ 92%] Linking CXX executable dmotor-encoder
+[ 93%] Building CXX object CMakeFiles/dmotor-coordinator-session-tests.dir/src/session_link.cpp.o
+[ 93%] Built target dmotor-recovery-coordinator-tests
+[ 93%] Built target dmotor-encoder
+[ 94%] Building CXX object CMakeFiles/dmotor-inspect.dir/apps/inspect.cpp.o
+[ 95%] Building CXX object CMakeFiles/dmotor-linux-tests.dir/tests/linux_inspection_test.cpp.o
+[ 96%] Linking CXX executable dmotor-coordinator-session-tests
+[ 96%] Built target dmotor-coordinator-session-tests
+[ 97%] Linking CXX executable dmotord
+[ 97%] Built target dmotord
+[ 98%] Linking CXX executable dmotor-linux-tests
+[100%] Linking CXX executable dmotor-inspect
+[100%] Built target dmotor-linux-tests
+[100%] Built target dmotor-inspect
++ ctest --test-dir /home/rklinkhammer/workspace/dmotor/build/product/software --output-on-failure
+Test project /home/rklinkhammer/workspace/dmotor/build/product/software
+      Start  1: software_semantics
+ 1/29 Test  #1: software_semantics ...............   Passed    0.00 sec
+      Start  2: software_protocol
+ 2/29 Test  #2: software_protocol ................   Passed    0.01 sec
+      Start  3: software_linux
+ 3/29 Test  #3: software_linux ...................   Passed    0.00 sec
+      Start  4: software_runtime
+ 4/29 Test  #4: software_runtime .................   Passed    0.01 sec
+      Start  5: software_client
+ 5/29 Test  #5: software_client ..................   Passed    0.67 sec
+      Start  6: software_client_package
+ 6/29 Test  #6: software_client_package ..........   Passed    0.49 sec
+      Start  7: software_startup
+ 7/29 Test  #7: software_startup .................   Passed    0.04 sec
+      Start  8: software_powered
+ 8/29 Test  #8: software_powered .................   Passed    2.86 sec
+      Start  9: software_direct
+ 9/29 Test  #9: software_direct ..................   Passed    2.12 sec
+      Start 10: software_commissioning
+10/29 Test #10: software_commissioning ...........   Passed    2.11 sec
+      Start 11: software_service
+11/29 Test #11: software_service .................   Passed    1.74 sec
+      Start 12: software_monitor
+12/29 Test #12: software_monitor .................   Passed    0.00 sec
+      Start 13: software_monitor_uart
+13/29 Test #13: software_monitor_uart ............   Passed    0.00 sec
+      Start 14: software_monitor_schema
+14/29 Test #14: software_monitor_schema ..........   Passed    0.08 sec
+      Start 15: software_recovery_model
+15/29 Test #15: software_recovery_model ..........   Passed    0.01 sec
+      Start 16: software_endpoint_session
+16/29 Test #16: software_endpoint_session ........   Passed    0.02 sec
+      Start 17: software_session_link
+17/29 Test #17: software_session_link ............   Passed    0.00 sec
+      Start 18: software_recovery_link
+18/29 Test #18: software_recovery_link ...........   Passed    0.00 sec
+      Start 19: software_monitor_simulator
+19/29 Test #19: software_monitor_simulator .......   Passed    0.00 sec
+      Start 20: software_recovery_coordinator
+20/29 Test #20: software_recovery_coordinator ....   Passed    0.01 sec
+      Start 21: software_coordinator_session
+21/29 Test #21: software_coordinator_session .....   Passed    0.01 sec
+      Start 22: software_uart_diagnostic_codec
+22/29 Test #22: software_uart_diagnostic_codec ...   Passed    0.00 sec
+      Start 23: software_uart_diagnostic_pty
+23/29 Test #23: software_uart_diagnostic_pty .....   Passed    3.21 sec
+      Start 24: software_gpio_diagnostic
+24/29 Test #24: software_gpio_diagnostic .........   Passed    0.00 sec
+      Start 25: software_ps_worker
+25/29 Test #25: software_ps_worker ...............   Passed    0.00 sec
+      Start 26: software_ps_cadence
+26/29 Test #26: software_ps_cadence ..............   Passed    0.00 sec
+      Start 27: software_ps_fused
+27/29 Test #27: software_ps_fused ................   Passed    0.01 sec
+      Start 28: acquisition
+28/29 Test #28: acquisition ......................   Passed    0.00 sec
+      Start 29: ina_adc_timing_cycle
+29/29 Test #29: ina_adc_timing_cycle .............   Passed    0.00 sec
+
+100% tests passed, 0 tests failed out of 29
+
+Total Test time (real) =  13.45 sec
++ /opt/vitis/2026.1/Vivado/bin/vivado -mode batch -source platforms/vivado/export_current.tcl
+INFO: [Common 17-3922] A valid Vivado Design Suite BASIC license has been detected. Your current license is active and will expire on 02-oct-2027.
+
+****** Vivado v2026.1 (64-bit)
+  **** SW Build 6511674 on Tue Jun 16 11:01:26 MDT 2026
+  **** IP Build 6504888 on Tue Jun 09 09:05:25 MDT 2026
+  **** SharedData Build 6501428 on Mon Jun 08 17:34:18 MDT 2026
+  **** Start of session at: Sat Nov  7 07:20:01 2026
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source platforms/vivado/export_current.tcl
+# set root [file normalize [file join [file dirname [info script]] ../..]]
+# set out [file join $root build current_ip]
+# file mkdir $out
+# proc export_block {root out name top generated sources} {
+#     foreach directory $generated {if {![file exists $directory]} {error "Missing generated HLS RTL: $directory"}}
+#     create_project -force $name [file join $out $name project] -part xc7z020clg400-1
+#     # IP packager cannot parse package-qualified parameter defaults. Resolve only
+#     # those references in staged copies from the generated timing package.
+#     set f [open [file join $root rtl timing.sv] r]; set timing [read $f]; close $f
+#     set staged [file join $out $name staged]
+#     file mkdir $staged
+#     foreach source $sources {
+#         set f [open [file join $root rtl $source] r]; set text [read $f]; close $f
+#         foreach {whole key value} [regexp -all -inline {localparam integer ([A-Z_]+) = ([0-9]+);} $timing] {
+#             set text [string map [list "dmotor_timing::$key" $value] $text]
+#         }
+#         set f [open [file join $staged $source] w]; puts -nonewline $f $text; close $f
+#         add_files [file join $staged $source]
+#     }
+#     foreach directory $generated {
+#         add_files [glob [file join $directory *.v]]
+#         foreach pattern {*.dat *.mem} {
+#             foreach data [glob -nocomplain [file join $directory $pattern]] {add_files $data}
+#         }
+#     }
+#     if {$name eq "controller_axi"} {
+#         add_files [file join $root constraints controller_halt.xdc]
+#     }
+#     set_property top $top [current_fileset]
+#     update_compile_order -fileset sources_1
+#     ipx::package_project -root_dir [file join $out $name ip] -vendor dmotor.org -library user -taxonomy /UserIP -import_files -set_current true
+#     set core [ipx::current_core]
+#     set_property name $name $core
+#     set_property version 0.18 $core
+#     # Scheduler feedback-loop repair: advertise a new revision to existing BDs.
+#     if {$name in {mailbox_control controller_axi}} {set_property core_revision 2 $core}
+#     if {$name eq "mailbox_control"} {set_property core_revision 3 $core}
+#     if {$name eq "controller_axi"} {set_property core_revision 13 $core}
+#     set_property display_name "DMOTOR current $name (integration preview)" $core
+#     set_property description "PSF1 1 ms PS motor executor with independent PL protection; see docs/ps_executor.md." $core
+#     ipx::infer_bus_interfaces xilinx.com:signal:clock_rtl:1.0 $core
+#     ipx::infer_bus_interfaces xilinx.com:signal:reset_rtl:1.0 $core
+#     if {$name eq "controller_axi"} {
+#         foreach old [ipx::get_bus_interfaces -of_objects $core -filter {BUS_TYPE_NAME == aximm}] {
+#             ipx::remove_bus_interface [get_property NAME $old] $core
+#         }
+#         foreach old [ipx::get_memory_maps -of_objects $core] {
+#             ipx::remove_memory_map [get_property NAME $old] $core
+#         }
+#         set bus [ipx::add_bus_interface S_AXI $core]
+#         set_property bus_type_vlnv xilinx.com:interface:aximm:1.0 $bus
+#         set_property abstraction_type_vlnv xilinx.com:interface:aximm_rtl:1.0 $bus
+#         set_property interface_mode slave $bus
+#         foreach port {AWADDR AWVALID AWREADY WDATA WSTRB WVALID WREADY BRESP BVALID BREADY ARADDR ARVALID ARREADY RDATA RRESP RVALID RREADY} {
+#             set map [ipx::add_port_map $port $bus];set_property physical_name [string tolower $port] $map
+#         }
+#         foreach {key value} {PROTOCOL AXI4LITE DATA_WIDTH 32 ADDR_WIDTH 16} {
+#             set param [ipx::add_bus_parameter $key $bus];set_property value $value $param
+#         }
+#         set mmap [ipx::add_memory_map registers $core]
+#         set block [ipx::add_address_block registers $mmap]
+#         set_property range 65536 $block;set_property width 32 $block;set_property usage register $block
+#         set_property slave_memory_map_ref registers $bus
+#         ipx::associate_bus_interfaces -busif S_AXI -clock clk $core
+#         set clockif [ipx::get_bus_interfaces clk -of_objects $core]
+#         set assoc [ipx::get_bus_parameters ASSOCIATED_BUSIF -of_objects $clockif]
+#         set_property value S_AXI $assoc
+#         set resetif [ipx::get_bus_interfaces reset -of_objects $core]
+#         set polarity [ipx::add_bus_parameter POLARITY $resetif]
+#         set_property value ACTIVE_HIGH $polarity
+#         set hz [ipx::get_bus_parameters FREQ_HZ -of_objects $clockif]
+#         if {![llength $hz]} {set hz [ipx::add_bus_parameter FREQ_HZ $clockif]}
+#         set_property value 20000000 $hz
+#     }
+#     ipx::create_xgui_files $core
+#     ipx::update_checksums $core
+#     ipx::check_integrity $core
+#     ipx::save_core $core
+#     ipx::archive_core [file join $out ${name}.zip] $core
+#     close_project
+# }
+# export_block $root $out controller_axi dmotor_controller_axi \
+#     [list [file join $root build vitis_atomic hls syn verilog]] \
+#     {timing.sv controller_registers.sv batch_registers.sv atomic_hls_adapter.sv atomic_mailbox_arbiter.sv shared_scheduler.sv target_age.sv pwm.sv shared_control.sv mailbox_control.sv shared_engine_transport.sv motor_engine_adapter.sv cleanup_sequencer.sv integrated_control.sv safety.sv qcencoder.sv encoder_snapshot.sv motor_io.sv monitor_heartbeat.sv axi_host.sv controller_axi.sv}
+WARNING: [IP_Flow 19-3833] Unreferenced file from the top module is not packaged: '/home/rklinkhammer/workspace/dmotor/build/current_ip/controller_axi/staged/batch_registers.sv'.
+WARNING: [IP_Flow 19-5101] Packaging a component with a SystemVerilog top file is not fully supported. Please refer to UG1118 'Creating and Packaging Custom IP'.
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/opt/vitis/2026.1/data/ip'.
+INFO: [IP_Flow 19-5107] Inferred bus interface 'interface_aximm' of definition 'xilinx.com:interface:aximm:1.0' (from Xilinx Repository).
+INFO: [IP_Flow 19-5107] Inferred bus interface 'reset' of definition 'xilinx.com:signal:reset:1.0' (from Xilinx Repository).
+INFO: [IP_Flow 19-5107] Inferred bus interface 'clk' of definition 'xilinx.com:signal:clock:1.0' (from Xilinx Repository).
+INFO: [IP_Flow 19-4728] Bus Interface 'clk': Added interface parameter 'ASSOCIATED_BUSIF' with value 'interface_aximm'.
+INFO: [IP_Flow 19-4728] Bus Interface 'clk': Added interface parameter 'ASSOCIATED_RESET' with value 'reset'.
+WARNING: [IP_Flow 19-11888] Component Definition 'dmotor.org:user:dmotor_controller_axi:1.0 (dmotor_controller_axi_v1_0)': IP description "dmotor_controller_axi_v1_0" is not meaningful: same as name or display name
+WARNING: [IP_Flow 19-11770] Clock interface 'clk' has no FREQ_HZ parameter.
+INFO: [IP_Flow 19-2181] Payment is not required for this core.
+WARNING: [IP_Flow 19-2187] The Product Guide file is missing.
+INFO: [IP_Flow 19-3166] Bus Interface 'interface_aximm': References existing memory map 'interface_aximm'.
+INFO: [IP_Flow 19-3166] Bus Interface 'interface_aximm': References existing memory map 'interface_aximm'.
+INFO: [IP_Flow 19-7067] Note that bus interface 'clk' has a fixed FREQ_HZ of '20000000'. This value will be respected whenever this IP is instantiated in IP Integrator.
+INFO: [IP_Flow 19-2181] Payment is not required for this core.
+WARNING: [IP_Flow 19-2187] The Product Guide file is missing.
+INFO: [Ipptcl 7-1486] check_integrity: Integrity check passed.
+# puts "PSF1 1 ms controller IP exported."
+PSF1 1 ms controller IP exported.
+INFO: [Common 17-206] Exiting Vivado at Sat Nov  7 07:20:10 2026...
++ /opt/vitis/2026.1/Vivado/bin/vivado -mode batch -source platforms/arty-z7-20/vivado/create.tcl -tclargs /home/rklinkhammer/workspace/dmotor/build/product/vivado
+INFO: [Common 17-3922] A valid Vivado Design Suite BASIC license has been detected. Your current license is active and will expire on 02-oct-2027.
+
+****** Vivado v2026.1 (64-bit)
+  **** SW Build 6511674 on Tue Jun 16 11:01:26 MDT 2026
+  **** IP Build 6504888 on Tue Jun 09 09:05:25 MDT 2026
+  **** SharedData Build 6501428 on Mon Jun 08 17:34:18 MDT 2026
+  **** Start of session at: Sat Nov  7 07:20:12 2026
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source platforms/arty-z7-20/vivado/create.tcl
+# if {[llength $argv] != 1} {error "Expected output directory"}
+# set root [file normalize [file join [file dirname [info script]] ../../..]]
+# set output [file normalize [lindex $argv 0]]
+# puts [exec python3 [file join $root tools check_arty_interface.py]]
+PASS: saved four-motor wiring, monitor UART/HB/coast and internal GPIO
+Pins: coast_req=V13, mc0_dir=Y18, mc0_pwm=Y19, mc0_qa=Y16, mc0_qb=Y17, mc1_dir=U18, mc1_pwm=U19, mc1_qa=W18, mc1_qb=W19, mc2_dir=W14, mc2_pwm=Y14, mc2_qa=T11, mc2_qb=T10, mc3_dir=V16, mc3_pwm=W16, mc3_qa=V12, mc3_qb=W13, mon_hb=U13, mon_rx=U12, mon_tx=T14
+# create_project -force dvrmc $output -part xc7z020clg400-1
+# set_property target_language Verilog [current_project]
+# set board_repos [glob -nocomplain [file normalize ~/.Xilinx/Vivado/[version -short]/xhub/board_store/xilinx_board_store/XilinxBoardStore/Vivado/[version -short]/boards]]
+# if {[info exists ::env(DMOTOR_BOARD_REPO)]} {lappend board_repos $::env(DMOTOR_BOARD_REPO)}
+# if {[llength $board_repos]} {set_param board.repoPaths $board_repos}
+# set board digilentinc.com:arty-z7-20:part0:1.1
+# if {![llength [get_board_parts -quiet $board]]} {error "Install Arty Z7-20 board files 1.1 or set DMOTOR_BOARD_REPO"}
+# set_property board_part $board [current_project]
+# set_property ip_repo_paths [list [file join $root build current_ip controller_axi ip]] [current_project]
+# update_ip_catalog
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1700] Loaded user IP repository '/home/rklinkhammer/workspace/dmotor/build/current_ip/controller_axi/ip'.
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/opt/vitis/2026.1/data/ip'.
+# import_files -norecurse [file join $root platforms arty-z7-20 vivado design_1.bd]
+WARNING: [BD 41-2576] File '/home/rklinkhammer/workspace/dmotor/platforms/arty-z7-20/vivado/ip/design_1_processing_system7_0_0/design_1_processing_system7_0_0.xci' referenced by design 'design_1' could not be found.
+WARNING: [BD 41-2576] File '/home/rklinkhammer/workspace/dmotor/platforms/arty-z7-20/vivado/ip/design_1_axi_gpio_0_0/design_1_axi_gpio_0_0.xci' referenced by design 'design_1' could not be found.
+WARNING: [BD 41-2576] File '/home/rklinkhammer/workspace/dmotor/platforms/arty-z7-20/vivado/ip/design_1_axi_smc_0/design_1_axi_smc_0.xci' referenced by design 'design_1' could not be found.
+WARNING: [BD 41-2576] File '/home/rklinkhammer/workspace/dmotor/platforms/arty-z7-20/vivado/ip/design_1_rst_ps7_0_100M_0/design_1_rst_ps7_0_100M_0.xci' referenced by design 'design_1' could not be found.
+WARNING: [BD 41-2576] File '/home/rklinkhammer/workspace/dmotor/platforms/arty-z7-20/vivado/ip/design_1_axi_gpio_1_0/design_1_axi_gpio_1_0.xci' referenced by design 'design_1' could not be found.
+WARNING: [BD 41-2576] File '/home/rklinkhammer/workspace/dmotor/platforms/arty-z7-20/vivado/ip/design_1_axi_iic_0_0/design_1_axi_iic_0_0.xci' referenced by design 'design_1' could not be found.
+WARNING: [BD 41-2576] File '/home/rklinkhammer/workspace/dmotor/platforms/arty-z7-20/vivado/ip/design_1_controller_axi_0_0/design_1_controller_axi_0_0.xci' referenced by design 'design_1' could not be found.
+WARNING: [BD 41-2576] File '/home/rklinkhammer/workspace/dmotor/platforms/arty-z7-20/vivado/ip/design_1_rst_ps7_0_20M_0/design_1_rst_ps7_0_20M_0.xci' referenced by design 'design_1' could not be found.
+WARNING: [BD 41-2576] File '/home/rklinkhammer/workspace/dmotor/platforms/arty-z7-20/vivado/ip/design_1_axi_gpio_3_0/design_1_axi_gpio_3_0.xci' referenced by design 'design_1' could not be found.
+WARNING: [BD 41-2576] File '/home/rklinkhammer/workspace/dmotor/platforms/arty-z7-20/vivado/ip/design_1_axi_uartlite_0_0/design_1_axi_uartlite_0_0.xci' referenced by design 'design_1' could not be found.
+INFO: [Project 1-1727] Source BDs should be added before importing the top BD /home/rklinkhammer/workspace/dmotor/platforms/arty-z7-20/vivado/design_1.bd with BDC
+# open_bd_design /home/rklinkhammer/workspace/dmotor/build/product/vivado/dvrmc.srcs/sources_1/bd/vivado/design_1.bd
+Reading block design file </home/rklinkhammer/workspace/dmotor/build/product/vivado/dvrmc.srcs/sources_1/bd/vivado/design_1.bd>...
+Adding component instance block -- xilinx.com:ip:processing_system7:5.5 - processing_system7_0
+INFO: [BD 41-434] Could not find an IP with XCI file by name: design_1_processing_system7_0_0 
+INFO: [PS7-6] Configuring Board Preset part0. Please wait ......
+CRITICAL WARNING: [PSU-1]  Parameter : PCW_UIPARAM_DDR_DQS_TO_CLK_DELAY_2 has negative value -0.009 . PS DDR interfaces might fail when entering negative DQS skew values. 
+CRITICAL WARNING: [PSU-2]  Parameter : PCW_UIPARAM_DDR_DQS_TO_CLK_DELAY_3 has negative value -0.033 . PS DDR interfaces might fail when entering negative DQS skew values. 
+CRITICAL WARNING: [PSU-1]  Parameter : PCW_UIPARAM_DDR_DQS_TO_CLK_DELAY_2 has negative value -0.009 . PS DDR interfaces might fail when entering negative DQS skew values. 
+CRITICAL WARNING: [PSU-2]  Parameter : PCW_UIPARAM_DDR_DQS_TO_CLK_DELAY_3 has negative value -0.033 . PS DDR interfaces might fail when entering negative DQS skew values. 
+Adding component instance block -- xilinx.com:ip:axi_gpio:2.0 - axi_gpio_0
+INFO: [BD 41-434] Could not find an IP with XCI file by name: design_1_axi_gpio_0_0 
+Adding component instance block -- xilinx.com:ip:smartconnect:1.0 - axi_smc
+INFO: [BD 41-434] Could not find an IP with XCI file by name: design_1_axi_smc_0 
+Adding component instance block -- xilinx.com:ip:proc_sys_reset:5.0 - rst_ps7_0_100M
+INFO: [BD 41-434] Could not find an IP with XCI file by name: design_1_rst_ps7_0_100M_0 
+INFO: [Ipptcl 7-1463] No Compatible Board Interface found. Board Tab not created in customize GUI
+Adding component instance block -- xilinx.com:ip:axi_gpio:2.0 - axi_gpio_1
+INFO: [BD 41-434] Could not find an IP with XCI file by name: design_1_axi_gpio_1_0 
+Adding component instance block -- xilinx.com:inline_hdl:ilconcat:1.0 - ilconcat_0
+Adding component instance block -- xilinx.com:ip:axi_iic:2.1 - axi_iic_0
+INFO: [BD 41-434] Could not find an IP with XCI file by name: design_1_axi_iic_0_0 
+Adding component instance block -- dmotor.org:user:controller_axi:0.18 - controller_axi_0
+INFO: [BD 41-434] Could not find an IP with XCI file by name: design_1_controller_axi_0_0 
+Adding component instance block -- xilinx.com:ip:proc_sys_reset:5.0 - rst_ps7_0_20M
+INFO: [BD 41-434] Could not find an IP with XCI file by name: design_1_rst_ps7_0_20M_0 
+INFO: [Ipptcl 7-1463] No Compatible Board Interface found. Board Tab not created in customize GUI
+Adding component instance block -- xilinx.com:inline_hdl:ilconcat:1.0 - qa_concat
+Adding component instance block -- xilinx.com:inline_hdl:ilconcat:1.0 - qb_concat
+Adding component instance block -- xilinx.com:inline_hdl:ilslice:1.0 - mc0_pwm
+Adding component instance block -- xilinx.com:inline_hdl:ilslice:1.0 - mc0_dir
+Adding component instance block -- xilinx.com:inline_hdl:ilslice:1.0 - mc1_pwm
+Adding component instance block -- xilinx.com:inline_hdl:ilslice:1.0 - mc1_dir
+Adding component instance block -- xilinx.com:ip:axi_gpio:2.0 - axi_gpio_3
+INFO: [BD 41-434] Could not find an IP with XCI file by name: design_1_axi_gpio_3_0 
+Adding component instance block -- xilinx.com:inline_hdl:ilslice:1.0 - mc2_dir
+Adding component instance block -- xilinx.com:inline_hdl:ilslice:1.0 - mc3_dir
+Adding component instance block -- xilinx.com:inline_hdl:ilslice:1.0 - mc2_pwm
+Adding component instance block -- xilinx.com:inline_hdl:ilslice:1.0 - mc3_pwm
+Adding component instance block -- xilinx.com:ip:axi_uartlite:2.0 - axi_uartlite_0
+INFO: [BD 41-434] Could not find an IP with XCI file by name: design_1_axi_uartlite_0_0 
+Adding component instance block -- xilinx.com:inline_hdl:ilconstant:1.0 - ilconstant_0
+Successfully read diagram <design_1> from block design file </home/rklinkhammer/workspace/dmotor/build/product/vivado/dvrmc.srcs/sources_1/bd/vivado/design_1.bd>
+INFO: [BD 41-433] Design successfully migrated to use XCI files...
+# upgrade_bd_cells [get_bd_cells controller_axi_0]
+INFO: [BD 41-1162] The cell '/controller_axi_0' is already at its latest version.
+# validate_bd_design
+WARNING: [BD 41-702] Propagation TCL tries to overwrite USER strength parameter PCW_M_AXI_GP0_FREQMHZ(10) on '/processing_system7_0' with propagated value(100). Command ignored
+INFO: [BD 5-943] Reserving offset range <0x4120_0000 [ 64K ]> from slave interface '/axi_smc/S00_AXI' to master interface '/axi_smc/M00_AXI'. This will be used by smartconnect on path for routing.
+INFO: [BD 5-943] Reserving offset range <0x4121_0000 [ 64K ]> from slave interface '/axi_smc/S00_AXI' to master interface '/axi_smc/M01_AXI'. This will be used by smartconnect on path for routing.
+INFO: [BD 5-943] Reserving offset range <0x42C0_0000 [ 64K ]> from slave interface '/axi_smc/S00_AXI' to master interface '/axi_smc/M02_AXI'. This will be used by smartconnect on path for routing.
+INFO: [BD 5-943] Reserving offset range <0x4160_0000 [ 64K ]> from slave interface '/axi_smc/S00_AXI' to master interface '/axi_smc/M03_AXI'. This will be used by smartconnect on path for routing.
+INFO: [BD 5-943] Reserving offset range <0x43C0_0000 [ 64K ]> from slave interface '/axi_smc/S00_AXI' to master interface '/axi_smc/M04_AXI'. This will be used by smartconnect on path for routing.
+INFO: [BD 5-943] Reserving offset range <0x4123_0000 [ 64K ]> from slave interface '/axi_smc/S00_AXI' to master interface '/axi_smc/M05_AXI'. This will be used by smartconnect on path for routing.
+INFO: [xilinx.com:ip:smartconnect:1.0-1] design_1_axi_smc_0: SmartConnect design_1_axi_smc_0 is in Ultralite mode.
+# save_bd_design
+Wrote  : </home/rklinkhammer/workspace/dmotor/build/product/vivado/dvrmc.srcs/sources_1/bd/vivado/design_1.bd> 
+# add_files -fileset constrs_1 [file join $root platforms arty-z7-20 constraints arty-z7-20.xdc]
+# generate_target all [get_files */design_1.bd]
+INFO: [BD 41-1662] The design 'design_1.bd' is already validated. Therefore parameter propagation will not be re-run.
+Verilog Output written to : /home/rklinkhammer/workspace/dmotor/build/product/vivado/dvrmc.gen/sources_1/bd/vivado/synth/design_1.v
+Verilog Output written to : /home/rklinkhammer/workspace/dmotor/build/product/vivado/dvrmc.gen/sources_1/bd/vivado/sim/design_1.v
+Verilog Output written to : /home/rklinkhammer/workspace/dmotor/build/product/vivado/dvrmc.gen/sources_1/bd/vivado/hdl/design_1_wrapper.v
+INFO: [IP_Flow 19-5611] Unable to find an associated reset port for the interface 'M_AXI_GP0'. A default connection has been created.
+INFO: [BD 41-1029] Generation completed for the IP Integrator block processing_system7_0 .
+INFO: [BD 41-1029] Generation completed for the IP Integrator block axi_gpio_0 .
+Exporting to file /home/rklinkhammer/workspace/dmotor/build/product/vivado/dvrmc.gen/sources_1/bd/vivado/ip/design_1_axi_smc_0/bd_0/hw_handoff/design_1_axi_smc_0.hwh
+Generated Hardware Definition File /home/rklinkhammer/workspace/dmotor/build/product/vivado/dvrmc.gen/sources_1/bd/vivado/ip/design_1_axi_smc_0/bd_0/synth/design_1_axi_smc_0.hwdef
+INFO: [BD 41-1029] Generation completed for the IP Integrator block axi_smc .
+INFO: [BD 41-1029] Generation completed for the IP Integrator block rst_ps7_0_100M .
+INFO: [BD 41-1029] Generation completed for the IP Integrator block axi_gpio_1 .
+INFO: [BD 41-1029] Generation completed for the IP Integrator block axi_iic_0 .
+INFO: [BD 41-1029] Generation completed for the IP Integrator block controller_axi_0 .
+INFO: [BD 41-1029] Generation completed for the IP Integrator block rst_ps7_0_20M .
+INFO: [BD 41-1029] Generation completed for the IP Integrator block axi_gpio_3 .
+WARNING: [IP_Flow 19-4994] Overwriting existing constraint file '/home/rklinkhammer/workspace/dmotor/build/product/vivado/dvrmc.gen/sources_1/bd/vivado/ip/design_1_axi_uartlite_0_0/design_1_axi_uartlite_0_0_ooc.xdc'
+INFO: [BD 41-1029] Generation completed for the IP Integrator block axi_uartlite_0 .
+Exporting to file /home/rklinkhammer/workspace/dmotor/build/product/vivado/dvrmc.gen/sources_1/bd/vivado/hw_handoff/design_1.hwh
+Generated Hardware Definition File /home/rklinkhammer/workspace/dmotor/build/product/vivado/dvrmc.gen/sources_1/bd/vivado/synth/design_1.hwdef
+INFO: [BD 41-3262] Generated VHDL Instantiation Template file /home/rklinkhammer/workspace/dmotor/build/product/vivado/dvrmc.gen/sources_1/bd/vivado/design_1.vho
+INFO: [BD 41-3262] Generated Verilog Instantiation Template file /home/rklinkhammer/workspace/dmotor/build/product/vivado/dvrmc.gen/sources_1/bd/vivado/design_1.veo
+INFO: [BD 41-3262] Generated System Verilog Instantiation Template file /home/rklinkhammer/workspace/dmotor/build/product/vivado/dvrmc.gen/sources_1/bd/vivado/design_1_sv.sveo
+generate_target: Time (s): cpu = 00:00:08 ; elapsed = 00:00:09 . Memory (MB): peak = 1946.773 ; gain = 29.875 ; free physical = 8147 ; free virtual = 29143
+# source [file join $root platforms vivado controller_area.tcl]
+## proc dmotor_controller_area {bd_file} {
+##     create_ip_run $bd_file
+##     set runs [get_runs -quiet *_controller_axi_*_synth_1]
+##     if {[llength $runs] != 1} {
+##         error "Expected one controller OOC synthesis run; found: $runs"
+##     }
+##     set_property STEPS.SYNTH_DESIGN.ARGS.DIRECTIVE AreaOptimized_high $runs
+##     if {[get_property STEPS.SYNTH_DESIGN.ARGS.DIRECTIVE $runs] ne "AreaOptimized_high"} {
+##         error "Controller area directive was not applied"
+##     }
+##     puts "DMOTOR_CONTROLLER_AREA_PASS: $runs = AreaOptimized_high"
+## }
+# dmotor_controller_area [get_files */design_1.bd]
+DMOTOR_CONTROLLER_AREA_PASS: design_1_controller_axi_0_0_synth_1 = AreaOptimized_high
+# set wrapper [make_wrapper -files [get_files */design_1.bd] -top]
+# add_files $wrapper
+# set_property top design_1_wrapper [current_fileset]
+# update_compile_order -fileset sources_1
+# report_ip_status -file [file join $output ip_status.txt]
+# close_project
+INFO: [Common 17-206] Exiting Vivado at Sat Nov  7 07:20:30 2026...
+Complete: /home/rklinkhammer/workspace/dmotor/build/product
+Logs, candidate and backup: /home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06
++ /opt/vitis/2026.1/Vivado/bin/vivado -mode batch -source /home/rklinkhammer/workspace/edf-dev/scripts/vivado/arty-build.tcl -tclargs /home/rklinkhammer/workspace/dmotor/build/product/vivado/dvrmc.xpr /home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06 4
+INFO: [Common 17-3922] A valid Vivado Design Suite BASIC license has been detected. Your current license is active and will expire on 02-oct-2027.
+
+****** Vivado v2026.1 (64-bit)
+  **** SW Build 6511674 on Tue Jun 16 11:01:26 MDT 2026
+  **** IP Build 6504888 on Tue Jun 09 09:05:25 MDT 2026
+  **** SharedData Build 6501428 on Mon Jun 08 17:34:18 MDT 2026
+  **** Start of session at: Sat Nov  7 07:20:32 2026
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source /home/rklinkhammer/workspace/edf-dev/scripts/vivado/arty-build.tcl
+# if {[llength $argv] != 3} {error "Expected project.xpr output-directory jobs"}
+# lassign $argv project output jobs
+# open_project $project
+Scanning sources...
+Finished scanning sources
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1700] Loaded user IP repository '/home/rklinkhammer/workspace/dmotor/build/current_ip/controller_axi/ip'.
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/opt/vitis/2026.1/data/ip'.
+# if {[get_property PART [current_project]] ne "xc7z020clg400-1"} {error "Expected Arty Z7-20 part xc7z020clg400-1"}
+# save_project_as -exclude_run_results edf_arty [file join $output project]
+INFO: [Coretcl 2-133] resetting run 'synth_1'...
+INFO: [Coretcl 2-133] resetting run 'design_1_processing_system7_0_0_synth_1'...
+INFO: [Coretcl 2-133] resetting run 'design_1_axi_gpio_0_0_synth_1'...
+INFO: [Coretcl 2-133] resetting run 'design_1_axi_smc_0_synth_1'...
+INFO: [Coretcl 2-133] resetting run 'design_1_rst_ps7_0_100M_0_synth_1'...
+INFO: [Coretcl 2-133] resetting run 'design_1_axi_gpio_1_0_synth_1'...
+INFO: [Coretcl 2-133] resetting run 'design_1_axi_iic_0_0_synth_1'...
+INFO: [Coretcl 2-133] resetting run 'design_1_controller_axi_0_0_synth_1'...
+INFO: [Coretcl 2-133] resetting run 'design_1_rst_ps7_0_20M_0_synth_1'...
+INFO: [Coretcl 2-133] resetting run 'design_1_axi_gpio_3_0_synth_1'...
+INFO: [Coretcl 2-133] resetting run 'design_1_axi_uartlite_0_0_synth_1'...
+INFO: [Coretcl 2-133] resetting run 'impl_1'...
+INFO: [Coretcl 2-133] resetting run 'design_1_processing_system7_0_0_impl_1'...
+INFO: [Coretcl 2-133] resetting run 'design_1_axi_gpio_0_0_impl_1'...
+INFO: [Coretcl 2-133] resetting run 'design_1_axi_smc_0_impl_1'...
+INFO: [Coretcl 2-133] resetting run 'design_1_rst_ps7_0_100M_0_impl_1'...
+INFO: [Coretcl 2-133] resetting run 'design_1_axi_gpio_1_0_impl_1'...
+INFO: [Coretcl 2-133] resetting run 'design_1_axi_iic_0_0_impl_1'...
+INFO: [Coretcl 2-133] resetting run 'design_1_controller_axi_0_0_impl_1'...
+INFO: [Coretcl 2-133] resetting run 'design_1_rst_ps7_0_20M_0_impl_1'...
+INFO: [Coretcl 2-133] resetting run 'design_1_axi_gpio_3_0_impl_1'...
+INFO: [Coretcl 2-133] resetting run 'design_1_axi_uartlite_0_0_impl_1'...
+# close_project
+# open_project [file join $output project edf_arty.xpr]
+Scanning sources...
+Finished scanning sources
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1700] Loaded user IP repository '/home/rklinkhammer/workspace/dmotor/build/current_ip/controller_axi/ip'.
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/opt/vitis/2026.1/data/ip'.
+# reset_run synth_1
+# launch_runs synth_1 -jobs $jobs
+[Sat Nov  7 07:20:39 2026] Launched design_1_processing_system7_0_0_synth_1, design_1_axi_gpio_0_0_synth_1, design_1_axi_smc_0_synth_1, design_1_rst_ps7_0_100M_0_synth_1, design_1_axi_gpio_1_0_synth_1, design_1_axi_iic_0_0_synth_1, design_1_controller_axi_0_0_synth_1, design_1_rst_ps7_0_20M_0_synth_1, design_1_axi_gpio_3_0_synth_1, design_1_axi_uartlite_0_0_synth_1...
+Run output will be captured here:
+design_1_processing_system7_0_0_synth_1: /home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/design_1_processing_system7_0_0_synth_1/runme.log
+design_1_axi_gpio_0_0_synth_1: /home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/design_1_axi_gpio_0_0_synth_1/runme.log
+design_1_axi_smc_0_synth_1: /home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/design_1_axi_smc_0_synth_1/runme.log
+design_1_rst_ps7_0_100M_0_synth_1: /home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/design_1_rst_ps7_0_100M_0_synth_1/runme.log
+design_1_axi_gpio_1_0_synth_1: /home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/design_1_axi_gpio_1_0_synth_1/runme.log
+design_1_axi_iic_0_0_synth_1: /home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/design_1_axi_iic_0_0_synth_1/runme.log
+design_1_controller_axi_0_0_synth_1: /home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/design_1_controller_axi_0_0_synth_1/runme.log
+design_1_rst_ps7_0_20M_0_synth_1: /home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/design_1_rst_ps7_0_20M_0_synth_1/runme.log
+design_1_axi_gpio_3_0_synth_1: /home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/design_1_axi_gpio_3_0_synth_1/runme.log
+design_1_axi_uartlite_0_0_synth_1: /home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/design_1_axi_uartlite_0_0_synth_1/runme.log
+[Sat Nov  7 07:20:39 2026] Launched synth_1...
+Run output will be captured here: /home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/synth_1/runme.log
+# wait_on_run synth_1
+[Sat Nov  7 07:20:39 2026] Waiting for synth_1 to finish...
+
+*** Running vivado
+    with args -log design_1_wrapper.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source design_1_wrapper.tcl
+
+INFO: [Common 17-3922] A valid Vivado Design Suite BASIC license has been detected. Your current license is active and will expire on 02-oct-2027.
+#-----------------------------------------------------------
+# Vivado v2026.1 (64-bit)
+# SW Build 6511674 on Tue Jun 16 11:01:26 MDT 2026
+# IP Build 6504888 on Tue Jun 09 09:05:25 MDT 2026
+# SharedData Build 6501428 on Mon Jun 08 17:34:18 MDT 2026
+# Start of session at: Sat Nov  7 07:32:41 2026
+# Process ID         : 1283324
+# Current directory  : /home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/synth_1
+# Command line       : vivado -log design_1_wrapper.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source design_1_wrapper.tcl
+# Log file           : /home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/synth_1/design_1_wrapper.vds
+# Journal file       : /home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/synth_1/vivado.jou
+# Running On         : luna
+# Platform           : Ubuntu
+# Operating System   : Ubuntu 26.04.1 LTS
+# Processor Detail   : 12th Gen Intel(R) Core(TM) i5-1240P
+# CPU Frequency      : 2103.705 MHz
+# CPU Physical cores : 12
+# CPU Logical cores  : 16
+# Host memory        : 32666 MB
+# Swap memory        : 8589 MB
+# Total Virtual      : 41256 MB
+# Available Virtual  : 30575 MB
+#-----------------------------------------------------------
+
+****** Vivado v2026.1 (64-bit)
+  **** SW Build 6511674 on Tue Jun 16 11:01:26 MDT 2026
+  **** IP Build 6504888 on Tue Jun 09 09:05:25 MDT 2026
+  **** SharedData Build 6501428 on Mon Jun 08 17:34:18 MDT 2026
+  **** Start of session at: Sat Nov  7 07:32:41 2026
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source design_1_wrapper.tcl -notrace
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1700] Loaded user IP repository '/home/rklinkhammer/workspace/dmotor/build/current_ip/controller_axi/ip'.
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/opt/vitis/2026.1/data/ip'.
+Command: synth_design -top design_1_wrapper -part xc7z020clg400-1
+Starting synth_design
+Attempting to get a license for feature 'Vivado_Synthesis' and/or device 'xc7z020'
+INFO: [Common 17-349] Got license for feature 'Vivado_Synthesis' and/or device 'xc7z020'
+INFO: [Device 21-403] Loading part xc7z020clg400-1
+INFO: [Designutils 20-5008] Incremental synthesis strategy default
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 7 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 1283568
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 2473.184 ; gain = 516.062 ; free physical = 10867 ; free virtual = 27748
+---------------------------------------------------------------------------------
+INFO: [Synth 8-6157] synthesizing module 'design_1_wrapper' [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/hdl/design_1_wrapper.v:13]
+INFO: [Synth 8-6157] synthesizing module 'design_1' [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/synth/design_1.v:13]
+INFO: [Synth 8-6157] synthesizing module 'design_1_axi_gpio_0_0' [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/synth_1/.Xil/Vivado-1283324-luna/realtime/design_1_axi_gpio_0_0_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'design_1_axi_gpio_0_0' (0#1) [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/synth_1/.Xil/Vivado-1283324-luna/realtime/design_1_axi_gpio_0_0_stub.v:6]
+INFO: [Synth 8-6157] synthesizing module 'design_1_axi_gpio_1_0' [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/synth_1/.Xil/Vivado-1283324-luna/realtime/design_1_axi_gpio_1_0_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'design_1_axi_gpio_1_0' (0#1) [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/synth_1/.Xil/Vivado-1283324-luna/realtime/design_1_axi_gpio_1_0_stub.v:6]
+INFO: [Synth 8-6157] synthesizing module 'design_1_axi_gpio_3_0' [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/synth_1/.Xil/Vivado-1283324-luna/realtime/design_1_axi_gpio_3_0_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'design_1_axi_gpio_3_0' (0#1) [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/synth_1/.Xil/Vivado-1283324-luna/realtime/design_1_axi_gpio_3_0_stub.v:6]
+INFO: [Synth 8-6157] synthesizing module 'design_1_axi_iic_0_0' [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/synth_1/.Xil/Vivado-1283324-luna/realtime/design_1_axi_iic_0_0_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'design_1_axi_iic_0_0' (0#1) [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/synth_1/.Xil/Vivado-1283324-luna/realtime/design_1_axi_iic_0_0_stub.v:6]
+WARNING: [Synth 8-7071] port 'gpo' of module 'design_1_axi_iic_0_0' is unconnected for instance 'axi_iic_0' [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/synth/design_1.v:396]
+WARNING: [Synth 8-7023] instance 'axi_iic_0' of module 'design_1_axi_iic_0_0' has 27 connections declared, but only 26 given [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/synth/design_1.v:396]
+INFO: [Synth 8-6157] synthesizing module 'design_1_axi_smc_0' [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/synth_1/.Xil/Vivado-1283324-luna/realtime/design_1_axi_smc_0_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'design_1_axi_smc_0' (0#1) [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/synth_1/.Xil/Vivado-1283324-luna/realtime/design_1_axi_smc_0_stub.v:6]
+WARNING: [Synth 8-7071] port 'M00_AXI_awprot' of module 'design_1_axi_smc_0' is unconnected for instance 'axi_smc' [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/synth/design_1.v:423]
+WARNING: [Synth 8-7071] port 'M00_AXI_arprot' of module 'design_1_axi_smc_0' is unconnected for instance 'axi_smc' [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/synth/design_1.v:423]
+WARNING: [Synth 8-7071] port 'M01_AXI_awprot' of module 'design_1_axi_smc_0' is unconnected for instance 'axi_smc' [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/synth/design_1.v:423]
+WARNING: [Synth 8-7071] port 'M01_AXI_arprot' of module 'design_1_axi_smc_0' is unconnected for instance 'axi_smc' [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/synth/design_1.v:423]
+WARNING: [Synth 8-7071] port 'M02_AXI_awprot' of module 'design_1_axi_smc_0' is unconnected for instance 'axi_smc' [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/synth/design_1.v:423]
+WARNING: [Synth 8-7071] port 'M02_AXI_arprot' of module 'design_1_axi_smc_0' is unconnected for instance 'axi_smc' [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/synth/design_1.v:423]
+WARNING: [Synth 8-7071] port 'M03_AXI_awprot' of module 'design_1_axi_smc_0' is unconnected for instance 'axi_smc' [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/synth/design_1.v:423]
+WARNING: [Synth 8-7071] port 'M03_AXI_arprot' of module 'design_1_axi_smc_0' is unconnected for instance 'axi_smc' [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/synth/design_1.v:423]
+WARNING: [Synth 8-7071] port 'M04_AXI_awprot' of module 'design_1_axi_smc_0' is unconnected for instance 'axi_smc' [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/synth/design_1.v:423]
+WARNING: [Synth 8-7071] port 'M04_AXI_arprot' of module 'design_1_axi_smc_0' is unconnected for instance 'axi_smc' [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/synth/design_1.v:423]
+WARNING: [Synth 8-7071] port 'M05_AXI_awprot' of module 'design_1_axi_smc_0' is unconnected for instance 'axi_smc' [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/synth/design_1.v:423]
+WARNING: [Synth 8-7071] port 'M05_AXI_arprot' of module 'design_1_axi_smc_0' is unconnected for instance 'axi_smc' [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/synth/design_1.v:423]
+WARNING: [Synth 8-7023] instance 'axi_smc' of module 'design_1_axi_smc_0' has 155 connections declared, but only 143 given [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/synth/design_1.v:423]
+INFO: [Synth 8-6157] synthesizing module 'design_1_axi_uartlite_0_0' [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/synth_1/.Xil/Vivado-1283324-luna/realtime/design_1_axi_uartlite_0_0_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'design_1_axi_uartlite_0_0' (0#1) [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/synth_1/.Xil/Vivado-1283324-luna/realtime/design_1_axi_uartlite_0_0_stub.v:6]
+INFO: [Synth 8-6157] synthesizing module 'design_1_controller_axi_0_0' [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/synth_1/.Xil/Vivado-1283324-luna/realtime/design_1_controller_axi_0_0_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'design_1_controller_axi_0_0' (0#1) [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/synth_1/.Xil/Vivado-1283324-luna/realtime/design_1_controller_axi_0_0_stub.v:6]
+WARNING: [Synth 8-7071] port 'shared_halt' of module 'design_1_controller_axi_0_0' is unconnected for instance 'controller_axi_0' [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/synth/design_1.v:590]
+WARNING: [Synth 8-7023] instance 'controller_axi_0' of module 'design_1_controller_axi_0_0' has 29 connections declared, but only 28 given [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/synth/design_1.v:590]
+INFO: [Synth 8-6157] synthesizing module 'design_1_processing_system7_0_0' [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/synth_1/.Xil/Vivado-1283324-luna/realtime/design_1_processing_system7_0_0_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'design_1_processing_system7_0_0' (0#1) [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/synth_1/.Xil/Vivado-1283324-luna/realtime/design_1_processing_system7_0_0_stub.v:6]
+WARNING: [Synth 8-7071] port 'USB0_PORT_INDCTL' of module 'design_1_processing_system7_0_0' is unconnected for instance 'processing_system7_0' [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/synth/design_1.v:629]
+WARNING: [Synth 8-7071] port 'USB0_VBUS_PWRSELECT' of module 'design_1_processing_system7_0_0' is unconnected for instance 'processing_system7_0' [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/synth/design_1.v:629]
+WARNING: [Synth 8-7023] instance 'processing_system7_0' of module 'design_1_processing_system7_0_0' has 67 connections declared, but only 65 given [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/synth/design_1.v:629]
+INFO: [Synth 8-6157] synthesizing module 'design_1_rst_ps7_0_100M_0' [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/synth_1/.Xil/Vivado-1283324-luna/realtime/design_1_rst_ps7_0_100M_0_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'design_1_rst_ps7_0_100M_0' (0#1) [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/synth_1/.Xil/Vivado-1283324-luna/realtime/design_1_rst_ps7_0_100M_0_stub.v:6]
+WARNING: [Synth 8-7071] port 'mb_reset' of module 'design_1_rst_ps7_0_100M_0' is unconnected for instance 'rst_ps7_0_100M' [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/synth/design_1.v:697]
+WARNING: [Synth 8-7071] port 'bus_struct_reset' of module 'design_1_rst_ps7_0_100M_0' is unconnected for instance 'rst_ps7_0_100M' [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/synth/design_1.v:697]
+WARNING: [Synth 8-7071] port 'peripheral_reset' of module 'design_1_rst_ps7_0_100M_0' is unconnected for instance 'rst_ps7_0_100M' [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/synth/design_1.v:697]
+WARNING: [Synth 8-7071] port 'interconnect_aresetn' of module 'design_1_rst_ps7_0_100M_0' is unconnected for instance 'rst_ps7_0_100M' [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/synth/design_1.v:697]
+WARNING: [Synth 8-7023] instance 'rst_ps7_0_100M' of module 'design_1_rst_ps7_0_100M_0' has 10 connections declared, but only 6 given [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/synth/design_1.v:697]
+INFO: [Synth 8-6157] synthesizing module 'design_1_rst_ps7_0_20M_0' [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/synth_1/.Xil/Vivado-1283324-luna/realtime/design_1_rst_ps7_0_20M_0_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'design_1_rst_ps7_0_20M_0' (0#1) [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/synth_1/.Xil/Vivado-1283324-luna/realtime/design_1_rst_ps7_0_20M_0_stub.v:6]
+WARNING: [Synth 8-7071] port 'mb_reset' of module 'design_1_rst_ps7_0_20M_0' is unconnected for instance 'rst_ps7_0_20M' [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/synth/design_1.v:704]
+WARNING: [Synth 8-7071] port 'bus_struct_reset' of module 'design_1_rst_ps7_0_20M_0' is unconnected for instance 'rst_ps7_0_20M' [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/synth/design_1.v:704]
+WARNING: [Synth 8-7071] port 'interconnect_aresetn' of module 'design_1_rst_ps7_0_20M_0' is unconnected for instance 'rst_ps7_0_20M' [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/synth/design_1.v:704]
+WARNING: [Synth 8-7023] instance 'rst_ps7_0_20M' of module 'design_1_rst_ps7_0_20M_0' has 10 connections declared, but only 7 given [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/synth/design_1.v:704]
+INFO: [Synth 8-6155] done synthesizing module 'design_1' (0#1) [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/synth/design_1.v:13]
+INFO: [Synth 8-6157] synthesizing module 'IOBUF' [/opt/vitis/2026.1/Vivado/scripts/rt/data/unisim_comp.v:87508]
+INFO: [Synth 8-6155] done synthesizing module 'IOBUF' (0#1) [/opt/vitis/2026.1/Vivado/scripts/rt/data/unisim_comp.v:87508]
+INFO: [Synth 8-6155] done synthesizing module 'design_1_wrapper' (0#1) [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/hdl/design_1_wrapper.v:13]
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 2576.152 ; gain = 619.031 ; free physical = 10779 ; free virtual = 27661
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 2585.059 ; gain = 627.938 ; free physical = 10779 ; free virtual = 27661
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 2585.059 ; gain = 627.938 ; free physical = 10779 ; free virtual = 27661
+---------------------------------------------------------------------------------
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 2588.027 ; gain = 0.000 ; free physical = 10779 ; free virtual = 27661
+INFO: [Netlist 29-17] Analyzing 2 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_processing_system7_0_0/design_1_processing_system7_0_0/design_1_processing_system7_0_0_in_context.xdc] for cell 'design_1_i/processing_system7_0'
+Finished Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_processing_system7_0_0/design_1_processing_system7_0_0/design_1_processing_system7_0_0_in_context.xdc] for cell 'design_1_i/processing_system7_0'
+Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_gpio_0_0/design_1_axi_gpio_0_0/design_1_axi_gpio_0_0_in_context.xdc] for cell 'design_1_i/axi_gpio_0'
+Finished Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_gpio_0_0/design_1_axi_gpio_0_0/design_1_axi_gpio_0_0_in_context.xdc] for cell 'design_1_i/axi_gpio_0'
+Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_smc_0/design_1_axi_smc_0/design_1_axi_smc_0_in_context.xdc] for cell 'design_1_i/axi_smc'
+Finished Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_smc_0/design_1_axi_smc_0/design_1_axi_smc_0_in_context.xdc] for cell 'design_1_i/axi_smc'
+Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_rst_ps7_0_100M_0/design_1_rst_ps7_0_100M_0/design_1_rst_ps7_0_100M_0_in_context.xdc] for cell 'design_1_i/rst_ps7_0_100M'
+Finished Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_rst_ps7_0_100M_0/design_1_rst_ps7_0_100M_0/design_1_rst_ps7_0_100M_0_in_context.xdc] for cell 'design_1_i/rst_ps7_0_100M'
+Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_gpio_1_0/design_1_axi_gpio_1_0/design_1_axi_gpio_1_0_in_context.xdc] for cell 'design_1_i/axi_gpio_1'
+Finished Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_gpio_1_0/design_1_axi_gpio_1_0/design_1_axi_gpio_1_0_in_context.xdc] for cell 'design_1_i/axi_gpio_1'
+Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_iic_0_0/design_1_axi_iic_0_0/design_1_axi_iic_0_0_in_context.xdc] for cell 'design_1_i/axi_iic_0'
+Finished Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_iic_0_0/design_1_axi_iic_0_0/design_1_axi_iic_0_0_in_context.xdc] for cell 'design_1_i/axi_iic_0'
+Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_controller_axi_0_0/design_1_controller_axi_0_0/design_1_controller_axi_0_0_in_context.xdc] for cell 'design_1_i/controller_axi_0'
+Finished Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_controller_axi_0_0/design_1_controller_axi_0_0/design_1_controller_axi_0_0_in_context.xdc] for cell 'design_1_i/controller_axi_0'
+Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_rst_ps7_0_20M_0/design_1_rst_ps7_0_20M_0/design_1_rst_ps7_0_20M_0_in_context.xdc] for cell 'design_1_i/rst_ps7_0_20M'
+Finished Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_rst_ps7_0_20M_0/design_1_rst_ps7_0_20M_0/design_1_rst_ps7_0_20M_0_in_context.xdc] for cell 'design_1_i/rst_ps7_0_20M'
+Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_gpio_3_0/design_1_axi_gpio_3_0/design_1_axi_gpio_3_0_in_context.xdc] for cell 'design_1_i/axi_gpio_3'
+Finished Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_gpio_3_0/design_1_axi_gpio_3_0/design_1_axi_gpio_3_0_in_context.xdc] for cell 'design_1_i/axi_gpio_3'
+Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_uartlite_0_0/design_1_axi_uartlite_0_0/design_1_axi_uartlite_0_0_in_context.xdc] for cell 'design_1_i/axi_uartlite_0'
+Finished Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_uartlite_0_0/design_1_axi_uartlite_0_0/design_1_axi_uartlite_0_0_in_context.xdc] for cell 'design_1_i/axi_uartlite_0'
+Parsing XDC File [/home/rklinkhammer/workspace/dmotor/platforms/arty-z7-20/constraints/arty-z7-20.xdc]
+Finished Parsing XDC File [/home/rklinkhammer/workspace/dmotor/platforms/arty-z7-20/constraints/arty-z7-20.xdc]
+INFO: [Project 1-236] Implementation specific constraints were found while reading constraint file [/home/rklinkhammer/workspace/dmotor/platforms/arty-z7-20/constraints/arty-z7-20.xdc]. These constraints will be ignored for synthesis but will be used in implementation. Impacted constraints are listed in the file [.Xil/design_1_wrapper_propImpl.xdc].
+Resolution: To avoid this warning, move constraints listed in [.Xil/design_1_wrapper_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
+Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/synth_1/dont_touch.xdc]
+Finished Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/synth_1/dont_touch.xdc]
+Completed Processing XDC Constraints
+
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2633.984 ; gain = 0.000 ; free physical = 10756 ; free virtual = 27638
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 2 instances were transformed.
+  IOBUF => IOBUF (IBUF, OBUFT): 2 instances
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2634.020 ; gain = 0.000 ; free physical = 10756 ; free virtual = 27638
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:08 ; elapsed = 00:00:09 . Memory (MB): peak = 2634.020 ; gain = 676.898 ; free physical = 10785 ; free virtual = 27667
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7z020clg400-1
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:08 ; elapsed = 00:00:09 . Memory (MB): peak = 2641.988 ; gain = 684.867 ; free physical = 10785 ; free virtual = 27667
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:09 ; elapsed = 00:00:09 . Memory (MB): peak = 2641.988 ; gain = 684.867 ; free physical = 10784 ; free virtual = 27666
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:09 ; elapsed = 00:00:09 . Memory (MB): peak = 2641.988 ; gain = 684.867 ; free physical = 10785 ; free virtual = 27669
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 220 (col length:60)
+BRAMs: 280 (col length: RAMB18 60 RAMB36 30)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:10 ; elapsed = 00:00:10 . Memory (MB): peak = 2641.988 ; gain = 684.867 ; free physical = 10770 ; free virtual = 27658
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:13 ; elapsed = 00:00:13 . Memory (MB): peak = 2749.988 ; gain = 792.867 ; free physical = 10630 ; free virtual = 27538
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:13 ; elapsed = 00:00:13 . Memory (MB): peak = 2749.988 ; gain = 792.867 ; free physical = 10630 ; free virtual = 27538
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:13 ; elapsed = 00:00:13 . Memory (MB): peak = 2761.004 ; gain = 803.883 ; free physical = 10628 ; free virtual = 27537
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:00:15 ; elapsed = 00:00:15 . Memory (MB): peak = 2965.816 ; gain = 1008.695 ; free physical = 10434 ; free virtual = 27342
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:15 ; elapsed = 00:00:15 . Memory (MB): peak = 2965.816 ; gain = 1008.695 ; free physical = 10434 ; free virtual = 27342
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:15 ; elapsed = 00:00:15 . Memory (MB): peak = 2965.816 ; gain = 1008.695 ; free physical = 10434 ; free virtual = 27342
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:15 ; elapsed = 00:00:15 . Memory (MB): peak = 2965.816 ; gain = 1008.695 ; free physical = 10434 ; free virtual = 27342
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:15 ; elapsed = 00:00:15 . Memory (MB): peak = 2965.816 ; gain = 1008.695 ; free physical = 10434 ; free virtual = 27342
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:15 ; elapsed = 00:00:15 . Memory (MB): peak = 2965.816 ; gain = 1008.695 ; free physical = 10434 ; free virtual = 27342
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++------+--------------------------------+----------+
+|      |BlackBox name                   |Instances |
++------+--------------------------------+----------+
+|1     |design_1_axi_gpio_0_0           |         1|
+|2     |design_1_axi_gpio_1_0           |         1|
+|3     |design_1_axi_gpio_3_0           |         1|
+|4     |design_1_axi_iic_0_0            |         1|
+|5     |design_1_axi_smc_0              |         1|
+|6     |design_1_axi_uartlite_0_0       |         1|
+|7     |design_1_controller_axi_0_0     |         1|
+|8     |design_1_processing_system7_0_0 |         1|
+|9     |design_1_rst_ps7_0_100M_0       |         1|
+|10    |design_1_rst_ps7_0_20M_0        |         1|
++------+--------------------------------+----------+
+
+Report Cell Usage: 
++------+------------------------------+------+
+|      |Cell                          |Count |
++------+------------------------------+------+
+|1     |design_1_axi_gpio_0           |     1|
+|2     |design_1_axi_gpio_1           |     1|
+|3     |design_1_axi_gpio_3           |     1|
+|4     |design_1_axi_iic_0            |     1|
+|5     |design_1_axi_smc              |     1|
+|6     |design_1_axi_uartlite_0       |     1|
+|7     |design_1_controller_axi_0     |     1|
+|8     |design_1_processing_system7_0 |     1|
+|9     |design_1_rst_ps7_0_100M       |     1|
+|10    |design_1_rst_ps7_0_20M        |     1|
+|11    |IBUF                          |    16|
+|12    |IOBUF                         |     2|
+|13    |OBUF                          |    20|
++------+------------------------------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:15 ; elapsed = 00:00:16 . Memory (MB): peak = 2965.816 ; gain = 1008.695 ; free physical = 10434 ; free virtual = 27342
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 0 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:14 ; elapsed = 00:00:14 . Memory (MB): peak = 2965.816 ; gain = 959.734 ; free physical = 10433 ; free virtual = 27341
+Synthesis Optimization Complete : Time (s): cpu = 00:00:15 ; elapsed = 00:00:16 . Memory (MB): peak = 2965.824 ; gain = 1008.695 ; free physical = 10426 ; free virtual = 27334
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2965.824 ; gain = 0.000 ; free physical = 10436 ; free virtual = 27344
+INFO: [Netlist 29-17] Analyzing 2 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2965.824 ; gain = 0.000 ; free physical = 10501 ; free virtual = 27409
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 2 instances were transformed.
+  IOBUF => IOBUF (IBUF, OBUFT): 2 instances
+
+Synth Design complete | Checksum: dcba1f0e
+INFO: [Common 17-83] Releasing license: Vivado_Synthesis
+47 Infos, 29 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:00:21 ; elapsed = 00:00:20 . Memory (MB): peak = 2965.852 ; gain = 1213.184 ; free physical = 10495 ; free virtual = 27404
+INFO: [Common 17-2834] synth_design peak Physical Memory [PSS] (MB): overall = 2024.175; main = 2024.175; forked = 275.465
+INFO: [Common 17-2834] synth_design peak Virtual Memory [VSS] (MB): overall = 3681.051; main = 2965.820; forked = 1039.059
+Write ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2989.828 ; gain = 0.000 ; free physical = 10496 ; free virtual = 27404
+INFO: [Common 17-1381] The checkpoint '/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/synth_1/design_1_wrapper.dcp' has been generated.
+INFO: [Vivado 12-24828] Executing command : report_utilization -file design_1_wrapper_utilization_synth.rpt -pb design_1_wrapper_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Sat Nov  7 07:33:05 2026...
+[Sat Nov  7 07:33:05 2026] synth_1 finished
+wait_on_runs: Time (s): cpu = 00:26:58 ; elapsed = 00:12:27 . Memory (MB): peak = 1979.352 ; gain = 0.000 ; free physical = 12272 ; free virtual = 29174
+# if {[get_property PROGRESS [get_runs synth_1]] ne "100%"} {error "Synthesis failed"}
+# launch_runs impl_1 -to_step write_bitstream -jobs $jobs
+[Sat Nov  7 07:33:07 2026] Launched impl_1...
+Run output will be captured here: /home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/impl_1/runme.log
+# wait_on_run impl_1
+[Sat Nov  7 07:33:07 2026] Waiting for impl_1 to finish...
+
+*** Running vivado
+    with args -log design_1_wrapper.vdi -applog -m64 -product Vivado -messageDb vivado.pb -mode batch -source design_1_wrapper.tcl -notrace
+
+INFO: [Common 17-3922] A valid Vivado Design Suite BASIC license has been detected. Your current license is active and will expire on 02-oct-2027.
+#-----------------------------------------------------------
+# Vivado v2026.1 (64-bit)
+# SW Build 6511674 on Tue Jun 16 11:01:26 MDT 2026
+# IP Build 6504888 on Tue Jun 09 09:05:25 MDT 2026
+# SharedData Build 6501428 on Mon Jun 08 17:34:18 MDT 2026
+# Start of session at: Sat Nov  7 07:33:09 2026
+# Process ID         : 1284385
+# Current directory  : /home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/impl_1
+# Command line       : vivado -log design_1_wrapper.vdi -applog -product Vivado -messageDb vivado.pb -mode batch -source design_1_wrapper.tcl -notrace
+# Log file           : /home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/impl_1/design_1_wrapper.vdi
+# Journal file       : /home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/impl_1/vivado.jou
+# Running On         : luna
+# Platform           : Ubuntu
+# Operating System   : Ubuntu 26.04.1 LTS
+# Processor Detail   : 12th Gen Intel(R) Core(TM) i5-1240P
+# CPU Frequency      : 400.000 MHz
+# CPU Physical cores : 12
+# CPU Logical cores  : 16
+# Host memory        : 32666 MB
+# Swap memory        : 8589 MB
+# Total Virtual      : 41256 MB
+# Available Virtual  : 30563 MB
+#-----------------------------------------------------------
+
+****** Vivado v2026.1 (64-bit)
+  **** SW Build 6511674 on Tue Jun 16 11:01:26 MDT 2026
+  **** IP Build 6504888 on Tue Jun 09 09:05:25 MDT 2026
+  **** SharedData Build 6501428 on Mon Jun 08 17:34:18 MDT 2026
+  **** Start of session at: Sat Nov  7 07:33:09 2026
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source design_1_wrapper.tcl -notrace
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1700] Loaded user IP repository '/home/rklinkhammer/workspace/dmotor/build/current_ip/controller_axi/ip'.
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/opt/vitis/2026.1/data/ip'.
+Command: link_design -top design_1_wrapper -part xc7z020clg400-1
+Design is defaulting to srcset: sources_1
+Design is defaulting to constrset: constrs_1
+INFO: [Device 21-403] Loading part xc7z020clg400-1
+INFO: [Project 1-5699] Read binary netlist with skipMacroContent - 1
+INFO: [Project 1-454] Reading design checkpoint '/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_gpio_0_0/design_1_axi_gpio_0_0.dcp' for cell 'design_1_i/axi_gpio_0'
+INFO: [Project 1-454] Reading design checkpoint '/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_gpio_1_0/design_1_axi_gpio_1_0.dcp' for cell 'design_1_i/axi_gpio_1'
+INFO: [Project 1-454] Reading design checkpoint '/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_gpio_3_0/design_1_axi_gpio_3_0.dcp' for cell 'design_1_i/axi_gpio_3'
+INFO: [Project 1-454] Reading design checkpoint '/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_iic_0_0/design_1_axi_iic_0_0.dcp' for cell 'design_1_i/axi_iic_0'
+INFO: [Project 1-454] Reading design checkpoint '/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_smc_0/design_1_axi_smc_0.dcp' for cell 'design_1_i/axi_smc'
+INFO: [Project 1-454] Reading design checkpoint '/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_uartlite_0_0/design_1_axi_uartlite_0_0.dcp' for cell 'design_1_i/axi_uartlite_0'
+INFO: [Project 1-454] Reading design checkpoint '/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_controller_axi_0_0/design_1_controller_axi_0_0.dcp' for cell 'design_1_i/controller_axi_0'
+INFO: [Project 1-454] Reading design checkpoint '/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_processing_system7_0_0/design_1_processing_system7_0_0.dcp' for cell 'design_1_i/processing_system7_0'
+INFO: [Project 1-454] Reading design checkpoint '/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_rst_ps7_0_100M_0/design_1_rst_ps7_0_100M_0.dcp' for cell 'design_1_i/rst_ps7_0_100M'
+INFO: [Project 1-454] Reading design checkpoint '/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_rst_ps7_0_20M_0/design_1_rst_ps7_0_20M_0.dcp' for cell 'design_1_i/rst_ps7_0_20M'
+Netlist sorting complete. Time (s): cpu = 00:00:00.12 ; elapsed = 00:00:00.12 . Memory (MB): peak = 2034.801 ; gain = 0.000 ; free physical = 11427 ; free virtual = 28350
+INFO: [Netlist 29-17] Analyzing 1902 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2026.1
+INFO: [Project 1-570] Preparing netlist for logic optimization
+Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_processing_system7_0_0/design_1_processing_system7_0_0.xdc] for cell 'design_1_i/processing_system7_0/inst'
+Finished Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_processing_system7_0_0/design_1_processing_system7_0_0.xdc] for cell 'design_1_i/processing_system7_0/inst'
+Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_gpio_0_0/design_1_axi_gpio_0_0_board.xdc] for cell 'design_1_i/axi_gpio_0/U0'
+Finished Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_gpio_0_0/design_1_axi_gpio_0_0_board.xdc] for cell 'design_1_i/axi_gpio_0/U0'
+Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_smc_0/bd_0/ip/ip_0/bd_afc3_sc_ul_0_cdc.xdc] for cell 'design_1_i/axi_smc/inst/sc_ul/inst'
+WARNING: [Vivado_Tcl 4-921] Waiver ID 'CDC-7' -to list should not be empty. [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_smc_0/bd_0/ip/ip_0/bd_afc3_sc_ul_0_cdc.xdc:22]
+WARNING: [Vivado_Tcl 4-921] Waiver ID 'CDC-11' -to list should not be empty. [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_smc_0/bd_0/ip/ip_0/bd_afc3_sc_ul_0_cdc.xdc:34]
+WARNING: [Vivado_Tcl 4-919] Waiver ID 'CDC-2' -from list should not be empty. [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_smc_0/bd_0/ip/ip_0/bd_afc3_sc_ul_0_cdc.xdc:42]
+WARNING: [Vivado_Tcl 4-919] Waiver ID 'CDC-5' -from list should not be empty. [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_smc_0/bd_0/ip/ip_0/bd_afc3_sc_ul_0_cdc.xdc:45]
+Finished Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_smc_0/bd_0/ip/ip_0/bd_afc3_sc_ul_0_cdc.xdc] for cell 'design_1_i/axi_smc/inst/sc_ul/inst'
+Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_smc_0/smartconnect.xdc] for cell 'design_1_i/axi_smc/inst'
+WARNING: [Vivado_Tcl 4-921] Waiver ID 'CDC-11' -to list should not be empty. [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_smc_0/smartconnect.xdc:2]
+WARNING: [Vivado_Tcl 4-921] Waiver ID 'CDC-1' -to list should not be empty. [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_smc_0/smartconnect.xdc:3]
+WARNING: [Vivado_Tcl 4-921] Waiver ID 'CDC-1' -to list should not be empty. [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_smc_0/smartconnect.xdc:4]
+WARNING: [Vivado_Tcl 4-919] Waiver ID 'CDC-1' -from list should not be empty. [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_smc_0/smartconnect.xdc:5]
+WARNING: [Vivado_Tcl 4-921] Waiver ID 'CDC-2' -to list should not be empty. [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_smc_0/smartconnect.xdc:6]
+WARNING: [Vivado_Tcl 4-919] Waiver ID 'CDC-2' -from list should not be empty. [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_smc_0/smartconnect.xdc:7]
+WARNING: [Vivado_Tcl 4-921] Waiver ID 'CDC-4' -to list should not be empty. [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_smc_0/smartconnect.xdc:8]
+WARNING: [Vivado_Tcl 4-919] Waiver ID 'CDC-4' -from list should not be empty. [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_smc_0/smartconnect.xdc:9]
+WARNING: [Vivado_Tcl 4-921] Waiver ID 'CDC-10' -to list should not be empty. [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_smc_0/smartconnect.xdc:10]
+WARNING: [Vivado_Tcl 4-919] Waiver ID 'CDC-10' -from list should not be empty. [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_smc_0/smartconnect.xdc:11]
+WARNING: [Vivado_Tcl 4-921] Waiver ID 'CDC-11' -to list should not be empty. [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_smc_0/smartconnect.xdc:12]
+WARNING: [Vivado_Tcl 4-919] Waiver ID 'CDC-11' -from list should not be empty. [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_smc_0/smartconnect.xdc:13]
+WARNING: [Vivado_Tcl 4-921] Waiver ID 'CDC-13' -to list should not be empty. [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_smc_0/smartconnect.xdc:14]
+WARNING: [Vivado_Tcl 4-919] Waiver ID 'CDC-13' -from list should not be empty. [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_smc_0/smartconnect.xdc:15]
+Finished Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_smc_0/smartconnect.xdc] for cell 'design_1_i/axi_smc/inst'
+Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_rst_ps7_0_100M_0/design_1_rst_ps7_0_100M_0_board.xdc] for cell 'design_1_i/rst_ps7_0_100M/U0'
+Finished Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_rst_ps7_0_100M_0/design_1_rst_ps7_0_100M_0_board.xdc] for cell 'design_1_i/rst_ps7_0_100M/U0'
+Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_gpio_1_0/design_1_axi_gpio_1_0_board.xdc] for cell 'design_1_i/axi_gpio_1/U0'
+Finished Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_gpio_1_0/design_1_axi_gpio_1_0_board.xdc] for cell 'design_1_i/axi_gpio_1/U0'
+Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_iic_0_0/design_1_axi_iic_0_0_board.xdc] for cell 'design_1_i/axi_iic_0/U0'
+Finished Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_iic_0_0/design_1_axi_iic_0_0_board.xdc] for cell 'design_1_i/axi_iic_0/U0'
+Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_controller_axi_0_0/src/controller_halt.xdc] for cell 'design_1_i/controller_axi_0/inst'
+Finished Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_controller_axi_0_0/src/controller_halt.xdc] for cell 'design_1_i/controller_axi_0/inst'
+Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_rst_ps7_0_20M_0/design_1_rst_ps7_0_20M_0_board.xdc] for cell 'design_1_i/rst_ps7_0_20M/U0'
+Finished Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_rst_ps7_0_20M_0/design_1_rst_ps7_0_20M_0_board.xdc] for cell 'design_1_i/rst_ps7_0_20M/U0'
+Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_gpio_3_0/design_1_axi_gpio_3_0_board.xdc] for cell 'design_1_i/axi_gpio_3/U0'
+Finished Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_gpio_3_0/design_1_axi_gpio_3_0_board.xdc] for cell 'design_1_i/axi_gpio_3/U0'
+Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_uartlite_0_0/design_1_axi_uartlite_0_0_board.xdc] for cell 'design_1_i/axi_uartlite_0/U0'
+Finished Parsing XDC File [/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.gen/sources_1/bd/vivado/ip/design_1_axi_uartlite_0_0/design_1_axi_uartlite_0_0_board.xdc] for cell 'design_1_i/axi_uartlite_0/U0'
+Parsing XDC File [/home/rklinkhammer/workspace/dmotor/platforms/arty-z7-20/constraints/arty-z7-20.xdc]
+Finished Parsing XDC File [/home/rklinkhammer/workspace/dmotor/platforms/arty-z7-20/constraints/arty-z7-20.xdc]
+INFO: [Project 1-1714] 33 XPM XDC files have been applied to the design.
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Project 1-1687] 23 scoped IP constraints or related sub-commands were skipped due to synthesis logic optimizations usually triggered by constant connectivity or unconnected output pins. To review the skipped constraints and messages, run the command 'set_param netlist.IPMsgFiltering false' before opening the design.
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 2811.305 ; gain = 0.000 ; free physical = 10854 ; free virtual = 27756
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 2 instances were transformed.
+  IOBUF => IOBUF (IBUF, OBUFT): 2 instances
+
+23 Infos, 18 Warnings, 0 Critical Warnings and 0 Errors encountered.
+link_design completed successfully
+link_design: Time (s): cpu = 00:00:14 ; elapsed = 00:00:13 . Memory (MB): peak = 2811.340 ; gain = 1048.062 ; free physical = 10854 ; free virtual = 27757
+Command: opt_design
+Attempting to get a license for feature 'Vivado_Implementation' and/or device 'xc7z020'
+INFO: [Common 17-349] Got license for feature 'Vivado_Implementation' and/or device 'xc7z020'
+Running DRC as a precondition to command opt_design
+
+Starting DRC Task
+INFO: [DRC 23-27] Running DRC with 8 threads
+INFO: [Project 1-461] DRC finished with 0 Errors
+INFO: [Project 1-462] Please refer to the DRC report (report_drc) for more information.
+
+Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.47 . Memory (MB): peak = 2811.340 ; gain = 0.000 ; free physical = 10844 ; free virtual = 27746
+
+Starting Cache Timing Information Task
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+Ending Cache Timing Information Task | Checksum: 23e776509
+
+Time (s): cpu = 00:00:02 ; elapsed = 00:00:00.53 . Memory (MB): peak = 2811.340 ; gain = 0.000 ; free physical = 10827 ; free virtual = 27729
+
+Starting Logic Optimization Task
+
+Phase 1 Initialization
+
+Phase 1.1 Core Generation And Design Setup
+Phase 1.1 Core Generation And Design Setup | Checksum: 23e776509
+
+Time (s): cpu = 00:00:00.03 ; elapsed = 00:00:00.04 . Memory (MB): peak = 3203.195 ; gain = 0.000 ; free physical = 10482 ; free virtual = 27385
+
+Phase 1.2 Setup Constraints And Sort Netlist
+Phase 1.2 Setup Constraints And Sort Netlist | Checksum: 23e776509
+
+Time (s): cpu = 00:00:00.04 ; elapsed = 00:00:00.05 . Memory (MB): peak = 3203.195 ; gain = 0.000 ; free physical = 10482 ; free virtual = 27384
+Phase 1 Initialization | Checksum: 23e776509
+
+Time (s): cpu = 00:00:00.04 ; elapsed = 00:00:00.05 . Memory (MB): peak = 3203.195 ; gain = 0.000 ; free physical = 10482 ; free virtual = 27384
+
+Phase 2 Timer Update And Timing Data Collection
+
+Phase 2.1 Detect if minReqCache needed
+Phase 2.1 Detect if minReqCache needed | Checksum: 23e776509
+
+Time (s): cpu = 00:00:00.06 ; elapsed = 00:00:00.07 . Memory (MB): peak = 3206.164 ; gain = 2.969 ; free physical = 10472 ; free virtual = 27375
+
+Phase 2.2 Timer Update
+Phase 2.2 Timer Update | Checksum: 23e776509
+
+Time (s): cpu = 00:00:02 ; elapsed = 00:00:00.45 . Memory (MB): peak = 3206.164 ; gain = 2.969 ; free physical = 10412 ; free virtual = 27314
+
+Phase 2.3 Timing Data Collection
+Phase 2.3 Timing Data Collection | Checksum: 23e776509
+
+Time (s): cpu = 00:00:02 ; elapsed = 00:00:00.47 . Memory (MB): peak = 3206.164 ; gain = 2.969 ; free physical = 10412 ; free virtual = 27314
+Phase 2 Timer Update And Timing Data Collection | Checksum: 23e776509
+
+Time (s): cpu = 00:00:02 ; elapsed = 00:00:00.47 . Memory (MB): peak = 3206.164 ; gain = 2.969 ; free physical = 10412 ; free virtual = 27314
+
+Phase 3 Retarget
+INFO: [Opt 31-1851] Number of loadless carry chains removed were: 0
+INFO: [Opt 31-1834] Total Chains To Be Transformed Were: 0 AND Number of Transformed insts Created are: 0
+INFO: [Opt 31-1566] Pulled 95 inverters resulting in an inversion of 713 pins
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Opt 31-49] Retargeted 0 cell(s).
+Phase 3 Retarget | Checksum: 146e80e70
+
+Time (s): cpu = 00:00:02 ; elapsed = 00:00:00.88 . Memory (MB): peak = 3206.164 ; gain = 2.969 ; free physical = 10443 ; free virtual = 27345
+Retarget | Checksum: 146e80e70
+INFO: [Opt 31-389] Phase Retarget created 62 cells and removed 183 cells
+INFO: [Opt 31-1021] In phase Retarget, 20 netlist objects are constrained preventing optimization. Please run opt_design with -debug_log to get more detail. 
+
+Phase 4 Constant propagation
+INFO: [Opt 31-138] Pushed 2 inverter(s) to 3 load pin(s).
+Phase 4 Constant propagation | Checksum: 14677b72d
+
+Time (s): cpu = 00:00:03 ; elapsed = 00:00:01 . Memory (MB): peak = 3206.164 ; gain = 2.969 ; free physical = 10434 ; free virtual = 27336
+Constant propagation | Checksum: 14677b72d
+INFO: [Opt 31-389] Phase Constant propagation created 86 cells and removed 142 cells
+
+Phase 5 Sweep
+INFO: [Constraints 18-11670] Building netlist checker database with flags, 0x8
+Done building netlist checker database: Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00 . Memory (MB): peak = 3206.164 ; gain = 0.000 ; free physical = 10421 ; free virtual = 27323
+INFO: [Constraints 18-11670] Building netlist checker database with flags, 0x8
+Done building netlist checker database: Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 3206.164 ; gain = 0.000 ; free physical = 10424 ; free virtual = 27326
+Phase 5 Sweep | Checksum: 611fc49a
+
+Time (s): cpu = 00:00:03 ; elapsed = 00:00:02 . Memory (MB): peak = 3206.164 ; gain = 2.969 ; free physical = 10424 ; free virtual = 27326
+Sweep | Checksum: 611fc49a
+INFO: [Opt 31-389] Phase Sweep created 10 cells and removed 50 cells
+INFO: [Opt 31-1021] In phase Sweep, 4 netlist objects are constrained preventing optimization. Please run opt_design with -debug_log to get more detail. 
+
+Phase 6 BUFG optimization
+Phase 6 BUFG optimization | Checksum: 611fc49a
+
+Time (s): cpu = 00:00:03 ; elapsed = 00:00:02 . Memory (MB): peak = 3238.180 ; gain = 34.984 ; free physical = 10430 ; free virtual = 27332
+BUFG optimization | Checksum: 611fc49a
+INFO: [Opt 31-662] Phase BUFG optimization created 0 cells of which 0 are BUFGs and removed 0 cells.
+
+Phase 7 Shift Register Optimization
+INFO: [Opt 31-1064] SRL Remap converted 0 SRLs to 0 registers and converted 0 registers of register chains to 0 SRLs
+Phase 7 Shift Register Optimization | Checksum: 611fc49a
+
+Time (s): cpu = 00:00:03 ; elapsed = 00:00:02 . Memory (MB): peak = 3238.180 ; gain = 34.984 ; free physical = 10430 ; free virtual = 27332
+Shift Register Optimization | Checksum: 611fc49a
+INFO: [Opt 31-389] Phase Shift Register Optimization created 0 cells and removed 0 cells
+
+Phase 8 Post Processing Netlist
+Phase 8 Post Processing Netlist | Checksum: db8c87c0
+
+Time (s): cpu = 00:00:04 ; elapsed = 00:00:02 . Memory (MB): peak = 3238.180 ; gain = 34.984 ; free physical = 10428 ; free virtual = 27330
+Post Processing Netlist | Checksum: db8c87c0
+INFO: [Opt 31-389] Phase Post Processing Netlist created 0 cells and removed 0 cells
+
+Phase 9 Finalization
+
+Phase 9.1 Finalizing Design Cores and Updating Shapes
+Phase 9.1 Finalizing Design Cores and Updating Shapes | Checksum: 1593fb696
+
+Time (s): cpu = 00:00:04 ; elapsed = 00:00:02 . Memory (MB): peak = 3238.180 ; gain = 34.984 ; free physical = 10437 ; free virtual = 27340
+
+Phase 9.2 Verifying Netlist Connectivity
+
+Starting Connectivity Check Task
+
+Time (s): cpu = 00:00:00.04 ; elapsed = 00:00:00.05 . Memory (MB): peak = 3238.180 ; gain = 0.000 ; free physical = 10437 ; free virtual = 27340
+Phase 9.2 Verifying Netlist Connectivity | Checksum: 1593fb696
+
+Time (s): cpu = 00:00:04 ; elapsed = 00:00:02 . Memory (MB): peak = 3238.180 ; gain = 34.984 ; free physical = 10437 ; free virtual = 27340
+Phase 9 Finalization | Checksum: 1593fb696
+
+Time (s): cpu = 00:00:04 ; elapsed = 00:00:02 . Memory (MB): peak = 3238.180 ; gain = 34.984 ; free physical = 10437 ; free virtual = 27340
+Opt_design Change Summary
+=========================
+
+
+-------------------------------------------------------------------------------------------------------------------------
+|  Phase                        |  #Cells created  |  #Cells Removed  |  #Constrained objects preventing optimizations  |
+-------------------------------------------------------------------------------------------------------------------------
+|  Retarget                     |              62  |             183  |                                             20  |
+|  Constant propagation         |              86  |             142  |                                              0  |
+|  Sweep                        |              10  |              50  |                                              4  |
+|  BUFG optimization            |               0  |               0  |                                              0  |
+|  Shift Register Optimization  |               0  |               0  |                                              0  |
+|  Post Processing Netlist      |               0  |               0  |                                              0  |
+-------------------------------------------------------------------------------------------------------------------------
+
+
+Ending Logic Optimization Task | Checksum: 1593fb696
+
+Time (s): cpu = 00:00:04 ; elapsed = 00:00:02 . Memory (MB): peak = 3238.180 ; gain = 34.984 ; free physical = 10437 ; free virtual = 27340
+
+Starting Power Optimization Task
+INFO: [Pwropt 34-132] Skipping clock gating for clocks with a period < 2.00 ns.
+Ending Power Optimization Task | Checksum: 1593fb696
+
+Time (s): cpu = 00:00:00.02 ; elapsed = 00:00:00.02 . Memory (MB): peak = 3238.180 ; gain = 0.000 ; free physical = 10437 ; free virtual = 27339
+
+Starting Final Cleanup Task
+Ending Final Cleanup Task | Checksum: 1593fb696
+
+Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00 . Memory (MB): peak = 3238.180 ; gain = 0.000 ; free physical = 10437 ; free virtual = 27339
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3238.180 ; gain = 0.000 ; free physical = 10437 ; free virtual = 27339
+INFO: [Common 17-83] Releasing license: Vivado_Implementation
+47 Infos, 18 Warnings, 0 Critical Warnings and 0 Errors encountered.
+opt_design completed successfully
+opt_design: Time (s): cpu = 00:00:09 ; elapsed = 00:00:05 . Memory (MB): peak = 3238.180 ; gain = 426.840 ; free physical = 10437 ; free virtual = 27339
+INFO: [Vivado 12-24828] Executing command : report_drc -file design_1_wrapper_drc_opted.rpt -pb design_1_wrapper_drc_opted.pb -rpx design_1_wrapper_drc_opted.rpx
+Command: report_drc -file design_1_wrapper_drc_opted.rpt -pb design_1_wrapper_drc_opted.pb -rpx design_1_wrapper_drc_opted.rpx
+INFO: [IP_Flow 19-1839] IP Catalog is up to date.
+INFO: [DRC 23-27] Running DRC with 8 threads
+INFO: [Vivado_Tcl 2-168] The results of DRC are in file /home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/impl_1/design_1_wrapper_drc_opted.rpt.
+report_drc completed successfully
+INFO: [Timing 38-480] Writing timing data to binary archive.
+Wrote PlaceDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3238.180 ; gain = 0.000 ; free physical = 10454 ; free virtual = 27356
+Wrote PulsedLatchDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3238.180 ; gain = 0.000 ; free physical = 10454 ; free virtual = 27356
+Writing XDEF routing.
+Writing XDEF routing logical nets.
+Write ShapeDB Complete: Time (s): cpu = 00:00:00.21 ; elapsed = 00:00:00.05 . Memory (MB): peak = 3238.180 ; gain = 0.000 ; free physical = 10449 ; free virtual = 27354
+Writing XDEF routing special nets.
+Wrote RouteStorage: Time (s): cpu = 00:00:00.3 ; elapsed = 00:00:00.07 . Memory (MB): peak = 3238.180 ; gain = 0.000 ; free physical = 10445 ; free virtual = 27352
+Wrote PlaceStorage: Time (s): cpu = 00:00:00.02 ; elapsed = 00:00:00 . Memory (MB): peak = 3238.180 ; gain = 0.000 ; free physical = 10445 ; free virtual = 27352
+Wrote Netlist Cache: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 3238.180 ; gain = 0.000 ; free physical = 10444 ; free virtual = 27352
+Wrote Device Cache: Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00 . Memory (MB): peak = 3238.180 ; gain = 0.000 ; free physical = 10443 ; free virtual = 27351
+Write Physdb Complete: Time (s): cpu = 00:00:00.35 ; elapsed = 00:00:00.08 . Memory (MB): peak = 3238.180 ; gain = 0.000 ; free physical = 10443 ; free virtual = 27351
+INFO: [Common 17-1381] The checkpoint '/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/impl_1/design_1_wrapper_opt.dcp' has been generated.
+Command: place_design
+Attempting to get a license for feature 'Vivado_Implementation' and/or device 'xc7z020'
+INFO: [Common 17-349] Got license for feature 'Vivado_Implementation' and/or device 'xc7z020'
+INFO: [Common 17-83] Releasing license: Vivado_Implementation
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+Running DRC as a precondition to command place_design
+INFO: [DRC 23-27] Running DRC with 8 threads
+INFO: [Vivado_Tcl 4-198] DRC finished with 0 Errors
+INFO: [Vivado_Tcl 4-199] Please refer to the DRC report (report_drc) for more information.
+INFO: [Place 30-611] Multithreading enabled for place_design using a maximum of 8 CPUs
+
+Starting Placer Task
+
+Phase 1 Placer Initialization
+
+Phase 1.1 Placer Initialization Netlist Sorting
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10388 ; free virtual = 27298
+Phase 1.1 Placer Initialization Netlist Sorting | Checksum: fb8799fc
+
+Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10388 ; free virtual = 27298
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10388 ; free virtual = 27298
+
+Phase 1.2 IO Placement/ Clock Placement/ Build Placer Device
+Phase 1.2 IO Placement/ Clock Placement/ Build Placer Device | Checksum: f3e18d1b
+
+Time (s): cpu = 00:00:03 ; elapsed = 00:00:01 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10405 ; free virtual = 27315
+
+Phase 1.3 Build Placer Netlist Model
+Phase 1.3 Build Placer Netlist Model | Checksum: 1ed830a37
+
+Time (s): cpu = 00:00:13 ; elapsed = 00:00:05 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10405 ; free virtual = 27315
+
+Phase 1.4 Constrain Clocks/Macros
+Phase 1.4 Constrain Clocks/Macros | Checksum: 1ed830a37
+
+Time (s): cpu = 00:00:13 ; elapsed = 00:00:05 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10409 ; free virtual = 27319
+Phase 1 Placer Initialization | Checksum: 1ed830a37
+
+Time (s): cpu = 00:00:13 ; elapsed = 00:00:05 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10409 ; free virtual = 27319
+
+Phase 2 Global Placement
+
+Phase 2.1 Floorplanning
+Phase 2.1 Floorplanning | Checksum: 226fca056
+
+Time (s): cpu = 00:00:20 ; elapsed = 00:00:07 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10407 ; free virtual = 27317
+
+Phase 2.2 Update Timing before SLR Path Opt
+Phase 2.2 Update Timing before SLR Path Opt | Checksum: 276f61801
+
+Time (s): cpu = 00:00:26 ; elapsed = 00:00:08 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10379 ; free virtual = 27289
+
+Phase 2.3 Post-Processing in Floorplanning
+Phase 2.3 Post-Processing in Floorplanning | Checksum: 276f61801
+
+Time (s): cpu = 00:00:26 ; elapsed = 00:00:08 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10382 ; free virtual = 27292
+
+Phase 2.4 Global Place Phase1
+Phase 2.4 Global Place Phase1 | Checksum: 18a8eca83
+
+Time (s): cpu = 00:01:11 ; elapsed = 00:00:22 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10271 ; free virtual = 27181
+
+Phase 2.5 Global Place Phase2
+
+Phase 2.5.1 UpdateTiming Before Physical Synthesis
+Phase 2.5.1 UpdateTiming Before Physical Synthesis | Checksum: 18a8eca83
+
+Time (s): cpu = 00:01:18 ; elapsed = 00:00:23 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10238 ; free virtual = 27148
+
+Phase 2.5.2 Physical Synthesis In Placer
+INFO: [Physopt 32-1035] Found 0 LUTNM shape to break, 610 LUT instances to create LUTNM shape
+INFO: [Physopt 32-1044] Break lutnm for timing: one critical 0, two critical 0, total 0, new lutff created 0
+INFO: [Physopt 32-1138] End 1 Pass. Optimized 233 nets or LUTs. Breaked 0 LUT, combined 233 existing LUTs and moved 0 existing LUT
+INFO: [Physopt 32-65] No nets found for high-fanout optimization.
+INFO: [Physopt 32-232] Optimized 0 net. Created 0 new instance.
+INFO: [Physopt 32-775] End 1 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+INFO: [Physopt 32-670] No setup violation found.  DSP Register Optimization was not performed.
+INFO: [Physopt 32-670] No setup violation found.  Shift Register to Pipeline Optimization was not performed.
+INFO: [Physopt 32-670] No setup violation found.  Shift Register Optimization was not performed.
+INFO: [Physopt 32-670] No setup violation found.  BRAM Register Optimization was not performed.
+INFO: [Physopt 32-670] No setup violation found.  URAM Register Optimization was not performed.
+INFO: [Physopt 32-949] No candidate nets found for dynamic/static region interface net replication
+INFO: [Physopt 32-775] End 1 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10244 ; free virtual = 27154
+
+Summary of Physical Synthesis Optimizations
+============================================
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+|  Optimization                                     |  Added Cells  |  Removed Cells  |  Optimized Cells/Nets  |  Dont Touch  |  Iterations  |  Elapsed   |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+|  LUT Combining                                    |            0  |            233  |                   233  |           0  |           1  |  00:00:01  |
+|  Retime                                           |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  Very High Fanout                                 |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  DSP Register                                     |            0  |              0  |                     0  |           0  |           0  |  00:00:00  |
+|  Shift Register to Pipeline                       |            0  |              0  |                     0  |           0  |           0  |  00:00:00  |
+|  Shift Register                                   |            0  |              0  |                     0  |           0  |           0  |  00:00:00  |
+|  BRAM Register                                    |            0  |              0  |                     0  |           0  |           0  |  00:00:00  |
+|  URAM Register                                    |            0  |              0  |                     0  |           0  |           0  |  00:00:00  |
+|  Dynamic/Static Region Interface Net Replication  |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  Total                                            |            0  |            233  |                   233  |           0  |           4  |  00:00:01  |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+Phase 2.5.2 Physical Synthesis In Placer | Checksum: 1b2e83838
+
+Time (s): cpu = 00:01:26 ; elapsed = 00:00:26 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10244 ; free virtual = 27154
+Phase 2.5 Global Place Phase2 | Checksum: 15a670a2d
+
+Time (s): cpu = 00:01:32 ; elapsed = 00:00:28 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10258 ; free virtual = 27168
+Phase 2 Global Placement | Checksum: 15a670a2d
+
+Time (s): cpu = 00:01:32 ; elapsed = 00:00:28 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10258 ; free virtual = 27168
+
+Phase 3 Detail Placement
+
+Phase 3.1 Commit Multi Column Macros
+Phase 3.1 Commit Multi Column Macros | Checksum: 1530d6030
+
+Time (s): cpu = 00:01:38 ; elapsed = 00:00:29 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10296 ; free virtual = 27206
+
+Phase 3.2 Commit Most Macros & LUTRAMs
+Phase 3.2 Commit Most Macros & LUTRAMs | Checksum: 1dd7bec6b
+
+Time (s): cpu = 00:01:49 ; elapsed = 00:00:32 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10285 ; free virtual = 27195
+
+Phase 3.3 Area Swap Optimization
+Phase 3.3 Area Swap Optimization | Checksum: 297f16f0a
+
+Time (s): cpu = 00:01:50 ; elapsed = 00:00:32 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10301 ; free virtual = 27212
+
+Phase 3.4 Pipeline Register Optimization
+Phase 3.4 Pipeline Register Optimization | Checksum: 1a6a638be
+
+Time (s): cpu = 00:01:50 ; elapsed = 00:00:32 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10293 ; free virtual = 27203
+
+Phase 3.5 Small Shape Detail Placement
+Phase 3.5 Small Shape Detail Placement | Checksum: 1b9595292
+
+Time (s): cpu = 00:02:00 ; elapsed = 00:00:41 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10285 ; free virtual = 27195
+
+Phase 3.6 Re-assign LUT pins
+Phase 3.6 Re-assign LUT pins | Checksum: 21943a0e9
+
+Time (s): cpu = 00:02:01 ; elapsed = 00:00:42 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10289 ; free virtual = 27199
+
+Phase 3.7 Pipeline Register Optimization
+Phase 3.7 Pipeline Register Optimization | Checksum: 1e290e020
+
+Time (s): cpu = 00:02:01 ; elapsed = 00:00:42 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10292 ; free virtual = 27202
+Phase 3 Detail Placement | Checksum: 1e290e020
+
+Time (s): cpu = 00:02:02 ; elapsed = 00:00:43 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10292 ; free virtual = 27202
+
+Phase 4 Post Placement Optimization and Clean-Up
+
+Phase 4.1 Post Commit Optimization
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+
+Phase 4.1.1 Post Placement Optimization
+Post Placement Optimization Initialization | Checksum: 1ddf2f34c
+
+Phase 4.1.1.1 BUFG Insertion
+
+Starting Physical Synthesis Task
+
+Phase 1 Physical Synthesis Initialization
+INFO: [Physopt 32-721] Multithreading enabled for phys_opt_design using a maximum of 8 CPUs
+INFO: [Physopt 32-619] Estimated Timing Summary | WNS=2.052 | TNS=0.000 |
+Phase 1 Physical Synthesis Initialization | Checksum: 15c62c425
+
+Time (s): cpu = 00:00:02 ; elapsed = 00:00:00.42 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10240 ; free virtual = 27150
+INFO: [Place 46-33] Processed net design_1_i/rst_ps7_0_20M/U0/peripheral_reset[0], BUFG insertion was skipped due to placement/routing conflicts.
+INFO: [Place 46-33] Processed net design_1_i/controller_axi_0/inst/controller/controller/control/control/scheduler/reset_0, BUFG insertion was skipped due to placement/routing conflicts.
+INFO: [Place 46-33] Processed net design_1_i/controller_axi_0/inst/controller/controller/control/control/scheduler/reset_1, BUFG insertion was skipped due to placement/routing conflicts.
+INFO: [Place 46-33] Processed net design_1_i/controller_axi_0/inst/bus/host_address_reg[7]_rep_0[0], BUFG insertion was skipped due to placement/routing conflicts.
+INFO: [Place 46-33] Processed net design_1_i/controller_axi_0/inst/controller/controller/control/control/scheduler/fault_reg_7[0], BUFG insertion was skipped due to placement/routing conflicts.
+INFO: [Place 46-33] Processed net design_1_i/controller_axi_0/inst/controller/controller/engine/cleanup_configurations[2559]_i_1_n_0, BUFG insertion was skipped due to placement/routing conflicts.
+INFO: [Place 46-33] Processed net design_1_i/controller_axi_0/inst/controller/controller/engine/E[0], BUFG insertion was skipped due to placement/routing conflicts.
+INFO: [Place 46-33] Processed net design_1_i/controller_axi_0/inst/controller/controller/control/protocol/transport/core/grp_batch_transaction_fu_228/grp_write_r_fu_793/grp_write_Pipeline_VITIS_LOOP_55_1_fu_328/flow_control_loop_pipe_sequential_init_U/fault_reg, BUFG insertion was skipped due to placement/routing conflicts.
+INFO: [Place 46-33] Processed net design_1_i/controller_axi_0/inst/controller/controller/control/protocol/transport/core/grp_batch_transaction_fu_228/box_rejection_s[3]_i_1_n_0, BUFG insertion was skipped due to placement/routing conflicts.
+INFO: [Place 46-33] Processed net design_1_i/controller_axi_0/inst/controller/controller/engine/transport/pending_i_2_n_0, BUFG insertion was skipped due to placement/routing conflicts.
+INFO: [Place 46-33] Processed net design_1_i/controller_axi_0/inst/controller/controller/control/control/scheduler/saved_generations[127]_i_1_n_0, BUFG insertion was skipped due to placement/routing conflicts.
+INFO: [Place 46-56] BUFG insertion identified 11 candidate nets. Inserted BUFG: 0, Replicated BUFG Driver: 0, Skipped due to Placement/Routing Conflicts: 11, Skipped due to Timing Degradation: 0, Skipped due to netlist editing failed: 0.
+Ending Physical Synthesis Task | Checksum: 16594bd43
+
+Time (s): cpu = 00:00:04 ; elapsed = 00:00:01 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10246 ; free virtual = 27156
+Phase 4.1.1.1 BUFG Insertion | Checksum: 1ddf2f34c
+
+Time (s): cpu = 00:02:19 ; elapsed = 00:00:47 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10246 ; free virtual = 27156
+
+Phase 4.1.1.2 Post Placement Timing Optimization
+INFO: [Place 30-746] Post Placement Timing Summary WNS=2.052. For the most accurate timing information please run report_timing.
+Phase 4.1.1.2 Post Placement Timing Optimization | Checksum: 111933dd4
+
+Time (s): cpu = 00:02:19 ; elapsed = 00:00:47 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10246 ; free virtual = 27156
+
+Time (s): cpu = 00:02:19 ; elapsed = 00:00:47 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10246 ; free virtual = 27156
+Phase 4.1 Post Commit Optimization | Checksum: 111933dd4
+
+Time (s): cpu = 00:02:19 ; elapsed = 00:00:47 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10251 ; free virtual = 27161
+
+Phase 4.2 Post Placement Cleanup
+Phase 4.2 Post Placement Cleanup | Checksum: 111933dd4
+
+Time (s): cpu = 00:02:20 ; elapsed = 00:00:48 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10264 ; free virtual = 27174
+
+Phase 4.3 Placer Reporting
+
+Phase 4.3.1 Print Estimated Congestion
+INFO: [Place 30-612] Post-Placement Estimated Congestion 
+ ____________________________________________________
+|           | Global Congestion | Short Congestion  |
+| Direction | Region Size       | Region Size       |
+|___________|___________________|___________________|
+|      North|                1x1|                2x2|
+|___________|___________________|___________________|
+|      South|                8x8|                4x4|
+|___________|___________________|___________________|
+|       East|              16x16|                8x8|
+|___________|___________________|___________________|
+|       West|                2x2|                4x4|
+|___________|___________________|___________________|
+
+Phase 4.3.1 Print Estimated Congestion | Checksum: 111933dd4
+
+Time (s): cpu = 00:02:20 ; elapsed = 00:00:48 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10264 ; free virtual = 27174
+Phase 4.3 Placer Reporting | Checksum: 111933dd4
+
+Time (s): cpu = 00:02:20 ; elapsed = 00:00:48 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10261 ; free virtual = 27171
+
+Phase 4.4 Final Placement Cleanup
+Netlist sorting complete. Time (s): cpu = 00:00:00.04 ; elapsed = 00:00:00.04 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10261 ; free virtual = 27171
+
+Time (s): cpu = 00:02:21 ; elapsed = 00:00:48 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10261 ; free virtual = 27171
+Phase 4 Post Placement Optimization and Clean-Up | Checksum: 1259726e5
+
+Time (s): cpu = 00:02:21 ; elapsed = 00:00:48 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10265 ; free virtual = 27175
+Ending Placer Task | Checksum: 11be089ba
+
+Time (s): cpu = 00:02:21 ; elapsed = 00:00:48 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10257 ; free virtual = 27167
+90 Infos, 18 Warnings, 0 Critical Warnings and 0 Errors encountered.
+place_design completed successfully
+place_design: Time (s): cpu = 00:02:25 ; elapsed = 00:00:50 . Memory (MB): peak = 3374.246 ; gain = 136.066 ; free physical = 10260 ; free virtual = 27170
+INFO: [Vivado 12-24838] Running report commands "report_control_sets, report_io, report_utilization" in parallel.
+Running report generation with 3 threads.
+INFO: [Vivado 12-24828] Executing command : report_control_sets -verbose -file design_1_wrapper_control_sets_placed.rpt
+report_control_sets: Time (s): cpu = 00:00:00.34 ; elapsed = 00:00:00.2 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10241 ; free virtual = 27151
+INFO: [Vivado 12-24828] Executing command : report_io -file design_1_wrapper_io_placed.rpt
+report_io: Time (s): cpu = 00:00:00.42 ; elapsed = 00:00:00.26 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10233 ; free virtual = 27143
+INFO: [Vivado 12-24828] Executing command : report_utilization -file design_1_wrapper_utilization_placed.rpt -pb design_1_wrapper_utilization_placed.pb
+INFO: [Timing 38-480] Writing timing data to binary archive.
+Wrote PlaceDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10248 ; free virtual = 27158
+Wrote PulsedLatchDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10248 ; free virtual = 27158
+Writing XDEF routing.
+Writing XDEF routing logical nets.
+Write ShapeDB Complete: Time (s): cpu = 00:00:00.32 ; elapsed = 00:00:00.07 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10242 ; free virtual = 27159
+Writing XDEF routing special nets.
+Wrote RouteStorage: Time (s): cpu = 00:00:00.34 ; elapsed = 00:00:00.08 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10241 ; free virtual = 27159
+Wrote PlaceStorage: Time (s): cpu = 00:00:03 ; elapsed = 00:00:00.93 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10197 ; free virtual = 27155
+Wrote Netlist Cache: Time (s): cpu = 00:00:00.06 ; elapsed = 00:00:00.03 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10188 ; free virtual = 27151
+Wrote Device Cache: Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10184 ; free virtual = 27148
+Write Physdb Complete: Time (s): cpu = 00:00:03 ; elapsed = 00:00:01 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10184 ; free virtual = 27148
+INFO: [Common 17-1381] The checkpoint '/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/impl_1/design_1_wrapper_placed.dcp' has been generated.
+Command: phys_opt_design
+Attempting to get a license for feature 'Vivado_Implementation' and/or device 'xc7z020'
+INFO: [Common 17-349] Got license for feature 'Vivado_Implementation' and/or device 'xc7z020'
+
+Starting Initial Update Timing Task
+
+Time (s): cpu = 00:00:12 ; elapsed = 00:00:03 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10236 ; free virtual = 27162
+INFO: [Vivado_Tcl 4-2279] Estimated Timing Summary | WNS= 2.052 | TNS= 0.000 | 
+INFO: [Vivado_Tcl 4-383] Design worst setup slack (WNS) is greater than or equal to 0.000 ns. All physical synthesis setup optimizations will be skipped.
+INFO: [Vivado_Tcl 4-232] No setup violation found. The netlist was not modified.
+INFO: [Common 17-83] Releasing license: Vivado_Implementation
+101 Infos, 18 Warnings, 0 Critical Warnings and 0 Errors encountered.
+phys_opt_design completed successfully
+INFO: [Timing 38-480] Writing timing data to binary archive.
+Wrote PlaceDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10239 ; free virtual = 27165
+Wrote PulsedLatchDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10239 ; free virtual = 27165
+Writing XDEF routing.
+Writing XDEF routing logical nets.
+Writing XDEF routing special nets.
+Wrote RouteStorage: Time (s): cpu = 00:00:00.28 ; elapsed = 00:00:00.06 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10232 ; free virtual = 27161
+Write ShapeDB Complete: Time (s): cpu = 00:00:00.47 ; elapsed = 00:00:00.1 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10230 ; free virtual = 27166
+Wrote PlaceStorage: Time (s): cpu = 00:00:03 ; elapsed = 00:00:00.93 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10191 ; free virtual = 27164
+Wrote Netlist Cache: Time (s): cpu = 00:00:00.06 ; elapsed = 00:00:00.03 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10183 ; free virtual = 27161
+Wrote Device Cache: Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10183 ; free virtual = 27163
+Write Physdb Complete: Time (s): cpu = 00:00:03 ; elapsed = 00:00:01 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10188 ; free virtual = 27168
+INFO: [Common 17-1381] The checkpoint '/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/impl_1/design_1_wrapper_physopt.dcp' has been generated.
+Command: route_design
+Attempting to get a license for feature 'Vivado_Implementation' and/or device 'xc7z020'
+INFO: [Common 17-349] Got license for feature 'Vivado_Implementation' and/or device 'xc7z020'
+
+
+Starting Routing Task
+INFO: [Route 35-254] Multithreading enabled for route_design using a maximum of 8 CPUs
+
+Phase 1 Build RT Design
+Checksum: PlaceDB: 98df34d4 ConstDB: 0 ShapeSum: 6d07e1f6 RouteDB: 15f972f0
+Post Restoration Checksum: NetGraph: 93b6ade7 | NumContArr: 794b2f2 | Constraints: c2a8fa9d | Timing: c2a8fa9d
+Phase 1 Build RT Design | Checksum: 2209d5613
+
+Time (s): cpu = 00:00:28 ; elapsed = 00:00:14 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10217 ; free virtual = 27158
+
+Phase 2 Router Initialization
+
+Phase 2.1 Fix Topology Constraints
+Phase 2.1 Fix Topology Constraints | Checksum: 2209d5613
+
+Time (s): cpu = 00:00:28 ; elapsed = 00:00:14 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10215 ; free virtual = 27156
+
+Phase 2.2 Pre Route Cleanup
+Phase 2.2 Pre Route Cleanup | Checksum: 2209d5613
+
+Time (s): cpu = 00:00:28 ; elapsed = 00:00:14 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10211 ; free virtual = 27152
+ Number of Nodes with overlaps = 0
+
+Phase 2.3 Update Timing
+Phase 2.3 Update Timing | Checksum: 1e963fc38
+
+Time (s): cpu = 00:00:46 ; elapsed = 00:00:18 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10228 ; free virtual = 27170
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=2.096  | TNS=0.000  | WHS=-0.190 | THS=-407.880|
+
+
+Phase 2.4 Update Timing for Bus Skew
+
+Phase 2.4.1 Update Timing
+Phase 2.4.1 Update Timing | Checksum: 213cb5cd9
+
+Time (s): cpu = 00:01:01 ; elapsed = 00:00:22 . Memory (MB): peak = 3374.246 ; gain = 0.000 ; free physical = 10201 ; free virtual = 27143
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=2.096  | TNS=0.000  | WHS=-0.138 | THS=-1.668 |
+
+Phase 2.4 Update Timing for Bus Skew | Checksum: 1cec61d85
+
+Time (s): cpu = 00:01:01 ; elapsed = 00:00:22 . Memory (MB): peak = 3378.395 ; gain = 4.148 ; free physical = 10207 ; free virtual = 27149
+
+Phase 2.5 Soft Constraint Pins - Fast Budgeting
+Phase 2.5 Soft Constraint Pins - Fast Budgeting | Checksum: 1cec61d85
+
+Time (s): cpu = 00:01:01 ; elapsed = 00:00:22 . Memory (MB): peak = 3402.457 ; gain = 28.211 ; free physical = 10184 ; free virtual = 27125
+
+Router Utilization Summary
+  Global Vertical Routing Utilization    = 0 %
+  Global Horizontal Routing Utilization  = 0 %
+  Routable Net Status*
+  *Does not include unroutable nets such as driverless and loadless.
+  Run report_route_status for detailed report.
+  Number of Failed Nets               = 48355
+    (Failed Nets is the sum of unrouted and partially routed nets)
+  Number of Unrouted Nets             = 48355
+  Number of Partially Routed Nets     = 0
+  Number of Node Overlaps             = 0
+
+Phase 2 Router Initialization | Checksum: 1ec4b4225
+
+Time (s): cpu = 00:01:02 ; elapsed = 00:00:23 . Memory (MB): peak = 3402.457 ; gain = 28.211 ; free physical = 10179 ; free virtual = 27120
+
+Phase 3 Global Routing
+Phase 3 Global Routing | Checksum: 1ec4b4225
+
+Time (s): cpu = 00:01:02 ; elapsed = 00:00:23 . Memory (MB): peak = 3402.457 ; gain = 28.211 ; free physical = 10184 ; free virtual = 27125
+
+Phase 4 Initial Routing
+
+Phase 4.1 Initial Net Routing Pass
+Phase 4.1 Initial Net Routing Pass | Checksum: 34f80e0da
+
+Time (s): cpu = 00:01:15 ; elapsed = 00:00:26 . Memory (MB): peak = 3470.793 ; gain = 96.547 ; free physical = 10132 ; free virtual = 27074
+Phase 4 Initial Routing | Checksum: 34f80e0da
+
+Time (s): cpu = 00:01:15 ; elapsed = 00:00:26 . Memory (MB): peak = 3470.793 ; gain = 96.547 ; free physical = 10125 ; free virtual = 27066
+
+Phase 5 Rip-up And Reroute
+
+Phase 5.1 Global Iteration 0
+ Number of Nodes with overlaps = 6419
+ Number of Nodes with overlaps = 585
+ Number of Nodes with overlaps = 238
+ Number of Nodes with overlaps = 125
+ Number of Nodes with overlaps = 45
+ Number of Nodes with overlaps = 18
+ Number of Nodes with overlaps = 5
+ Number of Nodes with overlaps = 3
+ Number of Nodes with overlaps = 0
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=2.140  | TNS=0.000  | WHS=N/A    | THS=N/A    |
+
+Phase 5.1 Global Iteration 0 | Checksum: 2028c55ec
+
+Time (s): cpu = 00:02:04 ; elapsed = 00:00:47 . Memory (MB): peak = 3470.793 ; gain = 96.547 ; free physical = 10134 ; free virtual = 27076
+
+Phase 5.2 Global Iteration 1
+ Number of Nodes with overlaps = 1
+ Number of Nodes with overlaps = 9
+ Number of Nodes with overlaps = 1
+ Number of Nodes with overlaps = 0
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=2.140  | TNS=0.000  | WHS=N/A    | THS=N/A    |
+
+Phase 5.2 Global Iteration 1 | Checksum: 263564293
+
+Time (s): cpu = 00:02:07 ; elapsed = 00:00:49 . Memory (MB): peak = 3470.793 ; gain = 96.547 ; free physical = 10117 ; free virtual = 27058
+Phase 5 Rip-up And Reroute | Checksum: 263564293
+
+Time (s): cpu = 00:02:07 ; elapsed = 00:00:49 . Memory (MB): peak = 3470.793 ; gain = 96.547 ; free physical = 10117 ; free virtual = 27058
+
+Phase 6 Delay and Skew Optimization
+
+Phase 6.1 Delay CleanUp
+
+Phase 6.1.1 Update Timing
+Phase 6.1.1 Update Timing | Checksum: 1dc6bbaa3
+
+Time (s): cpu = 00:02:11 ; elapsed = 00:00:49 . Memory (MB): peak = 3470.793 ; gain = 96.547 ; free physical = 10117 ; free virtual = 27059
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=2.154  | TNS=0.000  | WHS=N/A    | THS=N/A    |
+
+Phase 6.1 Delay CleanUp | Checksum: 25f7ec6bd
+
+Time (s): cpu = 00:02:11 ; elapsed = 00:00:49 . Memory (MB): peak = 3470.793 ; gain = 96.547 ; free physical = 10117 ; free virtual = 27059
+
+Phase 6.2 Clock Skew Optimization
+Phase 6.2 Clock Skew Optimization | Checksum: 25f7ec6bd
+
+Time (s): cpu = 00:02:11 ; elapsed = 00:00:49 . Memory (MB): peak = 3470.793 ; gain = 96.547 ; free physical = 10117 ; free virtual = 27059
+Phase 6 Delay and Skew Optimization | Checksum: 25f7ec6bd
+
+Time (s): cpu = 00:02:11 ; elapsed = 00:00:49 . Memory (MB): peak = 3470.793 ; gain = 96.547 ; free physical = 10117 ; free virtual = 27059
+
+Phase 7 Post Hold Fix
+
+Phase 7.1 Hold Fix Iter
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=2.154  | TNS=0.000  | WHS=0.013  | THS=0.000  |
+
+Phase 7.1 Hold Fix Iter | Checksum: 264229c6d
+
+Time (s): cpu = 00:02:15 ; elapsed = 00:00:50 . Memory (MB): peak = 3470.793 ; gain = 96.547 ; free physical = 10101 ; free virtual = 27043
+Phase 7 Post Hold Fix | Checksum: 264229c6d
+
+Time (s): cpu = 00:02:15 ; elapsed = 00:00:50 . Memory (MB): peak = 3470.793 ; gain = 96.547 ; free physical = 10101 ; free virtual = 27043
+
+Phase 8 Route finalize
+
+Router Utilization Summary
+  Global Vertical Routing Utilization    = 19.6669 %
+  Global Horizontal Routing Utilization  = 23.332 %
+  Routable Net Status*
+  *Does not include unroutable nets such as driverless and loadless.
+  Run report_route_status for detailed report.
+  Number of Failed Nets               = 0
+    (Failed Nets is the sum of unrouted and partially routed nets)
+  Number of Unrouted Nets             = 0
+  Number of Partially Routed Nets     = 0
+  Number of Node Overlaps             = 0
+
+Phase 8 Route finalize | Checksum: 264229c6d
+
+Time (s): cpu = 00:02:16 ; elapsed = 00:00:50 . Memory (MB): peak = 3470.793 ; gain = 96.547 ; free physical = 10104 ; free virtual = 27046
+
+Phase 9 Verifying routed nets
+
+ Verification completed successfully
+Phase 9 Verifying routed nets | Checksum: 264229c6d
+
+Time (s): cpu = 00:02:16 ; elapsed = 00:00:50 . Memory (MB): peak = 3470.793 ; gain = 96.547 ; free physical = 10100 ; free virtual = 27041
+
+Phase 10 Depositing Routes
+Phase 10 Depositing Routes | Checksum: 2537864a3
+
+Time (s): cpu = 00:02:19 ; elapsed = 00:00:52 . Memory (MB): peak = 3470.793 ; gain = 96.547 ; free physical = 10119 ; free virtual = 27061
+
+Phase 11 Post Process Routing
+Phase 11 Post Process Routing | Checksum: 2537864a3
+
+Time (s): cpu = 00:02:20 ; elapsed = 00:00:52 . Memory (MB): peak = 3470.793 ; gain = 96.547 ; free physical = 10120 ; free virtual = 27061
+
+Phase 12 Post Router Timing
+INFO: [Route 35-57] Estimated Timing Summary | WNS=2.154  | TNS=0.000  | WHS=0.013  | THS=0.000  |
+
+INFO: [Route 35-327] The final timing numbers are based on the router estimated timing analysis. For a complete and accurate timing signoff, please run report_timing_summary.
+Phase 12 Post Router Timing | Checksum: 2537864a3
+
+Time (s): cpu = 00:02:20 ; elapsed = 00:00:52 . Memory (MB): peak = 3470.793 ; gain = 96.547 ; free physical = 10120 ; free virtual = 27061
+Total Elapsed time in route_design: 51.94 secs
+
+Phase 13 Post-Route Event Processing
+Phase 13 Post-Route Event Processing | Checksum: 11a247564
+
+Time (s): cpu = 00:02:20 ; elapsed = 00:00:52 . Memory (MB): peak = 3470.793 ; gain = 96.547 ; free physical = 10120 ; free virtual = 27061
+INFO: [Route 35-16] Router Completed Successfully
+Ending Routing Task | Checksum: 11a247564
+
+Time (s): cpu = 00:02:20 ; elapsed = 00:00:52 . Memory (MB): peak = 3470.793 ; gain = 96.547 ; free physical = 10120 ; free virtual = 27061
+
+Routing Is Done.
+INFO: [Common 17-83] Releasing license: Vivado_Implementation
+115 Infos, 18 Warnings, 0 Critical Warnings and 0 Errors encountered.
+route_design completed successfully
+route_design: Time (s): cpu = 00:02:20 ; elapsed = 00:00:52 . Memory (MB): peak = 3470.793 ; gain = 96.547 ; free physical = 10119 ; free virtual = 27061
+INFO: [Vivado 12-24828] Executing command : report_drc -file design_1_wrapper_drc_routed.rpt -pb design_1_wrapper_drc_routed.pb -rpx design_1_wrapper_drc_routed.rpx
+Command: report_drc -file design_1_wrapper_drc_routed.rpt -pb design_1_wrapper_drc_routed.pb -rpx design_1_wrapper_drc_routed.rpx
+INFO: [IP_Flow 19-1839] IP Catalog is up to date.
+INFO: [DRC 23-27] Running DRC with 8 threads
+INFO: [Vivado_Tcl 2-168] The results of DRC are in file /home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/impl_1/design_1_wrapper_drc_routed.rpt.
+report_drc completed successfully
+INFO: [Vivado 12-24828] Executing command : report_methodology -file design_1_wrapper_methodology_drc_routed.rpt -pb design_1_wrapper_methodology_drc_routed.pb -rpx design_1_wrapper_methodology_drc_routed.rpx
+Command: report_methodology -file design_1_wrapper_methodology_drc_routed.rpt -pb design_1_wrapper_methodology_drc_routed.pb -rpx design_1_wrapper_methodology_drc_routed.rpx
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [DRC 23-133] Running Methodology with 8 threads
+INFO: [Vivado_Tcl 2-1520] The results of Report Methodology are in file /home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/impl_1/design_1_wrapper_methodology_drc_routed.rpt.
+report_methodology completed successfully
+report_methodology: Time (s): cpu = 00:00:32 ; elapsed = 00:00:05 . Memory (MB): peak = 3470.793 ; gain = 0.000 ; free physical = 10102 ; free virtual = 27043
+INFO: [Vivado 12-24828] Executing command : report_timing_summary -max_paths 10 -routable_nets -report_unconstrained -file design_1_wrapper_timing_summary_routed.rpt -pb design_1_wrapper_timing_summary_routed.pb -rpx design_1_wrapper_timing_summary_routed.rpx -warn_on_violation 
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 8 CPUs
+WARNING: [Timing 38-436] There are set_bus_skew constraint(s) in this design. Please run report_bus_skew to ensure that bus skew requirements are met.
+INFO: [Vivado 12-24838] Running report commands "report_bus_skew, report_incremental_reuse, report_route_status" in parallel.
+Running report generation with 3 threads.
+INFO: [Vivado 12-24828] Executing command : report_incremental_reuse -file design_1_wrapper_incremental_reuse_routed.rpt
+INFO: [Vivado_Tcl 4-1062] Incremental flow is disabled. No incremental reuse Info to report.
+INFO: [Vivado 12-24828] Executing command : report_bus_skew -warn_on_violation -file design_1_wrapper_bus_skew_routed.rpt -pb design_1_wrapper_bus_skew_routed.pb -rpx design_1_wrapper_bus_skew_routed.rpx
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 8 CPUs
+INFO: [Vivado 12-24828] Executing command : report_route_status -file design_1_wrapper_route_status.rpt -pb design_1_wrapper_route_status.pb
+INFO: [Vivado 12-24828] Executing command : report_power -file design_1_wrapper_power_routed.rpt -pb design_1_wrapper_power_summary_routed.pb -rpx design_1_wrapper_power_routed.rpx
+Command: report_power -file design_1_wrapper_power_routed.rpt -pb design_1_wrapper_power_summary_routed.pb -rpx design_1_wrapper_power_routed.rpx
+Running Vector-less Activity Propagation...
+
+Finished Running Vector-less Activity Propagation
+WARNING: [Power 33-332] Found switching activity that implies high-fanout reset nets being asserted for excessive periods of time which may result in inaccurate power analysis.
+Resolution: To review and fix problems, please run Power Constraints Advisor in the GUI from Tools > Power Constraints Advisor or run report_power with the -advisory option to generate a text report.
+135 Infos, 20 Warnings, 0 Critical Warnings and 0 Errors encountered.
+report_power completed successfully
+INFO: [Vivado 12-24828] Executing command : report_clock_utilization -file design_1_wrapper_clock_utilization_routed.rpt
+generate_parallel_reports: Time (s): cpu = 00:01:04 ; elapsed = 00:00:16 . Memory (MB): peak = 3510.840 ; gain = 40.047 ; free physical = 10075 ; free virtual = 27029
+INFO: [Timing 38-480] Writing timing data to binary archive.
+Wrote PlaceDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3510.840 ; gain = 0.000 ; free physical = 10068 ; free virtual = 27022
+Wrote PulsedLatchDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3510.840 ; gain = 0.000 ; free physical = 10068 ; free virtual = 27022
+Writing XDEF routing.
+Writing XDEF routing logical nets.
+Write ShapeDB Complete: Time (s): cpu = 00:00:00.27 ; elapsed = 00:00:00.06 . Memory (MB): peak = 3510.840 ; gain = 0.000 ; free physical = 10065 ; free virtual = 27025
+Writing XDEF routing special nets.
+Wrote RouteStorage: Time (s): cpu = 00:00:02 ; elapsed = 00:00:00.35 . Memory (MB): peak = 3510.840 ; gain = 0.000 ; free physical = 10060 ; free virtual = 27036
+Wrote PlaceStorage: Time (s): cpu = 00:00:02 ; elapsed = 00:00:00.89 . Memory (MB): peak = 3510.840 ; gain = 0.000 ; free physical = 9992 ; free virtual = 27002
+Wrote Netlist Cache: Time (s): cpu = 00:00:00.03 ; elapsed = 00:00:00.03 . Memory (MB): peak = 3510.840 ; gain = 0.000 ; free physical = 9990 ; free virtual = 27005
+Wrote Device Cache: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 3510.840 ; gain = 0.000 ; free physical = 9990 ; free virtual = 27006
+Write Physdb Complete: Time (s): cpu = 00:00:04 ; elapsed = 00:00:01 . Memory (MB): peak = 3510.840 ; gain = 0.000 ; free physical = 9990 ; free virtual = 27006
+INFO: [Common 17-1381] The checkpoint '/home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/project/edf_arty.runs/impl_1/design_1_wrapper_routed.dcp' has been generated.
+Command: write_bitstream -force design_1_wrapper.bit
+Attempting to get a license for feature 'Vivado_Implementation' and/or device 'xc7z020'
+INFO: [Common 17-349] Got license for feature 'Vivado_Implementation' and/or device 'xc7z020'
+Running DRC as a precondition to command write_bitstream
+INFO: [IP_Flow 19-1839] IP Catalog is up to date.
+INFO: [DRC 23-27] Running DRC with 8 threads
+INFO: [Vivado 12-3199] DRC finished with 0 Errors
+INFO: [Vivado 12-3200] Please refer to the DRC report (report_drc) for more information.
+Integrating Hard IP ELF/MEM with the PDI.
+INFO: [Designutils 20-2272] Running write_bitstream with 8 threads.
+Initializing bitstream generation complete. Time (s): cpu = 00:00:00.35 ; elapsed = 00:00:00.36 . Memory (MB): peak = 3561.355 ; gain = 50.516 ; free physical = 10013 ; free virtual = 26988
+Loading data files...
+Loading site data...
+Loading route data...
+Processing options...
+Creating bitmap...
+Creating bitstream...
+Writing bitstream ./design_1_wrapper.bit...
+Generate Bitstream complete. Time (s): cpu = 00:00:44 ; elapsed = 00:00:09 . Memory (MB): peak = 3813.691 ; gain = 302.852 ; free physical = 9718 ; free virtual = 26697
+INFO: [Vivado 12-1842] Bitgen Completed Successfully.
+INFO: [Common 17-83] Releasing license: Vivado_Implementation
+146 Infos, 20 Warnings, 0 Critical Warnings and 0 Errors encountered.
+write_bitstream completed successfully
+write_bitstream: Time (s): cpu = 00:00:51 ; elapsed = 00:00:40 . Memory (MB): peak = 3813.824 ; gain = 302.984 ; free physical = 9706 ; free virtual = 26686
+INFO: [Common 17-206] Exiting Vivado at Sat Nov  7 07:36:23 2026...
+[Sat Nov  7 07:36:23 2026] impl_1 finished
+wait_on_runs: Time (s): cpu = 00:07:52 ; elapsed = 00:03:16 . Memory (MB): peak = 2002.242 ; gain = 0.000 ; free physical = 12157 ; free virtual = 29135
+# if {[get_property PROGRESS [get_runs impl_1]] ne "100%"} {error "Implementation/bitstream failed"}
+# open_run impl_1
+INFO: [Device 21-403] Loading part xc7z020clg400-1
+Netlist sorting complete. Time (s): cpu = 00:00:00.11 ; elapsed = 00:00:00.12 . Memory (MB): peak = 2059.805 ; gain = 0.000 ; free physical = 11951 ; free virtual = 28930
+INFO: [Netlist 29-17] Analyzing 1902 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2026.1
+INFO: [Project 1-570] Preparing netlist for logic optimization
+Read ShapeDB Complete: Time (s): cpu = 00:00:00.04 ; elapsed = 00:00:00.05 . Memory (MB): peak = 2179.586 ; gain = 5.250 ; free physical = 11823 ; free virtual = 28802
+INFO: [Timing 38-478] Restoring timing data from binary archive.
+INFO: [Timing 38-479] Binary timing data restore complete.
+INFO: [Project 1-856] Restoring constraints from binary archive.
+INFO: [Project 1-853] Binary constraint restore complete.
+INFO: [Designutils 20-5722] Start Reading Physical Databases.
+Reading placement.
+Read Netlist Cache: Time (s): cpu = 00:00:00.04 ; elapsed = 00:00:00.04 . Memory (MB): peak = 2782.453 ; gain = 0.000 ; free physical = 11285 ; free virtual = 28264
+Reading placer database...
+Read Device Cache: Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 2784.453 ; gain = 2.000 ; free physical = 11277 ; free virtual = 28256
+Read PlaceDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2784.453 ; gain = 0.000 ; free physical = 11277 ; free virtual = 28256
+Read placeStorage: Time (s): cpu = 00:00:00.71 ; elapsed = 00:00:00.72 . Memory (MB): peak = 2843.070 ; gain = 58.617 ; free physical = 11231 ; free virtual = 28210
+Read PulsedLatchDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2843.070 ; gain = 0.000 ; free physical = 11231 ; free virtual = 28210
+Reading routing.
+Read RouteStorage: Time (s): cpu = 00:00:00.8 ; elapsed = 00:00:00.22 . Memory (MB): peak = 2843.070 ; gain = 0.000 ; free physical = 11211 ; free virtual = 28190
+Read Physdb Files: Time (s): cpu = 00:00:02 ; elapsed = 00:00:01 . Memory (MB): peak = 2843.070 ; gain = 60.617 ; free physical = 11211 ; free virtual = 28190
+Restored from archive | CPU: 1.640000 secs | Memory: 47.220924 MB |
+Finished XDEF File Restore: Time (s): cpu = 00:00:02 ; elapsed = 00:00:01 . Memory (MB): peak = 2843.070 ; gain = 63.586 ; free physical = 11211 ; free virtual = 28190
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 2847.070 ; gain = 0.000 ; free physical = 11213 ; free virtual = 28193
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 2 instances were transformed.
+  IOBUF => IOBUF (IBUF, OBUFT): 2 instances
+
+open_run: Time (s): cpu = 00:00:11 ; elapsed = 00:00:10 . Memory (MB): peak = 2847.105 ; gain = 844.863 ; free physical = 11213 ; free virtual = 28193
+# report_io -file [file join $output io.rpt]
+report_io: Time (s): cpu = 00:00:00.05 ; elapsed = 00:00:00.14 . Memory (MB): peak = 2857.070 ; gain = 9.965 ; free physical = 11209 ; free virtual = 28188
+# report_timing_summary -file [file join $output timing.rpt]
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 8 CPUs
+WARNING: [Timing 38-436] There are set_bus_skew constraint(s) in this design. Please run report_bus_skew to ensure that bus skew requirements are met.
+# report_drc -file [file join $output drc.rpt]
+Command: report_drc -file /home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/drc.rpt
+INFO: [IP_Flow 19-1839] IP Catalog is up to date.
+INFO: [DRC 23-27] Running DRC with 8 threads
+INFO: [Vivado_Tcl 2-168] The results of DRC are in file /home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/drc.rpt.
+report_drc completed successfully
+# foreach delay {max min} {
+#     set paths [get_timing_paths -delay_type $delay -max_paths 1]
+#     if {![llength $paths]} {error "No $delay timing paths: review constraints"}
+#     if {[get_property SLACK $paths] < 0} {error "$delay timing failed; see timing.rpt"}
+# }
+# if {[llength [get_drc_violations -filter {SEVERITY == Error}]]} {error "DRC errors; see drc.rpt"}
+WARNING: [Vivado_Tcl 4-49] No violations matched 'SEVERITY == Error'.
+# write_hw_platform -fixed -include_bit -force -file [file join $output dvrmc.xsa]
+INFO: [Project 1-1918] Creating Hardware Platform: /home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/dvrmc.xsa ...
+WARNING: [Project 1-645] Board images not set in Hardware Platform.
+INFO: [Project 1-1943] The Hardware Platform can be used for Hardware
+INFO: [Project 1-1941] Successfully created Hardware Platform: /home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/dvrmc.xsa
+INFO: [Hsi 55-2053] elapsed time for repository (/opt/vitis/2026.1/data/embeddedsw) loading 0 seconds
+# close_project
+INFO: [Common 17-206] Exiting Vivado at Sat Nov  7 07:36:45 2026...
++ /opt/vitis/2026.1/Vitis/bin/sdtgen -xsa /home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/dvrmc.xsa -dir /home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/sdt
+INFO: [Hsi 55-2053] elapsed time for repository (/opt/vitis/2026.1/data/embeddedsw) loading 0 seconds
++ docker compose up -d --build --wait hashserv
+ Image edf-dev-next:26.06.1 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 593B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 2.51kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/ubuntu:22.04@sha256:b1066385161d28ddf6bc7e7b28a9170eec11484c821d1a5150d176cbde41d7f7
+#3 DONE 0.5s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 116B done
+#4 DONE 0.0s
+
+#5 [ 1/10] FROM docker.io/library/ubuntu:22.04@sha256:b1066385161d28ddf6bc7e7b28a9170eec11484c821d1a5150d176cbde41d7f7
+#5 resolve docker.io/library/ubuntu:22.04@sha256:b1066385161d28ddf6bc7e7b28a9170eec11484c821d1a5150d176cbde41d7f7 0.0s done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 114B done
+#6 DONE 0.0s
+
+#7 [ 8/10] RUN find /opt/edf -name .git -prune -exec sh -c 'git config --system --add safe.directory "$(dirname "$1")"' sh {} \; && chown -R root:root /opt/edf && chmod -R a+rX /opt/edf
+#7 CACHED
+
+#8 [ 2/10] RUN apt-get update && apt-get install -y --no-install-recommends     ca-certificates locales tzdata build-essential gcc-multilib g++-multilib     libc6-dev-i386 autoconf automake bison flex patch gawk wget curl gperf     git git-lfs libgl1 subversion diffstat unzip zip sysstat texinfo chrpath socat cpio     xz-utils lz4 zstd bmap-tools file rsync bc debianutils iproute2 iputils-ping     python3 python3-pip python3-pexpect python3-venv python3-virtualenv     python3-git python3-jinja2 python3-yaml python3-subunit pylint     repo tmux screen openssh-client graphviz xterm libegl1-mesa libsdl1.2-dev     libssl-dev libncurses-dev libacl1 acl liblz4-tool     && locale-gen en_US.UTF-8     && groupadd --gid 1000 amd-edf     && useradd --uid 1000 --gid 1000 --create-home --shell /bin/bash amd-edf     && install -d /usr/local/share/edf-dev     && dpkg-query -W -f='${Package}\t${Version}\t${Architecture}\n'        > /usr/local/share/edf-dev/packages.tsv     && rm -rf /var/lib/apt/lists/*
+#8 CACHED
+
+#9 [ 6/10] COPY config/sources.lock.xml /tmp/edf-manifest.xml
+#9 CACHED
+
+#10 [ 9/10] COPY --chmod=755 container-entrypoint.sh /usr/local/bin/container-entrypoint
+#10 CACHED
+
+#11 [ 3/10] RUN apt-get update && apt-get install -y --no-install-recommends util-linux && rm -rf /var/lib/apt/lists/*
+#11 CACHED
+
+#12 [ 4/10] RUN chmod 0755 /home/amd-edf && install -d -o 1000 -g 1000 /opt/edf
+#12 CACHED
+
+#13 [ 5/10] WORKDIR /opt/edf
+#13 CACHED
+
+#14 [ 7/10] RUN git config --global user.name "EDF container" && git config --global user.email "edf@localhost" && repo init -u https://github.com/Xilinx/yocto-manifests.git -b db9ad19553f9acdd5dfc92228e5a0ca10de760db -m default-edf.xml --depth=1     && cmp /tmp/edf-manifest.xml .repo/manifests/default-edf.xml     && repo sync -j4     && repo manifest -r -o /opt/edf/source-manifest.xml
+#14 CACHED
+
+#15 [10/10] WORKDIR /project
+#15 CACHED
+
+#16 exporting to image
+#16 exporting layers done
+#16 exporting manifest sha256:6d64a34e4e7efb9f9a3e10da8b7015750e991bcfe13f4c29fe0653bc42ce6de2 done
+#16 exporting config sha256:b34bae9f5b60d0a7991c13656a12b851a52d8a7cdd7848382ef23ff099cb72bf done
+#16 exporting attestation manifest sha256:04e5dd5684cc02cae841dc9a9e6728f12f6f91941376adb345e10ffa113cb86b
+#16 exporting attestation manifest sha256:04e5dd5684cc02cae841dc9a9e6728f12f6f91941376adb345e10ffa113cb86b 0.0s done
+#16 exporting manifest list sha256:7864eea86e509c314f019f33d54eea18445608a7b0b97625ef6de05061902ca2 0.0s done
+#16 naming to docker.io/library/edf-dev-next:26.06.1 done
+#16 unpacking to docker.io/library/edf-dev-next:26.06.1 0.0s done
+#16 DONE 0.2s
+
+#17 resolving provenance for metadata file
+#17 DONE 0.0s
+ Image edf-dev-next:26.06.1 Built 
+ Container edf-dev-next-hashserv-1 Running 
+ Container edf-dev-next-hashserv-1 Waiting 
+ Container edf-dev-next-hashserv-1 Healthy 
++ docker compose run --rm --no-deps -T -v /home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06:/generation -e EDF_TARGET=zc702 shell bash /opt/edf-scripts/arty-generate.sh
+ Container edf-dev-next-shell-run-e44cbf4871ef Creating 
+ Container edf-dev-next-shell-run-e44cbf4871ef Created 
+NOTE: Starting bitbake server...
+NOTE: Started PRServer with DBfile: /home/amd-edf/edf/builds/zc702/cache/prserv.sqlite3, Address: 127.0.0.1:35907, PID: 62
+***** Gen Machine Conf v2026.1
+NOTE: Unpacking /generation/sdt to /home/amd-edf/edf/builds/zc702/.hw-description/
+[INFO] Using HW file: /home/amd-edf/edf/builds/zc702/.hw-description/generation/sdt/system-top.dts
+[WARNING] A machine arty-z7-20 was found in /project/meta-edf-dev/conf/machine/arty-z7-20.conf, this may conflict with the machine you specified.  It is recommended to use a different name for your machine.
+[INFO] Getting Platform info from HW file
+[INFO] Generating Kconfig for the project
+[INFO] Silentconfig project
+[INFO] Generating configuration files
+[INFO] Generating cortex-a9 Linux configuration [ None ]
+[INFO] pl-overlay [ full ] is enabled for cortex-a9 file: /home/amd-edf/edf/builds/zc702/.hw-description/generation/sdt/system-top.dts and stored in intermediate ps dts file: /generation/conf/dts/arty-z7-20/system-top-no-pl.dts
+[INFO] Lopper generated pl overlay file is found in: /generation/work/pl.dtso and a copy of pl.dtso is stored in: /generation/conf/dts/arty-z7-20/pl-overlay-full
+[INFO] Generating cortex-a9 baremetal configuration for FSBL
+[INFO] Generating machine conf file
+[NOTE] To enable this, add the following to your local.conf:
+
+# Use the newly generated MACHINE
+MACHINE = "arty-z7-20"
+
+# Avoid errors in some baremetal configs as these layers may be present
+# but are not used.  Note the following lines are optional and can be
+# safely disabled.
+SKIP_META_VIRT_SANITY_CHECK = "1"
+SKIP_META_SECURITY_SANITY_CHECK = "1"
+SKIP_META_TPM_SANITY_CHECK = "1"
+
+Portable hardware bundle: /home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06/hardware-bundle.tar.gz
+Installed and verified matched Arty bundle.
+Complete: /home/rklinkhammer/workspace/edf-dev/artifacts/arty-hardware/20261107T122031Z-5ba3ad06

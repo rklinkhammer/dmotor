@@ -1,0 +1,21 @@
+{
+  "result": "PASS",
+  "rootfs_files": {
+    "usr/bin/dmotor-uart-test": {
+      "bytes": 13764,
+      "sha256": "0a5f14a6815fbc043058666f1b1e9371d447376008df2a55e07e2f9b522ee7ac"
+    },
+    "usr/bin/dmotord": {
+      "bytes": 58860,
+      "sha256": "85ac8b2da22714b92dac5e313df87451850e3ae9ee6e769d2672d288466d95c2"
+    },
+    "usr/lib/modules/6.18.10-xilinx-g4f7afe14f724/updates/dmotor_access.ko": {
+      "bytes": 11876,
+      "sha256": "ddf3af2d7207c23ad109be80e96e517b4c94830c9dc50e40fb793b5b57163d4c"
+    },
+    "usr/share/dmotor/source-version.json": {
+      "bytes": 15162,
+      "sha256": "61bcc3bd2d7a079fdb0aee26cbbc0b76b33b7c89b7efb6b7b096ac7da03c91db"
+    }
+  }
+}

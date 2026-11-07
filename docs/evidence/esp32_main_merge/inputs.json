@@ -1,0 +1,55 @@
+{
+  "build_commit": "39afd4e511fcb27eda415ffe92aebe36ad5d41d3",
+  "merged_esp32_commit": "93eaa9d",
+  "dirty": false,
+  "software_version": "0.10.1",
+  "control_period_us": 1000,
+  "frame_deadline_us": 800,
+  "controller_ip_revision": 13,
+  "hardware_stage": "arty-hardware/20261107T122031Z-5ba3ad06",
+  "sd_export": "arty-z7-20/20261107T125321Z-39aec82b",
+  "hardware_source_sha256": "0198b2565cb50cc91b52578a681444872c5cb620fa3c998caa7db1261a64518b",
+  "component_source_sha256": "7e28234255e27d08697de89e35091e641f1f21a96707d8f939149dae7625c904",
+  "software_source_sha256": "b8dc5c75f0bd607b1839cca517cb727b29a321f1e59dbb014717a554163d1665",
+  "result": "PASS; no flashing, SD writing, physical boot or hardware testing",
+  "full_board_placement": {
+    "slices": 10430,
+    "LUTs": 22646,
+    "registers": 33904,
+    "DSPs": 5,
+    "BRAM_tiles": 0
+  },
+  "timing": {
+    "WNS_ns": 2.157,
+    "WHS_ns": 0.013,
+    "DRC_errors": 0
+  },
+  "tests": {
+    "controller_native_RTL": 36,
+    "software_native": 29,
+    "clang_tidy_UBSan_native": 29,
+    "ESP32_ASan_UBSan_host": 2,
+    "ARM_QEMU": 10,
+    "ESP32_S3_clean_build_profiles": [
+      "uart_u1",
+      "acquisition_link",
+      "ina_1000hz",
+      "ina_probe100"
+    ]
+  },
+  "clean_scope": {
+    "FPGA": "Fresh HLS, packaged IP and board project outputs; hardware --force",
+    "Zynq": "cleansstate of kernel, bootloader, FSBL, device tree, BOOT.BIN, dmotor software/driver, FPGA firmware package and Linux disk image; see rebuild_zynq_software.sh",
+    "ESP32": "Fresh build and sdkconfig directories, compiler cache disabled, four profiles",
+    "retained": "Downloaded dependencies, toolchains and unrelated Yocto dependency sstate"
+  },
+  "limits": [
+    "Physical testing paused pending assembled monitor/motor boards.",
+    "No operational monitor application or live recovery enabled.",
+    "1 ms/800 us runtime qualification requires loaded target measurements."
+  ],
+  "EDF_state": "Generated hardware and recipe inputs locally updated; EDF pin and repository not committed or pushed.",
+  "warnings": [
+    "Existing PSU-1/PSU-2 DDR DQS skew warnings (-0.009/-0.033 ns), identical to previous main build; no physical DDR/boot qualification."
+  ]
+}

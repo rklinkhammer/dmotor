@@ -148,3 +148,11 @@ the acquisition tests. It injects battery ADC errors/delays, start/preemption
 lateness, repeated-ADC/IPROPI load, every I²C failure/overrun position, and 100 Hz
 bounded-versus-raw behavior. The fake bus checks the four-slot register sequence.
 These tests validate sequencing/abort behavior; actual durations require ESP32-S3.
+
+## Merged-main build evidence
+
+Both the 1 kHz bounded profile and explicit 100 Hz raw-timeout probe pass fresh
+ESP32-S3 builds using pinned ESP-IDF v6.1, with compiler caches disabled. The
+portable acquisition/timing tests also pass native ASan/UBSan and ARM QEMU. See
+[matched build record](../../../../docs/evidence/esp32_main_merge/inputs.json).
+No target was flashed or measured; this does not establish timing qualification.

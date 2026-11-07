@@ -1,0 +1,50 @@
+[
+  {
+    "profile": "uart_u1",
+    "target": "esp32s3",
+    "idf_version": "v6.1",
+    "project_version": "39afd4e",
+    "freertos_hz": 1000,
+    "raw_timeout_probe": false,
+    "elf": "build/merged_release/esp32/uart_u1/build/dmotor_uart_bench.elf",
+    "clean_build": true,
+    "compiler_cache_disabled": true,
+    "pinned_image": "espressif/idf:v6.1@sha256:81893c71bb5e570088901f21def8684c25cd2a9020281bd01b843a7655edb18c"
+  },
+  {
+    "profile": "acquisition_link",
+    "target": "esp32s3",
+    "idf_version": "v6.1",
+    "project_version": "39afd4e",
+    "freertos_hz": 1000,
+    "raw_timeout_probe": false,
+    "elf": "build/merged_release/esp32/acquisition_link/build/dmotor_acquisition_compile_check.elf",
+    "clean_build": true,
+    "compiler_cache_disabled": true,
+    "pinned_image": "espressif/idf:v6.1@sha256:81893c71bb5e570088901f21def8684c25cd2a9020281bd01b843a7655edb18c"
+  },
+  {
+    "profile": "ina_1000hz",
+    "target": "esp32s3",
+    "idf_version": "v6.1",
+    "project_version": "39afd4e",
+    "freertos_hz": 1000,
+    "raw_timeout_probe": false,
+    "elf": "build/merged_release/esp32/ina_1000hz/build/dmotor_ina_adc_timing.elf",
+    "clean_build": true,
+    "compiler_cache_disabled": true,
+    "pinned_image": "espressif/idf:v6.1@sha256:81893c71bb5e570088901f21def8684c25cd2a9020281bd01b843a7655edb18c"
+  },
+  {
+    "profile": "ina_probe100",
+    "target": "esp32s3",
+    "idf_version": "v6.1",
+    "project_version": "39afd4e",
+    "freertos_hz": 100,
+    "raw_timeout_probe": true,
+    "elf": "build/merged_release/esp32/ina_probe100/build/dmotor_ina_adc_timing.elf",
+    "clean_build": true,
+    "compiler_cache_disabled": true,
+    "pinned_image": "espressif/idf:v6.1@sha256:81893c71bb5e570088901f21def8684c25cd2a9020281bd01b843a7655edb18c"
+  }
+]

@@ -1,0 +1,8 @@
+Building uart_u1
+PASS uart_u1
+Building acquisition_link
+PASS acquisition_link
+Building ina_1000hz
+PASS ina_1000hz
+Building ina_probe100
+PASS ina_probe100

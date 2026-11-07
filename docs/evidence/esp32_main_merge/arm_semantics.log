@@ -1,0 +1,16 @@
+DEBUG: Executing shell function do_semantics
+dmotor-semantic-tests: DMOTOR 0.10.1 commit=39afd4e511fcb27eda415ffe92aebe36ad5d41d3 dirty=false source=b8dc5c75f0bd607b1839cca517cb727b29a321f1e59dbb014717a554163d1665 ABI=DMI2/DMB1-schema1/PSF1-1000us
+PASS: mailbox atomicity, replay/range checks, timeout precedence, ownership and HALT lifecycle
+dmotor-protocol-tests: DMOTOR 0.10.1 commit=39afd4e511fcb27eda415ffe92aebe36ad5d41d3 dirty=false source=b8dc5c75f0bd607b1839cca517cb727b29a321f1e59dbb014717a554163d1665 ABI=DMI2/DMB1-schema1/PSF1-1000us
+PASS: typed configuration, ABI checks, telemetry decoding/coherence and transport failure propagation
+dmotor-linux-tests: DMOTOR 0.10.1 commit=39afd4e511fcb27eda415ffe92aebe36ad5d41d3 dirty=false source=b8dc5c75f0bd607b1839cca517cb727b29a321f1e59dbb014717a554163d1665 ABI=DMI2/DMB1-schema1/PSF1-1000us
+PASS: Linux mapping, cross-process ownership, inspection allowlists and cleanup
+dmotor-runtime-tests: DMOTOR 0.10.1 commit=39afd4e511fcb27eda415ffe92aebe36ad5d41d3 dirty=false source=b8dc5c75f0bd607b1839cca517cb727b29a321f1e59dbb014717a554163d1665 ABI=DMI2/DMB1-schema1/PSF1-1000us
+PASS: lifecycle, 400RPM limits, atomic masks, STOP/rearm, watchdog refresh, lease/fault/access loss and readiness deadlines
+monitor codec PASS
+PASS: PS identity, complete packing, context isolation, speculative cancellation, accepted tickets, physical reset rejection
+PASS: 1000 us cadence, physical ramp scaling, maximum encoder event rate, missed-tick fault
+PASS: 188 fused four-stage/commit/tick operations match serial original operations, all reply words
+acquisition deterministic tests passed
+INA plus battery ADC timing cycle tests passed
+DEBUG: Shell function do_semantics finished

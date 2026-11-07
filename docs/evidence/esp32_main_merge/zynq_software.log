@@ -1,0 +1,1857 @@
+DMOTOR staged: 39afd4e511fcb27eda415ffe92aebe36ad5d41d3 source=b8dc5c75f0bd607b1839cca517cb727b29a321f1e59dbb014717a554163d1665
+ Image edf-dev-next:26.06.1 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 593B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 2.51kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/ubuntu:22.04@sha256:b1066385161d28ddf6bc7e7b28a9170eec11484c821d1a5150d176cbde41d7f7
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 116B done
+#4 DONE 0.0s
+
+#5 [ 1/10] FROM docker.io/library/ubuntu:22.04@sha256:b1066385161d28ddf6bc7e7b28a9170eec11484c821d1a5150d176cbde41d7f7
+#5 resolve docker.io/library/ubuntu:22.04@sha256:b1066385161d28ddf6bc7e7b28a9170eec11484c821d1a5150d176cbde41d7f7 0.0s done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 114B done
+#6 DONE 0.0s
+
+#7 [ 3/10] RUN apt-get update && apt-get install -y --no-install-recommends util-linux && rm -rf /var/lib/apt/lists/*
+#7 CACHED
+
+#8 [ 4/10] RUN chmod 0755 /home/amd-edf && install -d -o 1000 -g 1000 /opt/edf
+#8 CACHED
+
+#9 [ 2/10] RUN apt-get update && apt-get install -y --no-install-recommends     ca-certificates locales tzdata build-essential gcc-multilib g++-multilib     libc6-dev-i386 autoconf automake bison flex patch gawk wget curl gperf     git git-lfs libgl1 subversion diffstat unzip zip sysstat texinfo chrpath socat cpio     xz-utils lz4 zstd bmap-tools file rsync bc debianutils iproute2 iputils-ping     python3 python3-pip python3-pexpect python3-venv python3-virtualenv     python3-git python3-jinja2 python3-yaml python3-subunit pylint     repo tmux screen openssh-client graphviz xterm libegl1-mesa libsdl1.2-dev     libssl-dev libncurses-dev libacl1 acl liblz4-tool     && locale-gen en_US.UTF-8     && groupadd --gid 1000 amd-edf     && useradd --uid 1000 --gid 1000 --create-home --shell /bin/bash amd-edf     && install -d /usr/local/share/edf-dev     && dpkg-query -W -f='${Package}\t${Version}\t${Architecture}\n'        > /usr/local/share/edf-dev/packages.tsv     && rm -rf /var/lib/apt/lists/*
+#9 CACHED
+
+#10 [ 6/10] COPY config/sources.lock.xml /tmp/edf-manifest.xml
+#10 CACHED
+
+#11 [ 7/10] RUN git config --global user.name "EDF container" && git config --global user.email "edf@localhost" && repo init -u https://github.com/Xilinx/yocto-manifests.git -b db9ad19553f9acdd5dfc92228e5a0ca10de760db -m default-edf.xml --depth=1     && cmp /tmp/edf-manifest.xml .repo/manifests/default-edf.xml     && repo sync -j4     && repo manifest -r -o /opt/edf/source-manifest.xml
+#11 CACHED
+
+#12 [ 8/10] RUN find /opt/edf -name .git -prune -exec sh -c 'git config --system --add safe.directory "$(dirname "$1")"' sh {} \; && chown -R root:root /opt/edf && chmod -R a+rX /opt/edf
+#12 CACHED
+
+#13 [ 5/10] WORKDIR /opt/edf
+#13 CACHED
+
+#14 [ 9/10] COPY --chmod=755 container-entrypoint.sh /usr/local/bin/container-entrypoint
+#14 CACHED
+
+#15 [10/10] WORKDIR /project
+#15 CACHED
+
+#16 exporting to image
+#16 exporting layers done
+#16 exporting manifest sha256:6d64a34e4e7efb9f9a3e10da8b7015750e991bcfe13f4c29fe0653bc42ce6de2 done
+#16 exporting config sha256:b34bae9f5b60d0a7991c13656a12b851a52d8a7cdd7848382ef23ff099cb72bf done
+#16 exporting attestation manifest sha256:27ec82416039dc9e09bcf0ad4f56da511debaa6eb4f373268f6c94c4a4280f79 0.0s done
+#16 exporting manifest list sha256:0ead17c758455750d69d42c92b6e5a01ba0536828d6f4edab54ec3c31004f789
+#16 exporting manifest list sha256:0ead17c758455750d69d42c92b6e5a01ba0536828d6f4edab54ec3c31004f789 0.0s done
+#16 naming to docker.io/library/edf-dev-next:26.06.1 done
+#16 unpacking to docker.io/library/edf-dev-next:26.06.1 done
+#16 DONE 0.1s
+
+#17 resolving provenance for metadata file
+#17 DONE 0.0s
+ Image edf-dev-next:26.06.1 Built 
+ Container edf-dev-next-hashserv-1 Running 
+ Container edf-dev-next-hashserv-1 Waiting 
+ Container edf-dev-next-hashserv-1 Healthy 
+Build log: /home/rklinkhammer/workspace/edf-dev/artifacts/logs/arty-z7-20/edf-dev-next-arty-z7-20-8eee05984f83.log
+ Container edf-dev-next-arty-z7-20-8eee05984f83 Creating 
+ Container edf-dev-next-arty-z7-20-8eee05984f83 Created 
+PASS storage: /home/amd-edf/edf
+PASS storage: /home/amd-edf/edf/downloads
+PASS storage: /home/amd-edf/edf/sstate-cache
+PASS storage: /artifacts
+PASS hashserv; UID/GID 1000:1000; groups [4, 24, 27, 30, 46, 100, 111, 114, 119, 973, 991, 1000, 1001]
+PASS native compiler, executable build storage and UTF-8 locale
+PASS matched Arty hardware bundle
+PASS matched Arty hardware bundle
+NOTE: Started PRServer with DBfile: /home/amd-edf/edf/builds/arty-z7-20/cache/prserv.sqlite3, Address: 127.0.0.1:38599, PID: 79
+Loading cache...done.
+Loaded 20950 entries from dependency cache.
+Parsing recipes...done.
+Parsing of 15234 .bb files complete (15205 cached, 29 parsed). 20978 targets, 9474 skipped, 16 masked, 0 errors.
+NOTE: Resolving any missing task queue dependencies
+NOTE: Resolving any missing task queue dependencies
+NOTE: Resolving any missing task queue dependencies
+NOTE: Resolving any missing task queue dependencies
+NOTE: Resolving any missing task queue dependencies
+NOTE: Resolving any missing task queue dependencies
+
+Build Configuration (mc:default):
+BB_VERSION           = "2.8.1"
+BUILD_SYS            = "x86_64-linux"
+NATIVELSBSTRING      = "universal"
+TARGET_SYS           = "arm-amd-linux-gnueabi"
+MACHINE              = "arty-z7-20"
+DISTRO               = "amd-edf"
+DISTRO_VERSION       = "26.06+release-cb75a4c061568fe7fecd552a60b17af9c9e64cf1"
+TUNE_FEATURES        = "arm vfp cortexa9 neon thumb callconvention-hard"
+TARGET_FPU           = "hard"
+XILINX_RELEASE_VERSION = "v2026.1"
+DISTRO_NAME          = "AMD Embedded Development Framework Linux distribution"
+ROS_DISTRO           = "jazzy"
+ROS_VERSION          = "2"
+ROS_PYTHON_VERSION   = "3"
+HW_BOOT_MODE         = "5"
+HW_BOOT_MODE_TYPE    = "SD"
+SOC_ON_DISK_BOOT_BIN = "1"
+SYSTEM_DTFILE        = "/home/amd-edf/edf/builds/arty-z7-20/tmp/work/cortexa9t2hf-neon-amd-linux-gnueabi/defaultpkgname/1.0/recipe-sysroot/usr/share/sdt/arty-z7-20/system-top.dts"
+CONFIG_DTFILE        = "/project/meta-edf-dev/conf/dts/arty-z7-20/cortexa9-linux.dts"
+meta                 
+meta-poky            = "HEAD:1d54d1c4736a114e1cecbe85a0306e3814d5ce70"
+meta-oe              
+meta-python          
+meta-filesystems     
+meta-networking      
+meta-multimedia      
+meta-webserver       = "HEAD:4d3e2639dec542b58708244662d5ce36810fc510"
+meta-virtualization  = "HEAD:6415d786379505f3af2849bc56baa5246250f729"
+meta-security        
+meta-tpm             = "HEAD:b13f1705d723650de61277670c8a76aadea4cfdd"
+meta-xilinx-core     
+meta-xilinx-standalone 
+meta-xilinx-standalone-sdt 
+meta-xilinx-multimedia 
+meta-xilinx-demos    
+meta-xilinx-virtualization 
+meta-xilinx-mali400  
+meta-xilinx-gpu-malig78ae 
+meta-microblaze      
+meta-amd-zephyr      = "HEAD:7967c6c8882d43518e8ec84eaadad797b190e6a1"
+meta-xilinx-tsn      = "HEAD:2049bfdc0d2bf7788afe0df8797b9eda7052619d"
+meta-openamp         = "HEAD:b2e2e8083235b6c9a673b0a4d0219ddca0701b12"
+meta-amd-edf         
+meta-amd-edf-bsp     = "HEAD:cb75a4c061568fe7fecd552a60b17af9c9e64cf1"
+meta-kria            = "HEAD:9a35e64910908a42a338cf5ddef37094c82649bd"
+meta-amd-adaptive-socs-core 
+meta-amd-adaptive-socs-bsp = "HEAD:eb06eb73417a86fa649573dc4513fa84ffd0ca7a"
+meta-xilinx-imgrcvry = "HEAD:7967c6c8882d43518e8ec84eaadad797b190e6a1"
+meta-arm             
+meta-arm-toolchain   = "HEAD:a81c19915b5b9e71ed394032e9a50fd06919e1cd"
+meta-jupyter         = "HEAD:5e47ac5efa4c9f7a36912253acbca0cdb2a812e6"
+meta-ros-common      
+meta-ros2            
+meta-ros2-jazzy      = "HEAD:d149a6264d084665b43790c020109bcfbcd54740"
+meta-qt5             = "HEAD:227cf5e7b64c93dfc1a45f235c466db8c3fd8707"
+meta-vitis           = "HEAD:4e8d979f9eb1dd10a98d7668f092be079d257e78"
+meta-zephyr-core     
+meta-zephyr-bsp      = "HEAD:b1f6967a3f9d6a543409714e7fb1c542994e3413"
+meta-embedded-plus   = "HEAD:061037409a56bcf8b1ca2f95e859483578bf3e17"
+meta-edf-dev         = "main:88df49f9eefdf5e0f7dc73f451ad91d84a6fb98f"
+
+
+Build Configuration (mc:arty-z7-20-cortexa9-fsbl):
+BB_VERSION           = "2.8.1"
+BUILD_SYS            = "x86_64-linux"
+NATIVELSBSTRING      = "universal"
+TARGET_SYS           = "arm-xilinx-eabi"
+MACHINE              = "arty-z7-20"
+DISTRO               = "xilinx-standalone"
+DISTRO_VERSION       = "1.0"
+TUNE_FEATURES        = "arm vfp cortexa9"
+TARGET_FPU           = "softfp"
+XILINX_RELEASE_VERSION = "v2026.1"
+DISTRO_NAME          = "AMD Xilinx Standalone distribution (LTO)"
+ROS_DISTRO           = "jazzy"
+ROS_VERSION          = "2"
+ROS_PYTHON_VERSION   = "3"
+HW_BOOT_MODE         = "5"
+HW_BOOT_MODE_TYPE    = "SD"
+SOC_ON_DISK_BOOT_BIN = "1"
+SYSTEM_DTFILE        = "/home/amd-edf/edf/builds/arty-z7-20/tmp-arty-z7-20-cortexa9-fsbl/work/cortexa9-vfp-xilinx-eabi/defaultpkgname/1.0/recipe-sysroot/usr/share/sdt/arty-z7-20/system-top.dts"
+CONFIG_DTFILE        = "/project/meta-edf-dev/conf/dts/arty-z7-20/arty-z7-20-cortexa9-fsbl.dts"
+meta                 
+meta-poky            = "HEAD:1d54d1c4736a114e1cecbe85a0306e3814d5ce70"
+meta-oe              
+meta-python          
+meta-filesystems     
+meta-networking      
+meta-multimedia      
+meta-webserver       = "HEAD:4d3e2639dec542b58708244662d5ce36810fc510"
+meta-virtualization  = "HEAD:6415d786379505f3af2849bc56baa5246250f729"
+meta-security        
+meta-tpm             = "HEAD:b13f1705d723650de61277670c8a76aadea4cfdd"
+meta-xilinx-core     
+meta-xilinx-standalone 
+meta-xilinx-standalone-sdt 
+meta-xilinx-multimedia 
+meta-xilinx-demos    
+meta-xilinx-virtualization 
+meta-xilinx-mali400  
+meta-xilinx-gpu-malig78ae 
+meta-microblaze      
+meta-amd-zephyr      = "HEAD:7967c6c8882d43518e8ec84eaadad797b190e6a1"
+meta-xilinx-tsn      = "HEAD:2049bfdc0d2bf7788afe0df8797b9eda7052619d"
+meta-openamp         = "HEAD:b2e2e8083235b6c9a673b0a4d0219ddca0701b12"
+meta-amd-edf         
+meta-amd-edf-bsp     = "HEAD:cb75a4c061568fe7fecd552a60b17af9c9e64cf1"
+meta-kria            = "HEAD:9a35e64910908a42a338cf5ddef37094c82649bd"
+meta-amd-adaptive-socs-core 
+meta-amd-adaptive-socs-bsp = "HEAD:eb06eb73417a86fa649573dc4513fa84ffd0ca7a"
+meta-xilinx-imgrcvry = "HEAD:7967c6c8882d43518e8ec84eaadad797b190e6a1"
+meta-arm             
+meta-arm-toolchain   = "HEAD:a81c19915b5b9e71ed394032e9a50fd06919e1cd"
+meta-jupyter         = "HEAD:5e47ac5efa4c9f7a36912253acbca0cdb2a812e6"
+meta-ros-common      
+meta-ros2            
+meta-ros2-jazzy      = "HEAD:d149a6264d084665b43790c020109bcfbcd54740"
+meta-qt5             = "HEAD:227cf5e7b64c93dfc1a45f235c466db8c3fd8707"
+meta-vitis           = "HEAD:4e8d979f9eb1dd10a98d7668f092be079d257e78"
+meta-zephyr-core     
+meta-zephyr-bsp      = "HEAD:b1f6967a3f9d6a543409714e7fb1c542994e3413"
+meta-embedded-plus   = "HEAD:061037409a56bcf8b1ca2f95e859483578bf3e17"
+meta-edf-dev         = "main:88df49f9eefdf5e0f7dc73f451ad91d84a6fb98f"
+
+Initialising tasks...Sstate summary: Wanted 0 Local 0 Mirrors 0 Missed 0 Current 0 (0% match, 0% complete)
+done.
+NOTE: No setscene tasks
+NOTE: Executing Tasks
+NOTE: Running task 1 of 8 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone/recipes-bsp/embeddedsw/fsbl-firmware_2026.1.bb:do_clean)
+NOTE: Running task 2 of 8 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/device-tree/device-tree.bb:do_clean)
+NOTE: recipe device-tree-1.0-r0: task do_clean: Started
+NOTE: recipe fsbl-firmware-2026.1+git-r0: task do_clean: Started
+NOTE: recipe device-tree-1.0-r0: task do_clean: Succeeded
+NOTE: Running task 3 of 8 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/u-boot/u-boot-xlnx_2026.01-xilinx-v2026.1.bb:do_clean)
+NOTE: recipe u-boot-xlnx-1_2026.01-xilinx-v2026.1+git-r0: task do_clean: Started
+NOTE: recipe fsbl-firmware-2026.1+git-r0: task do_clean: Succeeded
+NOTE: Running task 4 of 8 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/bootbin/xilinx-bootbin.bb:do_clean)
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_clean: Started
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_clean: Succeeded
+NOTE: Running task 5 of 8 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone/recipes-bsp/embeddedsw/fsbl-firmware_2026.1.bb:do_cleansstate)
+NOTE: recipe fsbl-firmware-2026.1+git-r0: task do_cleansstate: Started
+NOTE: recipe u-boot-xlnx-1_2026.01-xilinx-v2026.1+git-r0: task do_clean: Succeeded
+NOTE: Running task 6 of 8 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/device-tree/device-tree.bb:do_cleansstate)
+NOTE: recipe device-tree-1.0-r0: task do_cleansstate: Started
+NOTE: recipe fsbl-firmware-2026.1+git-r0: task do_cleansstate: Succeeded
+NOTE: Running task 7 of 8 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/u-boot/u-boot-xlnx_2026.01-xilinx-v2026.1.bb:do_cleansstate)
+NOTE: recipe u-boot-xlnx-1_2026.01-xilinx-v2026.1+git-r0: task do_cleansstate: Started
+NOTE: recipe device-tree-1.0-r0: task do_cleansstate: Succeeded
+NOTE: Running task 8 of 8 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/bootbin/xilinx-bootbin.bb:do_cleansstate)
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_cleansstate: Started
+NOTE: recipe u-boot-xlnx-1_2026.01-xilinx-v2026.1+git-r0: task do_cleansstate: Succeeded
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_cleansstate: Succeeded
+NOTE: Tasks Summary: Attempted 8 tasks of which 0 didn't need to be rerun and all succeeded.
+DMOTOR staged: 39afd4e511fcb27eda415ffe92aebe36ad5d41d3 source=b8dc5c75f0bd607b1839cca517cb727b29a321f1e59dbb014717a554163d1665
+ Image edf-dev-next:26.06.1 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 593B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 2.51kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/ubuntu:22.04@sha256:b1066385161d28ddf6bc7e7b28a9170eec11484c821d1a5150d176cbde41d7f7
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 116B done
+#4 DONE 0.0s
+
+#5 [ 1/10] FROM docker.io/library/ubuntu:22.04@sha256:b1066385161d28ddf6bc7e7b28a9170eec11484c821d1a5150d176cbde41d7f7
+#5 resolve docker.io/library/ubuntu:22.04@sha256:b1066385161d28ddf6bc7e7b28a9170eec11484c821d1a5150d176cbde41d7f7 0.0s done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 114B done
+#6 DONE 0.0s
+
+#7 [ 8/10] RUN find /opt/edf -name .git -prune -exec sh -c 'git config --system --add safe.directory "$(dirname "$1")"' sh {} \; && chown -R root:root /opt/edf && chmod -R a+rX /opt/edf
+#7 CACHED
+
+#8 [ 3/10] RUN apt-get update && apt-get install -y --no-install-recommends util-linux && rm -rf /var/lib/apt/lists/*
+#8 CACHED
+
+#9 [ 5/10] WORKDIR /opt/edf
+#9 CACHED
+
+#10 [ 2/10] RUN apt-get update && apt-get install -y --no-install-recommends     ca-certificates locales tzdata build-essential gcc-multilib g++-multilib     libc6-dev-i386 autoconf automake bison flex patch gawk wget curl gperf     git git-lfs libgl1 subversion diffstat unzip zip sysstat texinfo chrpath socat cpio     xz-utils lz4 zstd bmap-tools file rsync bc debianutils iproute2 iputils-ping     python3 python3-pip python3-pexpect python3-venv python3-virtualenv     python3-git python3-jinja2 python3-yaml python3-subunit pylint     repo tmux screen openssh-client graphviz xterm libegl1-mesa libsdl1.2-dev     libssl-dev libncurses-dev libacl1 acl liblz4-tool     && locale-gen en_US.UTF-8     && groupadd --gid 1000 amd-edf     && useradd --uid 1000 --gid 1000 --create-home --shell /bin/bash amd-edf     && install -d /usr/local/share/edf-dev     && dpkg-query -W -f='${Package}\t${Version}\t${Architecture}\n'        > /usr/local/share/edf-dev/packages.tsv     && rm -rf /var/lib/apt/lists/*
+#10 CACHED
+
+#11 [ 6/10] COPY config/sources.lock.xml /tmp/edf-manifest.xml
+#11 CACHED
+
+#12 [ 7/10] RUN git config --global user.name "EDF container" && git config --global user.email "edf@localhost" && repo init -u https://github.com/Xilinx/yocto-manifests.git -b db9ad19553f9acdd5dfc92228e5a0ca10de760db -m default-edf.xml --depth=1     && cmp /tmp/edf-manifest.xml .repo/manifests/default-edf.xml     && repo sync -j4     && repo manifest -r -o /opt/edf/source-manifest.xml
+#12 CACHED
+
+#13 [ 9/10] COPY --chmod=755 container-entrypoint.sh /usr/local/bin/container-entrypoint
+#13 CACHED
+
+#14 [ 4/10] RUN chmod 0755 /home/amd-edf && install -d -o 1000 -g 1000 /opt/edf
+#14 CACHED
+
+#15 [10/10] WORKDIR /project
+#15 CACHED
+
+#16 exporting to image
+#16 exporting layers done
+#16 exporting manifest sha256:6d64a34e4e7efb9f9a3e10da8b7015750e991bcfe13f4c29fe0653bc42ce6de2 done
+#16 exporting config sha256:b34bae9f5b60d0a7991c13656a12b851a52d8a7cdd7848382ef23ff099cb72bf done
+#16 exporting attestation manifest sha256:72adfb0f90dd31cea58f182dfe67423ffaede22fbfc6a4c292d0b4e49723f999
+#16 exporting attestation manifest sha256:72adfb0f90dd31cea58f182dfe67423ffaede22fbfc6a4c292d0b4e49723f999 0.0s done
+#16 exporting manifest list sha256:b4dfba9d1c21fa7c3d52e84748b308bb4e2c758f458a9ea86e382777d07cf9c6 0.0s done
+#16 naming to docker.io/library/edf-dev-next:26.06.1 done
+#16 unpacking to docker.io/library/edf-dev-next:26.06.1 done
+#16 DONE 0.1s
+
+#17 resolving provenance for metadata file
+#17 DONE 0.0s
+ Image edf-dev-next:26.06.1 Built 
+ Container edf-dev-next-hashserv-1 Running 
+ Container edf-dev-next-hashserv-1 Waiting 
+ Container edf-dev-next-hashserv-1 Healthy 
+Build log: /home/rklinkhammer/workspace/edf-dev/artifacts/logs/arty-z7-20/edf-dev-next-arty-z7-20-6f4bd1eb8fb4.log
+ Container edf-dev-next-arty-z7-20-6f4bd1eb8fb4 Creating 
+ Container edf-dev-next-arty-z7-20-6f4bd1eb8fb4 Created 
+PASS storage: /home/amd-edf/edf
+PASS storage: /home/amd-edf/edf/downloads
+PASS storage: /home/amd-edf/edf/sstate-cache
+PASS storage: /artifacts
+PASS hashserv; UID/GID 1000:1000; groups [4, 24, 27, 30, 46, 100, 111, 114, 119, 973, 991, 1000, 1001]
+PASS native compiler, executable build storage and UTF-8 locale
+PASS matched Arty hardware bundle
+PASS matched Arty hardware bundle
+NOTE: Started PRServer with DBfile: /home/amd-edf/edf/builds/arty-z7-20/cache/prserv.sqlite3, Address: 127.0.0.1:42623, PID: 73
+Loading cache...done.
+Loaded 10478 entries from dependency cache.
+Parsing recipes...done.
+Parsing of 7617 .bb files complete (7605 cached, 12 parsed). 10489 targets, 2062 skipped, 8 masked, 0 errors.
+NOTE: Resolving any missing task queue dependencies
+
+Build Configuration:
+BB_VERSION           = "2.8.1"
+BUILD_SYS            = "x86_64-linux"
+NATIVELSBSTRING      = "universal"
+TARGET_SYS           = "arm-amd-linux-gnueabi"
+MACHINE              = "amd-cortexa9thf-neon-common"
+DISTRO               = "amd-edf"
+DISTRO_VERSION       = "26.06+release-cb75a4c061568fe7fecd552a60b17af9c9e64cf1"
+TUNE_FEATURES        = "arm vfp cortexa9 neon thumb callconvention-hard"
+TARGET_FPU           = "hard"
+XILINX_RELEASE_VERSION = "v2026.1"
+DISTRO_NAME          = "AMD Embedded Development Framework Linux distribution"
+ROS_DISTRO           = "jazzy"
+ROS_VERSION          = "2"
+ROS_PYTHON_VERSION   = "3"
+HW_BOOT_MODE         = ""
+HW_BOOT_MODE_TYPE    = ""
+SOC_ON_DISK_BOOT_BIN = ""
+meta                 
+meta-poky            = "HEAD:1d54d1c4736a114e1cecbe85a0306e3814d5ce70"
+meta-oe              
+meta-python          
+meta-filesystems     
+meta-networking      
+meta-multimedia      
+meta-webserver       = "HEAD:4d3e2639dec542b58708244662d5ce36810fc510"
+meta-virtualization  = "HEAD:6415d786379505f3af2849bc56baa5246250f729"
+meta-security        
+meta-tpm             = "HEAD:b13f1705d723650de61277670c8a76aadea4cfdd"
+meta-xilinx-core     
+meta-xilinx-standalone 
+meta-xilinx-standalone-sdt 
+meta-xilinx-multimedia 
+meta-xilinx-demos    
+meta-xilinx-virtualization 
+meta-xilinx-mali400  
+meta-xilinx-gpu-malig78ae 
+meta-microblaze      
+meta-amd-zephyr      = "HEAD:7967c6c8882d43518e8ec84eaadad797b190e6a1"
+meta-xilinx-tsn      = "HEAD:2049bfdc0d2bf7788afe0df8797b9eda7052619d"
+meta-openamp         = "HEAD:b2e2e8083235b6c9a673b0a4d0219ddca0701b12"
+meta-amd-edf         
+meta-amd-edf-bsp     = "HEAD:cb75a4c061568fe7fecd552a60b17af9c9e64cf1"
+meta-kria            = "HEAD:9a35e64910908a42a338cf5ddef37094c82649bd"
+meta-amd-adaptive-socs-core 
+meta-amd-adaptive-socs-bsp = "HEAD:eb06eb73417a86fa649573dc4513fa84ffd0ca7a"
+meta-xilinx-imgrcvry = "HEAD:7967c6c8882d43518e8ec84eaadad797b190e6a1"
+meta-arm             
+meta-arm-toolchain   = "HEAD:a81c19915b5b9e71ed394032e9a50fd06919e1cd"
+meta-jupyter         = "HEAD:5e47ac5efa4c9f7a36912253acbca0cdb2a812e6"
+meta-ros-common      
+meta-ros2            
+meta-ros2-jazzy      = "HEAD:d149a6264d084665b43790c020109bcfbcd54740"
+meta-qt5             = "HEAD:227cf5e7b64c93dfc1a45f235c466db8c3fd8707"
+meta-vitis           = "HEAD:4e8d979f9eb1dd10a98d7668f092be079d257e78"
+meta-zephyr-core     
+meta-zephyr-bsp      = "HEAD:b1f6967a3f9d6a543409714e7fb1c542994e3413"
+meta-embedded-plus   = "HEAD:061037409a56bcf8b1ca2f95e859483578bf3e17"
+meta-edf-dev         = "main:88df49f9eefdf5e0f7dc73f451ad91d84a6fb98f"
+
+Initialising tasks...Sstate summary: Wanted 0 Local 0 Mirrors 0 Missed 0 Current 0 (0% match, 0% complete)
+done.
+NOTE: No setscene tasks
+NOTE: Executing Tasks
+NOTE: Running task 1 of 11 (/opt/edf/sources/poky/meta/recipes-kernel/make-mod-scripts/make-mod-scripts_1.0.bb:do_clean)
+NOTE: Running task 2 of 11 (/opt/edf/sources/poky/../meta-amd-edf/recipes-extended/images/edf-linux-disk-image.bb:do_clean)
+NOTE: recipe make-mod-scripts-1.0-r0: task do_clean: Started
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_clean: Started
+NOTE: recipe make-mod-scripts-1.0-r0: task do_clean: Succeeded
+NOTE: Running task 3 of 11 (/project/meta-edf-dev/recipes-firmware/dvrmc/dvrmc-firmware.bb:do_clean)
+NOTE: recipe dvrmc-firmware-1.0-r0: task do_clean: Started
+NOTE: recipe dvrmc-firmware-1.0-r0: task do_clean: Succeeded
+NOTE: Running task 4 of 11 (/project/meta-edf-dev/recipes-dmotor/dmotor-access/dmotor-access.bb:do_clean)
+NOTE: recipe dmotor-access-1.0-r0: task do_clean: Started
+NOTE: recipe dmotor-access-1.0-r0: task do_clean: Succeeded
+NOTE: Running task 5 of 11 (/project/meta-edf-dev/recipes-dmotor/dmotor-semantic-tests/dmotor-semantic-tests.bb:do_clean)
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_clean: Started
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_clean: Succeeded
+NOTE: Running task 6 of 11 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-kernel/linux/linux-xlnx_6.18.10-v2026.1.bb:do_clean)
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_clean: Started
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_clean: Succeeded
+NOTE: Running task 7 of 11 (/opt/edf/sources/poky/../meta-amd-edf/recipes-extended/images/edf-linux-disk-image.bb:do_cleansstate)
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_cleansstate: Started
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_cleansstate: Succeeded
+NOTE: Running task 8 of 11 (/project/meta-edf-dev/recipes-firmware/dvrmc/dvrmc-firmware.bb:do_cleansstate)
+NOTE: recipe dvrmc-firmware-1.0-r0: task do_cleansstate: Started
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_clean: Succeeded
+NOTE: Running task 9 of 11 (/project/meta-edf-dev/recipes-dmotor/dmotor-access/dmotor-access.bb:do_cleansstate)
+NOTE: recipe dmotor-access-1.0-r0: task do_cleansstate: Started
+NOTE: recipe dvrmc-firmware-1.0-r0: task do_cleansstate: Succeeded
+NOTE: Running task 10 of 11 (/project/meta-edf-dev/recipes-dmotor/dmotor-semantic-tests/dmotor-semantic-tests.bb:do_cleansstate)
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_cleansstate: Started
+NOTE: recipe dmotor-access-1.0-r0: task do_cleansstate: Succeeded
+NOTE: Running task 11 of 11 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-kernel/linux/linux-xlnx_6.18.10-v2026.1.bb:do_cleansstate)
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_cleansstate: Started
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_cleansstate: Succeeded
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_cleansstate: Succeeded
+NOTE: Tasks Summary: Attempted 11 tasks of which 0 didn't need to be rerun and all succeeded.
+DMOTOR staged: 39afd4e511fcb27eda415ffe92aebe36ad5d41d3 source=b8dc5c75f0bd607b1839cca517cb727b29a321f1e59dbb014717a554163d1665
+ Image edf-dev-next:26.06.1 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 593B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 2.51kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/ubuntu:22.04@sha256:b1066385161d28ddf6bc7e7b28a9170eec11484c821d1a5150d176cbde41d7f7
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 116B done
+#4 DONE 0.0s
+
+#5 [ 1/10] FROM docker.io/library/ubuntu:22.04@sha256:b1066385161d28ddf6bc7e7b28a9170eec11484c821d1a5150d176cbde41d7f7
+#5 resolve docker.io/library/ubuntu:22.04@sha256:b1066385161d28ddf6bc7e7b28a9170eec11484c821d1a5150d176cbde41d7f7 0.0s done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 114B done
+#6 DONE 0.0s
+
+#7 [ 9/10] COPY --chmod=755 container-entrypoint.sh /usr/local/bin/container-entrypoint
+#7 CACHED
+
+#8 [ 3/10] RUN apt-get update && apt-get install -y --no-install-recommends util-linux && rm -rf /var/lib/apt/lists/*
+#8 CACHED
+
+#9 [ 6/10] COPY config/sources.lock.xml /tmp/edf-manifest.xml
+#9 CACHED
+
+#10 [ 8/10] RUN find /opt/edf -name .git -prune -exec sh -c 'git config --system --add safe.directory "$(dirname "$1")"' sh {} \; && chown -R root:root /opt/edf && chmod -R a+rX /opt/edf
+#10 CACHED
+
+#11 [ 4/10] RUN chmod 0755 /home/amd-edf && install -d -o 1000 -g 1000 /opt/edf
+#11 CACHED
+
+#12 [ 2/10] RUN apt-get update && apt-get install -y --no-install-recommends     ca-certificates locales tzdata build-essential gcc-multilib g++-multilib     libc6-dev-i386 autoconf automake bison flex patch gawk wget curl gperf     git git-lfs libgl1 subversion diffstat unzip zip sysstat texinfo chrpath socat cpio     xz-utils lz4 zstd bmap-tools file rsync bc debianutils iproute2 iputils-ping     python3 python3-pip python3-pexpect python3-venv python3-virtualenv     python3-git python3-jinja2 python3-yaml python3-subunit pylint     repo tmux screen openssh-client graphviz xterm libegl1-mesa libsdl1.2-dev     libssl-dev libncurses-dev libacl1 acl liblz4-tool     && locale-gen en_US.UTF-8     && groupadd --gid 1000 amd-edf     && useradd --uid 1000 --gid 1000 --create-home --shell /bin/bash amd-edf     && install -d /usr/local/share/edf-dev     && dpkg-query -W -f='${Package}\t${Version}\t${Architecture}\n'        > /usr/local/share/edf-dev/packages.tsv     && rm -rf /var/lib/apt/lists/*
+#12 CACHED
+
+#13 [ 5/10] WORKDIR /opt/edf
+#13 CACHED
+
+#14 [ 7/10] RUN git config --global user.name "EDF container" && git config --global user.email "edf@localhost" && repo init -u https://github.com/Xilinx/yocto-manifests.git -b db9ad19553f9acdd5dfc92228e5a0ca10de760db -m default-edf.xml --depth=1     && cmp /tmp/edf-manifest.xml .repo/manifests/default-edf.xml     && repo sync -j4     && repo manifest -r -o /opt/edf/source-manifest.xml
+#14 CACHED
+
+#15 [10/10] WORKDIR /project
+#15 CACHED
+
+#16 exporting to image
+#16 exporting layers done
+#16 exporting manifest sha256:6d64a34e4e7efb9f9a3e10da8b7015750e991bcfe13f4c29fe0653bc42ce6de2 done
+#16 exporting config sha256:b34bae9f5b60d0a7991c13656a12b851a52d8a7cdd7848382ef23ff099cb72bf done
+#16 exporting attestation manifest sha256:f584e9931c306a797d79dd69f5c00593b3f4f08ac27943a04d68a0a1ab3904a7
+#16 exporting attestation manifest sha256:f584e9931c306a797d79dd69f5c00593b3f4f08ac27943a04d68a0a1ab3904a7 0.0s done
+#16 exporting manifest list sha256:c9edebc10353e9bcadc7b8ed2f1a4f9bcc133a7e8c314de33334525a931d2c1b 0.0s done
+#16 naming to docker.io/library/edf-dev-next:26.06.1 done
+#16 unpacking to docker.io/library/edf-dev-next:26.06.1 done
+#16 DONE 0.2s
+
+#17 resolving provenance for metadata file
+#17 DONE 0.0s
+ Image edf-dev-next:26.06.1 Built 
+ Container edf-dev-next-hashserv-1 Running 
+ Container edf-dev-next-hashserv-1 Waiting 
+ Container edf-dev-next-hashserv-1 Healthy 
+Build log: /home/rklinkhammer/workspace/edf-dev/artifacts/logs/arty-z7-20/edf-dev-next-arty-z7-20-3b274a3bbbd2.log
+ Container edf-dev-next-arty-z7-20-3b274a3bbbd2 Creating 
+ Container edf-dev-next-arty-z7-20-3b274a3bbbd2 Created 
+PASS storage: /home/amd-edf/edf
+PASS storage: /home/amd-edf/edf/downloads
+PASS storage: /home/amd-edf/edf/sstate-cache
+PASS storage: /artifacts
+PASS hashserv; UID/GID 1000:1000; groups [4, 24, 27, 30, 46, 100, 111, 114, 119, 973, 991, 1000, 1001]
+PASS native compiler, executable build storage and UTF-8 locale
+PASS matched Arty hardware bundle
+PASS matched Arty hardware bundle
+NOTE: Started PRServer with DBfile: /home/amd-edf/edf/builds/arty-z7-20/cache/prserv.sqlite3, Address: 127.0.0.1:32845, PID: 79
+Loading cache...done.
+Loaded 20950 entries from dependency cache.
+Parsing recipes...done.
+Parsing of 15234 .bb files complete (15212 cached, 22 parsed). 20978 targets, 9474 skipped, 16 masked, 0 errors.
+NOTE: Resolving any missing task queue dependencies
+NOTE: Resolving any missing task queue dependencies
+NOTE: Resolving any missing task queue dependencies
+NOTE: Resolving any missing task queue dependencies
+NOTE: Resolving any missing task queue dependencies
+NOTE: Resolving any missing task queue dependencies
+
+Build Configuration (mc:default):
+BB_VERSION           = "2.8.1"
+BUILD_SYS            = "x86_64-linux"
+NATIVELSBSTRING      = "universal"
+TARGET_SYS           = "arm-amd-linux-gnueabi"
+MACHINE              = "arty-z7-20"
+DISTRO               = "amd-edf"
+DISTRO_VERSION       = "26.06+release-cb75a4c061568fe7fecd552a60b17af9c9e64cf1"
+TUNE_FEATURES        = "arm vfp cortexa9 neon thumb callconvention-hard"
+TARGET_FPU           = "hard"
+XILINX_RELEASE_VERSION = "v2026.1"
+DISTRO_NAME          = "AMD Embedded Development Framework Linux distribution"
+ROS_DISTRO           = "jazzy"
+ROS_VERSION          = "2"
+ROS_PYTHON_VERSION   = "3"
+HW_BOOT_MODE         = "5"
+HW_BOOT_MODE_TYPE    = "SD"
+SOC_ON_DISK_BOOT_BIN = "1"
+SYSTEM_DTFILE        = "/home/amd-edf/edf/builds/arty-z7-20/tmp/work/cortexa9t2hf-neon-amd-linux-gnueabi/defaultpkgname/1.0/recipe-sysroot/usr/share/sdt/arty-z7-20/system-top.dts"
+CONFIG_DTFILE        = "/project/meta-edf-dev/conf/dts/arty-z7-20/cortexa9-linux.dts"
+meta                 
+meta-poky            = "HEAD:1d54d1c4736a114e1cecbe85a0306e3814d5ce70"
+meta-oe              
+meta-python          
+meta-filesystems     
+meta-networking      
+meta-multimedia      
+meta-webserver       = "HEAD:4d3e2639dec542b58708244662d5ce36810fc510"
+meta-virtualization  = "HEAD:6415d786379505f3af2849bc56baa5246250f729"
+meta-security        
+meta-tpm             = "HEAD:b13f1705d723650de61277670c8a76aadea4cfdd"
+meta-xilinx-core     
+meta-xilinx-standalone 
+meta-xilinx-standalone-sdt 
+meta-xilinx-multimedia 
+meta-xilinx-demos    
+meta-xilinx-virtualization 
+meta-xilinx-mali400  
+meta-xilinx-gpu-malig78ae 
+meta-microblaze      
+meta-amd-zephyr      = "HEAD:7967c6c8882d43518e8ec84eaadad797b190e6a1"
+meta-xilinx-tsn      = "HEAD:2049bfdc0d2bf7788afe0df8797b9eda7052619d"
+meta-openamp         = "HEAD:b2e2e8083235b6c9a673b0a4d0219ddca0701b12"
+meta-amd-edf         
+meta-amd-edf-bsp     = "HEAD:cb75a4c061568fe7fecd552a60b17af9c9e64cf1"
+meta-kria            = "HEAD:9a35e64910908a42a338cf5ddef37094c82649bd"
+meta-amd-adaptive-socs-core 
+meta-amd-adaptive-socs-bsp = "HEAD:eb06eb73417a86fa649573dc4513fa84ffd0ca7a"
+meta-xilinx-imgrcvry = "HEAD:7967c6c8882d43518e8ec84eaadad797b190e6a1"
+meta-arm             
+meta-arm-toolchain   = "HEAD:a81c19915b5b9e71ed394032e9a50fd06919e1cd"
+meta-jupyter         = "HEAD:5e47ac5efa4c9f7a36912253acbca0cdb2a812e6"
+meta-ros-common      
+meta-ros2            
+meta-ros2-jazzy      = "HEAD:d149a6264d084665b43790c020109bcfbcd54740"
+meta-qt5             = "HEAD:227cf5e7b64c93dfc1a45f235c466db8c3fd8707"
+meta-vitis           = "HEAD:4e8d979f9eb1dd10a98d7668f092be079d257e78"
+meta-zephyr-core     
+meta-zephyr-bsp      = "HEAD:b1f6967a3f9d6a543409714e7fb1c542994e3413"
+meta-embedded-plus   = "HEAD:061037409a56bcf8b1ca2f95e859483578bf3e17"
+meta-edf-dev         = "main:88df49f9eefdf5e0f7dc73f451ad91d84a6fb98f"
+
+
+Build Configuration (mc:arty-z7-20-cortexa9-fsbl):
+BB_VERSION           = "2.8.1"
+BUILD_SYS            = "x86_64-linux"
+NATIVELSBSTRING      = "universal"
+TARGET_SYS           = "arm-xilinx-eabi"
+MACHINE              = "arty-z7-20"
+DISTRO               = "xilinx-standalone"
+DISTRO_VERSION       = "1.0"
+TUNE_FEATURES        = "arm vfp cortexa9"
+TARGET_FPU           = "softfp"
+XILINX_RELEASE_VERSION = "v2026.1"
+DISTRO_NAME          = "AMD Xilinx Standalone distribution (LTO)"
+ROS_DISTRO           = "jazzy"
+ROS_VERSION          = "2"
+ROS_PYTHON_VERSION   = "3"
+HW_BOOT_MODE         = "5"
+HW_BOOT_MODE_TYPE    = "SD"
+SOC_ON_DISK_BOOT_BIN = "1"
+SYSTEM_DTFILE        = "/home/amd-edf/edf/builds/arty-z7-20/tmp-arty-z7-20-cortexa9-fsbl/work/cortexa9-vfp-xilinx-eabi/defaultpkgname/1.0/recipe-sysroot/usr/share/sdt/arty-z7-20/system-top.dts"
+CONFIG_DTFILE        = "/project/meta-edf-dev/conf/dts/arty-z7-20/arty-z7-20-cortexa9-fsbl.dts"
+meta                 
+meta-poky            = "HEAD:1d54d1c4736a114e1cecbe85a0306e3814d5ce70"
+meta-oe              
+meta-python          
+meta-filesystems     
+meta-networking      
+meta-multimedia      
+meta-webserver       = "HEAD:4d3e2639dec542b58708244662d5ce36810fc510"
+meta-virtualization  = "HEAD:6415d786379505f3af2849bc56baa5246250f729"
+meta-security        
+meta-tpm             = "HEAD:b13f1705d723650de61277670c8a76aadea4cfdd"
+meta-xilinx-core     
+meta-xilinx-standalone 
+meta-xilinx-standalone-sdt 
+meta-xilinx-multimedia 
+meta-xilinx-demos    
+meta-xilinx-virtualization 
+meta-xilinx-mali400  
+meta-xilinx-gpu-malig78ae 
+meta-microblaze      
+meta-amd-zephyr      = "HEAD:7967c6c8882d43518e8ec84eaadad797b190e6a1"
+meta-xilinx-tsn      = "HEAD:2049bfdc0d2bf7788afe0df8797b9eda7052619d"
+meta-openamp         = "HEAD:b2e2e8083235b6c9a673b0a4d0219ddca0701b12"
+meta-amd-edf         
+meta-amd-edf-bsp     = "HEAD:cb75a4c061568fe7fecd552a60b17af9c9e64cf1"
+meta-kria            = "HEAD:9a35e64910908a42a338cf5ddef37094c82649bd"
+meta-amd-adaptive-socs-core 
+meta-amd-adaptive-socs-bsp = "HEAD:eb06eb73417a86fa649573dc4513fa84ffd0ca7a"
+meta-xilinx-imgrcvry = "HEAD:7967c6c8882d43518e8ec84eaadad797b190e6a1"
+meta-arm             
+meta-arm-toolchain   = "HEAD:a81c19915b5b9e71ed394032e9a50fd06919e1cd"
+meta-jupyter         = "HEAD:5e47ac5efa4c9f7a36912253acbca0cdb2a812e6"
+meta-ros-common      
+meta-ros2            
+meta-ros2-jazzy      = "HEAD:d149a6264d084665b43790c020109bcfbcd54740"
+meta-qt5             = "HEAD:227cf5e7b64c93dfc1a45f235c466db8c3fd8707"
+meta-vitis           = "HEAD:4e8d979f9eb1dd10a98d7668f092be079d257e78"
+meta-zephyr-core     
+meta-zephyr-bsp      = "HEAD:b1f6967a3f9d6a543409714e7fb1c542994e3413"
+meta-embedded-plus   = "HEAD:061037409a56bcf8b1ca2f95e859483578bf3e17"
+meta-edf-dev         = "main:88df49f9eefdf5e0f7dc73f451ad91d84a6fb98f"
+
+Initialising tasks...Sstate summary: Wanted 339 Local 271 Mirrors 0 Missed 68 Current 574 (79% match, 92% complete)
+Removing 22 stale sstate objects for arch cortexa9-vfp...done.
+Removing 5 stale sstate objects for arch arty_z7_20...done.
+Removing 12 stale sstate objects for arch arty_z7_20...done.
+NOTE: Executing Tasks
+NOTE: Running task 564 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-bsp/sdt-artifacts/sdt-artifacts.bb:do_fetch)
+NOTE: recipe sdt-artifacts-1.0-r0: task do_fetch: Started
+NOTE: recipe sdt-artifacts-1.0-r0: task do_fetch: Succeeded
+NOTE: Running task 841 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-bsp/sdt-artifacts/sdt-artifacts.bb:do_unpack)
+NOTE: Running task 889 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-bsp/sdt-artifacts/sdt-artifacts.bb:do_prepare_recipe_sysroot)
+NOTE: recipe sdt-artifacts-1.0-r0: task do_unpack: Started
+NOTE: recipe sdt-artifacts-1.0-r0: task do_prepare_recipe_sysroot: Started
+NOTE: recipe sdt-artifacts-1.0-r0: task do_unpack: Succeeded
+NOTE: Running task 890 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-bsp/sdt-artifacts/sdt-artifacts.bb:do_patch)
+NOTE: recipe sdt-artifacts-1.0-r0: task do_prepare_recipe_sysroot: Succeeded
+NOTE: recipe sdt-artifacts-1.0-r0: task do_patch: Started
+NOTE: recipe sdt-artifacts-1.0-r0: task do_patch: Succeeded
+NOTE: Running task 1074 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-bsp/sdt-artifacts/sdt-artifacts.bb:do_deploy_source_date_epoch)
+NOTE: recipe sdt-artifacts-1.0-r0: task do_deploy_source_date_epoch: Started
+NOTE: recipe sdt-artifacts-1.0-r0: task do_deploy_source_date_epoch: Succeeded
+NOTE: Running noexec task 1593 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-bsp/sdt-artifacts/sdt-artifacts.bb:do_configure)
+NOTE: Running noexec task 1594 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-bsp/sdt-artifacts/sdt-artifacts.bb:do_compile)
+NOTE: Running task 1595 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-bsp/sdt-artifacts/sdt-artifacts.bb:do_install)
+NOTE: Running task 1648 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone/recipes-bsp/embeddedsw/fsbl-firmware_2026.1.bb:do_recipe_qa)
+NOTE: recipe sdt-artifacts-1.0-r0: task do_install: Started
+NOTE: recipe fsbl-firmware-2026.1+git-r0: task do_recipe_qa: Started
+NOTE: recipe fsbl-firmware-2026.1+git-r0: task do_recipe_qa: Succeeded
+NOTE: Running task 1649 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone/recipes-bsp/embeddedsw/fsbl-firmware_2026.1.bb:do_fetch)
+NOTE: recipe sdt-artifacts-1.0-r0: task do_install: Succeeded
+NOTE: Running task 1650 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-bsp/sdt-artifacts/sdt-artifacts.bb:do_populate_sysroot)
+NOTE: recipe fsbl-firmware-2026.1+git-r0: task do_fetch: Started
+NOTE: recipe sdt-artifacts-1.0-r0: task do_populate_sysroot: Started
+NOTE: recipe fsbl-firmware-2026.1+git-r0: task do_fetch: Succeeded
+NOTE: Running task 1681 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone/recipes-bsp/embeddedsw/fsbl-firmware_2026.1.bb:do_unpack)
+NOTE: recipe fsbl-firmware-2026.1+git-r0: task do_unpack: Started
+NOTE: recipe fsbl-firmware-2026.1+git-r0: task do_unpack: Succeeded
+NOTE: Running task 1682 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone/recipes-bsp/embeddedsw/fsbl-firmware_2026.1.bb:do_patch)
+NOTE: recipe fsbl-firmware-2026.1+git-r0: task do_patch: Started
+NOTE: recipe sdt-artifacts-1.0-r0: task do_populate_sysroot: Succeeded
+NOTE: Running task 1685 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-bsp/sdt-artifacts/sdt-artifacts.bb:do_fetch)
+NOTE: recipe fsbl-firmware-2026.1+git-r0: task do_patch: Succeeded
+NOTE: Running task 1724 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/device-tree/device-tree.bb:do_recipe_qa)
+NOTE: recipe sdt-artifacts-1.0-r0: task do_fetch: Started
+NOTE: recipe sdt-artifacts-1.0-r0: task do_fetch: Succeeded
+NOTE: recipe device-tree-1.0-r0: task do_recipe_qa: Started
+NOTE: Running task 1803 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/u-boot/u-boot-xlnx_2026.01-xilinx-v2026.1.bb:do_recipe_qa)
+NOTE: recipe device-tree-1.0-r0: task do_recipe_qa: Succeeded
+NOTE: Running task 1804 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/device-tree/device-tree.bb:do_fetch)
+NOTE: recipe u-boot-xlnx-1_2026.01-xilinx-v2026.1+git-r0: task do_recipe_qa: Started
+NOTE: recipe device-tree-1.0-r0: task do_fetch: Started
+NOTE: recipe device-tree-1.0-r0: task do_fetch: Succeeded
+NOTE: Running task 1805 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-bsp/sdt-artifacts/sdt-artifacts.bb:do_unpack)
+NOTE: recipe u-boot-xlnx-1_2026.01-xilinx-v2026.1+git-r0: task do_recipe_qa: Succeeded
+NOTE: Running task 1806 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/u-boot/u-boot-xlnx_2026.01-xilinx-v2026.1.bb:do_fetch)
+NOTE: recipe sdt-artifacts-1.0-r0: task do_unpack: Started
+NOTE: recipe sdt-artifacts-1.0-r0: task do_unpack: Succeeded
+NOTE: Running task 1807 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-bsp/sdt-artifacts/sdt-artifacts.bb:do_patch)
+NOTE: recipe u-boot-xlnx-1_2026.01-xilinx-v2026.1+git-r0: task do_fetch: Started
+NOTE: recipe sdt-artifacts-1.0-r0: task do_patch: Started
+NOTE: recipe u-boot-xlnx-1_2026.01-xilinx-v2026.1+git-r0: task do_fetch: Succeeded
+NOTE: recipe sdt-artifacts-1.0-r0: task do_patch: Succeeded
+NOTE: Running task 1849 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/device-tree/device-tree.bb:do_unpack)
+NOTE: Running task 1878 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/u-boot/u-boot-xlnx_2026.01-xilinx-v2026.1.bb:do_unpack)
+NOTE: recipe device-tree-1.0-r0: task do_unpack: Started
+NOTE: recipe device-tree-1.0-r0: task do_unpack: Succeeded
+NOTE: Running task 1879 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/device-tree/device-tree.bb:do_patch)
+NOTE: recipe u-boot-xlnx-1_2026.01-xilinx-v2026.1+git-r0: task do_unpack: Started
+NOTE: recipe device-tree-1.0-r0: task do_patch: Started
+NOTE: recipe device-tree-1.0-r0: task do_patch: Succeeded
+NOTE: Running task 1906 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone/recipes-bsp/embeddedsw/fsbl-firmware_2026.1.bb:do_copy_shared_src)
+NOTE: recipe fsbl-firmware-2026.1+git-r0: task do_copy_shared_src: Started
+NOTE: recipe fsbl-firmware-2026.1+git-r0: task do_copy_shared_src: Succeeded
+NOTE: Running task 1956 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-bsp/sdt-artifacts/sdt-artifacts.bb:do_deploy_source_date_epoch)
+NOTE: recipe sdt-artifacts-1.0-r0: task do_deploy_source_date_epoch: Started
+NOTE: recipe sdt-artifacts-1.0-r0: task do_deploy_source_date_epoch: Succeeded
+NOTE: Running task 1957 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-bsp/sdt-artifacts/sdt-artifacts.bb:do_prepare_recipe_sysroot)
+NOTE: recipe sdt-artifacts-1.0-r0: task do_prepare_recipe_sysroot: Started
+NOTE: recipe sdt-artifacts-1.0-r0: task do_prepare_recipe_sysroot: Succeeded
+NOTE: Running noexec task 1958 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-bsp/sdt-artifacts/sdt-artifacts.bb:do_configure)
+NOTE: Running noexec task 1959 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-bsp/sdt-artifacts/sdt-artifacts.bb:do_compile)
+NOTE: Running task 1960 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-bsp/sdt-artifacts/sdt-artifacts.bb:do_install)
+NOTE: recipe u-boot-xlnx-1_2026.01-xilinx-v2026.1+git-r0: task do_unpack: Succeeded
+NOTE: Running task 1961 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/u-boot/u-boot-xlnx_2026.01-xilinx-v2026.1.bb:do_patch)
+NOTE: recipe sdt-artifacts-1.0-r0: task do_install: Started
+NOTE: recipe u-boot-xlnx-1_2026.01-xilinx-v2026.1+git-r0: task do_patch: Started
+NOTE: recipe u-boot-xlnx-1_2026.01-xilinx-v2026.1+git-r0: task do_patch: Succeeded
+NOTE: recipe sdt-artifacts-1.0-r0: task do_install: Succeeded
+NOTE: Running task 2002 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/device-tree/device-tree.bb:do_prepare_recipe_sysroot)
+NOTE: Running task 2008 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-bsp/sdt-artifacts/sdt-artifacts.bb:do_populate_sysroot)
+NOTE: recipe sdt-artifacts-1.0-r0: task do_populate_sysroot: Started
+NOTE: recipe device-tree-1.0-r0: task do_prepare_recipe_sysroot: Started
+NOTE: recipe device-tree-1.0-r0: task do_prepare_recipe_sysroot: Succeeded
+NOTE: Running task 2009 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/device-tree/device-tree.bb:do_configure)
+NOTE: recipe device-tree-1.0-r0: task do_configure: Started
+NOTE: recipe device-tree-1.0-r0: task do_configure: Succeeded
+NOTE: recipe sdt-artifacts-1.0-r0: task do_populate_sysroot: Succeeded
+NOTE: Running task 2010 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/device-tree/device-tree.bb:do_compile)
+NOTE: Running task 2011 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/device-tree/device-tree.bb:do_deploy_source_date_epoch)
+NOTE: recipe device-tree-1.0-r0: task do_compile: Started
+NOTE: recipe device-tree-1.0-r0: task do_deploy_source_date_epoch: Started
+NOTE: recipe device-tree-1.0-r0: task do_compile: Succeeded
+NOTE: Running task 2012 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/device-tree/device-tree.bb:do_install)
+NOTE: recipe device-tree-1.0-r0: task do_deploy_source_date_epoch: Succeeded
+NOTE: Running task 2013 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/device-tree/device-tree.bb:do_prepare_recipe_sysroot)
+NOTE: recipe device-tree-1.0-r0: task do_install: Started
+NOTE: recipe device-tree-1.0-r0: task do_prepare_recipe_sysroot: Started
+NOTE: recipe device-tree-1.0-r0: task do_install: Succeeded
+NOTE: Running task 2014 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/device-tree/device-tree.bb:do_deploy)
+NOTE: recipe device-tree-1.0-r0: task do_deploy: Started
+NOTE: recipe device-tree-1.0-r0: task do_prepare_recipe_sysroot: Succeeded
+NOTE: Running task 2015 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/device-tree/device-tree.bb:do_populate_sysroot)
+NOTE: recipe device-tree-1.0-r0: task do_deploy: Succeeded
+NOTE: Running task 2016 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/device-tree/device-tree.bb:do_configure)
+NOTE: recipe device-tree-1.0-r0: task do_populate_sysroot: Started
+NOTE: recipe device-tree-1.0-r0: task do_configure: Started
+NOTE: recipe device-tree-1.0-r0: task do_configure: Succeeded
+NOTE: Running task 2017 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/device-tree/device-tree.bb:do_compile)
+NOTE: recipe device-tree-1.0-r0: task do_populate_sysroot: Succeeded
+NOTE: recipe device-tree-1.0-r0: task do_compile: Started
+NOTE: Running task 2100 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/u-boot/u-boot-xlnx_2026.01-xilinx-v2026.1.bb:do_deploy_source_date_epoch)
+NOTE: recipe device-tree-1.0-r0: task do_compile: Succeeded
+NOTE: Running task 2101 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/device-tree/device-tree.bb:do_install)
+NOTE: recipe u-boot-xlnx-1_2026.01-xilinx-v2026.1+git-r0: task do_deploy_source_date_epoch: Started
+NOTE: recipe device-tree-1.0-r0: task do_install: Started
+NOTE: recipe u-boot-xlnx-1_2026.01-xilinx-v2026.1+git-r0: task do_deploy_source_date_epoch: Succeeded
+NOTE: Running task 2102 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/u-boot/u-boot-xlnx_2026.01-xilinx-v2026.1.bb:do_prepare_recipe_sysroot)
+NOTE: recipe device-tree-1.0-r0: task do_install: Succeeded
+NOTE: Running task 2103 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/device-tree/device-tree.bb:do_populate_sysroot)
+NOTE: recipe u-boot-xlnx-1_2026.01-xilinx-v2026.1+git-r0: task do_prepare_recipe_sysroot: Started
+NOTE: recipe device-tree-1.0-r0: task do_populate_sysroot: Started
+NOTE: recipe device-tree-1.0-r0: task do_populate_sysroot: Succeeded
+NOTE: Running task 2114 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone/recipes-bsp/embeddedsw/fsbl-firmware_2026.1.bb:do_generate_toolchain_file)
+NOTE: recipe fsbl-firmware-2026.1+git-r0: task do_generate_toolchain_file: Started
+NOTE: recipe u-boot-xlnx-1_2026.01-xilinx-v2026.1+git-r0: task do_prepare_recipe_sysroot: Succeeded
+NOTE: Running task 2115 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/u-boot/u-boot-xlnx_2026.01-xilinx-v2026.1.bb:do_configure)
+NOTE: recipe fsbl-firmware-2026.1+git-r0: task do_generate_toolchain_file: Succeeded
+NOTE: Running task 2116 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone/recipes-bsp/embeddedsw/fsbl-firmware_2026.1.bb:do_deploy_source_date_epoch)
+NOTE: recipe u-boot-xlnx-1_2026.01-xilinx-v2026.1+git-r0: task do_configure: Started
+NOTE: recipe fsbl-firmware-2026.1+git-r0: task do_deploy_source_date_epoch: Started
+NOTE: recipe fsbl-firmware-2026.1+git-r0: task do_deploy_source_date_epoch: Succeeded
+NOTE: Running task 2175 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/bootbin/xilinx-bootbin.bb:do_recipe_qa)
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_recipe_qa: Started
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_recipe_qa: Succeeded
+NOTE: Running task 2176 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/bootbin/xilinx-bootbin.bb:do_fetch)
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_fetch: Started
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_fetch: Succeeded
+NOTE: Running task 2336 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/bootbin/xilinx-bootbin.bb:do_unpack)
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_unpack: Started
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_unpack: Succeeded
+NOTE: Running noexec task 2339 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/bootbin/xilinx-bootbin.bb:do_patch)
+NOTE: Running task 2368 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-bsp/sdt-artifacts/sdt-artifacts.bb:do_package)
+NOTE: recipe sdt-artifacts-1.0-r0: task do_package: Started
+NOTE: recipe sdt-artifacts-1.0-r0: task do_package: Succeeded
+NOTE: Running task 2386 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-libraries/embeddedsw/xilstandalone_2026.1.bb:do_prepare_recipe_sysroot)
+NOTE: recipe xilstandalone-2026.1+git-r0: task do_prepare_recipe_sysroot: Started
+NOTE: recipe xilstandalone-2026.1+git-r0: task do_prepare_recipe_sysroot: Succeeded
+NOTE: Running task 2387 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-libraries/embeddedsw/xilstandalone_2026.1.bb:do_configure)
+NOTE: recipe xilstandalone-2026.1+git-r0: task do_configure: Started
+NOTE: recipe u-boot-xlnx-1_2026.01-xilinx-v2026.1+git-r0: task do_configure: Succeeded
+NOTE: Running task 2388 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/u-boot/u-boot-xlnx_2026.01-xilinx-v2026.1.bb:do_compile)
+NOTE: recipe u-boot-xlnx-1_2026.01-xilinx-v2026.1+git-r0: task do_compile: Started
+NOTE: recipe xilstandalone-2026.1+git-r0: task do_configure: Succeeded
+NOTE: Running task 2389 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-libraries/embeddedsw/xilstandalone_2026.1.bb:do_compile)
+NOTE: recipe xilstandalone-2026.1+git-r0: task do_compile: Started
+NOTE: recipe xilstandalone-2026.1+git-r0: task do_compile: Succeeded
+NOTE: Running task 2390 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-libraries/embeddedsw/xilstandalone_2026.1.bb:do_install)
+NOTE: recipe xilstandalone-2026.1+git-r0: task do_install: Started
+NOTE: recipe xilstandalone-2026.1+git-r0: task do_install: Succeeded
+NOTE: Running task 2391 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-libraries/embeddedsw/xilstandalone_2026.1.bb:do_populate_sysroot)
+NOTE: recipe xilstandalone-2026.1+git-r0: task do_populate_sysroot: Started
+NOTE: recipe xilstandalone-2026.1+git-r0: task do_populate_sysroot: Succeeded
+NOTE: Running task 2392 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/scugic_2026.1.bb:do_prepare_recipe_sysroot)
+NOTE: recipe scugic-2026.1+git-r0: task do_prepare_recipe_sysroot: Started
+NOTE: recipe scugic-2026.1+git-r0: task do_prepare_recipe_sysroot: Succeeded
+NOTE: Running task 2393 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/gpiops_2026.1.bb:do_prepare_recipe_sysroot)
+NOTE: recipe gpiops-2026.1+git-r0: task do_prepare_recipe_sysroot: Started
+NOTE: recipe gpiops-2026.1+git-r0: task do_prepare_recipe_sysroot: Succeeded
+NOTE: Running task 2394 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/emacps_2026.1.bb:do_prepare_recipe_sysroot)
+NOTE: recipe emacps-2026.1+git-r0: task do_prepare_recipe_sysroot: Started
+NOTE: recipe emacps-2026.1+git-r0: task do_prepare_recipe_sysroot: Succeeded
+NOTE: Running task 2395 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/scugic_2026.1.bb:do_generate_driver_data)
+NOTE: recipe scugic-2026.1+git-r0: task do_generate_driver_data: Started
+NOTE: recipe scugic-2026.1+git-r0: task do_generate_driver_data: Succeeded
+NOTE: Running task 2396 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/devcfg_2026.1.bb:do_prepare_recipe_sysroot)
+NOTE: recipe devcfg-2026.1+git-r0: task do_prepare_recipe_sysroot: Started
+NOTE: recipe devcfg-2026.1+git-r0: task do_prepare_recipe_sysroot: Succeeded
+NOTE: Running task 2397 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/iic_2026.1.bb:do_prepare_recipe_sysroot)
+NOTE: recipe iic-2026.1+git-r0: task do_prepare_recipe_sysroot: Started
+NOTE: recipe iic-2026.1+git-r0: task do_prepare_recipe_sysroot: Succeeded
+NOTE: Running task 2398 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/dmaps_2026.1.bb:do_prepare_recipe_sysroot)
+NOTE: recipe dmaps-2026.1+git-r0: task do_prepare_recipe_sysroot: Started
+NOTE: recipe dmaps-2026.1+git-r0: task do_prepare_recipe_sysroot: Succeeded
+NOTE: Running task 2399 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/scuwdt_2026.1.bb:do_prepare_recipe_sysroot)
+NOTE: recipe scuwdt-2026.1+git-r0: task do_prepare_recipe_sysroot: Started
+NOTE: recipe scuwdt-2026.1+git-r0: task do_prepare_recipe_sysroot: Succeeded
+NOTE: Running task 2400 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/scutimer_2026.1.bb:do_prepare_recipe_sysroot)
+NOTE: recipe scutimer-2026.1+git-r0: task do_prepare_recipe_sysroot: Started
+NOTE: recipe scutimer-2026.1+git-r0: task do_prepare_recipe_sysroot: Succeeded
+NOTE: Running task 2401 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/qspips_2026.1.bb:do_prepare_recipe_sysroot)
+NOTE: recipe qspips-2026.1+git-r0: task do_prepare_recipe_sysroot: Started
+NOTE: recipe qspips-2026.1+git-r0: task do_prepare_recipe_sysroot: Succeeded
+NOTE: Running task 2402 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/gpio_2026.1.bb:do_prepare_recipe_sysroot)
+NOTE: recipe gpio-2026.1+git-r0: task do_prepare_recipe_sysroot: Started
+NOTE: recipe gpio-2026.1+git-r0: task do_prepare_recipe_sysroot: Succeeded
+NOTE: Running task 2403 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/coresightps-dcc_2026.1.bb:do_prepare_recipe_sysroot)
+NOTE: recipe coresightps-dcc-2026.1+git-r0: task do_prepare_recipe_sysroot: Started
+NOTE: recipe coresightps-dcc-2026.1+git-r0: task do_prepare_recipe_sysroot: Succeeded
+NOTE: Running task 2404 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/xadcps_2026.1.bb:do_prepare_recipe_sysroot)
+NOTE: recipe xadcps-2026.1+git-r0: task do_prepare_recipe_sysroot: Started
+NOTE: recipe xadcps-2026.1+git-r0: task do_prepare_recipe_sysroot: Succeeded
+NOTE: Running task 2405 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/sdps_2026.1.bb:do_prepare_recipe_sysroot)
+NOTE: recipe sdps-2026.1+git-r0: task do_prepare_recipe_sysroot: Started
+NOTE: recipe sdps-2026.1+git-r0: task do_prepare_recipe_sysroot: Succeeded
+NOTE: Running task 2406 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/usbps_2026.1.bb:do_prepare_recipe_sysroot)
+NOTE: recipe usbps-2026.1+git-r0: task do_prepare_recipe_sysroot: Started
+NOTE: recipe usbps-2026.1+git-r0: task do_prepare_recipe_sysroot: Succeeded
+NOTE: Running task 2407 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/scugic_2026.1.bb:do_configure)
+NOTE: recipe scugic-2026.1+git-r0: task do_configure: Started
+NOTE: recipe scugic-2026.1+git-r0: task do_configure: Succeeded
+NOTE: Running task 2408 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/scugic_2026.1.bb:do_compile)
+NOTE: recipe scugic-2026.1+git-r0: task do_compile: Started
+NOTE: recipe scugic-2026.1+git-r0: task do_compile: Succeeded
+NOTE: Running task 2409 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/scugic_2026.1.bb:do_install)
+NOTE: recipe scugic-2026.1+git-r0: task do_install: Started
+NOTE: recipe scugic-2026.1+git-r0: task do_install: Succeeded
+NOTE: Running task 2410 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/scugic_2026.1.bb:do_populate_sysroot)
+NOTE: recipe scugic-2026.1+git-r0: task do_populate_sysroot: Started
+NOTE: recipe scugic-2026.1+git-r0: task do_populate_sysroot: Succeeded
+NOTE: Running task 2411 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/gpiops_2026.1.bb:do_generate_driver_data)
+NOTE: recipe gpiops-2026.1+git-r0: task do_generate_driver_data: Started
+NOTE: recipe gpiops-2026.1+git-r0: task do_generate_driver_data: Succeeded
+NOTE: Running task 2412 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/uartlite_2026.1.bb:do_prepare_recipe_sysroot)
+NOTE: recipe uartlite-2026.1+git-r0: task do_prepare_recipe_sysroot: Started
+NOTE: recipe uartlite-2026.1+git-r0: task do_prepare_recipe_sysroot: Succeeded
+NOTE: Running task 2413 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/emacps_2026.1.bb:do_generate_driver_data)
+NOTE: recipe emacps-2026.1+git-r0: task do_generate_driver_data: Started
+NOTE: recipe emacps-2026.1+git-r0: task do_generate_driver_data: Succeeded
+NOTE: Running task 2414 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/devcfg_2026.1.bb:do_generate_driver_data)
+NOTE: recipe devcfg-2026.1+git-r0: task do_generate_driver_data: Started
+NOTE: recipe devcfg-2026.1+git-r0: task do_generate_driver_data: Succeeded
+NOTE: Running task 2415 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/iic_2026.1.bb:do_generate_driver_data)
+NOTE: recipe iic-2026.1+git-r0: task do_generate_driver_data: Started
+NOTE: recipe iic-2026.1+git-r0: task do_generate_driver_data: Succeeded
+NOTE: Running task 2416 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/dmaps_2026.1.bb:do_generate_driver_data)
+NOTE: recipe dmaps-2026.1+git-r0: task do_generate_driver_data: Started
+NOTE: recipe dmaps-2026.1+git-r0: task do_generate_driver_data: Succeeded
+NOTE: Running task 2417 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/scuwdt_2026.1.bb:do_generate_driver_data)
+NOTE: recipe scuwdt-2026.1+git-r0: task do_generate_driver_data: Started
+NOTE: recipe scuwdt-2026.1+git-r0: task do_generate_driver_data: Succeeded
+NOTE: Running task 2418 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/scutimer_2026.1.bb:do_generate_driver_data)
+NOTE: recipe scutimer-2026.1+git-r0: task do_generate_driver_data: Started
+NOTE: recipe scutimer-2026.1+git-r0: task do_generate_driver_data: Succeeded
+NOTE: Running task 2419 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/qspips_2026.1.bb:do_generate_driver_data)
+NOTE: recipe qspips-2026.1+git-r0: task do_generate_driver_data: Started
+NOTE: recipe qspips-2026.1+git-r0: task do_generate_driver_data: Succeeded
+NOTE: Running task 2420 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/gpio_2026.1.bb:do_generate_driver_data)
+NOTE: recipe gpio-2026.1+git-r0: task do_generate_driver_data: Started
+NOTE: recipe gpio-2026.1+git-r0: task do_generate_driver_data: Succeeded
+NOTE: Running task 2421 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/coresightps-dcc_2026.1.bb:do_generate_driver_data)
+NOTE: recipe coresightps-dcc-2026.1+git-r0: task do_generate_driver_data: Started
+NOTE: recipe coresightps-dcc-2026.1+git-r0: task do_generate_driver_data: Succeeded
+NOTE: Running task 2422 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/xadcps_2026.1.bb:do_generate_driver_data)
+NOTE: recipe xadcps-2026.1+git-r0: task do_generate_driver_data: Started
+NOTE: recipe xadcps-2026.1+git-r0: task do_generate_driver_data: Succeeded
+NOTE: Running task 2423 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/sdps_2026.1.bb:do_generate_driver_data)
+NOTE: recipe sdps-2026.1+git-r0: task do_generate_driver_data: Started
+NOTE: recipe sdps-2026.1+git-r0: task do_generate_driver_data: Succeeded
+NOTE: Running task 2424 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/usbps_2026.1.bb:do_generate_driver_data)
+NOTE: recipe usbps-2026.1+git-r0: task do_generate_driver_data: Started
+NOTE: recipe usbps-2026.1+git-r0: task do_generate_driver_data: Succeeded
+NOTE: Running task 2425 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/uartps_2026.1.bb:do_prepare_recipe_sysroot)
+NOTE: recipe uartps-2026.1+git-r0: task do_prepare_recipe_sysroot: Started
+NOTE: recipe uartps-2026.1+git-r0: task do_prepare_recipe_sysroot: Succeeded
+NOTE: Running task 2426 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/common_2026.1.bb:do_prepare_recipe_sysroot)
+NOTE: recipe common-2026.1+git-r0: task do_prepare_recipe_sysroot: Started
+NOTE: recipe common-2026.1+git-r0: task do_prepare_recipe_sysroot: Succeeded
+NOTE: Running task 2427 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/gpiops_2026.1.bb:do_configure)
+NOTE: recipe gpiops-2026.1+git-r0: task do_configure: Started
+NOTE: recipe gpiops-2026.1+git-r0: task do_configure: Succeeded
+NOTE: Running task 2428 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/uartlite_2026.1.bb:do_configure)
+NOTE: recipe uartlite-2026.1+git-r0: task do_configure: Started
+NOTE: recipe uartlite-2026.1+git-r0: task do_configure: Succeeded
+NOTE: Running task 2429 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/emacps_2026.1.bb:do_configure)
+NOTE: recipe emacps-2026.1+git-r0: task do_configure: Started
+NOTE: recipe emacps-2026.1+git-r0: task do_configure: Succeeded
+NOTE: Running task 2430 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/devcfg_2026.1.bb:do_configure)
+NOTE: recipe devcfg-2026.1+git-r0: task do_configure: Started
+NOTE: recipe devcfg-2026.1+git-r0: task do_configure: Succeeded
+NOTE: Running task 2431 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/iic_2026.1.bb:do_configure)
+NOTE: recipe iic-2026.1+git-r0: task do_configure: Started
+NOTE: recipe iic-2026.1+git-r0: task do_configure: Succeeded
+NOTE: Running task 2432 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/dmaps_2026.1.bb:do_configure)
+NOTE: recipe dmaps-2026.1+git-r0: task do_configure: Started
+NOTE: recipe dmaps-2026.1+git-r0: task do_configure: Succeeded
+NOTE: Running task 2433 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/scuwdt_2026.1.bb:do_configure)
+NOTE: recipe scuwdt-2026.1+git-r0: task do_configure: Started
+NOTE: recipe scuwdt-2026.1+git-r0: task do_configure: Succeeded
+NOTE: Running task 2434 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/scutimer_2026.1.bb:do_configure)
+NOTE: recipe scutimer-2026.1+git-r0: task do_configure: Started
+NOTE: recipe scutimer-2026.1+git-r0: task do_configure: Succeeded
+NOTE: Running task 2435 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/qspips_2026.1.bb:do_configure)
+NOTE: recipe qspips-2026.1+git-r0: task do_configure: Started
+NOTE: recipe qspips-2026.1+git-r0: task do_configure: Succeeded
+NOTE: Running task 2436 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/gpio_2026.1.bb:do_configure)
+NOTE: recipe gpio-2026.1+git-r0: task do_configure: Started
+NOTE: recipe gpio-2026.1+git-r0: task do_configure: Succeeded
+NOTE: Running task 2437 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/coresightps-dcc_2026.1.bb:do_configure)
+NOTE: recipe coresightps-dcc-2026.1+git-r0: task do_configure: Started
+NOTE: recipe coresightps-dcc-2026.1+git-r0: task do_configure: Succeeded
+NOTE: Running task 2438 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/xadcps_2026.1.bb:do_configure)
+NOTE: recipe xadcps-2026.1+git-r0: task do_configure: Started
+NOTE: recipe xadcps-2026.1+git-r0: task do_configure: Succeeded
+NOTE: Running task 2439 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/sdps_2026.1.bb:do_configure)
+NOTE: recipe sdps-2026.1+git-r0: task do_configure: Started
+NOTE: recipe sdps-2026.1+git-r0: task do_configure: Succeeded
+NOTE: Running task 2440 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/usbps_2026.1.bb:do_configure)
+NOTE: recipe usbps-2026.1+git-r0: task do_configure: Started
+NOTE: recipe usbps-2026.1+git-r0: task do_configure: Succeeded
+NOTE: Running task 2441 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/uartps_2026.1.bb:do_configure)
+NOTE: recipe uartps-2026.1+git-r0: task do_configure: Started
+NOTE: recipe uartps-2026.1+git-r0: task do_configure: Succeeded
+NOTE: Running task 2442 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/common_2026.1.bb:do_configure)
+NOTE: recipe common-2026.1+git-r0: task do_configure: Started
+NOTE: recipe common-2026.1+git-r0: task do_configure: Succeeded
+NOTE: Running task 2443 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/gpiops_2026.1.bb:do_compile)
+NOTE: recipe gpiops-2026.1+git-r0: task do_compile: Started
+NOTE: recipe gpiops-2026.1+git-r0: task do_compile: Succeeded
+NOTE: Running task 2444 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/uartlite_2026.1.bb:do_compile)
+NOTE: recipe uartlite-2026.1+git-r0: task do_compile: Started
+NOTE: recipe uartlite-2026.1+git-r0: task do_compile: Succeeded
+NOTE: Running task 2445 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/emacps_2026.1.bb:do_compile)
+NOTE: recipe emacps-2026.1+git-r0: task do_compile: Started
+NOTE: recipe u-boot-xlnx-1_2026.01-xilinx-v2026.1+git-r0: task do_compile: Succeeded
+NOTE: Running task 2446 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/devcfg_2026.1.bb:do_compile)
+NOTE: recipe devcfg-2026.1+git-r0: task do_compile: Started
+NOTE: recipe emacps-2026.1+git-r0: task do_compile: Succeeded
+NOTE: Running task 2447 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/iic_2026.1.bb:do_compile)
+NOTE: recipe iic-2026.1+git-r0: task do_compile: Started
+NOTE: recipe devcfg-2026.1+git-r0: task do_compile: Succeeded
+NOTE: Running task 2448 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/dmaps_2026.1.bb:do_compile)
+NOTE: recipe dmaps-2026.1+git-r0: task do_compile: Started
+NOTE: recipe iic-2026.1+git-r0: task do_compile: Succeeded
+NOTE: Running task 2449 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/scuwdt_2026.1.bb:do_compile)
+NOTE: recipe dmaps-2026.1+git-r0: task do_compile: Succeeded
+NOTE: Running task 2450 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/scutimer_2026.1.bb:do_compile)
+NOTE: recipe scuwdt-2026.1+git-r0: task do_compile: Started
+NOTE: recipe scutimer-2026.1+git-r0: task do_compile: Started
+NOTE: recipe scuwdt-2026.1+git-r0: task do_compile: Succeeded
+NOTE: Running task 2451 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/qspips_2026.1.bb:do_compile)
+NOTE: recipe scutimer-2026.1+git-r0: task do_compile: Succeeded
+NOTE: Running task 2452 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/gpio_2026.1.bb:do_compile)
+NOTE: recipe qspips-2026.1+git-r0: task do_compile: Started
+NOTE: recipe gpio-2026.1+git-r0: task do_compile: Started
+NOTE: recipe gpio-2026.1+git-r0: task do_compile: Succeeded
+NOTE: Running task 2453 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/coresightps-dcc_2026.1.bb:do_compile)
+NOTE: recipe qspips-2026.1+git-r0: task do_compile: Succeeded
+NOTE: Running task 2454 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/xadcps_2026.1.bb:do_compile)
+NOTE: recipe coresightps-dcc-2026.1+git-r0: task do_compile: Started
+NOTE: recipe xadcps-2026.1+git-r0: task do_compile: Started
+NOTE: recipe coresightps-dcc-2026.1+git-r0: task do_compile: Succeeded
+NOTE: Running task 2455 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/sdps_2026.1.bb:do_compile)
+NOTE: recipe sdps-2026.1+git-r0: task do_compile: Started
+NOTE: recipe xadcps-2026.1+git-r0: task do_compile: Succeeded
+NOTE: Running task 2456 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/usbps_2026.1.bb:do_compile)
+NOTE: recipe usbps-2026.1+git-r0: task do_compile: Started
+NOTE: recipe sdps-2026.1+git-r0: task do_compile: Succeeded
+NOTE: Running task 2457 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/uartps_2026.1.bb:do_compile)
+NOTE: recipe uartps-2026.1+git-r0: task do_compile: Started
+NOTE: recipe usbps-2026.1+git-r0: task do_compile: Succeeded
+NOTE: Running task 2458 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/common_2026.1.bb:do_compile)
+NOTE: recipe common-2026.1+git-r0: task do_compile: Started
+NOTE: recipe uartps-2026.1+git-r0: task do_compile: Succeeded
+NOTE: Running task 2459 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/gpiops_2026.1.bb:do_install)
+NOTE: recipe common-2026.1+git-r0: task do_compile: Succeeded
+NOTE: Running task 2460 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/uartlite_2026.1.bb:do_install)
+NOTE: recipe gpiops-2026.1+git-r0: task do_install: Started
+NOTE: recipe uartlite-2026.1+git-r0: task do_install: Started
+NOTE: recipe gpiops-2026.1+git-r0: task do_install: Succeeded
+NOTE: Running task 2461 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/emacps_2026.1.bb:do_install)
+NOTE: recipe uartlite-2026.1+git-r0: task do_install: Succeeded
+NOTE: Running task 2462 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/devcfg_2026.1.bb:do_install)
+NOTE: recipe emacps-2026.1+git-r0: task do_install: Started
+NOTE: recipe devcfg-2026.1+git-r0: task do_install: Started
+NOTE: recipe emacps-2026.1+git-r0: task do_install: Succeeded
+NOTE: Running task 2463 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/iic_2026.1.bb:do_install)
+NOTE: recipe devcfg-2026.1+git-r0: task do_install: Succeeded
+NOTE: Running task 2464 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/dmaps_2026.1.bb:do_install)
+NOTE: recipe iic-2026.1+git-r0: task do_install: Started
+NOTE: recipe dmaps-2026.1+git-r0: task do_install: Started
+NOTE: recipe iic-2026.1+git-r0: task do_install: Succeeded
+NOTE: Running task 2465 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/scuwdt_2026.1.bb:do_install)
+NOTE: recipe dmaps-2026.1+git-r0: task do_install: Succeeded
+NOTE: Running task 2466 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/scutimer_2026.1.bb:do_install)
+NOTE: recipe scuwdt-2026.1+git-r0: task do_install: Started
+NOTE: recipe scutimer-2026.1+git-r0: task do_install: Started
+NOTE: recipe scuwdt-2026.1+git-r0: task do_install: Succeeded
+NOTE: Running task 2467 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/qspips_2026.1.bb:do_install)
+NOTE: recipe scutimer-2026.1+git-r0: task do_install: Succeeded
+NOTE: Running task 2468 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/gpio_2026.1.bb:do_install)
+NOTE: recipe qspips-2026.1+git-r0: task do_install: Started
+NOTE: recipe gpio-2026.1+git-r0: task do_install: Started
+NOTE: recipe qspips-2026.1+git-r0: task do_install: Succeeded
+NOTE: Running task 2469 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/coresightps-dcc_2026.1.bb:do_install)
+NOTE: recipe gpio-2026.1+git-r0: task do_install: Succeeded
+NOTE: Running task 2470 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/xadcps_2026.1.bb:do_install)
+NOTE: recipe coresightps-dcc-2026.1+git-r0: task do_install: Started
+NOTE: recipe xadcps-2026.1+git-r0: task do_install: Started
+NOTE: recipe coresightps-dcc-2026.1+git-r0: task do_install: Succeeded
+NOTE: Running task 2471 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/sdps_2026.1.bb:do_install)
+NOTE: recipe xadcps-2026.1+git-r0: task do_install: Succeeded
+NOTE: Running task 2472 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/usbps_2026.1.bb:do_install)
+NOTE: recipe sdps-2026.1+git-r0: task do_install: Started
+NOTE: recipe usbps-2026.1+git-r0: task do_install: Started
+NOTE: recipe sdps-2026.1+git-r0: task do_install: Succeeded
+NOTE: Running task 2473 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/uartps_2026.1.bb:do_install)
+NOTE: recipe usbps-2026.1+git-r0: task do_install: Succeeded
+NOTE: Running task 2474 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/common_2026.1.bb:do_install)
+NOTE: recipe uartps-2026.1+git-r0: task do_install: Started
+NOTE: recipe common-2026.1+git-r0: task do_install: Started
+NOTE: recipe uartps-2026.1+git-r0: task do_install: Succeeded
+NOTE: recipe common-2026.1+git-r0: task do_install: Succeeded
+NOTE: Running task 2475 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/gpiops_2026.1.bb:do_populate_sysroot)
+NOTE: Running task 2476 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/uartlite_2026.1.bb:do_populate_sysroot)
+NOTE: recipe gpiops-2026.1+git-r0: task do_populate_sysroot: Started
+NOTE: recipe uartlite-2026.1+git-r0: task do_populate_sysroot: Started
+NOTE: recipe gpiops-2026.1+git-r0: task do_populate_sysroot: Succeeded
+NOTE: Running task 2477 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/emacps_2026.1.bb:do_populate_sysroot)
+NOTE: recipe uartlite-2026.1+git-r0: task do_populate_sysroot: Succeeded
+NOTE: Running task 2478 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/devcfg_2026.1.bb:do_populate_sysroot)
+NOTE: recipe emacps-2026.1+git-r0: task do_populate_sysroot: Started
+NOTE: recipe devcfg-2026.1+git-r0: task do_populate_sysroot: Started
+NOTE: recipe emacps-2026.1+git-r0: task do_populate_sysroot: Succeeded
+NOTE: recipe devcfg-2026.1+git-r0: task do_populate_sysroot: Succeeded
+NOTE: Running task 2479 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/iic_2026.1.bb:do_populate_sysroot)
+NOTE: Running task 2480 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/dmaps_2026.1.bb:do_populate_sysroot)
+NOTE: recipe iic-2026.1+git-r0: task do_populate_sysroot: Started
+NOTE: recipe dmaps-2026.1+git-r0: task do_populate_sysroot: Started
+NOTE: recipe dmaps-2026.1+git-r0: task do_populate_sysroot: Succeeded
+NOTE: recipe iic-2026.1+git-r0: task do_populate_sysroot: Succeeded
+NOTE: Running task 2481 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/scuwdt_2026.1.bb:do_populate_sysroot)
+NOTE: Running task 2482 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/scutimer_2026.1.bb:do_populate_sysroot)
+NOTE: recipe scuwdt-2026.1+git-r0: task do_populate_sysroot: Started
+NOTE: recipe scutimer-2026.1+git-r0: task do_populate_sysroot: Started
+NOTE: recipe scuwdt-2026.1+git-r0: task do_populate_sysroot: Succeeded
+NOTE: recipe scutimer-2026.1+git-r0: task do_populate_sysroot: Succeeded
+NOTE: Running task 2483 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/qspips_2026.1.bb:do_populate_sysroot)
+NOTE: Running task 2484 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/gpio_2026.1.bb:do_populate_sysroot)
+NOTE: recipe qspips-2026.1+git-r0: task do_populate_sysroot: Started
+NOTE: recipe gpio-2026.1+git-r0: task do_populate_sysroot: Started
+NOTE: recipe gpio-2026.1+git-r0: task do_populate_sysroot: Succeeded
+NOTE: recipe qspips-2026.1+git-r0: task do_populate_sysroot: Succeeded
+NOTE: Running task 2485 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/coresightps-dcc_2026.1.bb:do_populate_sysroot)
+NOTE: Running task 2486 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/xadcps_2026.1.bb:do_populate_sysroot)
+NOTE: recipe coresightps-dcc-2026.1+git-r0: task do_populate_sysroot: Started
+NOTE: recipe xadcps-2026.1+git-r0: task do_populate_sysroot: Started
+NOTE: recipe coresightps-dcc-2026.1+git-r0: task do_populate_sysroot: Succeeded
+NOTE: recipe xadcps-2026.1+git-r0: task do_populate_sysroot: Succeeded
+NOTE: Running task 2487 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/sdps_2026.1.bb:do_populate_sysroot)
+NOTE: Running task 2488 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/usbps_2026.1.bb:do_populate_sysroot)
+NOTE: recipe sdps-2026.1+git-r0: task do_populate_sysroot: Started
+NOTE: recipe usbps-2026.1+git-r0: task do_populate_sysroot: Started
+NOTE: recipe usbps-2026.1+git-r0: task do_populate_sysroot: Succeeded
+NOTE: recipe sdps-2026.1+git-r0: task do_populate_sysroot: Succeeded
+NOTE: Running task 2489 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/uartps_2026.1.bb:do_populate_sysroot)
+NOTE: Running task 2490 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-drivers/embeddedsw/common_2026.1.bb:do_populate_sysroot)
+NOTE: recipe uartps-2026.1+git-r0: task do_populate_sysroot: Started
+NOTE: recipe common-2026.1+git-r0: task do_populate_sysroot: Started
+NOTE: recipe common-2026.1+git-r0: task do_populate_sysroot: Succeeded
+NOTE: recipe uartps-2026.1+git-r0: task do_populate_sysroot: Succeeded
+NOTE: Running task 2491 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/u-boot/u-boot-xlnx_2026.01-xilinx-v2026.1.bb:do_uboot_generate_rsa_keys)
+NOTE: Running task 2492 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-libraries/embeddedsw/libxil_2026.1.bb:do_prepare_recipe_sysroot)
+NOTE: recipe u-boot-xlnx-1_2026.01-xilinx-v2026.1+git-r0: task do_uboot_generate_rsa_keys: Started
+NOTE: recipe libxil-2026.1+git-r0: task do_prepare_recipe_sysroot: Started
+NOTE: recipe u-boot-xlnx-1_2026.01-xilinx-v2026.1+git-r0: task do_uboot_generate_rsa_keys: Succeeded
+NOTE: Running task 2493 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/u-boot/u-boot-xlnx_2026.01-xilinx-v2026.1.bb:do_uboot_assemble_fitimage)
+NOTE: recipe libxil-2026.1+git-r0: task do_prepare_recipe_sysroot: Succeeded
+NOTE: Running task 2494 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-libraries/embeddedsw/libxil_2026.1.bb:do_configure)
+NOTE: recipe u-boot-xlnx-1_2026.01-xilinx-v2026.1+git-r0: task do_uboot_assemble_fitimage: Started
+NOTE: recipe libxil-2026.1+git-r0: task do_configure: Started
+NOTE: recipe u-boot-xlnx-1_2026.01-xilinx-v2026.1+git-r0: task do_uboot_assemble_fitimage: Succeeded
+NOTE: Running task 2495 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/u-boot/u-boot-xlnx_2026.01-xilinx-v2026.1.bb:do_create_extlinux_config)
+NOTE: recipe u-boot-xlnx-1_2026.01-xilinx-v2026.1+git-r0: task do_create_extlinux_config: Started
+NOTE: recipe u-boot-xlnx-1_2026.01-xilinx-v2026.1+git-r0: task do_create_extlinux_config: Succeeded
+NOTE: Running task 2496 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/u-boot/u-boot-xlnx_2026.01-xilinx-v2026.1.bb:do_install)
+NOTE: recipe u-boot-xlnx-1_2026.01-xilinx-v2026.1+git-r0: task do_install: Started
+NOTE: recipe libxil-2026.1+git-r0: task do_configure: Succeeded
+NOTE: Running task 2497 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-libraries/embeddedsw/libxil_2026.1.bb:do_compile)
+NOTE: recipe u-boot-xlnx-1_2026.01-xilinx-v2026.1+git-r0: task do_install: Succeeded
+NOTE: Running task 2498 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/u-boot/u-boot-xlnx_2026.01-xilinx-v2026.1.bb:do_populate_sysroot)
+NOTE: recipe libxil-2026.1+git-r0: task do_compile: Started
+NOTE: recipe u-boot-xlnx-1_2026.01-xilinx-v2026.1+git-r0: task do_populate_sysroot: Started
+NOTE: recipe libxil-2026.1+git-r0: task do_compile: Succeeded
+NOTE: Running task 2499 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-libraries/embeddedsw/libxil_2026.1.bb:do_install)
+NOTE: recipe libxil-2026.1+git-r0: task do_install: Started
+NOTE: recipe u-boot-xlnx-1_2026.01-xilinx-v2026.1+git-r0: task do_populate_sysroot: Succeeded
+NOTE: Running task 2658 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-bsp/sdt-artifacts/sdt-artifacts.bb:do_packagedata)
+NOTE: recipe libxil-2026.1+git-r0: task do_install: Succeeded
+NOTE: Running task 2659 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-libraries/embeddedsw/libxil_2026.1.bb:do_populate_sysroot)
+NOTE: recipe sdt-artifacts-1.0-r0: task do_packagedata: Started
+NOTE: recipe libxil-2026.1+git-r0: task do_populate_sysroot: Started
+NOTE: recipe sdt-artifacts-1.0-r0: task do_packagedata: Succeeded
+NOTE: Running task 2666 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/device-tree/device-tree.bb:do_package)
+NOTE: recipe device-tree-1.0-r0: task do_package: Started
+NOTE: recipe libxil-2026.1+git-r0: task do_populate_sysroot: Succeeded
+NOTE: Running task 2667 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-libraries/embeddedsw/xilrsa_2026.1.bb:do_prepare_recipe_sysroot)
+NOTE: recipe xilrsa-2026.1+git-r0: task do_prepare_recipe_sysroot: Started
+NOTE: recipe xilrsa-2026.1+git-r0: task do_prepare_recipe_sysroot: Succeeded
+NOTE: Running task 2668 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-libraries/embeddedsw/xiltimer_2026.1.bb:do_prepare_recipe_sysroot)
+NOTE: recipe xiltimer-2026.1+git-r0: task do_prepare_recipe_sysroot: Started
+NOTE: recipe xiltimer-2026.1+git-r0: task do_prepare_recipe_sysroot: Succeeded
+NOTE: Running task 2669 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-libraries/embeddedsw/xilffs_2026.1.bb:do_prepare_recipe_sysroot)
+NOTE: recipe xilffs-2026.1+git-r0: task do_prepare_recipe_sysroot: Started
+NOTE: recipe device-tree-1.0-r0: task do_package: Succeeded
+NOTE: Running task 2670 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-libraries/embeddedsw/xilrsa_2026.1.bb:do_configure)
+NOTE: recipe xilffs-2026.1+git-r0: task do_prepare_recipe_sysroot: Succeeded
+NOTE: Running task 2671 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-libraries/embeddedsw/xiltimer_2026.1.bb:do_configure)
+NOTE: recipe xilrsa-2026.1+git-r0: task do_configure: Started
+NOTE: recipe xiltimer-2026.1+git-r0: task do_configure: Started
+NOTE: recipe xiltimer-2026.1+git-r0: task do_configure: Succeeded
+NOTE: recipe xilrsa-2026.1+git-r0: task do_configure: Succeeded
+NOTE: Running task 2672 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-libraries/embeddedsw/xilffs_2026.1.bb:do_configure)
+NOTE: Running task 2673 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-libraries/embeddedsw/xilrsa_2026.1.bb:do_compile)
+NOTE: recipe xilffs-2026.1+git-r0: task do_configure: Started
+NOTE: recipe xilrsa-2026.1+git-r0: task do_compile: Started
+NOTE: recipe xilrsa-2026.1+git-r0: task do_compile: Succeeded
+NOTE: Running task 2674 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-libraries/embeddedsw/xiltimer_2026.1.bb:do_compile)
+NOTE: recipe xiltimer-2026.1+git-r0: task do_compile: Started
+NOTE: recipe xiltimer-2026.1+git-r0: task do_compile: Succeeded
+NOTE: Running task 2675 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-libraries/embeddedsw/xilrsa_2026.1.bb:do_install)
+NOTE: recipe xilrsa-2026.1+git-r0: task do_install: Started
+NOTE: recipe xilffs-2026.1+git-r0: task do_configure: Succeeded
+NOTE: Running task 2676 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-libraries/embeddedsw/xilffs_2026.1.bb:do_compile)
+NOTE: recipe xilffs-2026.1+git-r0: task do_compile: Started
+NOTE: recipe xilrsa-2026.1+git-r0: task do_install: Succeeded
+NOTE: Running task 2677 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-libraries/embeddedsw/xiltimer_2026.1.bb:do_install)
+NOTE: recipe xiltimer-2026.1+git-r0: task do_install: Started
+NOTE: recipe xilffs-2026.1+git-r0: task do_compile: Succeeded
+NOTE: Running task 2678 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-libraries/embeddedsw/xilffs_2026.1.bb:do_install)
+NOTE: recipe xiltimer-2026.1+git-r0: task do_install: Succeeded
+NOTE: Running task 2679 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-libraries/embeddedsw/xilrsa_2026.1.bb:do_populate_sysroot)
+NOTE: recipe xilffs-2026.1+git-r0: task do_install: Started
+NOTE: recipe xilrsa-2026.1+git-r0: task do_populate_sysroot: Started
+NOTE: recipe xilffs-2026.1+git-r0: task do_install: Succeeded
+NOTE: Running task 2680 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-libraries/embeddedsw/xiltimer_2026.1.bb:do_populate_sysroot)
+NOTE: recipe xilrsa-2026.1+git-r0: task do_populate_sysroot: Succeeded
+NOTE: Running task 2681 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-libraries/embeddedsw/xilffs_2026.1.bb:do_populate_sysroot)
+NOTE: recipe xiltimer-2026.1+git-r0: task do_populate_sysroot: Started
+NOTE: recipe xilffs-2026.1+git-r0: task do_populate_sysroot: Started
+NOTE: recipe xiltimer-2026.1+git-r0: task do_populate_sysroot: Succeeded
+NOTE: Running task 2682 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/u-boot/u-boot-xlnx_2026.01-xilinx-v2026.1.bb:do_package)
+NOTE: recipe xilffs-2026.1+git-r0: task do_populate_sysroot: Succeeded
+NOTE: Running task 2683 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone/recipes-bsp/embeddedsw/fsbl-firmware_2026.1.bb:do_prepare_recipe_sysroot)
+NOTE: recipe fsbl-firmware-2026.1+git-r0: task do_prepare_recipe_sysroot: Started
+NOTE: recipe u-boot-xlnx-1_2026.01-xilinx-v2026.1+git-r0: task do_package: Started
+NOTE: recipe fsbl-firmware-2026.1+git-r0: task do_prepare_recipe_sysroot: Succeeded
+NOTE: Running task 2684 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone/recipes-bsp/embeddedsw/fsbl-firmware_2026.1.bb:do_configure)
+NOTE: recipe fsbl-firmware-2026.1+git-r0: task do_configure: Started
+NOTE: recipe u-boot-xlnx-1_2026.01-xilinx-v2026.1+git-r0: task do_package: Succeeded
+NOTE: Running task 2688 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/bootbin/xilinx-bootbin.bb:do_deploy_source_date_epoch)
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_deploy_source_date_epoch: Started
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_deploy_source_date_epoch: Succeeded
+NOTE: Running task 2689 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/device-tree/device-tree.bb:do_packagedata)
+NOTE: recipe device-tree-1.0-r0: task do_packagedata: Started
+NOTE: recipe device-tree-1.0-r0: task do_packagedata: Succeeded
+NOTE: recipe fsbl-firmware-2026.1+git-r0: task do_configure: Succeeded
+NOTE: Running task 2690 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone/recipes-bsp/embeddedsw/fsbl-firmware_2026.1.bb:do_compile)
+NOTE: Running task 2691 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/u-boot/u-boot-xlnx_2026.01-xilinx-v2026.1.bb:do_packagedata)
+NOTE: recipe fsbl-firmware-2026.1+git-r0: task do_compile: Started
+NOTE: recipe u-boot-xlnx-1_2026.01-xilinx-v2026.1+git-r0: task do_packagedata: Started
+NOTE: recipe u-boot-xlnx-1_2026.01-xilinx-v2026.1+git-r0: task do_packagedata: Succeeded
+NOTE: Running task 2841 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-bsp/sdt-artifacts/sdt-artifacts.bb:do_collect_spdx_deps)
+NOTE: recipe sdt-artifacts-1.0-r0: task do_collect_spdx_deps: Started
+NOTE: recipe sdt-artifacts-1.0-r0: task do_collect_spdx_deps: Succeeded
+NOTE: Running task 2848 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-bsp/sdt-artifacts/sdt-artifacts.bb:do_create_spdx)
+NOTE: recipe sdt-artifacts-1.0-r0: task do_create_spdx: Started
+NOTE: recipe sdt-artifacts-1.0-r0: task do_create_spdx: Succeeded
+NOTE: Running task 2853 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/device-tree/device-tree.bb:do_collect_spdx_deps)
+NOTE: recipe device-tree-1.0-r0: task do_collect_spdx_deps: Started
+NOTE: recipe device-tree-1.0-r0: task do_collect_spdx_deps: Succeeded
+NOTE: Running task 2854 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/u-boot/u-boot-xlnx_2026.01-xilinx-v2026.1.bb:do_collect_spdx_deps)
+NOTE: recipe u-boot-xlnx-1_2026.01-xilinx-v2026.1+git-r0: task do_collect_spdx_deps: Started
+NOTE: recipe u-boot-xlnx-1_2026.01-xilinx-v2026.1+git-r0: task do_collect_spdx_deps: Succeeded
+NOTE: Running task 2858 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/device-tree/device-tree.bb:do_create_spdx)
+NOTE: recipe fsbl-firmware-2026.1+git-r0: task do_compile: Succeeded
+NOTE: Running task 2859 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone/recipes-bsp/embeddedsw/fsbl-firmware_2026.1.bb:do_install)
+NOTE: recipe device-tree-1.0-r0: task do_create_spdx: Started
+NOTE: recipe fsbl-firmware-2026.1+git-r0: task do_install: Started
+NOTE: recipe device-tree-1.0-r0: task do_create_spdx: Succeeded
+NOTE: Running task 2860 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/u-boot/u-boot-xlnx_2026.01-xilinx-v2026.1.bb:do_create_spdx)
+NOTE: recipe u-boot-xlnx-1_2026.01-xilinx-v2026.1+git-r0: task do_create_spdx: Started
+NOTE: recipe fsbl-firmware-2026.1+git-r0: task do_install: Succeeded
+NOTE: Running task 2861 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone/recipes-bsp/embeddedsw/fsbl-firmware_2026.1.bb:do_package)
+NOTE: recipe u-boot-xlnx-1_2026.01-xilinx-v2026.1+git-r0: task do_create_spdx: Succeeded
+NOTE: Running task 2873 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-bsp/sdt-artifacts/sdt-artifacts.bb:do_deploy)
+NOTE: recipe fsbl-firmware-2026.1+git-r0: task do_package: Started
+NOTE: recipe sdt-artifacts-1.0-r0: task do_deploy: Started
+NOTE: recipe fsbl-firmware-2026.1+git-r0: task do_package: Succeeded
+NOTE: Running task 2874 of 2910 (mc:arty-z7-20-cortexa9-fsbl:/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone/recipes-bsp/embeddedsw/fsbl-firmware_2026.1.bb:do_deploy)
+NOTE: recipe sdt-artifacts-1.0-r0: task do_deploy: Succeeded
+NOTE: Running task 2875 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-standalone-sdt/recipes-bsp/sdt-artifacts/sdt-artifacts.bb:do_deploy)
+NOTE: recipe sdt-artifacts-1.0-r0: task do_deploy: Started
+NOTE: recipe fsbl-firmware-2026.1+git-r0: task do_deploy: Started
+NOTE: recipe fsbl-firmware-2026.1+git-r0: task do_deploy: Succeeded
+NOTE: Running task 2876 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/embeddedsw/fsbl.bb:do_fetch)
+NOTE: recipe sdt-artifacts-1.0-r0: task do_deploy: Succeeded
+NOTE: recipe fsbl-1.0-r0: task do_fetch: Started
+NOTE: recipe fsbl-1.0-r0: task do_fetch: Succeeded
+NOTE: Running task 2878 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/device-tree/device-tree.bb:do_deploy)
+NOTE: Running task 2879 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/embeddedsw/fsbl.bb:do_unpack)
+NOTE: recipe device-tree-1.0-r0: task do_deploy: Started
+NOTE: recipe fsbl-1.0-r0: task do_unpack: Started
+NOTE: recipe fsbl-1.0-r0: task do_unpack: Succeeded
+NOTE: Running task 2880 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/embeddedsw/fsbl.bb:do_patch)
+NOTE: recipe fsbl-1.0-r0: task do_patch: Started
+NOTE: recipe fsbl-1.0-r0: task do_patch: Succeeded
+NOTE: Running task 2881 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/embeddedsw/fsbl.bb:do_deploy_source_date_epoch)
+NOTE: recipe device-tree-1.0-r0: task do_deploy: Succeeded
+NOTE: Running task 2882 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/embeddedsw/fsbl.bb:do_prepare_recipe_sysroot)
+NOTE: recipe fsbl-1.0-r0: task do_deploy_source_date_epoch: Started
+NOTE: recipe fsbl-1.0-r0: task do_prepare_recipe_sysroot: Started
+NOTE: recipe fsbl-1.0-r0: task do_prepare_recipe_sysroot: Succeeded
+NOTE: Running task 2883 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/embeddedsw/fsbl.bb:do_collect_spdx_deps)
+NOTE: recipe fsbl-1.0-r0: task do_deploy_source_date_epoch: Succeeded
+NOTE: Running task 2884 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/embeddedsw/fsbl.bb:do_configure)
+NOTE: recipe fsbl-1.0-r0: task do_collect_spdx_deps: Started
+NOTE: recipe fsbl-1.0-r0: task do_collect_spdx_deps: Succeeded
+NOTE: Running task 2885 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/u-boot/u-boot-xlnx_2026.01-xilinx-v2026.1.bb:do_deploy)
+NOTE: recipe fsbl-1.0-r0: task do_configure: Started
+NOTE: recipe fsbl-1.0-r0: task do_configure: Succeeded
+NOTE: recipe u-boot-xlnx-1_2026.01-xilinx-v2026.1+git-r0: task do_deploy: Started
+NOTE: Running task 2886 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/embeddedsw/fsbl.bb:do_compile)
+NOTE: recipe fsbl-1.0-r0: task do_compile: Started
+NOTE: recipe fsbl-1.0-r0: task do_compile: Succeeded
+NOTE: Running task 2887 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/embeddedsw/fsbl.bb:do_install)
+NOTE: recipe fsbl-1.0-r0: task do_install: Started
+NOTE: recipe u-boot-xlnx-1_2026.01-xilinx-v2026.1+git-r0: task do_deploy: Succeeded
+NOTE: Running task 2889 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/bootbin/xilinx-bootbin.bb:do_populate_lic)
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_populate_lic: Started
+NOTE: recipe fsbl-1.0-r0: task do_install: Succeeded
+NOTE: Running task 2890 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/embeddedsw/fsbl.bb:do_populate_sysroot)
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_populate_lic: Succeeded
+NOTE: Running task 2891 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/embeddedsw/fsbl.bb:do_package)
+NOTE: recipe fsbl-1.0-r0: task do_populate_sysroot: Started
+NOTE: recipe fsbl-1.0-r0: task do_package: Started
+NOTE: recipe fsbl-1.0-r0: task do_populate_sysroot: Succeeded
+NOTE: Running task 2892 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/bootbin/xilinx-bootbin.bb:do_prepare_recipe_sysroot)
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_prepare_recipe_sysroot: Started
+NOTE: recipe fsbl-1.0-r0: task do_package: Succeeded
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_prepare_recipe_sysroot: Succeeded
+NOTE: Running setscene task 913 of 913 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/embeddedsw/fsbl.bb:do_packagedata_setscene)
+NOTE: Running task 2893 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/bootbin/xilinx-bootbin.bb:do_amr_overlay_cdo)
+NOTE: recipe fsbl-1.0-r0: task do_packagedata_setscene: Started
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_amr_overlay_cdo: Started
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_amr_overlay_cdo: Succeeded
+NOTE: recipe fsbl-1.0-r0: task do_packagedata_setscene: Succeeded
+NOTE: Running task 2895 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/bootbin/xilinx-bootbin.bb:do_manifest_aggregate)
+NOTE: Running task 2896 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/embeddedsw/fsbl.bb:do_create_spdx)
+NOTE: recipe fsbl-1.0-r0: task do_create_spdx: Started
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_manifest_aggregate: Started
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_manifest_aggregate: Succeeded
+NOTE: Running task 2897 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/bootbin/xilinx-bootbin.bb:do_configure)
+NOTE: recipe fsbl-1.0-r0: task do_create_spdx: Succeeded
+NOTE: Running task 2898 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/bootbin/xilinx-bootbin.bb:do_collect_spdx_deps)
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_configure: Started
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_configure: Succeeded
+NOTE: Running task 2899 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/bootbin/xilinx-bootbin.bb:do_compile)
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_collect_spdx_deps: Started
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_collect_spdx_deps: Succeeded
+NOTE: Running task 2900 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/embeddedsw/fsbl.bb:do_deploy)
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_compile: Started
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_compile: Succeeded
+NOTE: Running task 2901 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/bootbin/xilinx-bootbin.bb:do_install)
+NOTE: recipe fsbl-1.0-r0: task do_deploy: Started
+NOTE: recipe fsbl-1.0-r0: task do_deploy: Succeeded
+NOTE: Running task 2902 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/bootbin/xilinx-bootbin.bb:do_deploy)
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_install: Started
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_deploy: Started
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_install: Succeeded
+NOTE: Running task 2903 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/bootbin/xilinx-bootbin.bb:do_package)
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_package: Started
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_deploy: Succeeded
+NOTE: Running task 2904 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/bootbin/xilinx-bootbin.bb:do_populate_sysroot)
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_populate_sysroot: Started
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_populate_sysroot: Succeeded
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_package: Succeeded
+NOTE: Running task 2905 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/bootbin/xilinx-bootbin.bb:do_packagedata)
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_packagedata: Started
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_packagedata: Succeeded
+NOTE: Running task 2906 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/bootbin/xilinx-bootbin.bb:do_create_spdx)
+NOTE: Running task 2907 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/bootbin/xilinx-bootbin.bb:do_package_write_rpm)
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_create_spdx: Started
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_package_write_rpm: Started
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_create_spdx: Succeeded
+NOTE: Running task 2908 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/bootbin/xilinx-bootbin.bb:do_package_qa)
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_package_qa: Started
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_package_write_rpm: Succeeded
+NOTE: Running task 2909 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/bootbin/xilinx-bootbin.bb:do_create_runtime_spdx)
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_package_qa: Succeeded
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_create_runtime_spdx: Started
+NOTE: recipe xilinx-bootbin-1.0-r0: task do_create_runtime_spdx: Succeeded
+NOTE: Running noexec task 2910 of 2910 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-bsp/bootbin/xilinx-bootbin.bb:do_build)
+NOTE: Tasks Summary: Attempted 2910 tasks of which 2675 didn't need to be rerun and all succeeded.
+NOTE: Started PRServer with DBfile: /home/amd-edf/edf/builds/arty-z7-20/cache/prserv.sqlite3, Address: 127.0.0.1:42771, PID: 25347
+Loading cache...done.
+Loaded 10478 entries from dependency cache.
+Parsing recipes...done.
+Parsing of 7617 .bb files complete (7606 cached, 11 parsed). 10489 targets, 2062 skipped, 8 masked, 0 errors.
+NOTE: Resolving any missing task queue dependencies
+
+Build Configuration:
+BB_VERSION           = "2.8.1"
+BUILD_SYS            = "x86_64-linux"
+NATIVELSBSTRING      = "universal"
+TARGET_SYS           = "arm-amd-linux-gnueabi"
+MACHINE              = "amd-cortexa9thf-neon-common"
+DISTRO               = "amd-edf"
+DISTRO_VERSION       = "26.06+release-cb75a4c061568fe7fecd552a60b17af9c9e64cf1"
+TUNE_FEATURES        = "arm vfp cortexa9 neon thumb callconvention-hard"
+TARGET_FPU           = "hard"
+XILINX_RELEASE_VERSION = "v2026.1"
+DISTRO_NAME          = "AMD Embedded Development Framework Linux distribution"
+ROS_DISTRO           = "jazzy"
+ROS_VERSION          = "2"
+ROS_PYTHON_VERSION   = "3"
+HW_BOOT_MODE         = ""
+HW_BOOT_MODE_TYPE    = ""
+SOC_ON_DISK_BOOT_BIN = ""
+meta                 
+meta-poky            = "HEAD:1d54d1c4736a114e1cecbe85a0306e3814d5ce70"
+meta-oe              
+meta-python          
+meta-filesystems     
+meta-networking      
+meta-multimedia      
+meta-webserver       = "HEAD:4d3e2639dec542b58708244662d5ce36810fc510"
+meta-virtualization  = "HEAD:6415d786379505f3af2849bc56baa5246250f729"
+meta-security        
+meta-tpm             = "HEAD:b13f1705d723650de61277670c8a76aadea4cfdd"
+meta-xilinx-core     
+meta-xilinx-standalone 
+meta-xilinx-standalone-sdt 
+meta-xilinx-multimedia 
+meta-xilinx-demos    
+meta-xilinx-virtualization 
+meta-xilinx-mali400  
+meta-xilinx-gpu-malig78ae 
+meta-microblaze      
+meta-amd-zephyr      = "HEAD:7967c6c8882d43518e8ec84eaadad797b190e6a1"
+meta-xilinx-tsn      = "HEAD:2049bfdc0d2bf7788afe0df8797b9eda7052619d"
+meta-openamp         = "HEAD:b2e2e8083235b6c9a673b0a4d0219ddca0701b12"
+meta-amd-edf         
+meta-amd-edf-bsp     = "HEAD:cb75a4c061568fe7fecd552a60b17af9c9e64cf1"
+meta-kria            = "HEAD:9a35e64910908a42a338cf5ddef37094c82649bd"
+meta-amd-adaptive-socs-core 
+meta-amd-adaptive-socs-bsp = "HEAD:eb06eb73417a86fa649573dc4513fa84ffd0ca7a"
+meta-xilinx-imgrcvry = "HEAD:7967c6c8882d43518e8ec84eaadad797b190e6a1"
+meta-arm             
+meta-arm-toolchain   = "HEAD:a81c19915b5b9e71ed394032e9a50fd06919e1cd"
+meta-jupyter         = "HEAD:5e47ac5efa4c9f7a36912253acbca0cdb2a812e6"
+meta-ros-common      
+meta-ros2            
+meta-ros2-jazzy      = "HEAD:d149a6264d084665b43790c020109bcfbcd54740"
+meta-qt5             = "HEAD:227cf5e7b64c93dfc1a45f235c466db8c3fd8707"
+meta-vitis           = "HEAD:4e8d979f9eb1dd10a98d7668f092be079d257e78"
+meta-zephyr-core     
+meta-zephyr-bsp      = "HEAD:b1f6967a3f9d6a543409714e7fb1c542994e3413"
+meta-embedded-plus   = "HEAD:061037409a56bcf8b1ca2f95e859483578bf3e17"
+meta-edf-dev         = "main:88df49f9eefdf5e0f7dc73f451ad91d84a6fb98f"
+
+Initialising tasks...Sstate summary: Wanted 1137 Local 1093 Mirrors 0 Missed 44 Current 3327 (96% match, 99% complete)
+done.
+NOTE: Executing Tasks
+NOTE: Running setscene task 3969 of 4467 (/opt/edf/sources/poky/meta/recipes-kernel/make-mod-scripts/make-mod-scripts_1.0.bb:do_package_qa_setscene)
+NOTE: Running setscene task 4023 of 4467 (/opt/edf/sources/poky/meta/recipes-kernel/make-mod-scripts/make-mod-scripts_1.0.bb:do_create_runtime_spdx_setscene)
+NOTE: recipe make-mod-scripts-1.0-r0: task do_package_qa_setscene: Started
+NOTE: recipe make-mod-scripts-1.0-r0: task do_create_runtime_spdx_setscene: Started
+NOTE: recipe make-mod-scripts-1.0-r0: task do_package_qa_setscene: Succeeded
+NOTE: recipe make-mod-scripts-1.0-r0: task do_create_runtime_spdx_setscene: Succeeded
+NOTE: Running setscene task 4102 of 4467 (/opt/edf/sources/poky/meta/recipes-kernel/make-mod-scripts/make-mod-scripts_1.0.bb:do_package_write_rpm_setscene)
+NOTE: Running setscene task 4124 of 4467 (/opt/edf/sources/poky/meta/recipes-kernel/make-mod-scripts/make-mod-scripts_1.0.bb:do_populate_lic_setscene)
+NOTE: recipe make-mod-scripts-1.0-r0: task do_package_write_rpm_setscene: Started
+NOTE: recipe make-mod-scripts-1.0-r0: task do_populate_lic_setscene: Started
+NOTE: recipe make-mod-scripts-1.0-r0: task do_populate_lic_setscene: Succeeded
+NOTE: recipe make-mod-scripts-1.0-r0: task do_package_write_rpm_setscene: Succeeded
+NOTE: Running setscene task 4131 of 4467 (/opt/edf/sources/poky/meta/recipes-kernel/make-mod-scripts/make-mod-scripts_1.0.bb:do_create_spdx_setscene)
+NOTE: recipe make-mod-scripts-1.0-r0: task do_create_spdx_setscene: Started
+NOTE: recipe make-mod-scripts-1.0-r0: task do_create_spdx_setscene: Succeeded
+NOTE: Running setscene task 4461 of 4467 (/opt/edf/sources/poky/meta/recipes-kernel/make-mod-scripts/make-mod-scripts_1.0.bb:do_packagedata_setscene)
+NOTE: recipe make-mod-scripts-1.0-r0: task do_packagedata_setscene: Started
+NOTE: recipe make-mod-scripts-1.0-r0: task do_packagedata_setscene: Succeeded
+NOTE: Running setscene task 4464 of 4467 (/opt/edf/sources/poky/meta/recipes-kernel/make-mod-scripts/make-mod-scripts_1.0.bb:do_deploy_source_date_epoch_setscene)
+NOTE: recipe make-mod-scripts-1.0-r0: task do_deploy_source_date_epoch_setscene: Started
+NOTE: recipe make-mod-scripts-1.0-r0: task do_deploy_source_date_epoch_setscene: Succeeded
+NOTE: Running setscene task 4467 of 4467 (/opt/edf/sources/poky/meta/recipes-kernel/make-mod-scripts/make-mod-scripts_1.0.bb:do_recipe_qa_setscene)
+NOTE: recipe make-mod-scripts-1.0-r0: task do_recipe_qa_setscene: Started
+NOTE: recipe make-mod-scripts-1.0-r0: task do_recipe_qa_setscene: Succeeded
+NOTE: Running task 1910 of 9178 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-kernel/linux/linux-xlnx_6.18.10-v2026.1.bb:do_recipe_qa)
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_recipe_qa: Started
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_recipe_qa: Succeeded
+NOTE: Running task 2561 of 9178 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-kernel/linux/linux-xlnx_6.18.10-v2026.1.bb:do_fetch)
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_fetch: Started
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_fetch: Succeeded
+NOTE: Running task 3365 of 9178 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-kernel/linux/linux-xlnx_6.18.10-v2026.1.bb:do_unpack)
+NOTE: Running task 3366 of 9178 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-kernel/linux/linux-xlnx_6.18.10-v2026.1.bb:do_prepare_recipe_sysroot)
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_unpack: Started
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_prepare_recipe_sysroot: Started
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_prepare_recipe_sysroot: Succeeded
+NOTE: Running task 3888 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-semantic-tests/dmotor-semantic-tests.bb:do_recipe_qa)
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_recipe_qa: Started
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_recipe_qa: Succeeded
+NOTE: Running task 3889 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-semantic-tests/dmotor-semantic-tests.bb:do_fetch)
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_fetch: Started
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_fetch: Succeeded
+NOTE: Running task 4044 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-semantic-tests/dmotor-semantic-tests.bb:do_unpack)
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_unpack: Started
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_unpack: Succeeded
+NOTE: Running task 4101 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-semantic-tests/dmotor-semantic-tests.bb:do_patch)
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_patch: Started
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_patch: Succeeded
+NOTE: Running task 4118 of 9178 (/opt/edf/sources/poky/meta/recipes-kernel/make-mod-scripts/make-mod-scripts_1.0.bb:do_fetch)
+NOTE: recipe make-mod-scripts-1.0-r0: task do_fetch: Started
+NOTE: recipe make-mod-scripts-1.0-r0: task do_fetch: Succeeded
+NOTE: Running task 4410 of 9178 (/opt/edf/sources/poky/meta/recipes-kernel/make-mod-scripts/make-mod-scripts_1.0.bb:do_unpack)
+NOTE: recipe make-mod-scripts-1.0-r0: task do_unpack: Started
+NOTE: recipe make-mod-scripts-1.0-r0: task do_unpack: Succeeded
+NOTE: Running task 4464 of 9178 (/project/meta-edf-dev/recipes-firmware/dvrmc/dvrmc-firmware.bb:do_recipe_qa)
+NOTE: recipe dvrmc-firmware-1.0-r0: task do_recipe_qa: Started
+NOTE: recipe dvrmc-firmware-1.0-r0: task do_recipe_qa: Succeeded
+NOTE: Running task 4469 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-access/dmotor-access.bb:do_recipe_qa)
+NOTE: recipe dmotor-access-1.0-r0: task do_recipe_qa: Started
+NOTE: recipe dmotor-access-1.0-r0: task do_recipe_qa: Succeeded
+NOTE: Running task 4499 of 9178 (/opt/edf/sources/poky/meta/recipes-kernel/make-mod-scripts/make-mod-scripts_1.0.bb:do_patch)
+NOTE: recipe make-mod-scripts-1.0-r0: task do_patch: Started
+NOTE: recipe make-mod-scripts-1.0-r0: task do_patch: Succeeded
+NOTE: Running task 4544 of 9178 (/project/meta-edf-dev/recipes-firmware/dvrmc/dvrmc-firmware.bb:do_fetch)
+NOTE: recipe dvrmc-firmware-1.0-r0: task do_fetch: Started
+NOTE: recipe dvrmc-firmware-1.0-r0: task do_fetch: Succeeded
+NOTE: Running task 4548 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-access/dmotor-access.bb:do_fetch)
+NOTE: recipe dmotor-access-1.0-r0: task do_fetch: Started
+NOTE: recipe dmotor-access-1.0-r0: task do_fetch: Succeeded
+NOTE: Running task 4871 of 9178 (/project/meta-edf-dev/recipes-firmware/dvrmc/dvrmc-firmware.bb:do_unpack)
+NOTE: recipe dvrmc-firmware-1.0-r0: task do_unpack: Started
+NOTE: recipe dvrmc-firmware-1.0-r0: task do_unpack: Succeeded
+NOTE: Running task 4875 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-access/dmotor-access.bb:do_unpack)
+NOTE: recipe dmotor-access-1.0-r0: task do_unpack: Started
+NOTE: recipe dmotor-access-1.0-r0: task do_unpack: Succeeded
+NOTE: Running task 5088 of 9178 (/project/meta-edf-dev/recipes-firmware/dvrmc/dvrmc-firmware.bb:do_patch)
+NOTE: recipe dvrmc-firmware-1.0-r0: task do_patch: Started
+NOTE: recipe dvrmc-firmware-1.0-r0: task do_patch: Succeeded
+NOTE: Running task 5094 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-access/dmotor-access.bb:do_patch)
+NOTE: recipe dmotor-access-1.0-r0: task do_patch: Started
+NOTE: recipe dmotor-access-1.0-r0: task do_patch: Succeeded
+NOTE: Running task 5148 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-semantic-tests/dmotor-semantic-tests.bb:do_deploy_source_date_epoch)
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_deploy_source_date_epoch: Started
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_deploy_source_date_epoch: Succeeded
+NOTE: Running task 5174 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-semantic-tests/dmotor-semantic-tests.bb:do_generate_toolchain_file)
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_generate_toolchain_file: Started
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_generate_toolchain_file: Succeeded
+NOTE: Running task 5175 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-semantic-tests/dmotor-semantic-tests.bb:do_prepare_recipe_sysroot)
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_prepare_recipe_sysroot: Started
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_prepare_recipe_sysroot: Succeeded
+NOTE: Running task 5176 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-semantic-tests/dmotor-semantic-tests.bb:do_configure)
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_configure: Started
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_configure: Succeeded
+NOTE: Running task 5177 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-semantic-tests/dmotor-semantic-tests.bb:do_compile)
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_compile: Started
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_unpack: Succeeded
+NOTE: Running task 5178 of 9178 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-kernel/linux/linux-xlnx_6.18.10-v2026.1.bb:do_symlink_kernsrc)
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_symlink_kernsrc: Started
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_symlink_kernsrc: Succeeded
+NOTE: Running task 5179 of 9178 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-kernel/linux/linux-xlnx_6.18.10-v2026.1.bb:do_kernel_checkout)
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_kernel_checkout: Started
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_compile: Succeeded
+NOTE: Running task 5264 of 9178 (/opt/edf/sources/poky/meta/recipes-kernel/make-mod-scripts/make-mod-scripts_1.0.bb:do_prepare_recipe_sysroot)
+NOTE: recipe make-mod-scripts-1.0-r0: task do_prepare_recipe_sysroot: Started
+NOTE: recipe make-mod-scripts-1.0-r0: task do_prepare_recipe_sysroot: Succeeded
+NOTE: Running task 5498 of 9178 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-kernel/linux/linux-xlnx_6.18.10-v2026.1.bb:do_collect_spdx_deps)
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_collect_spdx_deps: Started
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_collect_spdx_deps: Succeeded
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_kernel_checkout: Succeeded
+NOTE: Running task 5505 of 9178 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-kernel/linux/linux-xlnx_6.18.10-v2026.1.bb:do_validate_branches)
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_validate_branches: Started
+NOTE: Running task 5825 of 9178 (/project/meta-edf-dev/recipes-firmware/dvrmc/dvrmc-firmware.bb:do_deploy_source_date_epoch)
+NOTE: recipe dvrmc-firmware-1.0-r0: task do_deploy_source_date_epoch: Started
+NOTE: recipe dvrmc-firmware-1.0-r0: task do_deploy_source_date_epoch: Succeeded
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_validate_branches: Succeeded
+NOTE: Running task 5826 of 9178 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-kernel/linux/linux-xlnx_6.18.10-v2026.1.bb:do_kernel_metadata)
+NOTE: Running task 5841 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-access/dmotor-access.bb:do_deploy_source_date_epoch)
+NOTE: recipe dmotor-access-1.0-r0: task do_deploy_source_date_epoch: Started
+NOTE: recipe dmotor-access-1.0-r0: task do_deploy_source_date_epoch: Succeeded
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_kernel_metadata: Started
+NOTE: Running task 5921 of 9178 (/project/meta-edf-dev/recipes-firmware/dvrmc/dvrmc-firmware.bb:do_prepare_recipe_sysroot)
+NOTE: recipe dvrmc-firmware-1.0-r0: task do_prepare_recipe_sysroot: Started
+NOTE: recipe dvrmc-firmware-1.0-r0: task do_prepare_recipe_sysroot: Succeeded
+NOTE: Running task 5924 of 9178 (/project/meta-edf-dev/recipes-firmware/dvrmc/dvrmc-firmware.bb:do_configure)
+NOTE: recipe dvrmc-firmware-1.0-r0: task do_configure: Started
+NOTE: recipe dvrmc-firmware-1.0-r0: task do_configure: Succeeded
+NOTE: Running task 5927 of 9178 (/project/meta-edf-dev/recipes-firmware/dvrmc/dvrmc-firmware.bb:do_compile)
+NOTE: recipe dvrmc-firmware-1.0-r0: task do_compile: Started
+NOTE: recipe dvrmc-firmware-1.0-r0: task do_compile: Succeeded
+NOTE: Running task 5928 of 9178 (/project/meta-edf-dev/recipes-firmware/dvrmc/dvrmc-firmware.bb:do_install)
+NOTE: recipe dvrmc-firmware-1.0-r0: task do_install: Started
+NOTE: recipe dvrmc-firmware-1.0-r0: task do_install: Succeeded
+NOTE: Running task 5949 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-access/dmotor-access.bb:do_prepare_recipe_sysroot)
+NOTE: recipe dmotor-access-1.0-r0: task do_prepare_recipe_sysroot: Started
+NOTE: recipe dmotor-access-1.0-r0: task do_prepare_recipe_sysroot: Succeeded
+NOTE: Running task 6018 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-semantic-tests/dmotor-semantic-tests.bb:do_semantics)
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_semantics: Started
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_semantics: Succeeded
+NOTE: Running task 6051 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-semantic-tests/dmotor-semantic-tests.bb:do_install)
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_install: Started
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_install: Succeeded
+NOTE: Running task 6086 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-semantic-tests/dmotor-semantic-tests.bb:do_package)
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_package: Started
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_kernel_metadata: Succeeded
+NOTE: Running task 6087 of 9178 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-kernel/linux/linux-xlnx_6.18.10-v2026.1.bb:do_patch)
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_patch: Started
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_patch: Succeeded
+NOTE: Running task 6088 of 9178 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-kernel/linux/linux-xlnx_6.18.10-v2026.1.bb:do_deploy_source_date_epoch)
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_deploy_source_date_epoch: Started
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_deploy_source_date_epoch: Succeeded
+NOTE: Running task 6089 of 9178 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-kernel/linux/linux-xlnx_6.18.10-v2026.1.bb:do_kernel_configme)
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_kernel_configme: Started
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_package: Succeeded
+NOTE: Running task 6090 of 9178 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-kernel/linux/linux-xlnx_6.18.10-v2026.1.bb:do_kernel_version_sanity_check)
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_kernel_version_sanity_check: Started
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_kernel_version_sanity_check: Succeeded
+NOTE: Running task 6091 of 9178 (/project/meta-edf-dev/recipes-firmware/dvrmc/dvrmc-firmware.bb:do_package)
+NOTE: recipe dvrmc-firmware-1.0-r0: task do_package: Started
+NOTE: recipe dvrmc-firmware-1.0-r0: task do_package: Succeeded
+NOTE: Running task 6480 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-semantic-tests/dmotor-semantic-tests.bb:do_packagedata)
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_packagedata: Started
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_packagedata: Succeeded
+NOTE: Running task 6481 of 9178 (/project/meta-edf-dev/recipes-firmware/dvrmc/dvrmc-firmware.bb:do_packagedata)
+NOTE: recipe dvrmc-firmware-1.0-r0: task do_packagedata: Started
+NOTE: recipe dvrmc-firmware-1.0-r0: task do_packagedata: Succeeded
+NOTE: Running task 6546 of 9178 (/opt/edf/sources/poky/../meta-amd-edf/recipes-extended/images/edf-linux-disk-image.bb:do_recipe_qa)
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_recipe_qa: Started
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_recipe_qa: Succeeded
+NOTE: Running noexec task 6547 of 9178 (/opt/edf/sources/poky/../meta-amd-edf/recipes-extended/images/edf-linux-disk-image.bb:do_fetch)
+NOTE: Running noexec task 6621 of 9178 (/opt/edf/sources/poky/../meta-amd-edf/recipes-extended/images/edf-linux-disk-image.bb:do_unpack)
+NOTE: Running task 6766 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-access/dmotor-access.bb:do_collect_spdx_deps)
+NOTE: recipe dmotor-access-1.0-r0: task do_collect_spdx_deps: Started
+NOTE: recipe dmotor-access-1.0-r0: task do_collect_spdx_deps: Succeeded
+NOTE: Running task 6767 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-semantic-tests/dmotor-semantic-tests.bb:do_collect_spdx_deps)
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_collect_spdx_deps: Started
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_collect_spdx_deps: Succeeded
+NOTE: Running task 6768 of 9178 (/project/meta-edf-dev/recipes-firmware/dvrmc/dvrmc-firmware.bb:do_collect_spdx_deps)
+NOTE: recipe dvrmc-firmware-1.0-r0: task do_collect_spdx_deps: Started
+NOTE: recipe dvrmc-firmware-1.0-r0: task do_collect_spdx_deps: Succeeded
+NOTE: Running task 6815 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-semantic-tests/dmotor-semantic-tests.bb:do_create_spdx)
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_create_spdx: Started
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_create_spdx: Succeeded
+NOTE: Running task 6816 of 9178 (/project/meta-edf-dev/recipes-firmware/dvrmc/dvrmc-firmware.bb:do_create_spdx)
+NOTE: recipe dvrmc-firmware-1.0-r0: task do_create_spdx: Started
+NOTE: recipe dvrmc-firmware-1.0-r0: task do_create_spdx: Succeeded
+NOTE: Running task 6983 of 9178 (/opt/edf/sources/poky/../meta-amd-edf/recipes-extended/images/edf-linux-disk-image.bb:do_collect_spdx_deps)
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_collect_spdx_deps: Started
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_collect_spdx_deps: Succeeded
+NOTE: Running task 6985 of 9178 (/opt/edf/sources/poky/../meta-amd-edf/recipes-extended/images/edf-linux-disk-image.bb:do_create_spdx)
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_create_spdx: Started
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_create_spdx: Succeeded
+NOTE: Running task 7596 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-access/dmotor-access.bb:do_populate_lic)
+NOTE: recipe dmotor-access-1.0-r0: task do_populate_lic: Started
+NOTE: recipe dmotor-access-1.0-r0: task do_populate_lic: Succeeded
+NOTE: Running task 7597 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-semantic-tests/dmotor-semantic-tests.bb:do_populate_lic)
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_populate_lic: Started
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_populate_lic: Succeeded
+NOTE: Running task 7598 of 9178 (/project/meta-edf-dev/recipes-firmware/dvrmc/dvrmc-firmware.bb:do_populate_lic)
+NOTE: recipe dvrmc-firmware-1.0-r0: task do_populate_lic: Started
+NOTE: recipe dvrmc-firmware-1.0-r0: task do_populate_lic: Succeeded
+NOTE: Running task 7692 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-semantic-tests/dmotor-semantic-tests.bb:do_package_write_rpm)
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_package_write_rpm: Started
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_package_write_rpm: Succeeded
+NOTE: Running task 7693 of 9178 (/project/meta-edf-dev/recipes-firmware/dvrmc/dvrmc-firmware.bb:do_package_write_rpm)
+NOTE: recipe dvrmc-firmware-1.0-r0: task do_package_write_rpm: Started
+NOTE: recipe dvrmc-firmware-1.0-r0: task do_package_write_rpm: Succeeded
+NOTE: Running task 8887 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-semantic-tests/dmotor-semantic-tests.bb:do_package_qa)
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_package_qa: Started
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_kernel_configme: Succeeded
+NOTE: Running task 8888 of 9178 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-kernel/linux/linux-xlnx_6.18.10-v2026.1.bb:do_configure)
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_configure: Started
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_package_qa: Succeeded
+NOTE: Running task 8889 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-semantic-tests/dmotor-semantic-tests.bb:do_create_runtime_spdx)
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_create_runtime_spdx: Started
+NOTE: recipe dmotor-semantic-tests-1.0-r0: task do_create_runtime_spdx: Succeeded
+NOTE: Running task 8890 of 9178 (/project/meta-edf-dev/recipes-firmware/dvrmc/dvrmc-firmware.bb:do_package_qa)
+NOTE: recipe dvrmc-firmware-1.0-r0: task do_package_qa: Started
+NOTE: recipe dvrmc-firmware-1.0-r0: task do_package_qa: Succeeded
+NOTE: Running task 8891 of 9178 (/project/meta-edf-dev/recipes-firmware/dvrmc/dvrmc-firmware.bb:do_create_runtime_spdx)
+NOTE: recipe dvrmc-firmware-1.0-r0: task do_create_runtime_spdx: Started
+NOTE: recipe dvrmc-firmware-1.0-r0: task do_create_runtime_spdx: Succeeded
+NOTE: Running task 9007 of 9178 (/opt/edf/sources/poky/../meta-amd-edf/recipes-extended/images/edf-linux-disk-image.bb:do_prepare_recipe_sysroot)
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_prepare_recipe_sysroot: Started
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_prepare_recipe_sysroot: Succeeded
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_configure: Succeeded
+NOTE: Running task 9079 of 9178 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-kernel/linux/linux-xlnx_6.18.10-v2026.1.bb:do_kernel_configcheck)
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_kernel_configcheck: Started
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_kernel_configcheck: Succeeded
+NOTE: Running task 9098 of 9178 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-kernel/linux/linux-xlnx_6.18.10-v2026.1.bb:do_compile)
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_compile: Started
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_compile: Succeeded
+NOTE: Running task 9099 of 9178 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-kernel/linux/linux-xlnx_6.18.10-v2026.1.bb:do_shared_workdir)
+NOTE: Running task 9100 of 9178 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-kernel/linux/linux-xlnx_6.18.10-v2026.1.bb:do_kernel_link_images)
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_shared_workdir: Started
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_kernel_link_images: Started
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_kernel_link_images: Succeeded
+NOTE: Running task 9101 of 9178 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-kernel/linux/linux-xlnx_6.18.10-v2026.1.bb:do_transform_kernel)
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_shared_workdir: Succeeded
+NOTE: Running task 9102 of 9178 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-kernel/linux/linux-xlnx_6.18.10-v2026.1.bb:do_compile_kernelmodules)
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_transform_kernel: Started
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_compile_kernelmodules: Started
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_transform_kernel: Succeeded
+NOTE: Running task 9103 of 9178 (/opt/edf/sources/poky/meta/recipes-kernel/make-mod-scripts/make-mod-scripts_1.0.bb:do_configure)
+NOTE: recipe make-mod-scripts-1.0-r0: task do_configure: Started
+NOTE: recipe make-mod-scripts-1.0-r0: task do_configure: Succeeded
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_compile_kernelmodules: Succeeded
+NOTE: Running task 9104 of 9178 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-kernel/linux/linux-xlnx_6.18.10-v2026.1.bb:do_strip)
+NOTE: Running task 9105 of 9178 (/opt/edf/sources/poky/meta/recipes-kernel/make-mod-scripts/make-mod-scripts_1.0.bb:do_compile)
+NOTE: recipe make-mod-scripts-1.0-r0: task do_compile: Started
+NOTE: recipe make-mod-scripts-1.0-r0: task do_compile: Succeeded
+NOTE: Running task 9106 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-access/dmotor-access.bb:do_configure)
+NOTE: recipe dmotor-access-1.0-r0: task do_configure: Started
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_strip: Started
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_strip: Succeeded
+NOTE: Running task 9107 of 9178 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-kernel/linux/linux-xlnx_6.18.10-v2026.1.bb:do_sizecheck)
+NOTE: recipe dmotor-access-1.0-r0: task do_configure: Succeeded
+NOTE: Running task 9108 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-access/dmotor-access.bb:do_compile)
+NOTE: recipe dmotor-access-1.0-r0: task do_compile: Started
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_sizecheck: Started
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_sizecheck: Succeeded
+NOTE: Running task 9109 of 9178 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-kernel/linux/linux-xlnx_6.18.10-v2026.1.bb:do_install)
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_install: Started
+NOTE: recipe dmotor-access-1.0-r0: task do_compile: Succeeded
+NOTE: Running task 9110 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-access/dmotor-access.bb:do_install)
+NOTE: recipe dmotor-access-1.0-r0: task do_install: Started
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_install: Succeeded
+NOTE: Running task 9111 of 9178 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-kernel/linux/linux-xlnx_6.18.10-v2026.1.bb:do_package)
+NOTE: recipe dmotor-access-1.0-r0: task do_install: Succeeded
+NOTE: Running task 9112 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-access/dmotor-access.bb:do_package)
+NOTE: recipe dmotor-access-1.0-r0: task do_package: Started
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_package: Started
+NOTE: recipe dmotor-access-1.0-r0: task do_package: Succeeded
+NOTE: Running task 9115 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-access/dmotor-access.bb:do_packagedata)
+NOTE: recipe dmotor-access-1.0-r0: task do_packagedata: Started
+NOTE: recipe dmotor-access-1.0-r0: task do_packagedata: Succeeded
+NOTE: Running task 9117 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-access/dmotor-access.bb:do_create_spdx)
+NOTE: recipe dmotor-access-1.0-r0: task do_create_spdx: Started
+NOTE: recipe dmotor-access-1.0-r0: task do_create_spdx: Succeeded
+NOTE: Running task 9119 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-access/dmotor-access.bb:do_package_write_rpm)
+NOTE: recipe dmotor-access-1.0-r0: task do_package_write_rpm: Started
+NOTE: recipe dmotor-access-1.0-r0: task do_package_write_rpm: Succeeded
+NOTE: Running task 9123 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-access/dmotor-access.bb:do_package_qa)
+NOTE: recipe dmotor-access-1.0-r0: task do_package_qa: Started
+NOTE: recipe dmotor-access-1.0-r0: task do_package_qa: Succeeded
+NOTE: Running task 9124 of 9178 (/project/meta-edf-dev/recipes-dmotor/dmotor-access/dmotor-access.bb:do_create_runtime_spdx)
+NOTE: recipe dmotor-access-1.0-r0: task do_create_runtime_spdx: Started
+NOTE: recipe dmotor-access-1.0-r0: task do_create_runtime_spdx: Succeeded
+NOTE: Running task 9125 of 9178 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-kernel/linux/linux-xlnx_6.18.10-v2026.1.bb:do_bundle_initramfs)
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_bundle_initramfs: Started
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_bundle_initramfs: Succeeded
+NOTE: Running task 9126 of 9178 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-kernel/linux/linux-xlnx_6.18.10-v2026.1.bb:do_populate_sysroot)
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_populate_sysroot: Started
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_populate_sysroot: Succeeded
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_package: Succeeded
+NOTE: Running task 9127 of 9178 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-kernel/linux/linux-xlnx_6.18.10-v2026.1.bb:do_packagedata)
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_packagedata: Started
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_packagedata: Succeeded
+NOTE: Running task 9128 of 9178 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-kernel/linux/linux-xlnx_6.18.10-v2026.1.bb:do_create_spdx)
+NOTE: Running task 9133 of 9178 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-kernel/linux/linux-xlnx_6.18.10-v2026.1.bb:do_package_write_rpm)
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_create_spdx: Started
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_package_write_rpm: Started
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_create_spdx: Succeeded
+NOTE: Running task 9134 of 9178 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-kernel/linux/linux-xlnx_6.18.10-v2026.1.bb:do_create_kernel_config_spdx)
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_create_kernel_config_spdx: Started
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_create_kernel_config_spdx: Succeeded
+NOTE: Running task 9135 of 9178 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-kernel/linux/linux-xlnx_6.18.10-v2026.1.bb:do_populate_lic)
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_populate_lic: Started
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_populate_lic: Succeeded
+NOTE: Running task 9136 of 9178 (/opt/edf/sources/poky/../meta-amd-edf/recipes-extended/images/edf-linux-disk-image.bb:do_create_runtime_spdx)
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_create_runtime_spdx: Started
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_create_runtime_spdx: Succeeded
+NOTE: Running task 9165 of 9178 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-kernel/linux/linux-xlnx_6.18.10-v2026.1.bb:do_package_qa)
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_package_write_rpm: Succeeded
+NOTE: Running task 9166 of 9178 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-kernel/linux/linux-xlnx_6.18.10-v2026.1.bb:do_create_runtime_spdx)
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_package_qa: Started
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_create_runtime_spdx: Started
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_create_runtime_spdx: Succeeded
+NOTE: Running task 9167 of 9178 (/opt/edf/sources/poky/../meta-xilinx/meta-xilinx-core/recipes-kernel/linux/linux-xlnx_6.18.10-v2026.1.bb:do_deploy)
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_deploy: Started
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_deploy: Succeeded
+NOTE: recipe linux-xlnx-6.18.10+git+v2026.1-r0: task do_package_qa: Succeeded
+NOTE: Running task 9168 of 9178 (/opt/edf/sources/poky/../meta-amd-edf/recipes-extended/images/edf-linux-disk-image.bb:do_rootfs)
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_rootfs: Started
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_rootfs: Succeeded
+NOTE: Running task 9169 of 9178 (/opt/edf/sources/poky/../meta-amd-edf/recipes-extended/images/edf-linux-disk-image.bb:do_flush_pseudodb)
+NOTE: Running task 9170 of 9178 (/opt/edf/sources/poky/../meta-amd-edf/recipes-extended/images/edf-linux-disk-image.bb:do_write_qemuboot_conf)
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_flush_pseudodb: Started
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_flush_pseudodb: Succeeded
+NOTE: Running task 9171 of 9178 (/opt/edf/sources/poky/../meta-amd-edf/recipes-extended/images/edf-linux-disk-image.bb:do_image_qa)
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_write_qemuboot_conf: Started
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_write_qemuboot_conf: Succeeded
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_image_qa: Started
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_image_qa: Succeeded
+NOTE: Running task 9172 of 9178 (/opt/edf/sources/poky/../meta-amd-edf/recipes-extended/images/edf-linux-disk-image.bb:do_image)
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_image: Started
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_image: Succeeded
+NOTE: Running task 9173 of 9178 (/opt/edf/sources/poky/../meta-amd-edf/recipes-extended/images/edf-linux-disk-image.bb:do_rootfs_wicenv)
+NOTE: Running task 9174 of 9178 (/opt/edf/sources/poky/../meta-amd-edf/recipes-extended/images/edf-linux-disk-image.bb:do_image_tar)
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_rootfs_wicenv: Started
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_rootfs_wicenv: Succeeded
+NOTE: Running task 9175 of 9178 (/opt/edf/sources/poky/../meta-amd-edf/recipes-extended/images/edf-linux-disk-image.bb:do_image_wic)
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_image_tar: Started
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_image_wic: Started
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_image_tar: Succeeded
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_image_wic: Succeeded
+NOTE: Running task 9176 of 9178 (/opt/edf/sources/poky/../meta-amd-edf/recipes-extended/images/edf-linux-disk-image.bb:do_image_complete)
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_image_complete: Started
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_image_complete: Succeeded
+NOTE: Running task 9177 of 9178 (/opt/edf/sources/poky/../meta-amd-edf/recipes-extended/images/edf-linux-disk-image.bb:do_populate_lic_deploy)
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_populate_lic_deploy: Started
+NOTE: recipe edf-linux-disk-image-1.0-r0: task do_populate_lic_deploy: Succeeded
+NOTE: Running noexec task 9178 of 9178 (/opt/edf/sources/poky/../meta-amd-edf/recipes-extended/images/edf-linux-disk-image.bb:do_build)
+NOTE: Tasks Summary: Attempted 9178 tasks of which 9067 didn't need to be rerun and all succeeded.
+DMOTOR staged: 39afd4e511fcb27eda415ffe92aebe36ad5d41d3 source=b8dc5c75f0bd607b1839cca517cb727b29a321f1e59dbb014717a554163d1665
+ Image edf-dev-next:26.06.1 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 593B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 2.51kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/ubuntu:22.04@sha256:b1066385161d28ddf6bc7e7b28a9170eec11484c821d1a5150d176cbde41d7f7
+#3 DONE 0.6s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 116B done
+#4 DONE 0.0s
+
+#5 [ 1/10] FROM docker.io/library/ubuntu:22.04@sha256:b1066385161d28ddf6bc7e7b28a9170eec11484c821d1a5150d176cbde41d7f7
+#5 resolve docker.io/library/ubuntu:22.04@sha256:b1066385161d28ddf6bc7e7b28a9170eec11484c821d1a5150d176cbde41d7f7 0.0s done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 114B done
+#6 DONE 0.0s
+
+#7 [ 6/10] COPY config/sources.lock.xml /tmp/edf-manifest.xml
+#7 CACHED
+
+#8 [ 7/10] RUN git config --global user.name "EDF container" && git config --global user.email "edf@localhost" && repo init -u https://github.com/Xilinx/yocto-manifests.git -b db9ad19553f9acdd5dfc92228e5a0ca10de760db -m default-edf.xml --depth=1     && cmp /tmp/edf-manifest.xml .repo/manifests/default-edf.xml     && repo sync -j4     && repo manifest -r -o /opt/edf/source-manifest.xml
+#8 CACHED
+
+#9 [ 2/10] RUN apt-get update && apt-get install -y --no-install-recommends     ca-certificates locales tzdata build-essential gcc-multilib g++-multilib     libc6-dev-i386 autoconf automake bison flex patch gawk wget curl gperf     git git-lfs libgl1 subversion diffstat unzip zip sysstat texinfo chrpath socat cpio     xz-utils lz4 zstd bmap-tools file rsync bc debianutils iproute2 iputils-ping     python3 python3-pip python3-pexpect python3-venv python3-virtualenv     python3-git python3-jinja2 python3-yaml python3-subunit pylint     repo tmux screen openssh-client graphviz xterm libegl1-mesa libsdl1.2-dev     libssl-dev libncurses-dev libacl1 acl liblz4-tool     && locale-gen en_US.UTF-8     && groupadd --gid 1000 amd-edf     && useradd --uid 1000 --gid 1000 --create-home --shell /bin/bash amd-edf     && install -d /usr/local/share/edf-dev     && dpkg-query -W -f='${Package}\t${Version}\t${Architecture}\n'        > /usr/local/share/edf-dev/packages.tsv     && rm -rf /var/lib/apt/lists/*
+#9 CACHED
+
+#10 [ 3/10] RUN apt-get update && apt-get install -y --no-install-recommends util-linux && rm -rf /var/lib/apt/lists/*
+#10 CACHED
+
+#11 [ 9/10] COPY --chmod=755 container-entrypoint.sh /usr/local/bin/container-entrypoint
+#11 CACHED
+
+#12 [ 5/10] WORKDIR /opt/edf
+#12 CACHED
+
+#13 [ 8/10] RUN find /opt/edf -name .git -prune -exec sh -c 'git config --system --add safe.directory "$(dirname "$1")"' sh {} \; && chown -R root:root /opt/edf && chmod -R a+rX /opt/edf
+#13 CACHED
+
+#14 [ 4/10] RUN chmod 0755 /home/amd-edf && install -d -o 1000 -g 1000 /opt/edf
+#14 CACHED
+
+#15 [10/10] WORKDIR /project
+#15 CACHED
+
+#16 exporting to image
+#16 exporting layers done
+#16 exporting manifest sha256:6d64a34e4e7efb9f9a3e10da8b7015750e991bcfe13f4c29fe0653bc42ce6de2 done
+#16 exporting config sha256:b34bae9f5b60d0a7991c13656a12b851a52d8a7cdd7848382ef23ff099cb72bf done
+#16 exporting attestation manifest sha256:a44b2deffa7ab796ec727c700db2e69d8a7ca0ebb31dd07641363251115b3fe7
+#16 exporting attestation manifest sha256:a44b2deffa7ab796ec727c700db2e69d8a7ca0ebb31dd07641363251115b3fe7 0.0s done
+#16 exporting manifest list sha256:dfe92d100cada697a769d7bfde52a0c8bdd8a0753740c190b3b6bd13c466094e 0.0s done
+#16 naming to docker.io/library/edf-dev-next:26.06.1 done
+#16 unpacking to docker.io/library/edf-dev-next:26.06.1 done
+#16 DONE 0.1s
+
+#17 resolving provenance for metadata file
+#17 DONE 0.0s
+ Image edf-dev-next:26.06.1 Built 
+ Container edf-dev-next-hashserv-1 Running 
+ Container edf-dev-next-hashserv-1 Waiting 
+ Container edf-dev-next-hashserv-1 Healthy 
+Build log: /home/rklinkhammer/workspace/edf-dev/artifacts/logs/arty-z7-20/edf-dev-next-arty-z7-20-5707b5886be5.log
+ Container edf-dev-next-arty-z7-20-5707b5886be5 Creating 
+ Container edf-dev-next-arty-z7-20-5707b5886be5 Created 
+PASS storage: /home/amd-edf/edf
+PASS storage: /home/amd-edf/edf/downloads
+PASS storage: /home/amd-edf/edf/sstate-cache
+PASS storage: /artifacts
+PASS hashserv; UID/GID 1000:1000; groups [4, 24, 27, 30, 46, 100, 111, 114, 119, 973, 991, 1000, 1001]
+PASS native compiler, executable build storage and UTF-8 locale
+PASS matched Arty hardware bundle
+PASS matched Arty hardware bundle
+Exporting arty-z7-20: collecting binaries and hashing inputs...
+Inserting board firmware into a separate SD image...
+Regenerating block map and compressing SD image...
+Export complete: /artifacts/arty-z7-20/20261107T125321Z-39aec82b
+Container: /artifacts/arty-z7-20/20261107T125321Z-39aec82b

@@ -1,0 +1,50 @@
+{
+  "dmotor-semantic-tests": {
+    "machine": "ARM",
+    "sha256": "f08c33901c5780b29c95fa6a678921e4da6512a5e8dd2ac591c3fd093666958e"
+  },
+  "dmotor-protocol-tests": {
+    "machine": "ARM",
+    "sha256": "2d3f54a08098730537e2d6f3da354478d77a1341887198bfa607af07224e3ba7"
+  },
+  "dmotor-linux-tests": {
+    "machine": "ARM",
+    "sha256": "7501142ebbd223cf7e36c71877a74d37219ac2434ab850d4eb6ec2cbb8a0087b"
+  },
+  "dmotor-runtime-tests": {
+    "machine": "ARM",
+    "sha256": "d6a290e6423ca81c445cde5db4311537061c390883266ed94a1b10f89750901c"
+  },
+  "dmotor-monitor-tests": {
+    "machine": "ARM",
+    "sha256": "fedc12ab3f55468e3c385c45a0c52f676a143cf973f0222e0bbe91999b6161e5"
+  },
+  "dmotor-ps-worker-tests": {
+    "machine": "ARM",
+    "sha256": "2817c1ce67171c4744a5680c5de1752be6358842c663b3098948369423b962da"
+  },
+  "dmotor-ps-cadence-tests": {
+    "machine": "ARM",
+    "sha256": "23c5a07770ccda4f5aba07cfe917274e3562c8a785f091bd6c0c801604de0171"
+  },
+  "dmotor-ps-fused-tests": {
+    "machine": "ARM",
+    "sha256": "4d2739a34c6b29d9783e671605b396aa442a6eb50d7442ec9e8cbb2d255ec25f"
+  },
+  "esp32-tests/acquisition_test": {
+    "machine": "ARM",
+    "sha256": "660d1c7673360222d378605c15e6081021c0b613fe96273c9a2a3100c217ed74"
+  },
+  "esp32-tests/timing_cycle_test": {
+    "machine": "ARM",
+    "sha256": "51783df44182295bd23d0b42179f53fb13aa1ecc7b7e5c550e912d27ee4b08f6"
+  },
+  "dmotord": {
+    "machine": "ARM",
+    "sha256": "cd24dccfac2f7ac66e916de18446fbe7fcca9d38db4f390eccdd146a417e784a"
+  },
+  "dmotor-uart-test": {
+    "machine": "ARM",
+    "sha256": "8cd9fe9ecb96594c1dd6e97c31309984f130a5d47094687886e3eec238f915fe"
+  }
+}

@@ -1,0 +1,7 @@
+DEBUG: Executing python function do_compile
+DEBUG: Executing python function devicetree_do_compile
+NOTE: Processing cortexa9-linux [cortexa9-linux.dts]
+NOTE: Running gcc -E -nostdinc -undef -D__DTS__ -x assembler-with-cpp -I/home/amd-edf/edf/builds/arty-z7-20/tmp/work/arty_z7_20-amd-linux-gnueabi/device-tree/1.0 -o cortexa9-linux.dts.pp /home/amd-edf/edf/builds/arty-z7-20/tmp/work/arty_z7_20-amd-linux-gnueabi/device-tree/1.0/cortexa9-linux.dts
+NOTE: Running dtc -R 8 -b 0 -p 0x3000 -@ -i /home/amd-edf/edf/builds/arty-z7-20/tmp/work/arty_z7_20-amd-linux-gnueabi/device-tree/1.0 -o cortexa9-linux.dtb -I dts -O dtb cortexa9-linux.dts.pp
+DEBUG: Python function devicetree_do_compile finished
+DEBUG: Python function do_compile finished

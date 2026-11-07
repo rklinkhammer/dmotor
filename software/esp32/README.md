@@ -56,7 +56,7 @@ A first operational acquisition **component candidate** now exists in
 `components/acquisition/` (portable clock/bus/deadline core) and
 `components/monitor_i2c/` (ESP-IDF adapter). This is not the operational application.
 See [deadline contract, tick analysis, build/test and target qualification](../../docs/g1c_i2c_deadline_adapter.md).
-`tests/` is host-only; `build_check/` is a non-deployable IDF compile/link harness.
+`tests/` contains portable native and ARM-QEMU policy tests; `build_check/` is a non-deployable IDF compile/link harness.
 No component writes HB or motor permits. Supervisor/output and freshness/policy
 integration remain mandatory before operational use.
 
@@ -66,5 +66,6 @@ by twelve register reads using **one INA226 as four logical slots**. Configurabl
 ADC sampling and optional four IPROPI channels cover the additional analog load.
 It captures per-call/cycle timestamps in RAM, prints CSV afterward, and keeps HB
 and all motor permits LOW. Separate 100 Hz raw-timeout and 1 kHz bounded profiles
-characterize the timeout hazard without changing the operational adapter. Prepared
-only: no target build, flash, hardware timing or safety acceptance is implied.
+characterize the timeout hazard without changing the operational adapter. All four ESP32-S3 profiles now pass clean target builds on merged main; see
+[build evidence](../../docs/evidence/esp32_main_merge/inputs.json). No flash, hardware
+timing measurement or safety acceptance is recorded.

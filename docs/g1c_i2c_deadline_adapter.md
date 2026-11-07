@@ -203,5 +203,6 @@ implements a finite RAM capture of both battery ADC channels followed by the sam
 INA read four times (twelve transactions), with per-call times and errors. Optional
 IPROPI acquisition and ADC sample counts extend the analog workload. A separately
 labelled 100 Hz raw-timeout probe deliberately measures zero-tick driver behavior;
-it does not weaken the operational adapter guard. No physical measurement or target
-build is recorded by this preparation increment.
+it does not weaken the operational adapter guard. The merged-main [clean build](evidence/esp32_main_merge/inputs.json) passes both
+target timing profiles and the adapter link harness. No physical measurement,
+flashing or safety acceptance is recorded.

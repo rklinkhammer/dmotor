@@ -197,3 +197,45 @@ board passed routing (+2.552 ns setup, +0.011 ns hold), zero DRC errors, and
 matched EDF hardware import. Existing DSP pipeline and PS DDR skew warnings remain.
 The production Linux image and SD export also passed. The export is recorded in
 the evidence above; no physical board was programmed or boot-tested.
+
+## Clean merged-main rebuild
+
+The [matched ESP32 merge record](evidence/esp32_main_merge/inputs.json) identifies
+software 0.10.1, controller revision 13 and all artifact hashes. Native software
+CTest now includes portable ESP32 acquisition and timing policy tests (29 total);
+Yocto runs both under ARM QEMU (10 executable checks total).
+
+With no other build running, move `build/product`, `build/current_ip` and
+`build/vitis_atomic` out of the active output paths. Retain the toolchains and
+previous release exports. From the EDF checkout, with the explicit source override:
+
+```sh
+export EDF_DMOTOR_SOURCE=/home/rklinkhammer/workspace/dmotor
+./edf --target arty-z7-20 hardware --force
+./edf --target arty-z7-20 --machine board bitbake -c cleansstate \
+  xilinx-bootbin u-boot-xlnx device-tree mc:arty-z7-20-cortexa9-fsbl:fsbl-firmware
+./edf --target arty-z7-20 --machine linux bitbake -c cleansstate \
+  linux-xlnx dmotor-semantic-tests dmotor-access dvrmc-firmware edf-linux-disk-image
+./edf --target arty-z7-20 image
+./edf --target arty-z7-20 export
+```
+
+This rebuilds the product outputs; it retains downloaded dependencies, installed
+toolchains and unrelated Yocto dependency sstate. EDF's source override regenerates
+local hardware/recipe inputs; it does not advance EDF's Git pin automatically.
+
+For ESP32, use fresh build **and sdkconfig** paths for each row, with
+`IDF_CCACHE_ENABLE=0 CCACHE_DISABLE=1`, target `esp32s3`, and the pinned ESP-IDF
+container. The [recorded matrix runner](evidence/esp32_main_merge/build_esp32.py)
+and [commands/hashes](evidence/esp32_main_merge/esp32_results.json) show exact inputs.
+Choose a new output root when repeating the runner; it refuses existing directories.
+
+| Project under `software/esp32/` | Defaults | Purpose |
+|---|---|---|
+| `diagnostics/bench` | `sdkconfig.defaults` | UART/U1 inhibited diagnostic |
+| `build_check` | `sdkconfig.defaults` | Acquisition adapter compile/link only |
+| `diagnostics/ina_timing` | `sdkconfig.defaults` | 1 kHz bounded timing diagnostic |
+| `diagnostics/ina_timing` | `sdkconfig.probe100.defaults` | Explicit 100 Hz raw-timeout probe |
+
+The timing diagnostic's acquisition period is 10 ms; this does not change the
+Zynq 1 ms motor loop. These builds do not flash devices or qualify hardware timing.

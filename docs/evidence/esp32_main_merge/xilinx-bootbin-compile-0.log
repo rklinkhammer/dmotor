@@ -1,0 +1,12 @@
+DEBUG: Executing shell function do_compile
+
+
+****** Bootgen v2026.1
+  **** Build date : Jun 16 2026-05:24:57
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
+
+
+[INFO]   : Bootimage generated successfully
+
+DEBUG: Shell function do_compile finished

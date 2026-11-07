@@ -14,7 +14,7 @@ is inferred from starting the plan.
 
 Further physical testing is **paused at Robert's request until the assembled
 monitor and motor boards are available**. U0 UART exchange/restart/reconnection
-checks passed. U1 GPIO/HB modes are implemented, covered by the current 27-test native PS suite
+checks passed. U1 GPIO/HB modes are implemented, covered by the current 29-test native PS suite
 and a passing ESP32-S3 build; U1 flashing and physical measurements are not recorded.
 Main now uses the [1 ms PS motor executor](ps_executor.md), with the matched
 board/ARM rebuild recorded in [system status](system_status.md).
@@ -27,11 +27,11 @@ is closed or waived by this pause.
 | Area | Current state | What is not established |
 |---|---|---|
 | Zynq PL | Revision-13 PSF1 1 ms controller built and routed; atomic HLS, independent protection, coherent PWM and CLN1 retained; setup +2.157 ns, hold +0.013 ns, no DRC errors | Electrical response on the assembled system; independent shutdown for PL-only failures |
-| Zynq PS | Four-context C++ motor worker integrated in daemon; matched PSF1 driver/daemon compiled for ARM; eight QEMU executable checks pass | Loaded 1 ms/800 us execution measurements; full monitor recovery/ARM coordinator and vehicle planner |
-| Client API | `dmotor_client`, installed `dmotor::client` CMake target and Yocto packaging retained; 27 native PS tests pass, including installed/staged consumer and recovery model | Physical board/client qualification remains |
-| ESP32 | ESP32-S3 UART/U1 diagnostic firmware rebuilt with pinned ESP-IDF v6.1 container; wire protocol and firmware sources unchanged | Operational application, safety core and U1 physical qualification remain open |
+| Zynq PS | Four-context C++ motor worker integrated in daemon; matched PSF1 driver/daemon compiled for ARM; ten QEMU executable checks pass | Loaded 1 ms/800 us execution measurements; full monitor recovery/ARM coordinator and vehicle planner |
+| Client API | `dmotor_client`, installed `dmotor::client` CMake target and Yocto packaging retained; 29 native PS tests pass, including installed/staged consumer and recovery model | Physical board/client qualification remains |
+| ESP32 | Four clean ESP32-S3 builds pass: UART/U1, acquisition link harness, bounded INA/ADC timing and raw-timeout probe; pinned ESP-IDF v6.1 | Operational application, safety core and U1 physical qualification remain open |
 | Integration | 36 controller/native/RTL tests pass, including real PS-C++/full-PL AXI and interrupted-cleanup co-simulation | Measured timing, electrical joint-state behavior and accepted system release |
-| Build evidence | [Matched revision-13 hardware/ARM build and SD export](evidence/ps_main_build/inputs.json); source identity, exported checksums and rootfs contents verified | No new physical boot, UART run, SD write or board flash |
+| Build evidence | [Matched revision-13 hardware/ARM build and SD export](evidence/esp32_main_merge/inputs.json); source identity, exported checksums and rootfs contents verified | No new physical boot, UART run, SD write or board flash |
 
 Builds, host simulations, ARM QEMU and electrical tests are separate evidence
 classes. None alone closes a system safety claim. Existing encoder observations
@@ -51,9 +51,9 @@ scope, not qualification of the newly integrated monitor system.
 | BV/GV | Architecture discussion active; implementation/acceptance deferred | [Autonomy proposal](autonomous_motion_architecture.md); first-release scope unchanged |
 | G7 | Not accepted | Matched release, gate records and completed documentation migration required |
 
-## Current matched PSF1 build — 2026-11-07
+## Current matched PSF1 / ESP32 merge build — 2026-11-07
 
-Implementation commit **`5d0616a102c531b2f61e43456728f3ae1cf01052`**, clean; software **0.10.0**,
+Implementation commit **`39afd4e511fcb27eda415ffe92aebe36ad5d41d3`**, clean; software **0.10.1**,
 controller IP revision **13**, **1 ms** control and **800 us** hardware frame deadline.
 Later documentation/evidence commits do not change the tested source fingerprints.
 
@@ -68,24 +68,33 @@ Later documentation/evidence commits do not change the tested source fingerprint
 This frees **2,859 slices** (21.5% fewer used),
 leaving 2,870 device slices available. These are complete-board placement
 reports, compared at the same stage; final routing passes timing/DRC and bus-skew
-checks. They are separate from historical controller-only OOC figures.
+checks. They are separate from historical controller-only OOC figures. The existing
+PS DDR DQS-skew warnings (PSU-1/PSU-2, -0.009/-0.033 ns) remain unchanged from
+the prior main build; target DDR/boot qualification remains open.
 
 Artifacts under `edf-dev/artifacts/`:
 
-- Hardware bundle: **`arty-hardware/20261107T065816Z-3543b389`**.
-- SD export: **`arty-z7-20/20261107T072059Z-7b68607f`**, including WIC, block map and SHA256SUMS.
-- [Build/test inputs and source hashes](evidence/ps_main_build/inputs.json),
-  [ARM QEMU log](evidence/ps_main_build/arm_semantics.log),
-  [timing](evidence/ps_main_build/timing.rpt) and
-  [utilization](evidence/ps_main_build/utilization.rpt).
+- Hardware bundle: **`arty-hardware/20261107T122031Z-5ba3ad06`**.
+- SD export: **`arty-z7-20/20261107T125321Z-39aec82b`**, including WIC, block map and SHA256SUMS.
+- [Build/test inputs and source hashes](evidence/esp32_main_merge/inputs.json),
+  [ARM QEMU log](evidence/esp32_main_merge/arm_semantics.log),
+  [timing](evidence/esp32_main_merge/timing.rpt) and
+  [utilization](evidence/esp32_main_merge/utilization.rpt).
 
-The 36 controller/native/RTL and 27 PS software tests pass. Atomic HLS C/RTL
+The 36 controller/native/RTL and 29 PS software tests pass. Atomic HLS C/RTL
 co-simulation matches 1,165 transactions; PS reference equivalence matches all
 16 reply words over 2,449 interleaved transactions; 188 fused operations match
-serial execution. All eight ARM QEMU executables pass, including worker/cadence/
+serial execution. All ten ARM QEMU executables pass, including worker/cadence/
 fused tests with assertions enabled. ARM driver compilation, package QA and the
-ESP32-S3 diagnostic build pass. A regression also verifies failure HALT cannot
+four ESP32-S3 diagnostic/link builds pass. The two portable ESP32 tests also pass
+ASan/UBSan; the native clang-tidy/UBSan configuration passes all 29 tests. A regression also verifies failure HALT cannot
 be overtaken by an in-flight Runtime release and rejects the previous backend.
+
+The ESP32 branch was merged without changing PL/ESP32 hardware interfaces or the
+1 ms/800 us PSF1 contract. Fresh FPGA and ESP32 outputs and cleansstate of the
+Zynq product recipes were used; toolchains/downloads and unrelated dependency
+sstate were retained. See [clean reproduction](build.md#clean-merged-main-rebuild).
+The [earlier PSF1 evidence](evidence/ps_main_build/inputs.json) remains historical.
 
 Rebuild using `EDF_DMOTOR_SOURCE=../dmotor ./edf --target arty-z7-20 build` from
 EDF. Its hardware/recipe inputs were regenerated locally; the EDF Git pin was not
@@ -119,7 +128,7 @@ retains timing and CLN1 verification. The previous SD export
 
 The [post-pairing G1a model](g1a_recovery_model.md) now implements host-tested
 admission/uncertain-outcome semantics, isolated from the daemon. The native PS
-suite now has 27 tests, including the isolated [PS session allocator](g1a_endpoint_sessions.md)
+suite now has 29 tests, including the isolated [PS session allocator](g1a_endpoint_sessions.md)
 and [pairing/replay link](g1a_session_link.md), now connected through an isolated
 [recovery wire adapter](g1a_recovery_link.md) with scripted monitor exchange tests and a
 [behavioral monitor simulator](g1a_monitor_simulator.md) exercising ARM/fault/expiry

@@ -6,8 +6,8 @@ scheduler tests, atomic HLS simulation/synthesis/co-simulation, PS transport tes
 and full-controller AXI/cleanup co-simulation with the real PS C++ engine.
 The PS software suite includes existing client/runtime/monitor/U1 tests and
 executor packing, cadence and fused-operation checks. Yocto also executes the
-new worker/cadence/fused tests under ARM QEMU, alongside the existing five semantic
-executables. No native, QEMU or co-simulation result is a Linux deadline measurement.
+worker/cadence/fused and portable ESP32 acquisition/timing tests under ARM QEMU,
+alongside the existing five semantic executables (ten total). No native, QEMU or co-simulation result is a Linux deadline measurement.
 
 Old FPGA position/dwell `motion_queue` and `position_error` tests are no longer
 product tests: these opcodes were already excluded by the prepared 400 RPM product.
@@ -22,12 +22,13 @@ matched new image, then measure the 1 ms/800 us worker budget, stalls/crashes,
 late replies, CPU/memory contention and electrical inhibition. Keep original
 HALT/heartbeat/authorization/target-age/STOP requirements.
 
-The [2026-11-07 matched main build](evidence/ps_main_build/inputs.json) records
-36 controller/native/RTL tests, 27 PS software tests, eight ARM QEMU executables,
-ARM driver/package QA, ESP32-S3 build, full-board routing and SD export.
-The clang-tidy 18/UBSan CI configuration also builds and passes all 27 PS tests.
+The [2026-11-07 matched main build](evidence/esp32_main_merge/inputs.json) records
+36 controller/native/RTL tests, 29 PS software tests, ten ARM QEMU executables,
+ARM driver/package QA, four clean ESP32-S3 builds, full-board routing and SD export.
+The clang-tidy 18/UBSan CI configuration also builds and passes all 29 PS tests.
 The worker-failure/HALT-release race regression passes and rejects the previous
-backend. These results do not change physical gate status.
+backend. The standalone ESP32 host suite also passes both tests with ASan/UBSan.
+These results do not change physical gate status.
 
 See [status](system_status.md), [PSF1](ps_executor.md) and [build](build.md).
 

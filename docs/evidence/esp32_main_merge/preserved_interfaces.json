@@ -1,0 +1,28 @@
+{
+  "baseline_main": "569aaf9",
+  "merged_source": "39afd4e",
+  "paths_with_no_changes": [
+    "rtl",
+    "src",
+    "include",
+    "platforms",
+    "abi",
+    "constraints",
+    "software/driver",
+    "software/src",
+    "software/include",
+    "software/esp32/diagnostics/bench"
+  ],
+  "diffs": {
+    "rtl": [],
+    "src": [],
+    "include": [],
+    "platforms": [],
+    "abi": [],
+    "constraints": [],
+    "software/driver": [],
+    "software/src": [],
+    "software/include": [],
+    "software/esp32/diagnostics/bench": []
+  }
+}

@@ -1,0 +1,118 @@
+[
+  {
+    "profile": "uart_u1",
+    "project": "software/esp32/diagnostics/bench",
+    "command": [
+      "/home/rklinkhammer/workspace/esp32-dev/esp32",
+      "--project",
+      "/home/rklinkhammer/workspace/dmotor/software/esp32/diagnostics/bench",
+      "--target",
+      "esp32s3",
+      "shell",
+      "-c",
+      "env IDF_CCACHE_ENABLE=0 CCACHE_DISABLE=1 idf.py -B /home/rklinkhammer/workspace/dmotor/build/merged_release/esp32/uart_u1/build -D SDKCONFIG=/home/rklinkhammer/workspace/dmotor/build/merged_release/esp32/uart_u1/sdkconfig -D SDKCONFIG_DEFAULTS=/home/rklinkhammer/workspace/dmotor/software/esp32/diagnostics/bench/sdkconfig.defaults build"
+    ],
+    "exit_code": 0,
+    "sha256": {
+      "sdkconfig": "44854e7cb94773e01e07577e12d969546356beba16ff2003be97dc9045e24465",
+      "build/dmotor_uart_bench.bin": "76b2c7258f8a485c629b3c7c8205482db1471b894152fc35d9fa73f44a1ae9ea",
+      "build/dmotor_uart_bench.map": "1568799139f4297901c7c93b595d10c0aee4ccd4354da7466bd58f1e1c35ea0b",
+      "build/dmotor_uart_bench.elf": "8ae10c724d015ec955bb51739297ce3301b44a4a2ed15c12e944a4f7ef94e1a0",
+      "build/partition_table/partition-table.bin": "7f00b6c042a89b15b0cac534f82ed988caf29278ff5700b0c511eb1b5bb7c820",
+      "build/bootloader/bootloader.elf": "f4b4a1226eca63bf887d4e3620f145064399d589e3fc36c68e0d99809caa7267",
+      "build/bootloader/bootloader.bin": "474e1fc78fbc24ddcac6cf3143bd4219af523bd0e9b692fe25beec602012f441",
+      "build/bootloader/bootloader.map": "de85c5d528f2fc24a3dcaeefd36a4b4dcffce9fdcad825a00541e19364b332ff",
+      "build/bootloader/CMakeFiles/4.0.3/CMakeDetermineCompilerABI_C.bin": "2e17a82b1b3d62c0d63d2a940e35310d0f99983f44a2e91f48368edae07f15e9",
+      "build/bootloader/CMakeFiles/4.0.3/CMakeDetermineCompilerABI_CXX.bin": "1f2415b09fad4f709656624f0d5e7f9926ce931e2e0e0f7e3f9ba2591373ecef",
+      "build/CMakeFiles/4.0.3/CMakeDetermineCompilerABI_C.bin": "2e17a82b1b3d62c0d63d2a940e35310d0f99983f44a2e91f48368edae07f15e9",
+      "build/CMakeFiles/4.0.3/CMakeDetermineCompilerABI_CXX.bin": "1f2415b09fad4f709656624f0d5e7f9926ce931e2e0e0f7e3f9ba2591373ecef"
+    }
+  },
+  {
+    "profile": "acquisition_link",
+    "project": "software/esp32/build_check",
+    "command": [
+      "/home/rklinkhammer/workspace/esp32-dev/esp32",
+      "--project",
+      "/home/rklinkhammer/workspace/dmotor/software/esp32/build_check",
+      "--target",
+      "esp32s3",
+      "shell",
+      "-c",
+      "env IDF_CCACHE_ENABLE=0 CCACHE_DISABLE=1 idf.py -B /home/rklinkhammer/workspace/dmotor/build/merged_release/esp32/acquisition_link/build -D SDKCONFIG=/home/rklinkhammer/workspace/dmotor/build/merged_release/esp32/acquisition_link/sdkconfig -D SDKCONFIG_DEFAULTS=/home/rklinkhammer/workspace/dmotor/software/esp32/build_check/sdkconfig.defaults build"
+    ],
+    "exit_code": 0,
+    "sha256": {
+      "sdkconfig": "c6cef080aba1b97f4dfd2df42f75081183b941b0146d0264e733f2cf73e9f409",
+      "build/dmotor_acquisition_compile_check.map": "a02f7321bf7f7b3d68396e955e26eae923bc03974004aa6c902be4486a2d4452",
+      "build/dmotor_acquisition_compile_check.bin": "c3066514398ceda8859419c75232ee9e8158c81747ae940e06f264e172b75a0a",
+      "build/dmotor_acquisition_compile_check.elf": "c7abc835d70df65acab0bbdb293d827a6060379ad390d8bfb9f263f2c4290d09",
+      "build/partition_table/partition-table.bin": "7f00b6c042a89b15b0cac534f82ed988caf29278ff5700b0c511eb1b5bb7c820",
+      "build/bootloader/bootloader.elf": "3d4edc5d79d79fff4d50467445e13a778f9aaaff3af0585de37c64f154c56f26",
+      "build/bootloader/bootloader.bin": "86b76368feff7c3014c3e0022a03252528f9a26680bb95d11601763196c916b0",
+      "build/bootloader/bootloader.map": "0f52683bf24d23bd3d0406b3a110b4779d9d8677780587af7fc12b3c121f9950",
+      "build/bootloader/CMakeFiles/4.0.3/CMakeDetermineCompilerABI_C.bin": "2e17a82b1b3d62c0d63d2a940e35310d0f99983f44a2e91f48368edae07f15e9",
+      "build/bootloader/CMakeFiles/4.0.3/CMakeDetermineCompilerABI_CXX.bin": "1f2415b09fad4f709656624f0d5e7f9926ce931e2e0e0f7e3f9ba2591373ecef",
+      "build/CMakeFiles/4.0.3/CMakeDetermineCompilerABI_C.bin": "2e17a82b1b3d62c0d63d2a940e35310d0f99983f44a2e91f48368edae07f15e9",
+      "build/CMakeFiles/4.0.3/CMakeDetermineCompilerABI_CXX.bin": "1f2415b09fad4f709656624f0d5e7f9926ce931e2e0e0f7e3f9ba2591373ecef"
+    }
+  },
+  {
+    "profile": "ina_1000hz",
+    "project": "software/esp32/diagnostics/ina_timing",
+    "command": [
+      "/home/rklinkhammer/workspace/esp32-dev/esp32",
+      "--project",
+      "/home/rklinkhammer/workspace/dmotor/software/esp32/diagnostics/ina_timing",
+      "--target",
+      "esp32s3",
+      "shell",
+      "-c",
+      "env IDF_CCACHE_ENABLE=0 CCACHE_DISABLE=1 idf.py -B /home/rklinkhammer/workspace/dmotor/build/merged_release/esp32/ina_1000hz/build -D SDKCONFIG=/home/rklinkhammer/workspace/dmotor/build/merged_release/esp32/ina_1000hz/sdkconfig -D SDKCONFIG_DEFAULTS=/home/rklinkhammer/workspace/dmotor/software/esp32/diagnostics/ina_timing/sdkconfig.defaults build"
+    ],
+    "exit_code": 0,
+    "sha256": {
+      "sdkconfig": "03b248a6bf81b77b0c84f4043255dfea5da524a800ba4e1f6b06c07ca9df88f1",
+      "build/dmotor_ina_adc_timing.map": "73a7412e6f7a548382ac62a8428d4429568060982fce1f178a1ce94d8a0467c9",
+      "build/dmotor_ina_adc_timing.elf": "4e7e3f2bf32c7f441bd4918439343ddc92183f11704fe15a8c94748a87e667d9",
+      "build/dmotor_ina_adc_timing.bin": "914da32af18ab860e2a4d92b876dfa2b8ed3883238f5237c619fff32c22e4115",
+      "build/partition_table/partition-table.bin": "7f00b6c042a89b15b0cac534f82ed988caf29278ff5700b0c511eb1b5bb7c820",
+      "build/bootloader/bootloader.elf": "b7fcfdeadac8880e818afae455842f6409c4ecbfd37870e9966f5027afa295ae",
+      "build/bootloader/bootloader.bin": "2a5664811d9f3edfe355002d41ad86072f0d218a700d1fb34ef03cf67fc13ae7",
+      "build/bootloader/bootloader.map": "4f5b7315734d32f07d226ddf73039ff47292bd993f96c5c3ff90992ff2c1d77e",
+      "build/bootloader/CMakeFiles/4.0.3/CMakeDetermineCompilerABI_C.bin": "2e17a82b1b3d62c0d63d2a940e35310d0f99983f44a2e91f48368edae07f15e9",
+      "build/bootloader/CMakeFiles/4.0.3/CMakeDetermineCompilerABI_CXX.bin": "1f2415b09fad4f709656624f0d5e7f9926ce931e2e0e0f7e3f9ba2591373ecef",
+      "build/CMakeFiles/4.0.3/CMakeDetermineCompilerABI_C.bin": "2e17a82b1b3d62c0d63d2a940e35310d0f99983f44a2e91f48368edae07f15e9",
+      "build/CMakeFiles/4.0.3/CMakeDetermineCompilerABI_CXX.bin": "1f2415b09fad4f709656624f0d5e7f9926ce931e2e0e0f7e3f9ba2591373ecef"
+    }
+  },
+  {
+    "profile": "ina_probe100",
+    "project": "software/esp32/diagnostics/ina_timing",
+    "command": [
+      "/home/rklinkhammer/workspace/esp32-dev/esp32",
+      "--project",
+      "/home/rklinkhammer/workspace/dmotor/software/esp32/diagnostics/ina_timing",
+      "--target",
+      "esp32s3",
+      "shell",
+      "-c",
+      "env IDF_CCACHE_ENABLE=0 CCACHE_DISABLE=1 idf.py -B /home/rklinkhammer/workspace/dmotor/build/merged_release/esp32/ina_probe100/build -D SDKCONFIG=/home/rklinkhammer/workspace/dmotor/build/merged_release/esp32/ina_probe100/sdkconfig -D SDKCONFIG_DEFAULTS=/home/rklinkhammer/workspace/dmotor/software/esp32/diagnostics/ina_timing/sdkconfig.probe100.defaults build"
+    ],
+    "exit_code": 0,
+    "sha256": {
+      "sdkconfig": "869f91083f3b119ac16dc377932be0de406c0b9b332a002052b2846e8bf04259",
+      "build/dmotor_ina_adc_timing.map": "bb8aaabef467d44d7b9da2637af88ba7b56a46bc0270e4547186ac2c5e4df91d",
+      "build/dmotor_ina_adc_timing.elf": "78af135c52b3a4ee92c71a1e291eed20c3a8871b63ebb63c387b25095849cbe0",
+      "build/dmotor_ina_adc_timing.bin": "74364918ce8b57868500421fb44daee292e0ec8e82c0cf7706c9206ca7959af1",
+      "build/partition_table/partition-table.bin": "7f00b6c042a89b15b0cac534f82ed988caf29278ff5700b0c511eb1b5bb7c820",
+      "build/bootloader/bootloader.elf": "8fe418675f55e7ec49d88b3fd7bbc7261aafc9352d22eea61aa4bc009a66ef7e",
+      "build/bootloader/bootloader.bin": "86a0fe136de7c770791601b9de41e7b10088f80d50f46d4a058f39f7b9052a31",
+      "build/bootloader/bootloader.map": "680477bddc4ccaba8810f74c33f8a5abc43495433c62d9b1a5ff50e983759717",
+      "build/bootloader/CMakeFiles/4.0.3/CMakeDetermineCompilerABI_C.bin": "2e17a82b1b3d62c0d63d2a940e35310d0f99983f44a2e91f48368edae07f15e9",
+      "build/bootloader/CMakeFiles/4.0.3/CMakeDetermineCompilerABI_CXX.bin": "1f2415b09fad4f709656624f0d5e7f9926ce931e2e0e0f7e3f9ba2591373ecef",
+      "build/CMakeFiles/4.0.3/CMakeDetermineCompilerABI_C.bin": "2e17a82b1b3d62c0d63d2a940e35310d0f99983f44a2e91f48368edae07f15e9",
+      "build/CMakeFiles/4.0.3/CMakeDetermineCompilerABI_CXX.bin": "1f2415b09fad4f709656624f0d5e7f9926ce931e2e0e0f7e3f9ba2591373ecef"
+    }
+  }
+]

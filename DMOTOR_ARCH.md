@@ -56,14 +56,14 @@ Normal sources now contain the prepared 400 RPM fixed-point implementation;
 there is no product patch-preparation step or shared motor HLS build. Only the
 atomic mailbox remains HLS. See [build instructions](docs/build.md),
 [PS executor/ABI details](docs/ps_executor.md), [current status](docs/system_status.md)
-and [verification](docs/verification.md). Main uses software version 0.10.0 and
+and [verification](docs/verification.md). Main uses software version 0.10.1 and
 controller IP revision 13, with PSF1-1000us provenance.
 
 The matched full-board build uses **10,430/13,300 slices (78.42%)**, versus
 13,289 previously (21.5% fewer used). Full-board LUTs drop from 41,203 to
 22,646; setup/hold slack is +2.157/+0.013 ns with no DRC errors.
 These are full-board placement figures followed by passing routing; earlier
-controller-only OOC figures remain historical. See [matched build evidence](docs/evidence/ps_main_build/inputs.json)
+controller-only OOC figures remain historical. See [matched build evidence](docs/evidence/esp32_main_merge/inputs.json)
 and [artifact/qualification status](docs/system_status.md).
 
 Hardware testing remains paused pending assembled monitor and motor boards.

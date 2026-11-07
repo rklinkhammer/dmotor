@@ -1,0 +1,8 @@
+{
+  "inputs": {
+    "source_sha256": "7e28234255e27d08697de89e35091e641f1f21a96707d8f939149dae7625c904",
+    "amd_root": "/opt/vitis/2026.1",
+    "profile": "PSF1-1000us"
+  },
+  "packaged_sha256": "6d9a64acdaa93ec43c0526be3a4e48c8523e0151064169664518e7a5766ff7f8"
+}

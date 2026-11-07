@@ -1,0 +1,19 @@
+DEBUG: Executing python function find_firmware_file
+DEBUG: Python function find_firmware_file finished
+DEBUG: Executing python function do_compile
+DEBUG: Executing python function devicetree_do_compile
+NOTE: Processing dvrmc [dvrmc.dtso]
+NOTE: Running gcc -E -nostdinc -undef -D__DTS__ -x assembler-with-cpp -I/home/amd-edf/edf/builds/arty-z7-20/tmp/work/amd_cortexa9thf_neon_common-amd-linux-gnueabi/dvrmc-firmware/1.0/ -o dvrmc.dtso.pp /home/amd-edf/edf/builds/arty-z7-20/tmp/work/amd_cortexa9thf_neon_common-amd-linux-gnueabi/dvrmc-firmware/1.0/dvrmc.dtso
+NOTE: Running dtc -R 8 -b 0 -p 0 -@ -H epapr -i /home/amd-edf/edf/builds/arty-z7-20/tmp/work/amd_cortexa9thf_neon_common-amd-linux-gnueabi/dvrmc-firmware/1.0/ -o dvrmc.dtbo -I dts -O dtb dvrmc.dtso.pp
+
+
+****** Bootgen v2026.1
+  **** Build date : Jun 16 2026-05:24:57
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
+
+
+[INFO]   : Bootimage generated successfully
+
+DEBUG: Python function devicetree_do_compile finished
+DEBUG: Python function do_compile finished
