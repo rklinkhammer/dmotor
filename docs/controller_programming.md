@@ -280,3 +280,10 @@ that the joint recovery contract has completed.
 For actual board operations, follow [production-access commissioning](../software/linux/production.md),
 [output validation](../software/linux/output-validation.md) and the separately gated
 [powered commissioning](../software/linux/powered-commissioning.md) procedures.
+
+## Monitor recovery status
+
+`Client::recovery_status()` reports monitor admission independently of PL readiness.
+The current daemon explicitly returns `RecoveryState::unavailable` and
+`admission_open=false`; `prepare()` remains PL-only. Older daemons reject this
+schema-2 query and the client disconnects without retry. See [the G1a API contract](g1a_client_status.md).

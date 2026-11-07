@@ -1,0 +1,4 @@
+amd-edf:~$ sudo dmotor-uart-test /dev/ttyUL0 100
+DIAGNOSTIC v1 115200 8N1 run=14639145771859718017 count=100
+PASS sent=100 verified=100 rejected=0 mismatched=0 elapsed_ms=1395
+amd-edf:~$

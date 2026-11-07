@@ -27,7 +27,8 @@ with tempfile.TemporaryDirectory(prefix='dmotor-client-') as directory:
     result = subprocess.run([sys.argv[1], path, 'connect-fail'], timeout=3)
     require(result.returncode == 0, 'missing endpoint was not rejected')
     for mode in ('exercise', 'drop', 'refuse', 'timeout', 'schema', 'short', 'oversize',
-                 'message', 'okay', 'disconnect'):
+                 'message', 'okay', 'disconnect', 'recovery', 'recovery-old',
+                 'recovery-invalid', 'recovery-inconsistent', 'recovery-short'):
         with socket.socket(socket.AF_UNIX, socket.SOCK_SEQPACKET) as server:
             server.bind(path)
             server.listen(1)
@@ -51,6 +52,17 @@ with tempfile.TemporaryDirectory(prefix='dmotor-client-') as directory:
                         require(child.returncode == 0, f'{mode}: {output} {error}')
                         continue
                     peer.sendall(reply())
+                    if mode.startswith('recovery'):
+                        receive((2, 12, 0, 0, 0, 0, 0))
+                        if mode != 'recovery-old':
+                            state = 99 if mode == 'recovery-invalid' else 4
+                            admitted = 1 if mode == 'recovery-inconsistent' else 0
+                            data = reply(schema=2) + struct.pack('<II', state, admitted)
+                            peer.sendall(data[:-1] if mode == 'recovery-short' else data)
+                        peer.close()
+                        output, error = child.communicate(timeout=3)
+                        require(child.returncode == 0, f'{mode}: {output} {error}')
+                        continue
                     receive((1, 1, 0, 0, 0, 0, 0))
                     if mode == 'exercise':
                         peer.sendall(reply())

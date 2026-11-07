@@ -28,9 +28,9 @@ proof of completed recovery. Complete these tasks before G1a acceptance:
 | A3: reset/drain/PI cleanup | CLN1 disabled sweep/completion plus session/request binding; actual-HLS reset interruption and full controller tests pass; see [evidence](g1a_cleanup_admission.md#8-combined-cln1-integration) | Trace reset into mailbox/HLS/PI state and outstanding AXI/HLS results; derive minimum assertion/completion conditions and prove with RTL tests. Review CLN1 completion semantics and complete the remaining boundary/race cases. CORE_RESET readback alone does not prove drain |
 | A4: session/configuration/causes | [Runtime attestation](g1a_cleanup_attestation.md) checks session/configuration/CLN1 and local/HB state with mid-read mutation tests; atomic hardware races remain open | Map each attestation flag to exact reads, ordering, reset guarantees and failure exits; verify expiration/new fault wins ACK and no unverified flag is sent |
 | A5: endpoint sessions | [PS journal allocator](g1a_endpoint_sessions.md) implemented and host-tested in isolation; ESP32 backend and deployment policy remain open | PS/ESP32 storage format, integrity/atomic-update strategy, power-loss/exhaustion handling and inhibited allocation ordering; never reuse a lifetime identifier |
-| A6: pairing/freshness | [Symmetric link candidate](g1a_session_link.md) host-tests HELLO confirmation, restart, duplicate caching and sequence checks; not connected to recovery/runtime | Specify HELLO confirmation, explicit re-pair inhibition, duplicate cache and sequence advancement; cover stale/mutated frames and peer restart in deterministic tests |
-| A7: outcome uncertainty | COMMIT_ACK and challenged STATE_REPLY layouts exist | Transition table for lost ACK, SAFE/ARM_PENDING/ARMED responses, changed epoch/session and bounded retry/query exhaustion; preserve hold on ambiguity |
-| A8: observable client semantics | Current Client.prepare is PL-only; schema-1 service replies lack recovery state | Decide explicit recovery/status API and wire versioning, client admission/error behavior and how UI reports pending physical ARM; do not silently relabel prepare success as full recovery |
+| A6: pairing/freshness | [Symmetric link candidate](g1a_session_link.md) host-tests HELLO confirmation, restart, duplicate caching and sequence checks; connected through the isolated coordinator, not the live daemon | Specify HELLO confirmation, explicit re-pair inhibition, duplicate cache and sequence advancement; cover stale/mutated frames and peer restart in deterministic tests |
+| A7: outcome uncertainty | [Joint model/coordinator tests](g1a_recovery_coordinator.md) cover COMMIT_ACK loss and challenged STATE_REPLY | Transition table for lost ACK, SAFE/ARM_PENDING/ARMED responses, changed epoch/session and bounded retry/query exhaustion; preserve hold on ambiguity |
+| A8: observable client semantics | [Read-only client recovery status](g1a_client_status.md) and compatibility tests pass; Client.prepare remains PL-only | Decide explicit recovery/status API and wire versioning, client admission/error behavior and how UI reports pending physical ARM; do not silently relabel prepare success as full recovery |
 
 **Model increment:** the [post-pairing host model](g1a_recovery_model.md) now exercises
 admission hold, challenged ARM, lost ACK and bounded UNKNOWN handling. Its design
@@ -44,7 +44,8 @@ and discards buffered targets. The [coordinator](g1a_recovery_coordinator.md) no
 tickets in joint tests. The [MMIO attestation path](g1a_cleanup_attestation.md) now acquires the proof
 with repeated identity/configuration/protection reads. [Durable PS reservation](g1a_session_integration.md)
 now runs before PL preparation with allocation failures tested while inhibited.
-Next implement A8 recovery/status semantics and finish A5
+The [A8 read-only recovery status API](g1a_client_status.md) is implemented; live
+mutation/admission remains behind its explicit review/proof checklist. Finish A5
 target provisioning/ESP32/storage qualification and complete
 A2–A5/A8 proof and integration before connecting the model to live admission. This does not
 create an alternate protocol or relax any live daemon precondition.
@@ -84,7 +85,9 @@ a new board or a restricted scope; do not silently exclude a failed case.
 
 ## G1c — Monitor budget and configuration closure
 
-Create the following tables from the actual populated board and ESP-IDF target:
+The [G1c design tables and pinned-IDF audit](g1c_monitor_design.md) are now prepared
+from rev-A sources. Actual population, thresholds and timing measurements remain
+for review. The tables cover:
 
 - Acquisition inventory: channel/device, mandatory versus population-selected,
   transaction count, normal/worst-case duration, conversion timestamp, deadline,

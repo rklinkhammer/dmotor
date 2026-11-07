@@ -84,12 +84,15 @@ void Client::disconnect() noexcept {
     }
 }
 ClientResult Client::exchange(uint32_t operation, uint32_t mask,
-                              const std::array<int32_t, 4>& values) {
+                              const std::array<int32_t, 4>& values, RecoveryStatus* recovery) {
     if (!connected())
         throw ClientError("Client disconnected; HALT not confirmed");
     Request request{};
     request.operation = static_cast<Operation>(operation);
     request.mask = mask;
+    if (recovery) {
+        request.schema = recovery_service_schema;
+    }
     for (unsigned i = 0; i < 4; ++i)
         request.velocity[i] = values[i];
     const auto budget = request.operation == Operation::prepare ? options_.prepare_timeout_ms
@@ -105,16 +108,29 @@ ClientResult Client::exchange(uint32_t operation, uint32_t mask,
                 throw ClientError("Service send failed; HALT not confirmed");
             break;
         }
-        Response response{};
+        RecoveryResponse packet{};
+        Response& response = packet.base;
+        const size_t expected = recovery ? sizeof(packet) : sizeof(Response);
         for (;;) {
             wait_ready(fd_, POLLIN, deadline);
-            const auto received = ::recv(fd_, &response, sizeof(response), MSG_TRUNC);
+            const auto received = ::recv(fd_, &packet, expected, MSG_TRUNC);
             if (received < 0 && (errno == EINTR || errno == EAGAIN || errno == EWOULDBLOCK))
                 continue;
-            if (received != sizeof(response) || response.schema != service_schema ||
+            if (received != static_cast<ssize_t>(expected) || response.schema != request.schema ||
                 response.okay > 1 || !std::memchr(response.message, '\0', sizeof(response.message)))
                 throw ClientError("Invalid service response; HALT not confirmed");
             break;
+        }
+        if (recovery) {
+            if (!response.okay ||
+                packet.recovery_state > static_cast<uint32_t>(RecoveryState::unknown) ||
+                packet.admission_open > 1 ||
+                (packet.admission_open != 0) !=
+                    (packet.recovery_state == static_cast<uint32_t>(RecoveryState::admitted))) {
+                throw ClientError("Invalid recovery status; admission not confirmed");
+            }
+            recovery->state = static_cast<RecoveryState>(packet.recovery_state);
+            recovery->admission_open = packet.admission_open != 0;
         }
         ClientResult result{};
         result.okay = response.okay != 0;
@@ -133,7 +149,7 @@ ClientResult Client::exchange(uint32_t operation, uint32_t mask,
         }
         return result;
     } catch (...) {
-        // Schema 1 has no request IDs. A late reply must never match a later call.
+        // Neither local schema has request IDs. Never reuse a late reply.
         disconnect();
         throw;
     }
@@ -143,6 +159,11 @@ ClientResult Client::ping() {
 }
 ClientResult Client::status() {
     return exchange(code(Operation::status));
+}
+RecoveryStatus Client::recovery_status() {
+    RecoveryStatus result;
+    exchange(code(Operation::recovery_status), 0, {}, &result);
+    return result;
 }
 ClientResult Client::prepare() {
     return exchange(code(Operation::prepare));

@@ -26,7 +26,14 @@ with tempfile.TemporaryDirectory(prefix='dmotor-service-') as tmp:
             time.sleep(.01)
         s=connect();assert request(s,0)[1]==1
         second=connect();assert second.recv(192)==b'';second.close()
+        s.send(struct.pack('<IIIiiii',2,12,0,0,0,0,0))
+        recovery=s.recv(201)
+        assert len(recovery)==200 and struct.unpack('<II',recovery[:8])==(2,1)
+        assert struct.unpack('<II',recovery[192:])==(0,0)  # unavailable, not admitted
         assert request(s,2)[1]==1
+        s.send(struct.pack('<IIIiiii',2,12,0,0,0,0,0))
+        recovery=s.recv(201)
+        assert len(recovery)==200 and struct.unpack('<II',recovery[192:])==(0,0)
         assert request(s,3,1)[1]==1
         assert target(s)[1]==1
         time.sleep(.04);assert request(s,1)[3]>0

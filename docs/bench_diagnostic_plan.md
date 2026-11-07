@@ -92,7 +92,7 @@ those to implement U0, and do not claim those functions have passed from U0/U1.
 |---|---|---|
 | 1 | Shared diagnostic envelope/vectors and Linux UART utility with host tests | Implemented; codec and independent Python PTY tests pass |
 | 2 | ESP32-S3 UART-only diagnostic image; native ESP-IDF build | Implemented; pinned ESP-IDF v6.1 build passes |
-| 3 | ARM packaging/build plus bench instructions; physical U0 run | ARM package and QA pass; instructions written; physical run pending |
+| 3 | ARM packaging/build plus bench instructions; physical U0 run | ARM package/QA pass; physical U0 PASS 2026-11-06: 1,000-exchange runs, endpoint restarts and expected failure/recovery after disconnection; [G2 record](gates/G2.md) |
 | 4 | Inhibited GPIO/HB modes and U1 observations | Not implemented |
 | 5 | Separate B1 injection variant, isolated B2 reset support and bench procedures | Not implemented; basic Vivado reload tooling already exists |
 

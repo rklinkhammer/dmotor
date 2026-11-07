@@ -1,6 +1,7 @@
 #pragma once
 #include "dmotor_sw/recovery_link.hpp"
 #include "dmotor_sw/runtime.hpp"
+#include "dmotor_sw/client.hpp"
 #include <functional>
 namespace dmotor_sw {
 namespace recovery {
@@ -26,6 +27,7 @@ class Coordinator {
     bool velocity(Ticket ticket, uint32_t mask, const std::array<int32_t, 4>& targets);
     bool stop(Ticket ticket, uint32_t mask);
     bool admitted() const;
+    RecoveryStatus status() const; // Observation only; never completes recovery.
 
   private:
     bool current(Ticket ticket) const;

@@ -25,6 +25,16 @@ int main(int argc, char** argv) {
         Client client(argv[1], {100, 1000});
         if (mode == "drop")
             return 0;
+        if (mode.find("recovery") == 0) {
+            try {
+                const auto status = client.recovery_status();
+                require(mode == "recovery" && status.state == RecoveryState::waiting_arm &&
+                        !status.admission_open && client.connected());
+            } catch (const ClientError&) {
+                require(mode != "recovery" && !client.connected());
+            }
+            return 0;
+        }
         if (mode != "exercise") {
             bool failed = false;
             try {

@@ -50,3 +50,8 @@ is the entry point for previous review rounds, milestones and build records.
 - [G1a recovery coordinator and queued command admission](g1a_recovery_coordinator.md)
 - [G1a MMIO cleanup attestation acquisition and limits](g1a_cleanup_attestation.md)
 - [G1a durable PS sessions in coordinator discovery](g1a_session_integration.md)
+
+- [G1a client recovery status and remaining review gate](g1a_client_status.md)
+- [G1c monitor design tables and implementation gate](g1c_monitor_design.md)
+
+- [G2 bring-up record — U0 UART PASS](gates/G2.md)

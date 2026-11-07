@@ -132,6 +132,33 @@ bool Coordinator::admitted() const {
     return owner_ && generation_ == runtime_.recovery_generation() && !runtime_.recovery_held() &&
            link_.admission_open();
 }
+RecoveryStatus Coordinator::status() const {
+    if (admitted()) {
+        return {RecoveryState::admitted, true};
+    }
+    if (!owner_ || generation_ != runtime_.recovery_generation()) {
+        return {RecoveryState::held, false};
+    }
+    if (!recovering_) {
+        return {RecoveryState::pairing, false};
+    }
+    switch (link_.phase()) {
+        case Phase::waiting_arm:
+            return {RecoveryState::waiting_arm, false};
+        case Phase::local_check:
+            return {RecoveryState::verifying, false};
+        case Phase::failed:
+            return {RecoveryState::failed, false};
+        case Phase::unknown:
+            return {RecoveryState::unknown, false};
+        case Phase::request:
+        case Phase::commit:
+        case Phase::query:
+            return {RecoveryState::recovering, false};
+        default:
+            return {RecoveryState::held, false};
+    }
+}
 Coordinator::Ticket Coordinator::ticket() const {
     return admitted() ? Ticket{owner_, generation_} : Ticket{};
 }

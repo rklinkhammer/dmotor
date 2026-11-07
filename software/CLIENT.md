@@ -142,3 +142,10 @@ and protocol tests; it is deliberately not installed as an application API.
 A wire change requires a schema/version plan, not merely another wrapper method.
 See the [controller programming guide](../docs/controller_programming.md) for
 lifecycle, units and current monitor recovery limitations.
+
+## Monitor recovery status
+
+`Client::recovery_status()` reports monitor admission independently of PL readiness.
+The current daemon explicitly returns `RecoveryState::unavailable` and
+`admission_open=false`; `prepare()` remains PL-only. Older daemons reject this
+schema-2 query and the client disconnects without retry. See [the G1a API contract](../docs/g1a_client_status.md).

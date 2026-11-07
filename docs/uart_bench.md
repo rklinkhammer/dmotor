@@ -3,8 +3,10 @@
 Implemented: `dmotor-uart-test` for Linux and the
 [ESP32-S3 bench application](../software/esp32/diagnostics/bench/README.md).
 Host tests and an ESP-IDF build are recorded in
-[evidence](evidence/uart_bench/inputs.json). No board has been flashed or tested by
-this implementation. Current SD export `arty-z7-20/20261106T005035Z-4c9ce75c`
+[evidence](evidence/uart_bench/inputs.json). The physical U0 test now has a [recorded PASS](gates/G2.md):
+Initial 100 exchanges and four 1,000-exchange runs passed, including endpoint
+restarts and reconnection. Disconnection correctly caused a timeout. Results
+supplied by Robert and recorded on 2026-11-06. Current SD export `arty-z7-20/20261106T005035Z-4c9ce75c`
 contains the ARM tool; see [image evidence](evidence/arty_uart_image/inputs.json).
 
 ## Build and deploy
@@ -37,7 +39,18 @@ command; no flashing is performed by a build.
    confirm the flashed image is this diagnostic with permits/HB low.
 2. Connect 3.3 V UART: Arty CK_IO0/T14 TX → J7-5 monitor RX (GPIO18);
    J7-4 monitor TX (GPIO17) → Arty CK_IO1/U12 RX; ground J7-1/6. J7 has no supply.
-3. Identify the UART Lite tty associated with device-tree address `0x42C00000`.
+3. Load the matched PL bitstream and overlay once after boot, before opening
+   controller applications (the base Linux tree does not expose UART Lite):
+
+   ```sh
+   sudo fpgautil -b /lib/firmware/xilinx/dvrmc-firmware/dvrmc-firmware.bin \
+     -o /lib/firmware/xilinx/dvrmc-firmware/dvrmc-firmware.dtbo
+   cat /sys/class/fpga_manager/fpga0/state
+   ls -l /dev/ttyUL*
+   ```
+
+   Expect `operating`. Do not reload PL while applications own its devices.
+   Identify the UART Lite tty associated with device-tree address `0x42C00000`.
    Keep the PS console separate. Stop any getty or competing monitor transport
    owner on that tty. The utility requests exclusive access; it does not stop
    other services for you.

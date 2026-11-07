@@ -1,0 +1,50 @@
+
+
+Longer Exchange Result:
+
+amd-edf:~$ sudo dmotor-uart-test /dev/ttyUL0 1000 
+DIAGNOSTIC v1 115200 8N1 run=13464931780827992581 count=1000
+PASS sent=1000 verified=1000 rejected=0 mismatched=0 elapsed_ms=13998
+amd-edf:~$ 
+
+ESP32 Restart
+
+amd-edf:~$ sudo dmotor-uart-test /dev/ttyUL0 1000
+DIAGNOSTIC v1 115200 8N1 run=5849776934164754298 count=1000
+PASS sent=1000 verified=1000 rejected=0 mismatched=0 elapsed_ms=13994
+amd-edf:~$ 
+
+Zynq Restart
+
+amd-edf login: amd-edf
+Password: 
+AMD Embedded Development Framework
+
+WARNING: Embedded Development Framework is a reference Yocto Project
+distribution that intended for testing and development purposes only.
+amd-edf:~$ sudo fpgautil \
+>   -b /lib/firmware/xilinx/dvrmc-firmware/dvrmc-firmware.bin \
+>   -o /lib/firmware/xilinx/dvrmc-firmware/dvrmc-firmware.dtbo
+Password: 
+mkdir: cannot create directory '/configfs': File exists
+Time taken to load BIN is 142.000000 Milli Seconds
+BIN FILE loaded through FPGA manager successfully
+amd-edf:~$ sudo dmotor-uart-test /dev/ttyUL0 1000
+DIAGNOSTIC v1 115200 8N1 run=12402075390825063574 count=1000
+PASS sent=1000 verified=1000 rejected=0 mismatched=0 elapsed_ms=13994
+
+Interrupted connection
+
+amd-edf:~$ sudo dmotor-uart-test /dev/ttyUL0 1000
+DIAGNOSTIC v1 115200 8N1 run=6405510236334177908 count=1000
+FAIL Response/TX timeout sent=203 verified=202 rejected=0 mismatched=0 run=6405510236334177908
+amd-edf:~$ 
+
+Reconnected:
+
+amd-edf:~$ sudo dmotor-uart-test /dev/ttyUL0 1000
+DIAGNOSTIC v1 115200 8N1 run=18055904587028420427 count=1000
+PASS sent=1000 verified=1000 rejected=0 mismatched=0 elapsed_ms=13994
+amd-edf:~$ 
+
+

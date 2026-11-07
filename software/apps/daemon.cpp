@@ -199,83 +199,98 @@ int main(int argc, char** argv) {
                 Request request{};
                 Response response{};
                 const auto n = recv(client.fd, &request, sizeof(request), MSG_TRUNC);
-                if (n != sizeof(request) || request.schema != service_schema) {
+                const bool recovery_query = request.schema == recovery_service_schema &&
+                                            request.operation == Operation::recovery_status &&
+                                            request.mask == 0 && request.velocity[0] == 0 &&
+                                            request.velocity[1] == 0 && request.velocity[2] == 0 &&
+                                            request.velocity[3] == 0;
+                if (n != sizeof(request) || (request.schema != service_schema && !recovery_query)) {
                     disconnect();
                     continue;
                 }
                 last_client = device.now_us();
                 runtime.heartbeat();
-                bool quit = false;
-                try {
-                    std::array<int32_t, 4> velocities{};
-                    for (unsigned i = 0; i < 4; ++i)
-                        velocities[i] = request.velocity[i];
-                    switch (request.operation) {
-                        case Operation::duty:
-                            runtime.duty(request.velocity[0]);
-                            break;
-                        case Operation::inject_target:
-                            trace("inject_target");
-                            runtime.inject_timeout(TimeoutInjection::target);
-                            break;
-                        case Operation::inject_watchdog:
-                            trace("inject_watchdog");
-                            runtime.inject_timeout(TimeoutInjection::watchdog);
-                            break;
-                        case Operation::ping:
-                        case Operation::status:
-                            break;
-                        case Operation::prepare:
-                            runtime.prepare(configs, mask);
-                            break;
-                        case Operation::enable:
-                            runtime.enable(request.mask);
-                            break;
-                        case Operation::velocity:
-                            runtime.velocity(request.mask, velocities);
-                            break;
-                        case Operation::stop:
-                            runtime.stop(request.mask);
-                            break;
-                        case Operation::disable:
-                            runtime.disable(request.mask);
-                            break;
-                        case Operation::halt:
-                            runtime.halt();
-                            break;
-                        case Operation::quit:
-                            runtime.halt();
-                            quit = true;
-                            break;
-                        default:
-                            throw IoError("Unknown operation");
+                if (recovery_query) {
+                    // No live coordinator yet: explicitly unavailable, even after PL prepare.
+                    RecoveryResponse reply{};
+                    reply.base.schema = recovery_service_schema;
+                    reply.base.okay = 1;
+                    if (send(client.fd, &reply, sizeof(reply), MSG_NOSIGNAL) != sizeof(reply)) {
+                        disconnect();
                     }
-                    const auto s = runtime.status();
-                    response.status = s.raw;
-                    response.applied = runtime.applied_sequence();
-                    if (request.operation == Operation::status) {
-                        const auto t = runtime.capture();
-                        for (unsigned m = 0; m < 4; ++m) {
-                            response.measured[m] = t.motors[m].measured_mrpm;
-                            const auto p = static_cast<uint64_t>(t.motors[m].position_counts);
-                            response.position_lo[m] = static_cast<uint32_t>(p);
-                            response.position_hi[m] = static_cast<uint32_t>(p >> 32);
+                } else {
+                    bool quit = false;
+                    try {
+                        std::array<int32_t, 4> velocities{};
+                        for (unsigned i = 0; i < 4; ++i)
+                            velocities[i] = request.velocity[i];
+                        switch (request.operation) {
+                            case Operation::duty:
+                                runtime.duty(request.velocity[0]);
+                                break;
+                            case Operation::inject_target:
+                                trace("inject_target");
+                                runtime.inject_timeout(TimeoutInjection::target);
+                                break;
+                            case Operation::inject_watchdog:
+                                trace("inject_watchdog");
+                                runtime.inject_timeout(TimeoutInjection::watchdog);
+                                break;
+                            case Operation::ping:
+                            case Operation::status:
+                                break;
+                            case Operation::prepare:
+                                runtime.prepare(configs, mask);
+                                break;
+                            case Operation::enable:
+                                runtime.enable(request.mask);
+                                break;
+                            case Operation::velocity:
+                                runtime.velocity(request.mask, velocities);
+                                break;
+                            case Operation::stop:
+                                runtime.stop(request.mask);
+                                break;
+                            case Operation::disable:
+                                runtime.disable(request.mask);
+                                break;
+                            case Operation::halt:
+                                runtime.halt();
+                                break;
+                            case Operation::quit:
+                                runtime.halt();
+                                quit = true;
+                                break;
+                            default:
+                                throw IoError("Unknown operation");
                         }
+                        const auto s = runtime.status();
+                        response.status = s.raw;
+                        response.applied = runtime.applied_sequence();
+                        if (request.operation == Operation::status) {
+                            const auto t = runtime.capture();
+                            for (unsigned m = 0; m < 4; ++m) {
+                                response.measured[m] = t.motors[m].measured_mrpm;
+                                const auto p = static_cast<uint64_t>(t.motors[m].position_counts);
+                                response.position_lo[m] = static_cast<uint32_t>(p);
+                                response.position_hi[m] = static_cast<uint32_t>(p >> 32);
+                            }
+                        }
+                        if (request.operation != Operation::ping)
+                            trace("command");
+                        response.okay = 1;
+                    } catch (const std::exception& e) {
+                        runtime.halt();
+                        std::strncpy(response.message, e.what(), sizeof(response.message) - 1);
                     }
-                    if (request.operation != Operation::ping)
-                        trace("command");
-                    response.okay = 1;
-                } catch (const std::exception& e) {
-                    runtime.halt();
-                    std::strncpy(response.message, e.what(), sizeof(response.message) - 1);
+                    if (send(client.fd, &response, sizeof(response), MSG_NOSIGNAL) !=
+                        sizeof(response)) {
+                        disconnect();
+                        continue;
+                    }
+                    if (quit)
+                        disconnect();
                 }
-                if (send(client.fd, &response, sizeof(response), MSG_NOSIGNAL) !=
-                    sizeof(response)) {
-                    disconnect();
-                    continue;
-                }
-                if (quit)
-                    disconnect();
             }
             if (device.now_us() >= next_tick) {
                 try {

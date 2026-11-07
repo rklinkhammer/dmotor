@@ -1,0 +1,45 @@
+{
+  "date": "2026-11-06",
+  "baseline_commit": "80121b32ba6c2187001b62962b97395a09fb87bd",
+  "scope": "G1a read-only client status and G1c design audit. No live recovery hookup, ARM image rebuild, flashing or physical qualification.",
+  "validation": {
+    "native_tests": "23/23 pass, UBSan and clang-tidy enabled",
+    "format": "57 handwritten PS files pass",
+    "archive": "5 original copies verified",
+    "diff": "git diff --check passes"
+  },
+  "commands": [
+    "cmake --build build/ps-dev -j4",
+    "ctest --test-dir build/ps-dev --output-on-failure",
+    "python3 software/tools/format.py --check",
+    "python3 tools/check_documentation_archive.py",
+    "git diff --check"
+  ],
+  "idf_audit": {
+    "image": "espressif/idf:v6.1@sha256:81893c71bb5e570088901f21def8684c25cd2a9020281bd01b843a7655edb18c",
+    "sources": [
+      "components/esp_driver_i2c/i2c_master.c:679 uses pdMS_TO_TICKS(xfer_timeout_ms)",
+      "components/esp_system/include/esp_task_wdt.h:22 timeout_ms is uint32_t"
+    ],
+    "diagnostic_config": {
+      "CONFIG_FREERTOS_HZ": 100,
+      "CONFIG_ESP_TASK_WDT_TIMEOUT_S": 5,
+      "CONFIG_ESP_TASK_WDT_PANIC": false,
+      "CONFIG_ESP_INT_WDT_TIMEOUT_MS": 300
+    }
+  },
+  "files_sha256": {
+    "software/CLIENT.md": "bacfc6521af004ab053df4b039a3704761d8714859e4f866f22e932eebf06402",
+    "software/apps/daemon.cpp": "a00b8434f1f7ba37ae970c6862d38fee547465ae6fb52409dd66f2548fe4995c",
+    "software/esp32/README.md": "2c9a96b1e5f1e676c866d1bdaa6c18614dc8930e203d96e3403a1ae7709e2a18",
+    "software/include/dmotor_sw/client.hpp": "794aa49a18b74d04f059ac0b1202d0f4aca1fe50f4452e15bb81bca7dc43bdd3",
+    "software/include/dmotor_sw/recovery_coordinator.hpp": "231c9e0829eab4bb3acd76a3b1cab6e95777edc747e01aeeb3d1ac6ffef9f559",
+    "software/include/dmotor_sw/service_protocol.hpp": "09467065b240c14a308a9169621c9ffec69e0a4e62d3ce6796a48213bdc6b28c",
+    "software/linux/client.cpp": "14810b580260859bebf1091aa8086167ff769b8faae887cff8c57966c85ede5e",
+    "software/src/recovery_coordinator.cpp": "831ca1f4519b33adc582fb3b1394e3dd5c8364cb75fb407e09e99e3dffd0c086",
+    "software/tests/client_test.cpp": "bd0527f3029765512f7ae0b5d6186d9112865e7a2905ded3e45ae3b40e74a796",
+    "software/tests/client_test.py": "5ebebbf9d0ee4694c3a7ed66504b261e8ea05117c2726b98da22883255676773",
+    "software/tests/recovery_coordinator_test.cpp": "4e0979d5d6eec306643861f8a1ba9b4a1ce39ba135da6060e8128294c3679efb",
+    "software/tests/service_test.py": "16f5afb357af087ece7d199381cd290a9ea4cb9071cd215d54d80df3c57d636f"
+  }
+}

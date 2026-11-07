@@ -42,3 +42,8 @@ remain unspecified where not accepted; this plan does not manufacture values.
 
 Closed findings and prior review rounds remain in the [archive](archive/index.md);
 retain their evidence links when recording a closure here.
+
+G1a/G1c source increment (2026-11-06): [read-only client status](g1a_client_status.md)
+and [monitor design tables](g1c_monitor_design.md) are prepared. Neither closes
+U02–U06. Review the non-atomic attestation limitation, storage-loss policy, actual
+population/thresholds and cycle budget before operational integration.

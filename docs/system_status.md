@@ -30,10 +30,11 @@ scope, not qualification of the newly integrated monitor system.
 | Gate/work | State | Next evidence or disposition |
 |---|---|---|
 | G1a recovery/admission | Open | [Cleanup/admission specification](g1a_cleanup_admission.md): CLN1, actual-HLS integration and matched build pass; remaining race/boundary qualification, admission hold, persistent sessions and A6–A8 recovery semantics remain open |
-| G1b electrical/R4 | Open | [G1b bench record](gates/G1b.md) references rev-A designs; [diagnostic programs](bench_diagnostic_plan.md) planned, [UART pair built/tested](uart_bench.md); deployment, bench hookup and physical run pending |
-| G1c monitor design | Open | Acquisition budget, calibration/protection policies and IDF isolation design |
+| G1b electrical/R4 | Open | [G1b bench record](gates/G1b.md) references rev-A designs; [diagnostic programs](bench_diagnostic_plan.md) planned, [UART pair built/tested](uart_bench.md); [physical U0 PASS](gates/G2.md): 1,000-exchange runs and endpoint restart/disconnect/reconnect checks pass; other cases remain open |
+| G1c monitor design | Prepared for review | [Design tables](g1c_monitor_design.md); thresholds/population, measured budget and isolation qualification remain open |
 | G1d documentation | [Prepared for self-review](gates/G1d.md) | Current records and initial archive created; matrix has 19 seed rows; extraction/self-review and full inventory migration remain open |
-| G2–G6 | Not accepted | No new board/powered evidence produced by this increment |
+| G2 | Open; U0 UART PASS | [Recorded UART exchange and restart/reconnect tests](gates/G2.md); other electrical/IO checks remain open |
+| G3–G6 | Not accepted | Monitor recovery/protection and powered qualification remain open |
 | BV/GV | Deferred | Not in first-release scope; retain U08 for subsequent vehicle work |
 | G7 | Not accepted | Matched release, gate records and completed documentation migration required |
 
@@ -73,15 +74,19 @@ proof from repeated Runtime register checks, with mid-read fault tests.
 The [durable session integration](g1a_session_integration.md) now reserves PS
 lifetimes while HALT is confirmed, before PL preparation and HELLO.
 
-Next development: A8 shared client/service recovery-status semantics and
-compatibility tests. Target provisioning, ESP32 persistence, storage power-cut qualification,
+The [A8 recovery-status API and compatibility tests](g1a_client_status.md) now
+pass; the current daemon truthfully reports monitor recovery unavailable.
+[G1c acquisition, protection, storage and IDF isolation tables](g1c_monitor_design.md)
+are prepared. Live G1a admission is stopped at the documented contract/proof
+review; operational ESP32 implementation awaits population, threshold and budget
+decisions. Target provisioning, ESP32 persistence, storage power-cut qualification,
 remaining G1a proof cases and live admission integration remain open. Robert's evidence review and the G1b/G1c decisions remain
 prerequisites for system qualification; a successful image build does not accept
 those gates.
 
 Physical UART testing belongs to B2/G2 after G1b conditional acceptance, with
 motor drive power disconnected and an inhibited ESP32 diagnostic image. It can
-precede full recovery firmware; no target UART test is recorded yet. See the
+precede full recovery firmware; [U0 target PASS is recorded](gates/G2.md). See the
 [serial bring-up sequence](system_bringup_plan.md#serial-link-checkpoint).
 
 The first archive pass covers the plan baseline and chronological review/PL/PS/build
@@ -90,5 +95,9 @@ Other mixed architecture/component documents are still awaiting extraction; this
 is not completion of U10. Update this page in place rather than appending progress rounds.
 
 U0 diagnostic increment: Linux/PTY tests, ESP32-S3 ESP-IDF v6.1 build and
-Arty ARM `dmotor-runtime` package/QA pass. The current SD export now includes the ARM diagnostic utility. [Bench instructions and evidence](uart_bench.md); no board flashed
-or tested. GPIO/HB diagnostic modes and simultaneous-stream stress remain open.
+Arty ARM `dmotor-runtime` package/QA pass. The current SD export now includes the ARM diagnostic utility. [Bench instructions and evidence](uart_bench.md); Robert supplied a physical U0 PASS. GPIO/HB diagnostic modes and simultaneous-stream stress remain open.
+
+User-reported bench progress: both Zynq and ESP32 boot; the native USB console
+shows the ESP32 diagnostic banner. The [U0 UART tests passed](gates/G2.md): initial 100 exchanges plus four
+1,000-exchange runs, including both endpoint restarts and reconnection. An
+interrupted run correctly timed out at 203 sent / 202 verified. Electrical permit/HB measurements remain unreported.

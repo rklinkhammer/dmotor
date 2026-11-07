@@ -15,6 +15,22 @@ struct ClientOptions {
     // PL prepare can wait 1.5 s for monitor health, unlike ordinary commands.
     uint32_t prepare_timeout_ms = 2000;
 };
+// This is monitor recovery admission, independent of PL readiness or enable bits.
+enum class RecoveryState : uint32_t {
+    unavailable = 0,
+    held,
+    pairing,
+    recovering,
+    waiting_arm,
+    verifying,
+    admitted,
+    failed,
+    unknown
+};
+struct RecoveryStatus {
+    RecoveryState state = RecoveryState::unavailable;
+    bool admission_open = false;
+};
 struct ClientResult {
     bool okay = false;
     uint32_t status = 0;
@@ -39,7 +55,9 @@ class Client {
 
     ClientResult ping();
     ClientResult status();
-    ClientResult prepare();
+    ClientResult prepare(); // PL-only; never implies completed monitor recovery.
+    // Schema-2 read-only query. Older daemons disconnect: no fallback or retry.
+    RecoveryStatus recovery_status();
     ClientResult enable(uint32_t mask);
     ClientResult velocity(uint32_t mask, const std::array<int32_t, 4>& targets_mrpm);
     ClientResult stop(uint32_t mask);
@@ -58,7 +76,8 @@ class Client {
 
   private:
     ClientResult exchange(uint32_t operation, uint32_t mask = 0,
-                          const std::array<int32_t, 4>& values = {});
+                          const std::array<int32_t, 4>& values = {},
+                          RecoveryStatus* recovery = nullptr);
     int fd_ = -1;
     ClientOptions options_;
 };

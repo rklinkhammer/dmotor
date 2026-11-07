@@ -212,6 +212,20 @@ int main() {
         CHECK(rejects([&] { j.coordinator.finish(); }));
         CHECK(changed && j.io.source && !j.coordinator.admitted());
     }
+    {
+        Joint j;
+        CHECK(j.coordinator.status().state == RecoveryState::held);
+        j.start();
+        CHECK(!j.coordinator.status().admission_open);
+        j.ready_to_finish();
+        CHECK(j.coordinator.status().state == RecoveryState::verifying);
+        CHECK(j.coordinator.finish());
+        CHECK(j.coordinator.status().state == RecoveryState::admitted);
+        CHECK(j.coordinator.status().admission_open);
+        j.coordinator.cancel();
+        CHECK(j.coordinator.status().state == RecoveryState::held);
+        CHECK(!j.coordinator.status().admission_open);
+    }
     std::cout
         << "coordinator PASS: joint recovery, local proof, ownership loss, stale ingress tickets, lease, restart and HALT failure\n";
 }

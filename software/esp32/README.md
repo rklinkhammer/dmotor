@@ -34,7 +34,9 @@ Place the versioned cross-device UART schema and golden wire vectors under
 Keep firmware builds separate from the existing native/Linux CMake build;
 building Linux must not require ESP-IDF or flash a device.
 
-Before implementation, finish the absolute acquisition-cycle budget, ISR-safe
+The [G1c design tables](../../docs/g1c_monitor_design.md) now record the candidate
+budget, storage design and pinned-IDF audit, with remaining review decisions.
+Before operational implementation, accept the absolute acquisition-cycle budget, ISR-safe
 resource rules, configuration/calibration schema and threshold policy. Fault
 logs use bounded RAM first; NVS writes, calibration and firmware updates occur
 only inhibited. Validate the population mask, always require both battery taps,
