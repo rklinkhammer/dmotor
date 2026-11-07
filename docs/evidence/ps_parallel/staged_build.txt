@@ -1,0 +1,36 @@
+[  8%] Building CXX object CMakeFiles/dmotor_ps_engine.dir/home/rklinkhammer/workspace/dmotor-mipi-opt/build/ps_parallel/final_5ms/staging_fixture/unpacked/dmotor-software/src/control.cpp.o
+[  8%] Building CXX object CMakeFiles/dmotor_ps_engine.dir/home/rklinkhammer/workspace/dmotor-mipi-opt/build/ps_parallel/final_5ms/staging_fixture/unpacked/dmotor-software/src/protocol.cpp.o
+[ 13%] Building CXX object CMakeFiles/dmotor_ps_engine.dir/home/rklinkhammer/workspace/dmotor-mipi-opt/build/ps_parallel/final_5ms/staging_fixture/unpacked/dmotor-software/src/arithmetic.cpp.o
+[ 17%] Building CXX object CMakeFiles/dmotor_ps_engine.dir/home/rklinkhammer/workspace/dmotor-mipi-opt/build/ps_parallel/final_5ms/staging_fixture/unpacked/dmotor-software/src/command_engine.cpp.o
+[ 21%] Building CXX object CMakeFiles/dmotor_ps_engine.dir/home/rklinkhammer/workspace/dmotor-mipi-opt/build/ps_parallel/final_5ms/staging_fixture/unpacked/dmotor-software/src/motion.cpp.o
+[ 21%] Built target dmotor_version
+[ 26%] Building CXX object CMakeFiles/dmotor_semantics.dir/src/model.cpp.o
+[ 30%] Building CXX object CMakeFiles/dmotor_ps_engine.dir/home/rklinkhammer/workspace/dmotor-mipi-opt/build/ps_parallel/final_5ms/staging_fixture/unpacked/dmotor-software/src/velocity.cpp.o
+[ 34%] Building CXX object CMakeFiles/dmotor_ps_engine.dir/home/rklinkhammer/workspace/dmotor-mipi-opt/build/ps_parallel/final_5ms/staging_fixture/unpacked/dmotor-software/src/controller.cpp.o
+[ 39%] Building CXX object CMakeFiles/dmotor_ps_engine.dir/home/rklinkhammer/workspace/dmotor-mipi-opt/build/ps_parallel/final_5ms/staging_fixture/unpacked/dmotor-software/src/mailbox.cpp.o
+[ 43%] Building CXX object CMakeFiles/dmotor_semantics.dir/src/runtime.cpp.o
+[ 47%] Building CXX object CMakeFiles/dmotor_semantics.dir/src/protocol.cpp.o
+[ 52%] Linking CXX static library libdmotor_ps_engine.a
+[ 52%] Built target dmotor_ps_engine
+[ 56%] Building CXX object CMakeFiles/dmotor_semantics.dir/src/monitor_protocol.cpp.o
+[ 60%] Building CXX object CMakeFiles/dmotor_semantics.dir/src/version.cpp.o
+[ 65%] Building CXX object CMakeFiles/dmotor_semantics.dir/home/rklinkhammer/workspace/dmotor-mipi-opt/build/ps_parallel/final_5ms/staging_fixture/unpacked/dmotor-software/src/atomic_mailbox.cpp.o
+[ 69%] Linking CXX static library libdmotor_semantics.a
+[ 69%] Built target dmotor_semantics
+[ 82%] Building CXX object CMakeFiles/dmotor_linux.dir/linux/monitor_uart.cpp.o
+[ 82%] Building CXX object CMakeFiles/dmotor_linux.dir/linux/inspection.cpp.o
+[ 82%] Building CXX object CMakeFiles/dmotor_linux.dir/linux/kernel_device.cpp.o
+[ 86%] Linking CXX static library libdmotor_linux.a
+[ 86%] Built target dmotor_linux
+[ 95%] Building CXX object CMakeFiles/dmotord.dir/home/rklinkhammer/workspace/dmotor-mipi-opt/build/ps_parallel/final_5ms/staging_fixture/unpacked/dmotor-software/ps_parallel/ps_device.cpp.o
+[ 95%] Building CXX object CMakeFiles/dmotord.dir/apps/daemon.cpp.o
+[100%] Linking CXX executable dmotord
+[100%] Built target dmotord
+[  9%] Building CXX object CMakeFiles/dmotor_client.dir/linux/client.cpp.o
+[  9%] Built target dmotor_version
+[ 72%] Built target dmotor_semantics
+[ 81%] Linking CXX static library libdmotor_client.a
+[ 81%] Built target dmotor_client
+[ 90%] Building CXX object CMakeFiles/dmotor-maint.dir/apps/maintenance.cpp.o
+[100%] Linking CXX executable dmotor-maint
+[100%] Built target dmotor-maint

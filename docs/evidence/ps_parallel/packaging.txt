@@ -1,0 +1,5 @@
+PASS: PS_PARALLEL_PACKAGE_PASS in profile-local package.txt.
+PASS: original Arty Z7-20 BD recreated, validated, IP upgraded, targets/wrapper generated.
+PASS: original DVRZ BD recreated, validated, IP upgraded, targets/wrapper generated.
+No board preset, pin, PS configuration or board constraint changes.
+No complete board synthesis/route/bitstream or hardware programming performed.

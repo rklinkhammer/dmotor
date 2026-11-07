@@ -1,0 +1,6 @@
+PASS: 29 board-facing port names/directions/widths match original.
+PASS: both final profiles have byte-identical RTL to measured/co-simulated profiles.
+PASS: original Arty/DVRZ board sources/constraints, ESP32 and monitor wire sources preserved.
+PASS: default implementation/build sources unchanged from a671966.
+PASS: original dmotor worktree clean.
+No device access, programming, live ARM or deployment.

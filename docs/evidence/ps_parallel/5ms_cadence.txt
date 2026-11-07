@@ -1,0 +1,1 @@
+PASS: 5000 us cadence, physical ramp scaling, maximum encoder event rate, missed-tick fault

@@ -1,0 +1,39 @@
+Test project /home/rklinkhammer/workspace/dmotor-mipi-opt/build/ps_parallel/final_1ms/build
+      Start  1: arithmetic
+ 1/17 Test  #1: arithmetic .......................   Passed    0.07 sec
+      Start  2: generated_abi
+ 2/17 Test  #2: generated_abi ....................   Passed    0.07 sec
+      Start  3: control
+ 3/17 Test  #3: control ..........................   Passed    0.00 sec
+      Start  4: command_engine
+ 4/17 Test  #4: command_engine ...................   Passed    0.00 sec
+      Start  5: peripheral
+ 5/17 Test  #5: peripheral .......................   Passed    0.00 sec
+      Start  6: configuration
+ 6/17 Test  #6: configuration ....................   Passed    0.00 sec
+      Start  7: motion
+ 7/17 Test  #7: motion ...........................   Passed    0.02 sec
+      Start  8: velocity
+ 8/17 Test  #8: velocity .........................   Passed    0.00 sec
+      Start  9: controller
+ 9/17 Test  #9: controller .......................   Passed    0.00 sec
+      Start 10: dispatcher
+10/17 Test #10: dispatcher .......................   Passed    0.00 sec
+      Start 11: atomic_mailbox
+11/17 Test #11: atomic_mailbox ...................   Passed    0.00 sec
+      Start 12: generated_mailbox_abi
+12/17 Test #12: generated_mailbox_abi ............   Passed    0.07 sec
+      Start 13: atomic_mailbox_top
+13/17 Test #13: atomic_mailbox_top ...............   Passed    0.00 sec
+      Start 14: controller_host
+14/17 Test #14: controller_host ..................   Passed    0.00 sec
+      Start 15: generated_controller_abi
+15/17 Test #15: generated_controller_abi .........   Passed    0.07 sec
+      Start 16: mailbox
+16/17 Test #16: mailbox ..........................   Passed    0.00 sec
+      Start 17: shared_mailbox
+17/17 Test #17: shared_mailbox ...................   Passed    0.01 sec
+
+100% tests passed, 0 tests failed out of 17
+
+Total Test time (real) =   0.35 sec

@@ -60,3 +60,5 @@ is the entry point for previous review rounds, milestones and build records.
 - [G2 bring-up record — U0 UART PASS](gates/G2.md)
 
 - [Experimental PS executor and coherent four-wheel endpoint: slice measurements and adoption gaps](../experiments/ps_executor/REPORT.txt)
+
+- [Parallel PS motor engine: preserved product features, 1 ms compatibility and 5 ms profiles](../experiments/ps_parallel/REPORT.txt)

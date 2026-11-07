@@ -1,0 +1,1 @@
+PASS: 188 fused four-stage/commit/tick operations match serial original operations, all reply words

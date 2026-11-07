@@ -1,0 +1,16 @@
+enable request f cfg=f initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=           455550000
+fault time=          7611050000 hls_fault=00000000 reject=00000000 core_fault=0 scheduler=0 stop=f
+enable request 3 cfg=f initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=          7715850000
+enable request 1 cfg=1 initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=          8948350000
+enable request 1 cfg=1 initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=          9607850000
+fault time=         10611100000 hls_fault=00000000 reject=00000000 core_fault=0 scheduler=0 stop=0
+enable request 1 cfg=1 initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=         10636850000
+fault time=         11638500000 hls_fault=00000000 reject=00000000 core_fault=0 scheduler=0 stop=0
+enable request 1 cfg=1 initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=         11663200000
+fault time=         11726750000 hls_fault=00000000 reject=00000000 core_fault=0 scheduler=0 stop=0
+enable request 1 cfg=1 initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=         11751500000
+enable request 1 cfg=1 initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=         11839800000
+monitor integration PASS: gating, loss, status, protected ACK, reset and no restart
+direct-duty PASS: 0/25/50/100 percent, signed ceiling, mode lock, replay rejection, STOP, expiry, watchdog, faults and HALT
+controller_axi PASS: real AXI, atomic HLS + actual C++ PS engine, configuration, four-motor targets, encoder capture, telemetry shared physical fault, explicit recovery and watchdog expiration
+/home/rklinkhammer/workspace/dmotor-mipi-opt/build/ps_parallel/compat_v3/cosim/controller_axi_tb.sv:249: $finish called at 12045676000 (1ps)

@@ -1,0 +1,210 @@
+Feature-preserving PS motor engine parallel path
+2026-11-07 | dmotor_mipi_opt | PSF1
+
+Implementation
+--------------
+This parallel path replaces the shared motor HLS arithmetic/context store with
+an owned C++ PS executor. It preserves the existing controller architecture,
+not the smaller PSE1 prototype. The baseline is the actual 400 RPM velocity-only
+product prepared by tools/prepare_shared_mailbox.py (exact-onephase profile).
+Position/dwell/queued-motion components in the generic source tree are not
+features of that product and are not added to the daemon.
+
+Retained hardware:
+  - Same controller top-level port names, directions and widths, original board
+    block designs, clock, AXI address range, pins and electrical interfaces.
+  - Full configuration staging/commit, immutable enabled configurations, per-motor
+    generation/session limits, enables/disables, telemetry and snapshot registers.
+  - Atomic four-wheel velocity mailbox, target admission/retirement, hardware
+    scheduler with coherent common-boundary PWM, existing reversal interval.
+  - Encoder capture, decoder diagnostics, per-motor authorization watchdogs,
+    independent target-age protection, hardware STOP deadline, HALT aggregation,
+    physical-fault inhibition and monitor-heartbeat qualification/latching.
+  - Disabled four-context cleanup, combined mailbox/engine proof, cleanup request
+    and session identities, reset cancellation and explicit PL acknowledgment.
+  - Single-motor direct-duty commissioning path remains exactly that; it has not
+    been stretched into the new four-wheel interface.
+
+PS state and calculations:
+  - Uses the product VelocityMailbox/Controller/VelocityEstimator/MotionExecutor,
+    including fixed-point rounding, rational encoder conversion, edge-anchored
+    estimation, PI anti-windup, fractional ramps, acquisition duty limits/deadlines,
+    zero qualification, STOP settling/timeouts and fault/rejection words.
+  - Four independent owned contexts; no process-global shared motor state.
+  - Fuses four target staging writes, commit and tick into one PS crossing while
+    executing the exact original C++ calls in their original order. Hardware
+    still checks applied sequence before retiring a target frame.
+  - A speculative context copy becomes authoritative only after PL confirms the
+    corresponding ticket. Reset/cancellation discards an unaccepted computation.
+  - One worker is owned by the parallel daemon's backend and uses the same
+    exclusive kernel descriptor. It cannot renew client/target/authorization
+    leases, prepare, enable or release HALT on its own. Runtime retains ownership
+    of those decisions. Worker failure asserts HALT, latches failure and blocks
+    future HALT release; no automatic worker restart or command replay.
+
+Compatibility and private extension
+-----------------------------------
+Existing DMI2 controller registers and daemon/client operations retain their
+contracts. The PSF1 extension is private to the parallel daemon/driver, inside
+unused addresses in the existing 64 KiB AXI aperture; no extra hardware ports,
+PS memory master, DMA, ESP32 messages or board wiring are required.
+
+  0x4000 R       PSF1 identity 0x50534631
+  0x4004 R       compiled control period in microseconds
+  0x4008 R       pending[0], transport_fault[1], attached[2]
+  0x4010/14 R    immutable request ticket, low/high
+  0x4018/1c W    response ticket echo, low/high
+  0x4020 W      commit=1; full 16-word response and both ticket words required
+  0x4024 RW     worker attachment; write 1 only on first attachment or engine reset
+  0x4028/2c R   last accepted reply ticket, low/high
+  0x4080..4108 R 35-word captured engine record
+  0x4140..417c W 16-word staged engine response
+
+Tickets are 64-bit, monotonically allocated, survive logical engine resets and
+fail closed at exhaustion. Physical reset removes attachment. An old response
+cannot reattach the endpoint. A newly started daemon asserts HALT before explicit
+attachment; ordinary Runtime preparation still performs the original cleanup.
+Commit bus completion is NOT reply acceptance or physical duty application.
+Cancelled writes are harmless discards; accepted_ticket is authoritative. This
+avoids AXI bus errors when a normal HALT/reset races a worker response.
+
+The new driver admits only the named extension offsets, retains exclusive-open,
+HALT-on-open/close and original register checks, and requires PSF1 at probe. The
+backend also checks PSF1 and PS/PL cadence agreement. An old daemon without an
+executor cannot complete velocity-engine cleanup. Applications still use
+unchanged dmotor_client; there is no new application-side raw MMIO path.
+
+Timing profiles
+---------------
+prepare.py defaults to 1000 us for strict product arithmetic/cadence comparison.
+--period-us 5000 selects the requested 200 Hz loop:
+  - Control timestamp spacing 100,000 clocks at the unchanged 20 MHz clock.
+  - Existing scheduler deadline becomes 4,800 us, shorter than the frame period;
+    the original overrun/fault policy remains. No missed-tick catch-up is allowed.
+  - PI scale and fractional ramp divisor follow 200 Hz. The existing 37-bit
+    integral store is sufficient for the smaller scale (65,536 * 200,000).
+  - Encoder maximum becomes 500 events/snapshot; selection mask widens from
+    7 to 9 bits. Numerator <=6e18 and denominator <=2e14 still fit uint64_t.
+  - Externally configured settle_ticks retain their original millisecond meaning;
+    qualification advances by 5 ms per valid observation and completion rounds
+    up to an observation boundary. Invalid feedback still resets settling.
+  - Acquisition, STOP, target-age and authorization budgets retain time units;
+    hardware protection remains independent of the slower control observations.
+
+A 5 ms loop cannot be bit/time-identical to the original 1 ms sampled loop. The
+1 ms profile establishes compatibility; the 5 ms profile preserves features,
+units and policies with the explicitly changed observation cadence. Rate-specific
+test fixtures change expected physical durations/PI denominators/event bounds,
+not production configuration acceptance or fault checks.
+
+The <=10 ms end-to-end objective is NOT a measured guarantee. From an admitted
+PL target, the selected 5 ms schedule budgets up to one frame wait plus 4.8 ms
+calculation and PWM/reversal boundaries (nominally under 10 ms). Client socket,
+Linux scheduling, ioctl latency, an already pending target and Runtime publication
+can add latency. Measure the complete application-to-output path and define
+admission/load limits before claiming <=10 ms. The worker's 25 us idle sleep is
+not a real-time scheduling guarantee. No camera/navigation contention, ARM
+execution-time or board timing measurements have been performed.
+
+Validation
+----------
+Both rate profiles pass 17 product-level native tests and UBSan. Three generic
+legacy tests (protocol, motion_queue, position_error) require position/queue
+features excluded by the product's existing velocity-only preparation and are
+explicitly outside this test selection; they are not reported as passing.
+
+Both rate profiles additionally pass:
+  - 2,449 interleaved transactions compared against four independent original
+    mailbox contexts, checking every one of the 16 reply words.
+  - 188 fused target transactions compared against the original serial staging,
+    commit and tick sequence, checking every reply word.
+  - Transport/client tests for identity, response packing, speculative cancellation,
+    context isolation, accepted tickets and physical-reset invalidation.
+  - Cadence tests for real acceleration, maximum encoder event rate and rejection
+    of timestamp discontinuities.
+  - Actual threaded backend with a test-only KernelDevice: inhibited start, no
+    implicit HALT release, worker IO failure, sticky failure and joined shutdown.
+
+Full-controller RTL co-simulation uses the real atomic HLS RTL and real PS C++
+engine through VPI, with the original AXI test actor and a second simulated PS
+actor serialized on the same AXI bus. It covers configuration/readback boundaries,
+four motors, telemetry, STOP, encoder pins, global physical faults, HALT, explicit
+PL acknowledgment/reset, direct-duty commissioning and monitor behavior. The
+original cleanup test covers all four contexts, request/session identity,
+in-flight cancellation, heartbeat invalidation and exhaustion. The test actors
+coordinate cold resets; the actual backend instead stops on unexpected physical
+reset and requires explicit restart. This is functional simulation, not a Linux
+scheduler model or wall-clock performance measurement.
+
+Standalone transport RTL tests cover full staging, immutable snapshots, wrong/
+stale tickets, response backpressure, cancellation, physical reset, stalled bus
+response consumption and deadline equality winning over reply commit.
+
+The parallel userspace build and 23 existing software/daemon/client tests pass.
+Those process fixtures deliberately retain their existing fake backend; the new
+threaded backend is tested separately above. The generated kernel module builds
+against installed native Linux headers; this is not an ARM target-kernel build.
+The existing source-archive workflow also stages every PS engine dependency and
+builds daemon/client tools from the unpacked archive. Provenance includes the
+PS worker/core sources and identifies PSF1 with the selected cadence.
+
+Resource and packaging evidence
+-------------------------------
+Vivado 2026.1, xc7z020clg400-1, 20 MHz, AreaOptimized_high, fully routed OOC:
+                              Retained HLS       PS 1 ms       PS 5 ms
+  Occupied slices             13,250             9,542         9,502
+  Slice utilization           99.62%             71.74%        71.44%
+  LUTs                        37,342             20,592        20,598
+  Flip-flops                  55,847             32,167        32,175
+  DSPs                        21                 5             5
+  BRAM tiles                  2                  0             0
+  Worst setup slack           +7.427 ns           +6.543 ns     +6.401 ns
+  Worst hold slack            +0.090 ns           +0.096 ns     +0.096 ns
+
+The 5 ms path saves 3,748 occupied slices (28.3%) and leaves 3,798 of 13,300
+slices unoccupied in this standalone controller placement. LUT reduction is
+44.8%. The retained configuration, telemetry, mailbox and protection stack costs
+substantially more than the stripped-down PSE1 prototype. The remaining five
+DSPs serve four normal PWM channels plus the retained commissioning PWM path.
+Both runs pass combinational-loop, setup, hold and DRC-error gates. DRC warnings
+remain for unpipelined PWM DSPs and the absent PS block in OOC mode. Port routing,
+clock skew and board IO are not qualified by OOC analysis; real board implementation
+and electrical timing remain separate requirements.
+
+See docs/evidence/ps_parallel/ for measured utilization, timing, test results,
+source hashes and scope checks. This full-stack result must replace the earlier
+1,354-slice PSE1 estimate for planning a compatible implementation. Camera logic
+and full-board implementation are not included in the standalone OOC measurement.
+IP packaging and board-project recreation use profile-local build/current_ip;
+the original repository's current_ip and product build remain untouched. Both
+Arty Z7-20 and DVRZ block designs validate and regenerate with the packaged IP;
+no complete board implementation or bitstream was produced.
+
+Reproduction (all paths relative to the sandbox)
+------------------------------------------------
+  python3 experiments/ps_parallel/prepare.py --output build/my-ps-1ms
+  python3 experiments/ps_parallel/prepare.py --period-us 5000 --output build/my-ps-5ms
+  python3 experiments/ps_parallel/verify.py --profile build/my-ps-5ms
+  python3 experiments/ps_parallel/package.py --profile build/my-ps-5ms --platform arty-z7-20
+  /opt/vitis/2026.1/Vivado/bin/vivado -mode batch -nojournal -nolog \
+    -source experiments/ps_parallel/measure.tcl \
+    -tclargs build/my-ps-5ms build/vitis_atomic/hls/syn/verilog build/my-ps-measurement
+
+Verification currently uses the local Icarus installation under build/opt/tools;
+atomic HLS RTL must already exist under build/vitis_atomic/hls/syn/verilog.
+Use a fresh output directory; preparation refuses to overwrite prior evidence.
+The generated software tree builds dmotord with the PS backend and the unchanged
+client API. The generated software/linux/driver tree contains the parallel driver.
+Build those against the actual Zynq toolchain/kernel before any later deployment.
+Neither scripts nor tests install, load, flash or open a hardware device.
+
+Release boundary
+----------------
+The default dmotor build is unchanged; this is a separately selected parallel path.
+The original dmotor worktree, ESP32 firmware/protocol and vehicle-motion sources
+are unchanged. Controller/protection software stays in dmotor. Hardware testing
+remains paused pending assembled boards. Existing PL cleanup/acknowledgment is
+preserved, but operational monitor firmware and end-to-end live recovery remain
+unimplemented; this change does not claim otherwise or widen the commissioning-
+first release scope. No extra ESP32 offload or DRAM ring is needed for these PS
+contexts. Keep the independent monitor role separate from motion computation.

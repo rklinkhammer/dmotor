@@ -1,0 +1,81 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2026.1 (lin64) Build 6511674 Tue Jun 16 11:01:26 MDT 2026
+| Date         : Sat Nov  7 01:20:19 2026
+| Host         : luna running 64-bit Ubuntu 26.04.1 LTS
+| Command      : report_utilization -hierarchical -file /home/rklinkhammer/workspace/dmotor-mipi-opt/build/ps_parallel/loop5_measurement/hierarchy.rpt
+| Design       : dmotor_controller_axi
+| Device       : xc7z020clg400-1
+| Speed File   : -1
+| Design State : Synthesized
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Utilization Design Information
+
+Table of Contents
+-----------------
+1. Utilization by Hierarchy
+
+1. Utilization by Hierarchy
+---------------------------
+
++-----------------------------------------------------------------------------+----------------------------------------------------------------------+------------+------------+---------+------+-------+--------+--------+------------+
+|                                   Instance                                  |                                Module                                | Total LUTs | Logic LUTs | LUTRAMs | SRLs |  FFs  | RAMB36 | RAMB18 | DSP Blocks |
++-----------------------------------------------------------------------------+----------------------------------------------------------------------+------------+------------+---------+------+-------+--------+--------+------------+
+| dmotor_controller_axi                                                       |                                                                (top) |      20872 |      20872 |       0 |    0 | 32175 |      0 |      0 |          5 |
+|   (dmotor_controller_axi)                                                   |                                                                (top) |          2 |          2 |       0 |    0 |  8315 |      0 |      0 |          0 |
+|   bus                                                                       |                                                      dmotor_axi_host |       3609 |       3609 |       0 |    0 |   168 |      0 |      0 |          0 |
+|   controller                                                                |                                                      dmotor_motor_io |      17231 |      17231 |       0 |    0 | 23637 |      0 |      0 |          5 |
+|     (controller)                                                            |                                                      dmotor_motor_io |         53 |         53 |       0 |    0 |   336 |      0 |      0 |          0 |
+|     channel[0].capture                                                      |                                              dmotor_encoder_snapshot |          9 |          9 |       0 |    0 |   195 |      0 |      0 |          0 |
+|     channel[0].decoder                                                      |                                                            qcencoder |        229 |        229 |       0 |    0 |   235 |      0 |      0 |          0 |
+|     channel[0].safety                                                       |                                                        dmotor_safety |        195 |        195 |       0 |    0 |   231 |      0 |      0 |          0 |
+|     channel[1].capture                                                      |                                            dmotor_encoder_snapshot_0 |          9 |          9 |       0 |    0 |   195 |      0 |      0 |          0 |
+|     channel[1].decoder                                                      |                                                          qcencoder_1 |        228 |        228 |       0 |    0 |   235 |      0 |      0 |          0 |
+|     channel[1].safety                                                       |                                                      dmotor_safety_2 |        196 |        196 |       0 |    0 |   231 |      0 |      0 |          0 |
+|     channel[2].capture                                                      |                                            dmotor_encoder_snapshot_3 |          9 |          9 |       0 |    0 |   195 |      0 |      0 |          0 |
+|     channel[2].decoder                                                      |                                                          qcencoder_4 |        228 |        228 |       0 |    0 |   235 |      0 |      0 |          0 |
+|     channel[2].safety                                                       |                                                      dmotor_safety_5 |        196 |        196 |       0 |    0 |   231 |      0 |      0 |          0 |
+|     channel[3].capture                                                      |                                            dmotor_encoder_snapshot_6 |          9 |          9 |       0 |    0 |   195 |      0 |      0 |          0 |
+|     channel[3].decoder                                                      |                                                          qcencoder_7 |        229 |        229 |       0 |    0 |   235 |      0 |      0 |          0 |
+|     channel[3].safety                                                       |                                                      dmotor_safety_8 |        206 |        206 |       0 |    0 |   231 |      0 |      0 |          0 |
+|     controller                                                              |                                            dmotor_integrated_control |      15109 |      15109 |       0 |    0 | 20596 |      0 |      0 |          4 |
+|       (controller)                                                          |                                            dmotor_integrated_control |        976 |        976 |       0 |    0 |  2048 |      0 |      0 |          0 |
+|       cleanup                                                               |                                             dmotor_cleanup_sequencer |        973 |        973 |       0 |    0 |  2650 |      0 |      0 |          0 |
+|       control                                                               |                                               dmotor_mailbox_control |       6867 |       6867 |       0 |    0 |  7580 |      0 |      0 |          4 |
+|         protocol                                                            |                                        dmotor_atomic_mailbox_arbiter |       4223 |       4223 |       0 |    0 |  5503 |      0 |      0 |          0 |
+|           (protocol)                                                        |                                        dmotor_atomic_mailbox_arbiter |        243 |        243 |       0 |    0 |   664 |      0 |      0 |          0 |
+|           transport                                                         |                                            dmotor_atomic_hls_adapter |       3980 |       3980 |       0 |    0 |  4839 |      0 |      0 |          0 |
+|             (transport)                                                     |                                            dmotor_atomic_hls_adapter |        229 |        229 |       0 |    0 |   965 |      0 |      0 |          0 |
+|             core                                                            |                                                dmotor_atomic_mailbox |       3751 |       3751 |       0 |    0 |  3874 |      0 |      0 |          0 |
+|               (core)                                                        |                                                dmotor_atomic_mailbox |          7 |          7 |       0 |    0 |   113 |      0 |      0 |          0 |
+|               grp_batch_transaction_fu_228                                  |                              dmotor_atomic_mailbox_batch_transaction |       3389 |       3389 |       0 |    0 |  3497 |      0 |      0 |          0 |
+|                 (grp_batch_transaction_fu_228)                              |                              dmotor_atomic_mailbox_batch_transaction |        620 |        620 |       0 |    0 |  2168 |      0 |      0 |          0 |
+|                 grp_batch_transaction_Pipeline_VITIS_LOOP_21_2_fu_779       |     dmotor_atomic_mailbox_batch_transaction_Pipeline_VITIS_LOOP_21_2 |        537 |        537 |       0 |    0 |     5 |      0 |      0 |          0 |
+|                   flow_control_loop_pipe_sequential_init_U                  |      dmotor_atomic_mailbox_flow_control_loop_pipe_sequential_init_15 |        537 |        537 |       0 |    0 |     2 |      0 |      0 |          0 |
+|                 grp_begin_tick_fu_547                                       |                                     dmotor_atomic_mailbox_begin_tick |       1003 |       1003 |       0 |    0 |   801 |      0 |      0 |          0 |
+|                   (grp_begin_tick_fu_547)                                   |                                     dmotor_atomic_mailbox_begin_tick |         74 |         74 |       0 |    0 |   794 |      0 |      0 |          0 |
+|                   grp_begin_tick_Pipeline_VITIS_LOOP_24_1_fu_500            |            dmotor_atomic_mailbox_begin_tick_Pipeline_VITIS_LOOP_24_1 |        929 |        929 |       0 |    0 |     7 |      0 |      0 |          0 |
+|                     flow_control_loop_pipe_sequential_init_U                |      dmotor_atomic_mailbox_flow_control_loop_pipe_sequential_init_13 |        929 |        929 |       0 |    0 |     2 |      0 |      0 |          0 |
+|                 grp_retire_fu_637                                           |                                         dmotor_atomic_mailbox_retire |        765 |        765 |       0 |    0 |   421 |      0 |      0 |          0 |
+|                   (grp_retire_fu_637)                                       |                                         dmotor_atomic_mailbox_retire |         98 |         98 |       0 |    0 |   408 |      0 |      0 |          0 |
+|                   grp_retire_Pipeline_VITIS_LOOP_132_1_fu_269               |               dmotor_atomic_mailbox_retire_Pipeline_VITIS_LOOP_132_1 |        359 |        359 |       0 |    0 |     6 |      0 |      0 |          0 |
+|                     flow_control_loop_pipe_sequential_init_U                |      dmotor_atomic_mailbox_flow_control_loop_pipe_sequential_init_12 |        359 |        359 |       0 |    0 |     2 |      0 |      0 |          0 |
+|                   grp_retire_Pipeline_VITIS_LOOP_24_1_fu_239                |                dmotor_atomic_mailbox_retire_Pipeline_VITIS_LOOP_24_1 |        308 |        308 |       0 |    0 |     7 |      0 |      0 |          0 |
+|                     flow_control_loop_pipe_sequential_init_U                |      dmotor_atomic_mailbox_flow_control_loop_pipe_sequential_init_11 |        294 |        294 |       0 |    0 |     2 |      0 |      0 |          0 |
+|                 grp_write_r_fu_793                                          |                                        dmotor_atomic_mailbox_write_r |        432 |        432 |       0 |    0 |    87 |      0 |      0 |          0 |
+|                   (grp_write_r_fu_793)                                      |                                        dmotor_atomic_mailbox_write_r |        154 |        154 |       0 |    0 |    63 |      0 |      0 |          0 |
+|                   grp_write_Pipeline_VITIS_LOOP_24_1_fu_334                 |                 dmotor_atomic_mailbox_write_Pipeline_VITIS_LOOP_24_1 |        253 |        253 |       0 |    0 |     7 |      0 |      0 |          0 |
+|                     flow_control_loop_pipe_sequential_init_U                |      dmotor_atomic_mailbox_flow_control_loop_pipe_sequential_init_10 |        253 |        253 |       0 |    0 |     2 |      0 |      0 |          0 |
+|               grp_dmotor_atomic_mailbox_Pipeline_VITIS_LOOP_38_1_fu_214     | dmotor_atomic_mailbox_dmotor_atomic_mailbox_Pipeline_VITIS_LOOP_38_1 |        355 |        355 |       0 |    0 |   264 |      0 |      0 |          0 |
+|                 (grp_dmotor_atomic_mailbox_Pipeline_VITIS_LOOP_38_1_fu_214) | dmotor_atomic_mailbox_dmotor_atomic_mailbox_Pipeline_VITIS_LOOP_38_1 |        217 |        217 |       0 |    0 |   262 |      0 |      0 |          0 |
+|                 flow_control_loop_pipe_sequential_init_U                    |         dmotor_atomic_mailbox_flow_control_loop_pipe_sequential_init |        138 |        138 |       0 |    0 |     2 |      0 |      0 |          0 |
+|         control                                                             |                                                dmotor_shared_control |       2644 |       2644 |       0 |    0 |  2076 |      0 |      0 |          4 |
+|           scheduler                                                         |                                              dmotor_shared_scheduler |       2537 |       2537 |       0 |    0 |  1563 |      0 |      0 |          0 |
+|           target_age                                                        |                                                    dmotor_target_age |        151 |        151 |       0 |    0 |   397 |      0 |      0 |          0 |
+|       engine                                                                |                                          dmotor_motor_engine_adapter |       6293 |       6293 |       0 |    0 |  8318 |      0 |      0 |          0 |
+|         (engine)                                                            |                                          dmotor_motor_engine_adapter |       2463 |       2463 |       0 |    0 |  6026 |      0 |      0 |          0 |
+|         transport                                                           |                                       dmotor_shared_engine_transport |       3830 |       3830 |       0 |    0 |  2292 |      0 |      0 |          0 |
+|     direct_output                                                           |                                                           dmotor_pwm |        325 |        325 |       0 |    0 |    60 |      0 |      0 |          1 |
+|   monitor                                                                   |                                             dmotor_monitor_heartbeat |         30 |         30 |       0 |    0 |    55 |      0 |      0 |          0 |
++-----------------------------------------------------------------------------+----------------------------------------------------------------------+------------+------------+---------+------+-------+--------+--------+------------+
