@@ -162,3 +162,11 @@ choices from the successful USB or UART diagnostic.
 
 G1a's [remaining proof checklist](g1a_client_status.md#remaining-g1a-gate) must also
 be reviewed before connecting live monitor recovery to daemon motion admission.
+
+## Deadline implementation increment (2026-11-07)
+
+The [I²C deadline adapter candidate](g1c_i2c_deadline_adapter.md) supplies portable
+absolute-deadline acquisition and deterministic fault/preemption tests, plus a
+1000 Hz guarded IDF adapter. Stock-driver timeout reuse/recovery means that an
+argument is not a hard whole-call bound. Independent deadline inhibit and target
+qualification remain required; no operational configuration or gate is accepted.

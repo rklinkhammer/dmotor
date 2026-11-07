@@ -51,3 +51,20 @@ electrical timing or powered-motor qualification.
 
 PCB, fabrication and assembly sources remain in motor-interface-integrated.
 That repository may link here, but must not carry an independent firmware fork.
+
+A first operational acquisition **component candidate** now exists in
+`components/acquisition/` (portable clock/bus/deadline core) and
+`components/monitor_i2c/` (ESP-IDF adapter). This is not the operational application.
+See [deadline contract, tick analysis, build/test and target qualification](../../docs/g1c_i2c_deadline_adapter.md).
+`tests/` is host-only; `build_check/` is a non-deployable IDF compile/link harness.
+No component writes HB or motor permits. Supervisor/output and freshness/policy
+integration remain mandatory before operational use.
+
+The isolated [INA + battery ADC timing diagnostic](diagnostics/ina_timing/README.md)
+now prepares the actual transport/ADC workload: two battery ADC channels followed
+by twelve register reads using **one INA226 as four logical slots**. Configurable
+ADC sampling and optional four IPROPI channels cover the additional analog load.
+It captures per-call/cycle timestamps in RAM, prints CSV afterward, and keeps HB
+and all motor permits LOW. Separate 100 Hz raw-timeout and 1 kHz bounded profiles
+characterize the timeout hazard without changing the operational adapter. Prepared
+only: no target build, flash, hardware timing or safety acceptance is implied.

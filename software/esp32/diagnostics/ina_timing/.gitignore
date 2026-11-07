@@ -1,0 +1,7 @@
+/build*/
+/sdkconfig
+/sdkconfig.old
+/sdkconfig.1khz
+/sdkconfig.1khz.old
+/sdkconfig.probe100
+/sdkconfig.probe100.old

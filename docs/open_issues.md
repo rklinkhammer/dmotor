@@ -56,3 +56,8 @@ G1a/G1c source increment (2026-11-06): [read-only client status](g1a_client_stat
 and [monitor design tables](g1c_monitor_design.md) are prepared. Neither closes
 U02–U06. Review the non-atomic attestation limitation, storage-loss policy, actual
 population/thresholds and cycle budget before operational integration.
+
+U03/U04 increment (2026-11-07): [deadline adapter candidate](g1c_i2c_deadline_adapter.md)
+rejects partial/late acquisition and zero-tick waits. Stock IDF whole-call execution
+bounds, independent deadline inhibit, operational integration and target measurements
+remain open. This does not close U03/U04/U06 or select thresholds.

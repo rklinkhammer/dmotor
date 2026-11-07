@@ -124,3 +124,8 @@ remaining mixed documents and companion inventories; complete requirement mappin
 link/packaging audit and eventual G7 migration acceptance. Historical component
 documents remain reachable from the archive index pending extraction. The first
 increment does not mark the whole archive migration complete.
+
+G1c implementation increment (2026-11-07): [deadline adapter](g1c_i2c_deadline_adapter.md)
+provides an isolated host-tested acquisition candidate and IDF build harness.
+Operational supervisor, ADC/INA freshness, policy and output integration remain
+open; no physical testing or acceptance is implied.
