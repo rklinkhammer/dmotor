@@ -1,5 +1,7 @@
 # Autonomous motion — architecture discussion
 
+> Architecture update (2026-11-07): main uses the [1 ms PS motor executor](../DMOTOR_ARCH.md) with independent PL capture/PWM/protection and a matched PSF1 driver/daemon. Client contracts, commissioning-first scope, U0 evidence, the hardware pause and pending live recovery are unchanged.
+
 Status: proposal for discussion, 2026-11-06. Robert has paused further hardware
 testing until the monitor and motor boards are available and requested higher-level
 architecture work. The commissioning-first release decision remains unchanged.

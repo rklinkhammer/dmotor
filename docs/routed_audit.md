@@ -1,5 +1,7 @@
 # Routed DVRMC audit — 2026-10-12
 
+> Historical implementation/evaluation record. Main now uses the [1 ms PS executor](../DMOTOR_ARCH.md); current build and acceptance state are in [build.md](build.md) and [system_status.md](system_status.md). HLS motor sizing/build instructions below do not select the current product.
+
 Examined the fully routed `dvrmc.runs/impl_1` reports dated 23:26 and opened
 `design_1_wrapper_routed.dcp` read-only to generate detailed CDC and clock-path
 reports. No source, constraint, board-design or routed-checkpoint changes were made.

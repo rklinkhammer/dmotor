@@ -1,0 +1,12 @@
+build/partition/engine/build/vitis_dispatcher_csim.log SHA256 7b5fa30ded4327981f1c041af16b05b7b540ee2a0872d884fdf46887070869ca
+shared mailbox: 2449 interleaved transactions, all 16 reply words match four independent contexts
+build/partition/engine/build/vitis_dispatcher_cosim.log SHA256 d2c34e5959e66132f9d4e18d9d7358760eea455b646de7a3ae7bc8785637cd78
+shared mailbox: 2449 interleaved transactions, all 16 reply words match four independent contexts
+shared mailbox: 2449 interleaved transactions, all 16 reply words match four independent contexts
+INFO: [COSIM 212-1000] *** C/RTL co-simulation finished: PASS ***
+build/partition/axi.txt SHA256 35cbff630fffbfa775bfaf679463037104b77e6b03f605315cd0e0be5ffce647
+monitor integration PASS: gating, loss, status, protected ACK, reset and no restart
+direct-duty PASS: 0/25/50/100 percent, signed ceiling, mode lock, replay rejection, STOP, expiry, watchdog, faults and HALT
+controller_axi PASS: real AXI, both HLS kernels, configuration, four-motor targets, encoder capture, telemetry shared physical fault, explicit recovery and watchdog expiration
+build/partition/cleanup.txt SHA256 64ad35564a717b1482d8339a317fffdc928eece337310fe3cf26bcc4f73ce69e
+controller_cleanup PASS: combined cleanup; completion, session, request, reset, fault, exhaustion

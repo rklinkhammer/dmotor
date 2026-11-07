@@ -1,5 +1,7 @@
 # Initial system requirements-to-test matrix
 
+> Architecture update (2026-11-07): main uses the [1 ms PS motor executor](../DMOTOR_ARCH.md) with independent PL capture/PWM/protection and a matched PSF1 driver/daemon. Client contracts, commissioning-first scope, U0 evidence, the hardware pause and pending live recovery are unchanged.
+
 **Status: DRAFT FOR REVIEW — 2026-11-04.** Seed matrix for the
 [B1–B7/BV system plan](system_bringup_plan.md), implementation baseline `63d5cdb`.
 This is the first G1d deliverable, not a complete requirements decomposition or

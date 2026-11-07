@@ -1,0 +1,37 @@
+{
+  "part": "xc7z020clg400-1",
+  "tool": "Vivado 2026.1",
+  "mode": "out-of-context routed complete controller, 20 MHz",
+  "available_slices": 13300,
+  "hardware_tested": false,
+  "application_to_output_10ms_measured": false,
+  "results": {
+    "baseline": {
+      "slices": 13250,
+      "LUT": 37342,
+      "FF": 55847,
+      "DSP": 21,
+      "BRAM_tiles": 2,
+      "WNS_ns": 7.427,
+      "WHS_ns": 0.09
+    },
+    "PS_1ms": {
+      "slices": 9542,
+      "LUT": 20592,
+      "FF": 32167,
+      "DSP": 5,
+      "BRAM_tiles": 0,
+      "WNS_ns": 6.543,
+      "WHS_ns": 0.096
+    },
+    "PS_5ms": {
+      "slices": 9502,
+      "LUT": 20598,
+      "FF": 32175,
+      "DSP": 5,
+      "BRAM_tiles": 0,
+      "WNS_ns": 6.401,
+      "WHS_ns": 0.096
+    }
+  }
+}

@@ -1,0 +1,7 @@
+build/opt/compact_registers_hls.log: sha256=f9cf379ed4d68e02e0ca5459a3ab72a04044ece44e5a835cfd1de5eb4a8b092c
+build/opt/compact_registers_axi_test.log: sha256=cf1902789a8e707111f3c90d6071741636a9f6f04371dab44a406a7c8b9e1f59
+monitor integration PASS: gating, loss, status, protected ACK, reset and no restart
+direct-duty PASS: 0/25/50/100 percent, signed ceiling, mode lock, replay rejection, STOP, expiry, watchdog, faults and HALT
+controller_axi PASS: real AXI, both HLS kernels, configuration, four-motor targets, encoder capture, telemetry shared physical fault, explicit recovery and watchdog expiration
+build/opt/compact_registers_cleanup_test.log: sha256=8451263bd0107c648812359ab45e2f9942ec5fee5589624d956fdd4393876b0b
+controller_cleanup PASS: combined cleanup; completion, session, request, reset, fault, exhaustion

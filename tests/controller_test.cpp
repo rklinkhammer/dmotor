@@ -20,6 +20,10 @@ static void call(bool reset = false, bool valid = false, bool ack = false, bool 
                  bool authorized = true, bool capture_fault = false) {
     dmotor_controller(reset, authorized, capture_fault, now, count, edge, direction, invalid,
                       negative, 0, 1, valid, command, ack, stop, config, reply);
+#ifdef DMOTOR_TRACE
+    for (auto word : reply) std::cout << word << ',';
+    std::cout << '\n';
+#endif
 }
 static void tick(bool event = false, bool valid = false, bool ack = false, bool stop = false,
                  bool authorized = true, bool capture_fault = false) {

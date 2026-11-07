@@ -1,5 +1,7 @@
 # Velocity mailbox measurement
 
+> Current main: PSF1 motor execution runs on the PS at 1 ms; the atomic mailbox, scheduler, PWM and protection remain in PL. See [current architecture](../DMOTOR_ARCH.md) and [PSF1 contract](ps_executor.md). Older component measurements below retain their original scope.
+
 > Current product builds: [build guide](build.md). Commands below are specialized
 > component/experiment reproduction or historical evidence, not the default build.
 
@@ -74,7 +76,7 @@ and configuration-state simplification remain possible.
 
 ## Experimental transaction interface
 
-`dmotor_mailbox` is an internal hardware-scheduled HLS transaction interface, not
+`dmotor_mailbox` is an internal hardware-scheduled PS engine transaction interface, not
 an AXI peripheral or frozen public ABI. Request words are:
 
 | Operation | request[0] | request[1] | request[2] | request[3] |

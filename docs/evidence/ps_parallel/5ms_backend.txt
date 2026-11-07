@@ -1,0 +1,1 @@
+PASS: actual threaded PS backend starts inhibited, attaches without enabling, latches worker failure, blocks HALT release, joins on shutdown

@@ -9,7 +9,10 @@ module dmotor_pwm # (parameter integer PERIOD_CYCLES=dmotor_timing::PWM_PERIOD_C
     output reg signed [31:0] applied_duty_q16,
     output reg [63:0] timestamp, application_timestamp
 );
-    reg [31:0] phase, magnitude;
+    // Phase never exceeds PERIOD_CYCLES-1; keep external duty/timestamps unchanged.
+    localparam integer PHASE_BITS = PERIOD_CYCLES > 1 ? $clog2(PERIOD_CYCLES) : 1;
+    reg [PHASE_BITS-1:0] phase;
+    reg [16:0] magnitude;
     wire negative = requested_duty_q16 < 0;
     wire signed [63:0] wide_duty = requested_duty_q16;
     wire [63:0] absolute_duty = negative ? -wide_duty : wide_duty;
@@ -33,7 +36,7 @@ module dmotor_pwm # (parameter integer PERIOD_CYCLES=dmotor_timing::PWM_PERIOD_C
                 end else begin
                     reversing<=0;
                     if(bounded!=0) direction<=negative;
-                    magnitude<=bounded;
+                    magnitude<=bounded[16:0];
                     applied_duty_q16<=negative ? -$signed(bounded) : $signed(bounded);
                 end
             end

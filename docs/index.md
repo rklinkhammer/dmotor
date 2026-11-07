@@ -18,6 +18,9 @@ U0 passed; U1 is implemented/build-tested with physical verification pending.
 - [G1 work package](g1_work_package.md): concrete contract, proof and experiment tasks.
 - [Requirements-to-test matrix](system_requirements_matrix.md): acceptance traceability.
 
+- [Sandbox LUT optimization](lut_optimization.md): measured implementation changes, tradeoffs and preserved contracts.
+- [Control partition evaluation](../experiments/control_partition/REPORT.txt): prepared velocity-only HLS audit, residual specialization and simulated 200 Hz PS control.
+
 ## Current contracts and interfaces
 
 - [Architecture](../DMOTOR_ARCH.md) and [protection circuitry](../DMOTOR_CONTROL.md).
@@ -61,3 +64,7 @@ is the entry point for previous review rounds, milestones and build records.
 - [G2 bring-up record — U0 UART PASS](gates/G2.md)
 
 - [U1 GPIO and bounded synthetic heartbeat procedure](u1_gpio_bench.md)
+- [Experimental PS executor and coherent four-wheel endpoint: slice measurements and adoption gaps](../experiments/ps_executor/REPORT.txt)
+
+- [Current 1 ms PS motor executor and private PSF1 interface](ps_executor.md)
+- [Historical 1 ms / 5 ms parallel-path evaluation](../experiments/ps_parallel/REPORT.txt)

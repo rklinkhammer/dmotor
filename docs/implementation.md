@@ -1,5 +1,7 @@
 # Development contract and implementation status
 
+> Historical implementation/evaluation record. Main now uses the [1 ms PS executor](../DMOTOR_ARCH.md); current build and acceptance state are in [build.md](build.md) and [system_status.md](system_status.md). HLS motor sizing/build instructions below do not select the current product.
+
 This is the first infrastructure implementation against architecture revision 0.16.
 The release ABI is not frozen. This workspace is not a deployable motor controller.
 

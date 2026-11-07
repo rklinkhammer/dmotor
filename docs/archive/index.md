@@ -28,7 +28,8 @@ requirements been migrated. Use current contracts first; treat conflicts as open
 issues. No additional platform or generated ABI is deprecated by this archive.
 
 - [Legacy architecture 0.17](../DMOTOR_ARCH_0_17.md)
-- [Older PS-only plan and milestones](../../DMOTOR_SW.md)
+- [Previous PS software plan](pre-ps-executor-2026-11-07/DMOTOR_SW.md)
+- [Previous HLS motor architecture](pre-ps-executor-2026-11-07/DMOTOR_ARCH.md)
 - [Development history](../history/development-log.md)
 - [IP export history](../history/ip-export-log.md)
 

@@ -1,4 +1,6 @@
-# C++ HLS motion executor
+# C++ PS motion executor
+
+> Current main: PSF1 motor execution runs on the PS at 1 ms; the atomic mailbox, scheduler, PWM and protection remain in PL. See [current architecture](../DMOTOR_ARCH.md) and [PSF1 contract](ps_executor.md). Older component measurements below retain their original scope.
 
 > Current product builds: [build guide](build.md). Commands below are specialized
 > component/experiment reproduction or historical evidence, not the default build.
@@ -145,7 +147,7 @@ not a synthesized AXI-to-motion dispatcher.
 
 `tools/motion_rtl.py` checks the actual generated HLS core with the scheduler/PWM:
 autonomous launches, completion acknowledgment, 50% PWM over a full 1,000-clock
-frame, inhibition during an HLS transaction, and a latched feedback fault.
+frame, inhibition during an PS engine transaction, and a latched feedback fault.
 Regenerate with `python3 tools/vitis_check.py --kernel motion` before running it;
 CTest does not regenerate HLS RTL. See [verification results](verification.md).
 

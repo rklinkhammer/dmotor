@@ -1,0 +1,42 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2026.1 (lin64) Build 6511674 Tue Jun 16 11:01:26 MDT 2026
+| Date         : Sat Nov  7 00:48:23 2026
+| Host         : luna running 64-bit Ubuntu 26.04.1 LTS
+| Command      : report_utilization -hierarchical -file /home/rklinkhammer/workspace/dmotor-mipi-opt/build/ps_executor/release_measurement/hierarchy.rpt
+| Design       : ps_controller_axi
+| Device       : xc7z020clg400-1
+| Speed File   : -1
+| Design State : Routed
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Utilization Design Information
+
+Table of Contents
+-----------------
+1. Utilization by Hierarchy
+
+1. Utilization by Hierarchy
+---------------------------
+
++-------------------------+---------------------------+------------+------------+---------+------+------+--------+--------+------------+
+|         Instance        |           Module          | Total LUTs | Logic LUTs | LUTRAMs | SRLs |  FFs | RAMB36 | RAMB18 | DSP Blocks |
++-------------------------+---------------------------+------------+------------+---------+------+------+--------+--------+------------+
+| ps_controller_axi       |                     (top) |       2746 |       2746 |       0 |    0 | 4458 |      0 |      0 |          4 |
+|   (ps_controller_axi)   |                     (top) |          9 |          9 |       0 |    0 | 2408 |      0 |      0 |          0 |
+|   bus                   |           dmotor_axi_host |       1052 |       1052 |       0 |    0 |  163 |      0 |      0 |          0 |
+|   channel[0].capture    |   dmotor_encoder_snapshot |          8 |          8 |       0 |    0 |  163 |      0 |      0 |          0 |
+|   channel[0].decoder    |                 qcencoder |        840 |        840 |       0 |    0 |  235 |      0 |      0 |          0 |
+|   channel[0].output_pwm |                dmotor_pwm |         25 |         25 |       0 |    0 |   60 |      0 |      0 |          1 |
+|   channel[1].capture    | dmotor_encoder_snapshot_0 |          8 |          8 |       0 |    0 |  163 |      0 |      0 |          0 |
+|   channel[1].decoder    |               qcencoder_1 |        135 |        135 |       0 |    0 |  235 |      0 |      0 |          0 |
+|   channel[1].output_pwm |              dmotor_pwm_2 |         22 |         22 |       0 |    0 |   60 |      0 |      0 |          1 |
+|   channel[2].capture    | dmotor_encoder_snapshot_3 |          8 |          8 |       0 |    0 |  163 |      0 |      0 |          0 |
+|   channel[2].decoder    |               qcencoder_4 |        139 |        139 |       0 |    0 |  235 |      0 |      0 |          0 |
+|   channel[2].output_pwm |              dmotor_pwm_5 |         22 |         22 |       0 |    0 |   60 |      0 |      0 |          1 |
+|   channel[3].capture    | dmotor_encoder_snapshot_6 |          8 |          8 |       0 |    0 |  163 |      0 |      0 |          0 |
+|   channel[3].decoder    |               qcencoder_7 |        134 |        134 |       0 |    0 |  235 |      0 |      0 |          0 |
+|   channel[3].output_pwm |              dmotor_pwm_8 |        310 |        310 |       0 |    0 |   60 |      0 |      0 |          1 |
+|   monitor               |  dmotor_monitor_heartbeat |         28 |         28 |       0 |    0 |   55 |      0 |      0 |          0 |
++-------------------------+---------------------------+------------+------------+---------+------+------+--------+--------+------------+
+* Note: The sum of lower-level cells may be larger than their parent cells total, due to cross-hierarchy LUT combining

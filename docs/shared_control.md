@@ -1,5 +1,7 @@
 # Shared scheduler, protection and PWM boundary
 
+> Current main: PSF1 motor execution runs on the PS at 1 ms; the atomic mailbox, scheduler, PWM and protection remain in PL. See [current architecture](../DMOTOR_ARCH.md) and [PSF1 contract](ps_executor.md). Older component measurements below retain their original scope.
+
 > Current product builds: [build guide](build.md). Commands below are specialized
 > component/experiment reproduction or historical evidence, not the default build.
 
@@ -7,7 +9,7 @@
 `rtl/shared_control.sv` connects an autonomous four-channel scheduler, the real
 independent target-age module, and four phase-aligned PWM output blocks. It exposes
 normalized protocol and engine handshakes for the next generated-HLS integration.
-It is not a board top or a complete connection to the atomic-mailbox/motor HLS IP.
+It is not a board top or a complete connection to the atomic-mailbox/PS motor IP.
 
 The algorithms remain C++ HLS: mailbox validation/management, velocity estimation,
 ramp/PI, and per-motor control state. RTL here handles clock-level scheduling,
@@ -73,7 +75,7 @@ Disabled channels clear retained duty so re-enable cannot replay an old command.
 
 Cancellation is a trusted integration action, not a complete controlled-stop
 implementation. The adapter must invalidate the entire intersecting protocol batch,
-close admission and inject the selected stop/disable transition into the HLS motor
+close admission and inject the selected stop/disable transition into the PS motor
 contexts before they next calculate. It must drain outstanding protocol operations
 as well. `stop_or_ready` disarms the corresponding target-age timers. A standalone
 cancel pulse does not implement ramp-to-zero or a stop deadline, and retains previous

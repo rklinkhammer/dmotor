@@ -6,7 +6,7 @@
 
 `rtl/target_age.sv` implements the next revision 0.18 component: four independent
 tracking-intent timers with a common inhibit request and per-motor latched causes.
-It runs every fabric clock, outside the shared HLS computation. The existing
+It runs every fabric clock, outside the PS motor computation. The existing
 `dmotor_safety` authorization watchdog is unchanged. Integration with the atomic
 protocol, scheduler, public MMIO and output gate remains pending.
 

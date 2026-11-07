@@ -12,7 +12,36 @@ module dmotor_controller_axi(
  import dmotor_controller_registers::*;
  wire host_valid,host_write,host_ready,host_response_valid,host_response_ready,host_response_okay;
  wire [31:0] host_address,host_wdata,host_rdata;wire [3:0] host_strobes;
- dmotor_axi_host bus(.*);
+ wire ps_power_reset=reset;
+ wire ps_valid,ps_write,ps_ready,ps_response_valid,ps_response_ready,ps_response_okay;
+ wire [15:0] ps_address;wire [31:0] ps_wdata,ps_rdata;wire [3:0] ps_strobes;
+ wire bus_valid,bus_write,bus_ready,bus_response_valid,bus_response_ready,bus_response_okay;
+ wire [31:0] bus_address,bus_wdata,bus_rdata;wire [3:0] bus_strobes;
+ reg route_busy,route_ps;
+ wire select_ps=bus_address>=32'h4000 && bus_address<32'h4200;
+ assign host_valid=bus_valid&&!route_busy&&!select_ps;
+ assign host_write=bus_write;assign host_address=bus_address;
+ assign host_wdata=bus_wdata;assign host_strobes=bus_strobes;
+ assign ps_valid=bus_valid&&!route_busy&&select_ps;
+ assign ps_write=bus_write;assign ps_address=bus_address[15:0];
+ assign ps_wdata=bus_wdata;assign ps_strobes=bus_strobes;
+ assign bus_ready=!route_busy && (select_ps?ps_ready:host_ready);
+ assign bus_response_valid=route_busy && (route_ps?ps_response_valid:host_response_valid);
+ assign bus_response_okay=route_ps?ps_response_okay:host_response_okay;
+ assign bus_rdata=route_ps?ps_rdata:host_rdata;
+ assign host_response_ready=route_busy&&!route_ps&&bus_response_ready;
+ assign ps_response_ready=route_busy&&route_ps&&bus_response_ready;
+ always @(posedge clk)begin
+  if(reset)begin route_busy<=0;route_ps<=0;end
+  else begin
+   if(bus_valid&&bus_ready)begin route_busy<=1;route_ps<=select_ps;end
+   if(bus_response_valid&&bus_response_ready)route_busy<=0;
+  end
+ end
+ dmotor_axi_host bus(.host_valid(bus_valid),.host_write(bus_write),.host_ready(bus_ready),
+ .host_address(bus_address),.host_wdata(bus_wdata),.host_strobes(bus_strobes),
+ .host_response_valid(bus_response_valid),.host_response_ready(bus_response_ready),
+ .host_response_okay(bus_response_okay),.host_rdata(bus_rdata),.*);
  reg local_valid,local_okay,atomic_owner;
  reg [31:0] local_data;
  reg core_reset;
@@ -62,7 +91,7 @@ module dmotor_controller_axi(
  assign host_response_valid=atomic_owner ? atomic_valid : local_valid;
  assign host_response_okay=atomic_owner ? atomic_okay : local_okay;
  assign host_rdata=atomic_owner ? atomic_data : local_data;
- dmotor_motor_io controller(.direct_mode(direct_mode),.direct_duty(direct_duty),.direct_valid(direct_valid),.clk(clk),.reset(reset),.core_reset(core_reset),
+ dmotor_motor_io controller(.ps_power_reset(ps_power_reset),.ps_valid(ps_valid),.ps_write(ps_write),.ps_address(ps_address),.ps_wdata(ps_wdata),.ps_strobes(ps_strobes),.ps_ready(ps_ready),.ps_response_valid(ps_response_valid),.ps_response_ready(ps_response_ready),.ps_response_okay(ps_response_okay),.ps_rdata(ps_rdata),.direct_mode(direct_mode),.direct_duty(direct_duty),.direct_valid(direct_valid),.clk(clk),.reset(reset),.core_reset(core_reset),
   .inhibit(!monitor_qualified),.cancel_frame(1'b0),.halt_async(halt_async),.qa(qa),.qb(qb),.physical_faults(physical_faults),
   .enable_request(enable_request),.disable_request(disable_request),.refresh_valid(refresh_valid),
   .encoder_initialize(encoder_initialize),.refresh_sequences(refresh_sequences),.refresh_session(refresh_session),

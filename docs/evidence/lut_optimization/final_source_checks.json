@@ -1,0 +1,32 @@
+{
+  "retained_rtl_matches_area_synthesis_inputs": {
+    "rtl/shared_control.sv": true,
+    "rtl/integrated_control.sv": true,
+    "rtl/qcencoder.sv": true,
+    "rtl/safety.sv": true,
+    "rtl/motor_io.sv": true,
+    "rtl/encoder_snapshot.sv": true,
+    "rtl/controller_registers.sv": true,
+    "rtl/scheduler.sv": true,
+    "rtl/pwm.sv": true,
+    "rtl/motion_top.sv": true,
+    "rtl/shared_scheduler.sv": true,
+    "rtl/target_age.sv": true,
+    "rtl/cleanup_sequencer.sv": true,
+    "rtl/motor_engine_adapter.sv": true,
+    "rtl/axi_bridge.sv": true,
+    "rtl/shared_engine_transport.sv": true,
+    "rtl/vivado_dev.sv": true,
+    "rtl/registers.sv": true,
+    "rtl/atomic_mailbox_arbiter.sv": true,
+    "rtl/atomic_hls_adapter.sv": true,
+    "rtl/mailbox_control.sv": true,
+    "rtl/monitor_heartbeat.sv": true,
+    "rtl/axi_host.sv": true,
+    "rtl/peripheral_top.sv": true,
+    "rtl/batch_registers.sv": true,
+    "rtl/timing.sv": true,
+    "rtl/controller_axi.sv": true
+  },
+  "original_worktree_status_unchanged": true
+}

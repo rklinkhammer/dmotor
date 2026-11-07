@@ -1,5 +1,7 @@
 # Safety/configuration integration — development schema 4
 
+> Architecture update (2026-11-07): main uses the [1 ms PS motor executor](../DMOTOR_ARCH.md) with independent PL capture/PWM/protection and a matched PSF1 driver/daemon. Client contracts, commissioning-first scope, U0 evidence, the hardware pause and pending live recovery are unchanged.
+
 The register peripheral now owns a C++ HLS `Configuration` object, with staged
 and active settings. `WATCHDOG_US` accepts staging writes while disabled; commit
 validates 1,000..10,000,000 us. `MAX_SPEED_MRPM` validates 1,000..1,000,000 milli-RPM.

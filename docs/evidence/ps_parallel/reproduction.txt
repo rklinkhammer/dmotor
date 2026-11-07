@@ -1,0 +1,1 @@
+PASS: fresh final prepare.py reproduces all measured RTL and compiled core/header/backend sources byte-for-byte, plus daemon, driver, software build and provenance inputs.

@@ -91,13 +91,10 @@ int main() {
     CHECK(reply[7] == activated);
     service(7, 0, 6);
     CHECK(reply[7] == activated);
-    enqueue(5, 3000);
+    enqueue(6, 1000000);
     enqueue(6, 1000000);
     tick();
     CHECK((reply[1] & 1) && reply[3] == 2);
-    tick();
-    tick();
-    CHECK(reply[4] == 1);
     tick();
     CHECK(reply[4] == 2);
     service(5, 2);
@@ -178,6 +175,9 @@ int main() {
     // Every descriptor error must be rejected by the shared validation path,
     // with correlation taken from ring ownership, never malformed wire fields.
     for (unsigned kind = 1; kind <= 8; ++kind) {
+#ifdef DMOTOR_TRACE
+        if (kind == 7) continue; // Removed relative-position opcode is tested separately.
+#endif
         reset();
         if (kind == 8) {
             // Reopen under generation 1, then supply generation 2 before the
@@ -239,11 +239,22 @@ int main() {
         service(7, 0, 2);
         CHECK(reply[7] == 1);
         service(7, 0, 3);
-        CHECK(reply[7] == (kind == 8 ? 5 : kind));
+        CHECK(reply[7] == (kind == 8 ? 5 : kind == 7 ? 1 : kind));
         service(7, 0, 4);
         CHECK(reply[7] == 0);
         cfg[0] = 1;
     }
+#ifndef DMOTOR_TRACE
+    // Removed modes must reject without activation or drive.
+    for (uint32_t opcode : {2U, 3U, 4U, 5U}) {
+        reset();
+        enqueue(opcode, 1000);
+        for (unsigned i = 0; i < 101; ++i) tick();
+        CHECK(reply[3] == 1 && reply[4] == 1 && !reply[6] && !reply[16]);
+        service(7, 0, 3);
+        CHECK(reply[7] == static_cast<uint32_t>(dmotor::Error::opcode));
+    }
+#endif
     std::cout << "dispatcher: exact activation, ordered completion, backpressure, stop, rejection "
                  "and cancellation priority passed\n";
 }

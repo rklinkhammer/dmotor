@@ -1,0 +1,26 @@
+{
+  "baseline": {
+    "lut": 39526.0,
+    "ff": 56036.0,
+    "slices": 13228.0,
+    "dsp": 16.0,
+    "bram_tiles": 2.0,
+    "wns_ns": 9.778,
+    "whs_ns": 0.063,
+    "tns_ns": 0.0,
+    "ths_ns": 0.0,
+    "timing_and_drc_error_gate": "PASS"
+  },
+  "area": {
+    "lut": 37342.0,
+    "ff": 55847.0,
+    "slices": 13250.0,
+    "dsp": 21.0,
+    "bram_tiles": 2.0,
+    "wns_ns": 7.427,
+    "whs_ns": 0.09,
+    "tns_ns": 0.0,
+    "ths_ns": 0.0,
+    "timing_and_drc_error_gate": "PASS"
+  }
+}

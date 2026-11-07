@@ -1,5 +1,7 @@
 # Width-specialized divider measurement
 
+> Historical implementation/evaluation record. Main now uses the [1 ms PS executor](../DMOTOR_ARCH.md); current build and acceptance state are in [build.md](build.md) and [system_status.md](system_status.md). HLS motor sizing/build instructions below do not select the current product.
+
 This isolated sweep compares the existing two-phase restoring divider with the
 same algorithm using `ap_uint<Width>` for its numerator, denominator, remainder,
 and combined dividend/quotient register. Each dividend bit takes two loop phases;

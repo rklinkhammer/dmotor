@@ -1,5 +1,7 @@
 # MMIO logic reduction — 2026-10-12
 
+> Historical implementation/evaluation record. Main now uses the [1 ms PS executor](../DMOTOR_ARCH.md); current build and acceptance state are in [build.md](build.md) and [system_status.md](system_status.md). HLS motor sizing/build instructions below do not select the current product.
+
 The integrated controller now uses 34,129 LUTs, down from 72,104 after the
 protection-loop repair. Both measurements are fresh Vivado 2026.1 out-of-context
 synthesis of `dmotor_controller_axi` for `xc7z020clg400-1`, using the same generated

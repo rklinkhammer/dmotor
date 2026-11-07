@@ -72,7 +72,9 @@ static int dm_release(struct inode *inode, struct file *file)
 static bool readable(u32 a)
 {
  if (a & 3) return false;
- return a <= 0x40 || (a >= 0x100 && a < 0x140) ||
+ return a == 0x4000 || a == 0x4004 || a == 0x4008 || a == 0x4010 || a == 0x4014 ||
+        a == 0x4024 || a == 0x4028 || a == 0x402c || (a >= 0x4080 && a < 0x410c) ||
+        a <= 0x40 || (a >= 0x100 && a < 0x140) ||
         (a >= DM_DIRECT_CAPABILITY && a <= DM_DIRECT_COMMIT) ||
         a == DM_MONITOR_CAPABILITY || a == DM_MONITOR_STATUS ||
         (a >= DM_CLEANUP_CAPABILITY && a <= DM_CLEANUP_REQUEST) ||
@@ -83,6 +85,8 @@ static bool readable(u32 a)
 static bool writable(u32 a, u32 v, u32 status)
 {
  if (a & 3) return false;
+ if (a == 0x4018 || a == 0x401c || (a >= 0x4140 && a < 0x4180)) return true;
+ if (a == 0x4020 || a == 0x4024) return v == 1;
  if ((a >= 0x10 && a <= 0x18) || (a >= 0x80 && a < 0xa0)) return true;
  if (a == 0x1c || a == DM_SNAPSHOT) return v == 1;
  if (a == DM_ENABLE || a == DM_DISABLE || a == DM_STOP) return v < 16;
@@ -171,10 +175,11 @@ static int dm_probe(struct platform_device *pdev)
  d->halt = devm_gpiod_get(&pdev->dev, "halt", GPIOD_OUT_HIGH);
  if (IS_ERR(d->halt)) { ret = PTR_ERR(d->halt); goto fail; }
  r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- if (!r || resource_size(r) < (DM_TELEMETRY_BASE + 4 * DM_TELEMETRY_STRIDE)) { ret = -EINVAL; goto fail; }
+ if (!r || resource_size(r) < 0x4180) { ret = -EINVAL; goto fail; }
  d->base = devm_ioremap_resource(&pdev->dev, r);
  if (IS_ERR(d->base)) { ret = PTR_ERR(d->base); goto fail; }
  if (readl(d->base + ID) != PROFILE) { ret = -ENODEV; goto fail; }
+ if (readl(d->base + 0x4000) != 0x50534631U) { ret = -ENODEV; goto fail; }
  ret = halt_all(d); if (ret) goto fail;
  if (readl(d->base + DM_MONITOR_CAPABILITY) != MONITOR_PROFILE) {
   dev_err(&pdev->dev, "Controller lacks required HB11 monitor supervision\n");

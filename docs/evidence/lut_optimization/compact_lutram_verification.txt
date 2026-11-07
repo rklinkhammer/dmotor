@@ -1,0 +1,7 @@
+build/opt/compact_lutram_hls.log: sha256=702d550ce87dd1a7896ebbd53e13a821c150402e896db6193a6ae401688a4a11
+build/opt/compact_lutram_axi_test.log: sha256=151d570938aa27e0c52ce65e4a02b3f5227f2becabfadefdf68d6ff0804b0474
+monitor integration PASS: gating, loss, status, protected ACK, reset and no restart
+direct-duty PASS: 0/25/50/100 percent, signed ceiling, mode lock, replay rejection, STOP, expiry, watchdog, faults and HALT
+controller_axi PASS: real AXI, both HLS kernels, configuration, four-motor targets, encoder capture, telemetry shared physical fault, explicit recovery and watchdog expiration
+build/opt/compact_lutram_cleanup_test.log: sha256=45394a2e88a8ceb74331b763671d8678fded0bc8c525e6f209814242faba65ff
+controller_cleanup PASS: combined cleanup; completion, session, request, reset, fault, exhaustion

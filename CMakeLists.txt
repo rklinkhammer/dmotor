@@ -23,7 +23,7 @@ find_program(IVERILOG iverilog)
 find_program(VVP vvp)
 set(IVERILOG_BASE "" CACHE PATH "Optional relocated Icarus backend directory")
 if(IVERILOG AND VVP)
-  foreach(test cleanup_sequencer motor_engine_adapter monitor_heartbeat safety scheduler qcencoder pwm latency axi_bridge encoder_snapshot target_age shared_scheduler vivado_dev)
+  foreach(test cleanup_sequencer monitor_heartbeat safety scheduler qcencoder pwm latency axi_bridge encoder_snapshot target_age shared_scheduler vivado_dev)
     add_test(NAME rtl_${test} COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/rtl_test.py
       --iverilog ${IVERILOG} --vvp ${VVP} --base "${IVERILOG_BASE}"
       --source ${CMAKE_SOURCE_DIR} --build ${CMAKE_BINARY_DIR} --test ${test})
@@ -44,11 +44,7 @@ add_executable(peripheral_test tests/peripheral_test.cpp)
 target_link_libraries(peripheral_test PRIVATE dmotor)
 add_test(NAME peripheral COMMAND peripheral_test)
 # Requires the generated kernel: run tools/vitis_check.py --kernel peripheral.
-if(IVERILOG AND VVP AND EXISTS "${CMAKE_SOURCE_DIR}/build/vitis_peripheral/hls/syn/verilog/dmotor_peripheral.v")
-  add_test(NAME rtl_peripheral_integrated COMMAND ${Python3_EXECUTABLE}
-    ${CMAKE_SOURCE_DIR}/tools/integrated_rtl.py --iverilog ${IVERILOG} --vvp ${VVP}
-    --base "${IVERILOG_BASE}")
-endif()
+# Legacy peripheral HLS integration is not part of the PSF1 product.
 add_executable(configuration_test tests/configuration_test.cpp)
 target_link_libraries(configuration_test PRIVATE dmotor)
 add_test(NAME configuration COMMAND configuration_test)
@@ -56,15 +52,8 @@ target_sources(dmotor PRIVATE src/motion.cpp)
 add_executable(motion_test tests/motion_test.cpp)
 target_link_libraries(motion_test PRIVATE dmotor)
 add_test(NAME motion COMMAND motion_test)
-add_executable(motion_queue_test tests/motion_queue_test.cpp)
-target_link_libraries(motion_queue_test PRIVATE dmotor)
-add_test(NAME motion_queue COMMAND motion_queue_test)
 # Generated motion RTL plus autonomous scheduler and logical PWM adapter.
-if(IVERILOG AND VVP AND EXISTS "${CMAKE_SOURCE_DIR}/build/vitis_motion/hls/syn/verilog/dmotor_motion.v")
-  add_test(NAME rtl_motion_integrated COMMAND ${Python3_EXECUTABLE}
-    ${CMAKE_SOURCE_DIR}/tools/motion_rtl.py --iverilog ${IVERILOG} --vvp ${VVP}
-    --base "${IVERILOG_BASE}")
-endif()
+# Legacy motion HLS integration is not part of the PSF1 product.
 
 target_sources(dmotor PRIVATE src/velocity.cpp)
 add_executable(velocity_test tests/velocity_test.cpp)
@@ -78,9 +67,6 @@ target_sources(dmotor PRIVATE src/dispatcher.cpp)
 add_executable(dispatcher_test tests/dispatcher_test.cpp)
 target_link_libraries(dispatcher_test PRIVATE dmotor)
 add_test(NAME dispatcher COMMAND dispatcher_test)
-add_executable(position_error_test tests/position_error_test.cpp)
-target_link_libraries(position_error_test PRIVATE dmotor)
-add_test(NAME position_error COMMAND position_error_test)
 
 # Revision 0.18 atomic batch protocol; distinct from the retained ring ABI.
 target_sources(dmotor PRIVATE src/atomic_mailbox.cpp)
@@ -103,19 +89,9 @@ endif()
 
 # Generated atomic mailbox plus real scheduler, target age and PWM; motor math mocked.
 if(IVERILOG AND VVP AND EXISTS "${CMAKE_SOURCE_DIR}/build/vitis_atomic/hls/syn/verilog/dmotor_atomic_mailbox.v")
-  add_test(NAME rtl_controller_cleanup COMMAND ${Python3_EXECUTABLE}
-    ${CMAKE_SOURCE_DIR}/tools/atomic_adapter_rtl.py --test controller_cleanup
-    --iverilog ${IVERILOG} --vvp ${VVP} --base "${IVERILOG_BASE}")
   add_test(NAME rtl_mailbox_control COMMAND ${Python3_EXECUTABLE}
     ${CMAKE_SOURCE_DIR}/tools/atomic_adapter_rtl.py --test mailbox_control
     --iverilog ${IVERILOG} --vvp ${VVP} --base "${IVERILOG_BASE}")
-endif()
-
-# Measured four-context motor kernel; requires the prepared/synthesized experiment.
-if(IVERILOG AND VVP AND EXISTS "${CMAKE_SOURCE_DIR}/build/shared_mailbox_copy/build/vitis_dispatcher/hls/syn/verilog/dmotor_mailbox_shared.v")
-  add_test(NAME rtl_shared_engine_transport COMMAND ${Python3_EXECUTABLE}
-    ${CMAKE_SOURCE_DIR}/tools/shared_engine_rtl.py --iverilog ${IVERILOG} --vvp ${VVP}
-    --base "${IVERILOG_BASE}")
 endif()
 
 add_executable(controller_host_test tests/controller_host_test.cpp)
@@ -124,23 +100,21 @@ add_test(NAME controller_host COMMAND controller_host_test)
 add_test(NAME generated_controller_abi COMMAND ${Python3_EXECUTABLE}
   ${CMAKE_SOURCE_DIR}/tools/generate_controller_abi.py --check)
 
-# Native checks of the same four-context sources used by HLS experiments.
-# Prepared HLS profiles install their own mailbox sources/tests instead.
-if(EXISTS "${CMAKE_SOURCE_DIR}/experiments/mailbox/shared_mailbox.cpp")
-  foreach(header mailbox shared_mailbox)
-    configure_file(experiments/mailbox/${header}.hpp
-      ${CMAKE_BINARY_DIR}/mailbox_include/dmotor/${header}.hpp COPYONLY)
+
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+set_property(TARGET dmotor PROPERTY POSITION_INDEPENDENT_CODE ON)
+target_sources(dmotor PRIVATE src/mailbox.cpp src/shared_mailbox.cpp)
+foreach(test mailbox shared_mailbox)
+ add_executable(${test}_test tests/${test}_test.cpp)
+ target_link_libraries(${test}_test PRIVATE dmotor)
+ add_test(NAME ${test} COMMAND ${test}_test)
+endforeach()
+add_test(NAME ps_executor_native COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/ps_native_tests.py --build ${CMAKE_BINARY_DIR})
+if(IVERILOG AND VVP)
+ add_test(NAME ps_transport COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/ps_transport_test.py --iverilog ${IVERILOG} --vvp ${VVP} --base "${IVERILOG_BASE}" --build ${CMAKE_BINARY_DIR})
+ if(EXISTS "${CMAKE_SOURCE_DIR}/build/vitis_atomic/hls/syn/verilog/dmotor_atomic_mailbox.v")
+  foreach(bench controller_axi controller_cleanup)
+   add_test(NAME ps_${bench} COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/ps_cosim.py --build ${CMAKE_BINARY_DIR} --bench ${bench} --iverilog ${IVERILOG} --vvp ${VVP} --base "${IVERILOG_BASE}")
   endforeach()
-  foreach(variant direct copy)
-    add_executable(shared_mailbox_${variant}_test
-      experiments/mailbox/shared_mailbox_test.cpp experiments/mailbox/mailbox.cpp
-      experiments/mailbox/shared_mailbox.cpp)
-    target_include_directories(shared_mailbox_${variant}_test PRIVATE
-      ${CMAKE_BINARY_DIR}/mailbox_include)
-    target_link_libraries(shared_mailbox_${variant}_test PRIVATE dmotor)
-    if(variant STREQUAL "copy")
-      target_compile_definitions(shared_mailbox_${variant}_test PRIVATE DMOTOR_MAILBOX_COPY_CONTEXT)
-    endif()
-    add_test(NAME shared_mailbox_${variant} COMMAND shared_mailbox_${variant}_test)
-  endforeach()
+ endif()
 endif()

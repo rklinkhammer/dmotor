@@ -1,11 +1,15 @@
-// Actual atomic-mailbox HLS IP + scheduler/target age/PWM. Motor engine ports
-// remain normalized until the shared C++ engine adapter is integrated.
+// Atomic-mailbox HLS + hardware scheduler/target age/PWM and PSF1 motor engine.
 module dmotor_motor_io #(
     parameter integer SNAPSHOT_BITS=256,
     parameter integer TICK_CYCLES=dmotor_timing::CONTROL_TICK_CYCLES,
     parameter integer DEADLINE_CYCLES=dmotor_timing::CONTROL_DEADLINE_CYCLES,
     parameter integer PWM_CYCLES=dmotor_timing::PWM_PERIOD_CYCLES
 )(
+
+    input wire ps_power_reset,ps_valid,ps_write,
+    input wire [15:0] ps_address,input wire [31:0] ps_wdata,input wire [3:0] ps_strobes,
+    output wire ps_ready,ps_response_valid,input wire ps_response_ready,
+    output wire ps_response_okay,output wire [31:0] ps_rdata,
     input wire clk, reset, inhibit, cancel_frame,
     input wire [3:0] direct_mode,
     input wire signed [31:0] direct_duty,
@@ -159,7 +163,7 @@ module dmotor_motor_io #(
             .halt_detected(halt_detected[m]));
     end endgenerate
     dmotor_integrated_control #(.SNAPSHOT_BITS(SNAPSHOT_BITS),.TICK_CYCLES(TICK_CYCLES),
-        .DEADLINE_CYCLES(DEADLINE_CYCLES),.PWM_CYCLES(PWM_CYCLES)) controller(
+        .DEADLINE_CYCLES(DEADLINE_CYCLES),.PWM_CYCLES(PWM_CYCLES)) controller(.ps_power_reset(ps_power_reset),.ps_valid(ps_valid),.ps_write(ps_write),.ps_address(ps_address),.ps_wdata(ps_wdata),.ps_strobes(ps_strobes),.ps_ready(ps_ready),.ps_response_valid(ps_response_valid),.ps_response_ready(ps_response_ready),.ps_response_okay(ps_response_okay),.ps_rdata(ps_rdata),
         .reset(reset || core_reset || direct_active),.inhibit(global_inhibit || |safety_requests || core_reset || direct_active),
         .fault(engine_fault),.halt_request(engine_halt),.protocol_initialized(engine_initialized),
         .ready_mask(engine_ready_mask),.stopped(engine_stopped),.busy(engine_busy),.fault_inhibit(engine_blocked),

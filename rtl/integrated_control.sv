@@ -1,11 +1,15 @@
-// Actual atomic-mailbox HLS IP + scheduler/target age/PWM. Motor engine ports
-// remain normalized until the shared C++ engine adapter is integrated.
+// Atomic-mailbox HLS + hardware scheduler/target age/PWM and PSF1 motor engine.
 module dmotor_integrated_control #(
     parameter integer SNAPSHOT_BITS=256,
     parameter integer TICK_CYCLES=dmotor_timing::CONTROL_TICK_CYCLES,
     parameter integer DEADLINE_CYCLES=dmotor_timing::CONTROL_DEADLINE_CYCLES,
     parameter integer PWM_CYCLES=dmotor_timing::PWM_PERIOD_CYCLES
 )(
+
+    input wire ps_power_reset,ps_valid,ps_write,
+    input wire [15:0] ps_address,input wire [31:0] ps_wdata,input wire [3:0] ps_strobes,
+    output wire ps_ready,ps_response_valid,input wire ps_response_ready,
+    output wire ps_response_okay,output wire [31:0] ps_rdata,
     input wire clk, reset, inhibit, cancel_frame,
     output wire target_inhibit,
     input wire [3:0] enabled,
@@ -73,7 +77,7 @@ module dmotor_integrated_control #(
     end
     assign fault=controller_fault || engine_fault || cleanup_local_fault;
     assign halt_request=controller_halt || engine_fault || cleanup_local_fault;
-    dmotor_motor_engine_adapter engine(.clk(clk),.reset(reset || (cleanup_override ? inhibit || controller_fault : engine_reset)),
+    dmotor_motor_engine_adapter engine(.ps_power_reset(ps_power_reset),.ps_valid(ps_valid),.ps_write(ps_write),.ps_address(ps_address),.ps_wdata(ps_wdata),.ps_strobes(ps_strobes),.ps_ready(ps_ready),.ps_response_valid(ps_response_valid),.ps_response_ready(ps_response_ready),.ps_response_okay(ps_response_okay),.ps_rdata(ps_rdata),.clk(clk),.reset(reset || (cleanup_override ? inhibit || controller_fault : engine_reset)),
         .cleanup_start(cleanup_start),.cleanup_busy(),.cleanup_done(cleanup_done),
         .start(engine_start),.ready(engine_ready),.done(engine_done),.fault(engine_fault),
         .motor(engine_motor),.session(cleanup_override ? session : engine_session),.generation(engine_generation),

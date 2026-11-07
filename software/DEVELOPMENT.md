@@ -1,5 +1,7 @@
 # PS software development
 
+> Architecture update (2026-11-07): main uses the [1 ms PS motor executor](../DMOTOR_ARCH.md) with independent PL capture/PWM/protection and a matched PSF1 driver/daemon. Client contracts, commissioning-first scope, U0 evidence, the hardware pause and pending live recovery are unchanged.
+
 The [controller programming guide](../docs/controller_programming.md) describes
 interfaces and lifecycle rules. This file describes the supported editing and
 validation workflow; the root [coding conventions](../docs/coding_standards.md)

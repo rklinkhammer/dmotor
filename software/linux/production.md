@@ -1,5 +1,7 @@
 # Exclusive-access and velocity-runtime commissioning
 
+> Architecture update (2026-11-07): main uses the [1 ms PS motor executor](../../DMOTOR_ARCH.md) with independent PL capture/PWM/protection and a matched PSF1 driver/daemon. Client contracts, commissioning-first scope, U0 evidence, the hardware pause and pending live recovery are unchanged.
+
 **Revision 9 integration update (2026-11-03):** current runtime preparation now
 requires the HB11 monitor capability and healthy HB. Use the matching driver
 and bitstream; explicit prepare waits up to 1.5 s while disabled/reset, requests
@@ -55,7 +57,10 @@ file at service startup; editing takes effect only after service restart/rearm.
 
 Initial user-approved timing (2026-10-17): 100 ms authorization, 20 ms refresh,
 500 ms client lease; 100 Hz target publication and 100 ms target timeout retained.
-The service uses 5 ms absolute monotonic ticks, skipping missed ticks. Readiness
+The client/lease service uses 5 ms absolute monotonic ticks, skipping missed ticks.
+The separate PS motor worker answers PL-issued frames at **1 ms**; service ticks
+do not set the motor control period. Its 800 us PL deadline must be measured
+on target under load; the polling sleep is not a real-time scheduling guarantee. Readiness
 has a provisional 500 ms deadline. Configured per-motor STOP deadlines remain
 independent. Measure all budgets under target load before claiming guarantees.
 

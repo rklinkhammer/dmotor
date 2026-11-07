@@ -11,7 +11,7 @@ not another bench test. Commissioning remains the first release; no hardware gat
 is closed or waived by this pause.
 
 
-**Status: IMPLEMENTATION STARTED — 2026-11-04; technical gates remain open.** Baseline inspected: dmotor `63d5cdb`.
+**Status: IMPLEMENTATION STARTED — 2026-11-04; technical gates remain open.** Historical plan baseline: dmotor `63d5cdb`. Architecture updated 2026-11-07 to the 1 ms PS executor; see D05.
 This amended proposal incorporates the supplied plan review and retains the seven
 bring-up stages B1–B7, with a separate optional vehicle-development workstream BV.
 It does not approve powered operation, adopt the proposed recovery contract, or
@@ -27,8 +27,8 @@ and unresolved work directly instead of appending successive historical narrativ
 
 ## 1. Objective, boundaries and baseline
 
-Deliver a reproducible system in which Zynq PL controls motor timing, Zynq PS owns
-intent and application lifecycle, and the ESP32-S3 monitor owns sensor protection,
+Deliver a reproducible system in which Zynq PL controls capture/PWM timing and independent protection, Zynq PS owns
+the 1 ms motor executor, intent and application lifecycle, and the ESP32-S3 monitor owns sensor protection,
 permits and physical ARM/STOP. Demonstrate safe inhibition and deliberate recovery
 under the adopted failure model before expanding to loaded vehicle operation.
 

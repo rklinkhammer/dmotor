@@ -1,12 +1,14 @@
 # Integrated controller: priorities 1–4 implementation
 
+> Current main: PSF1 motor execution runs on the PS at 1 ms; the atomic mailbox, scheduler, PWM and protection remain in PL. See [current architecture](../DMOTOR_ARCH.md) and [PSF1 contract](ps_executor.md). Older component measurements below retain their original scope.
+
 > Current product builds: [build guide](build.md). Commands below are specialized
 > component/experiment reproduction or historical evidence, not the default build.
 
 
 The first complete logical control path is now implemented in
 `rtl/controller_axi.sv`. It connects AXI4-Lite, the actual atomic-mailbox HLS IP,
-the scheduler, the actual shared four-context motor HLS IP, four encoder channels,
+the scheduler, the actual shared four-context PS motor IP, four encoder channels,
 independent authorization/target-age protection and four PWM outputs. It is an
 integration preview with a provisional register map, with revision 3 routed evidence but not a board-qualified
 controller. The separate DMD1 diagnostics endpoint is unchanged.

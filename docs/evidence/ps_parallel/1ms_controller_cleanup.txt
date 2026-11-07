@@ -1,0 +1,2 @@
+controller_cleanup PASS: combined cleanup; completion, session, request, reset, fault, exhaustion
+/home/rklinkhammer/workspace/dmotor-mipi-opt/build/ps_parallel/compat_v3/cosim/controller_cleanup_tb.sv:98: $finish called at 253500000 (1ps)

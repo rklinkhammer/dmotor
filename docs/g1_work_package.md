@@ -1,5 +1,7 @@
 # G1 execution work package
 
+> Architecture update (2026-11-07): main uses the [1 ms PS motor executor](../DMOTOR_ARCH.md) with independent PL capture/PWM/protection and a matched PSF1 driver/daemon. Client contracts, commissioning-first scope, U0 evidence, the hardware pause and pending live recovery are unchanged.
+
 **Current scheduling (2026-11-06):** Further physical testing is paused until
 assembled monitor and motor boards are available, at Robert's request ([D04](decisions.md)).
 Completed U0 results remain valid; U1 is implemented/build-tested, with no physical
@@ -17,8 +19,9 @@ now traces A1–A4/A8. It identifies lazy context initialization as a barrier to
 claiming all-context cleanup from reset readback. An adapter reset regression
 passes; an internal disabled four-context cleanup primitive and native reset tests
 are implemented. Combined mailbox cleanup, CLN1 MMIO completion, kernel access and PS verification
-are integrated in source. Actual motor-HLS co-simulation, full AXI and interrupted-cleanup integration
-now pass; the matched revision-11 hardware/ARM build also passes. Time-separated
+are integrated in source. The previous motor-HLS co-simulation, full AXI, interrupted-cleanup and
+revision-11 hardware/ARM builds passed. Main now uses PSF1; current build results
+are tracked in [system status](system_status.md). Time-separated
 review and remaining recovery qualification are outstanding. A5–A7 and G1a acceptance remain open.
 
 The [single proposed recovery contract](recovery_transition_contract.md) remains

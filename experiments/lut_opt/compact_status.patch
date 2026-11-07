@@ -1,0 +1,73 @@
+diff --git a/experiments/mailbox/mailbox.cpp b/experiments/mailbox/mailbox.cpp
+index 6cb5846..a7493ac 100644
+--- a/experiments/mailbox/mailbox.cpp
++++ b/experiments/mailbox/mailbox.cpp
+@@ -59,34 +59,37 @@ void VelocityMailbox::service(bool reset, const uint32_t request[4], bool tick,
+             command[4] = pending_generation_;
+             command[5] = static_cast<uint32_t>(pending_speed_);
+             const bool offer = pending_ && authorized && !stopping_ && !capture_pending_;
+-            last_ = controller_.step(false, authorized, capture_pending_, now, encoder, 0,
++            const auto next = controller_.step(false, authorized, capture_pending_, now, encoder, 0,
+                                      session, offer, command, true, stop_pending_, config);
+-            if (last_.motion.accepted) {
+-                if (!last_.faults && last_.motion.outcome == 0)
++            if (next.motion.accepted) {
++                if (!next.faults && next.motion.outcome == 0)
+                     applied_sequence_ = pending_sequence_;
+                 else rejects_ |= 8;
+                 pending_ = false;
+             }
+             stop_pending_ = false;
+-            if (last_.faults) { pending_ = false; written_ = 0; }
+-            if (stopping_ && last_.motion.ready && last_.motion.ramp_mrpm == 0)
++            if (next.faults) { pending_ = false; written_ = 0; }
++            if (stopping_ && next.motion.ready && next.motion.ramp_mrpm == 0)
+                 stopping_ = false;
++            last_ = {next.motion.duty_q16, next.motion.ramp_mrpm, next.velocity.mrpm,
++                     next.velocity.age, next.faults, next.velocity.valid,
++                     next.velocity.timed_out, next.acquiring, next.warming_up};
+         }
+     }
+     reply[0] = accepted;
+     reply[1] = pending_;
+     reply[2] = applied_sequence_;
+     reply[3] = pending_ ? pending_sequence_ : 0;
+-    reply[4] = authorized && !capture_pending_ ? static_cast<uint32_t>(last_.motion.duty_q16) : 0;
+-    reply[5] = static_cast<uint32_t>(last_.motion.ramp_mrpm);
+-    reply[6] = static_cast<uint32_t>(last_.velocity.mrpm);
+-    reply[7] = (last_.velocity.valid ? 1U : 0U) | (last_.velocity.timed_out ? 2U : 0U) |
++    reply[4] = authorized && !capture_pending_ ? static_cast<uint32_t>(last_.duty_q16) : 0;
++    reply[5] = static_cast<uint32_t>(last_.ramp_mrpm);
++    reply[6] = static_cast<uint32_t>(last_.mrpm);
++    reply[7] = (last_.valid ? 1U : 0U) | (last_.timed_out ? 2U : 0U) |
+                (last_.acquiring ? 4U : 0U) | (last_.warming_up ? 8U : 0U) |
+                (stopping_ ? 16U : 0U);
+     reply[8] = last_.faults | (capture_pending_ ? 0x80000000U : 0U);
+     reply[9] = rejects_;
+-    reply[10] = static_cast<uint32_t>(last_.velocity.age);
+-    reply[11] = static_cast<uint32_t>(last_.velocity.age >> 32);
++    reply[10] = static_cast<uint32_t>(last_.age);
++    reply[11] = static_cast<uint32_t>(last_.age >> 32);
+     reply[12] = published_sequence_;
+     reply[13] = session;
+     reply[14] = reply[15] = 0;
+diff --git a/experiments/mailbox/mailbox.hpp b/experiments/mailbox/mailbox.hpp
+index 71ffbb3..95c9f28 100644
+--- a/experiments/mailbox/mailbox.hpp
++++ b/experiments/mailbox/mailbox.hpp
+@@ -9,7 +9,14 @@ class VelocityMailbox {
+                  uint32_t reply[16]);
+   private:
+     Controller controller_{};
+-    ControllerResult last_{};
++    // Only fields read on a later service are persistent. Acceptance/completion
++    // decisions use the full local ControllerResult on the producing tick.
++    struct Status {
++        int32_t duty_q16 = 0, ramp_mrpm = 0, mrpm = 0;
++        uint64_t age = 0;
++        uint32_t faults = 0;
++        bool valid = false, timed_out = false, acquiring = false, warming_up = false;
++    } last_{};
+     // Mutable staging and immutable pending bank. Active target lives in controller.
+     uint32_t staged_[4] = {}; // session, generation, sequence, signed milliRPM
+     uint32_t pending_sequence_ = 0, pending_generation_ = 0, pending_session_ = 0;

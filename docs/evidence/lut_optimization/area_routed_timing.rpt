@@ -1,0 +1,419 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2026.1 (lin64) Build 6511674 Tue Jun 16 11:01:26 MDT 2026
+| Date         : Fri Nov  6 23:47:48 2026
+| Host         : luna running 64-bit Ubuntu 26.04.1 LTS
+| Command      : report_timing_summary -file /home/rklinkhammer/workspace/dmotor-mipi-opt/build/opt/area/routed/timing.rpt
+| Design       : dmotor_controller_axi
+| Device       : 7z020-clg400
+| Speed File   : -1  PRODUCTION 1.12 2019-11-22
+| Design State : Routed
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+Timing Summary Report
+
+------------------------------------------------------------------------------------------------
+| Timer Settings
+| --------------
+------------------------------------------------------------------------------------------------
+
+  Enable Multi Corner Analysis               :  Yes
+  Enable Pessimism Removal                   :  Yes
+  Pessimism Removal Resolution               :  Nearest Common Node
+  Enable Input Delay Default Clock           :  No
+  Enable Preset / Clear Arcs                 :  No
+  Disable Flight Delays                      :  No
+  Ignore I/O Paths                           :  No
+  Timing Early Launch at Borrowing Latches   :  No
+  Borrow Time for Max Delay Exceptions       :  Yes
+  Merge Timing Exceptions                    :  Yes
+  Inter-SLR Compensation                     :  Conservative
+
+  Corner  Analyze    Analyze
+  Name    Max Paths  Min Paths
+  ------  ---------  ---------
+  Slow    Yes        Yes
+  Fast    Yes        Yes
+
+
+------------------------------------------------------------------------------------------------
+| Report Methodology
+| ------------------
+------------------------------------------------------------------------------------------------
+
+No report available as report_methodology has not been run prior. Run report_methodology on the current design for the summary of methodology violations.
+
+
+
+check_timing report
+
+Table of Contents
+-----------------
+1. checking no_clock (0)
+2. checking constant_clock (0)
+3. checking pulse_width_clock (0)
+4. checking unconstrained_internal_endpoints (0)
+5. checking no_input_delay (88)
+6. checking no_output_delay (53)
+7. checking multiple_clock (0)
+8. checking generated_clocks (0)
+9. checking loops (0)
+10. checking partial_input_delay (0)
+11. checking partial_output_delay (0)
+12. checking latch_loops (0)
+
+1. checking no_clock (0)
+------------------------
+ There are 0 register/latch pins with no clock.
+
+
+2. checking constant_clock (0)
+------------------------------
+ There are 0 register/latch pins with constant_clock.
+
+
+3. checking pulse_width_clock (0)
+---------------------------------
+ There are 0 register/latch pins which need pulse_width check
+
+
+4. checking unconstrained_internal_endpoints (0)
+------------------------------------------------
+ There are 0 pins that are not constrained for maximum delay.
+
+ There are 0 pins that are not constrained for maximum delay due to constant clock.
+
+
+5. checking no_input_delay (88)
+-------------------------------
+ There are 88 input ports with no input delay specified. (HIGH)
+
+ There are 0 input ports with no input delay but user has a false path constraint.
+
+
+6. checking no_output_delay (53)
+--------------------------------
+ There are 53 ports with no output delay specified. (HIGH)
+
+ There are 0 ports with no output delay but user has a false path constraint
+
+ There are 0 ports with no output delay but with a timing clock defined on it or propagating through it
+
+
+7. checking multiple_clock (0)
+------------------------------
+ There are 0 register/latch pins with multiple clocks.
+
+
+8. checking generated_clocks (0)
+--------------------------------
+ There are 0 generated clocks that are not connected to a clock source.
+
+
+9. checking loops (0)
+---------------------
+ There are 0 combinational loops in the design.
+
+
+10. checking partial_input_delay (0)
+------------------------------------
+ There are 0 input ports with partial input delay specified.
+
+
+11. checking partial_output_delay (0)
+-------------------------------------
+ There are 0 ports with partial output delay specified.
+
+
+12. checking latch_loops (0)
+----------------------------
+ There are 0 combinational latch loops in the design through latch input
+
+
+
+------------------------------------------------------------------------------------------------
+| Design Timing Summary
+| ---------------------
+------------------------------------------------------------------------------------------------
+
+    WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints
+    -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------
+      7.427        0.000                      0               154590        0.090        0.000                      0               154590       23.750        0.000                       0                 56527
+
+
+All user specified timing constraints are met.
+
+
+------------------------------------------------------------------------------------------------
+| Clock Summary
+| -------------
+------------------------------------------------------------------------------------------------
+
+Clock           Waveform(ns)       Period(ns)      Frequency(MHz)
+-----           ------------       ----------      --------------
+controller_clk  {0.000 25.000}     50.000          20.000
+
+
+------------------------------------------------------------------------------------------------
+| Intra Clock Table
+| -----------------
+------------------------------------------------------------------------------------------------
+
+Clock               WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints
+-----               -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------
+controller_clk        7.427        0.000                      0               154590        0.090        0.000                      0               154590       23.750        0.000                       0                 56527
+
+
+------------------------------------------------------------------------------------------------
+| Inter Clock Table
+| -----------------
+------------------------------------------------------------------------------------------------
+
+From Clock    To Clock          WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints
+----------    --------          -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------
+
+
+------------------------------------------------------------------------------------------------
+| Other Path Groups Table
+| -----------------------
+------------------------------------------------------------------------------------------------
+
+Path Group    From Clock    To Clock          WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints
+----------    ----------    --------          -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------
+
+
+------------------------------------------------------------------------------------------------
+| Timing Details
+| --------------
+------------------------------------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------------------------
+From Clock:  controller_clk
+  To Clock:  controller_clk
+
+Setup :            0  Failing Endpoints,  Worst Slack        7.427ns,  Total Violation        0.000ns
+Hold  :            0  Failing Endpoints,  Worst Slack        0.090ns,  Total Violation        0.000ns
+PW    :            0  Failing Endpoints,  Worst Slack       23.750ns,  Total Violation        0.000ns
+---------------------------------------------------------------------------------------------------
+
+
+Max Delay Paths
+--------------------------------------------------------------------------------------
+Slack (MET) :             7.427ns  (required time - arrival time)
+  Source:                 configurations_reg[1699]/C
+                            (rising edge-triggered cell FDRE clocked by controller_clk  {rise@0.000ns fall@25.000ns period=50.000ns})
+  Destination:            controller/controller/engine/saved_snapshot_reg[40]/CE
+                            (rising edge-triggered cell FDRE clocked by controller_clk  {rise@0.000ns fall@25.000ns period=50.000ns})
+  Path Group:             controller_clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            50.000ns  (controller_clk rise@50.000ns - controller_clk rise@0.000ns)
+  Data Path Delay:        42.118ns  (logic 8.533ns (20.260%)  route 33.585ns (79.740%))
+  Logic Levels:           48  (CARRY4=11 LUT2=4 LUT3=4 LUT4=11 LUT5=7 LUT6=11)
+  Clock Path Skew:        -0.049ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.924ns = ( 50.924 - 50.000 )
+    Source Clock Delay      (SCD):    0.973ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock controller_clk rise edge)
+                                                      0.000     0.000 r  <hidden>
+                                                      0.000     0.000 r  clk
+                         net (fo=56540, unset)        0.973     0.973    clk
+    SLICE_X107Y11        FDRE                                         r  configurations_reg[1699]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X107Y11        FDRE (Prop_fdre_C_Q)         0.419     1.392 r  configurations_reg[1699]/Q
+                         net (fo=9, routed)           2.557     3.949    controller/channel[2].safety/faults_reg[4]_i_76__1_0[3]
+    SLICE_X63Y43         LUT2 (Prop_lut2_I0_O)        0.297     4.246 r  controller/channel[2].safety/faults[4]_i_183__1/O
+                         net (fo=1, routed)           0.000     4.246    controller/channel[2].safety/faults[4]_i_183__1_n_0
+    SLICE_X63Y43         CARRY4 (Prop_carry4_S[0]_CO[3])
+                                                      0.532     4.778 r  controller/channel[2].safety/faults_reg[4]_i_148__1/CO[3]
+                         net (fo=1, routed)           0.000     4.778    controller/channel[2].safety/faults_reg[4]_i_148__1_n_0
+    SLICE_X63Y44         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114     4.892 r  controller/channel[2].safety/faults_reg[4]_i_146__1/CO[3]
+                         net (fo=1, routed)           0.000     4.892    controller/channel[2].safety/faults_reg[4]_i_146__1_n_0
+    SLICE_X63Y45         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114     5.006 r  controller/channel[2].safety/faults_reg[4]_i_121__1/CO[3]
+                         net (fo=1, routed)           0.000     5.006    controller/channel[2].safety/faults_reg[4]_i_121__1_n_0
+    SLICE_X63Y46         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114     5.120 r  controller/channel[2].safety/faults_reg[4]_i_119__1/CO[3]
+                         net (fo=1, routed)           0.000     5.120    controller/channel[2].safety/faults_reg[4]_i_119__1_n_0
+    SLICE_X63Y47         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114     5.234 r  controller/channel[2].safety/faults_reg[4]_i_97__1/CO[3]
+                         net (fo=1, routed)           0.000     5.234    controller/channel[2].safety/faults_reg[4]_i_97__1_n_0
+    SLICE_X63Y48         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114     5.348 r  controller/channel[2].safety/faults_reg[4]_i_95__1/CO[3]
+                         net (fo=1, routed)           0.000     5.348    controller/channel[2].safety/faults_reg[4]_i_95__1_n_0
+    SLICE_X63Y49         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334     5.682 r  controller/channel[2].safety/faults_reg[4]_i_76__1/O[1]
+                         net (fo=2, routed)           0.837     6.519    controller/channel[2].decoder/channel[2].stop_budget[29]
+    SLICE_X58Y49         LUT4 (Prop_lut4_I2_O)        0.303     6.822 r  controller/channel[2].decoder/faults[4]_i_53__1/O
+                         net (fo=1, routed)           0.000     6.822    controller/channel[2].decoder/faults[4]_i_53__1_n_0
+    SLICE_X58Y49         CARRY4 (Prop_carry4_S[0]_CO[3])
+                                                      0.513     7.335 r  controller/channel[2].decoder/faults_reg[4]_i_26__1/CO[3]
+                         net (fo=1, routed)           0.001     7.336    controller/channel[2].decoder/faults_reg[4]_i_26__1_n_0
+    SLICE_X58Y50         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     7.453 r  controller/channel[2].decoder/faults_reg[4]_i_15__1/CO[3]
+                         net (fo=1, routed)           0.000     7.453    controller/channel[2].decoder/faults_reg[4]_i_15__1_n_0
+    SLICE_X58Y51         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     7.570 r  controller/channel[2].decoder/faults_reg[4]_i_6__1/CO[3]
+                         net (fo=1, routed)           0.000     7.570    controller/channel[2].decoder/faults_reg[4]_i_6__1_n_0
+    SLICE_X58Y52         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     7.687 f  controller/channel[2].decoder/faults_reg[4]_i_5__1/CO[3]
+                         net (fo=1, routed)           1.166     8.853    controller/channel[2].decoder/channel[2].stop_expired0
+    SLICE_X43Y52         LUT6 (Prop_lut6_I0_O)        0.124     8.977 f  controller/channel[2].decoder/faults[4]_i_4__0/O
+                         net (fo=2, routed)           1.009     9.987    controller/channel[2].safety/faults_reg[4]_1
+    SLICE_X38Y66         LUT6 (Prop_lut6_I5_O)        0.124    10.111 f  controller/channel[2].safety/faults[4]_i_3__1/O
+                         net (fo=8, routed)           0.814    10.925    controller/channel[2].safety/enabled2
+    SLICE_X36Y59         LUT4 (Prop_lut4_I3_O)        0.124    11.049 f  controller/channel[2].safety/last_refresh[63]_i_8__0/O
+                         net (fo=2, routed)           1.038    12.086    controller/channel[3].safety/telemetry[2047]_i_12_0
+    SLICE_X34Y55         LUT5 (Prop_lut5_I4_O)        0.152    12.238 f  controller/channel[3].safety/telemetry[2047]_i_15/O
+                         net (fo=1, routed)           0.286    12.524    controller/channel[3].safety/telemetry[2047]_i_15_n_0
+    SLICE_X34Y55         LUT5 (Prop_lut5_I0_O)        0.348    12.872 f  controller/channel[3].safety/telemetry[2047]_i_12/O
+                         net (fo=1, routed)           0.648    13.520    controller/channel[3].safety/telemetry[2047]_i_12_n_0
+    SLICE_X35Y55         LUT4 (Prop_lut4_I0_O)        0.124    13.644 f  controller/channel[3].safety/telemetry[2047]_i_10/O
+                         net (fo=11, routed)          0.902    14.546    controller/channel[3].safety/p_32_in
+    SLICE_X34Y50         LUT4 (Prop_lut4_I1_O)        0.153    14.699 f  controller/channel[3].safety/telemetry[2047]_i_5/O
+                         net (fo=5, routed)           1.321    16.021    controller/controller/cleanup/inhibit033_out
+    SLICE_X15Y48         LUT4 (Prop_lut4_I0_O)        0.331    16.352 f  controller/controller/cleanup/previous_inhibit_i_2/O
+                         net (fo=5, routed)           0.784    17.136    controller/controller/control/control/scheduler/inhibit0_1
+    SLICE_X19Y40         LUT6 (Prop_lut6_I3_O)        0.124    17.260 f  controller/controller/control/control/scheduler/channel[0].last_tick[0][63]_i_17/O
+                         net (fo=1, routed)           0.430    17.690    controller/controller/control/control/scheduler/channel[0].last_tick[0][63]_i_17_n_0
+    SLICE_X17Y40         LUT6 (Prop_lut6_I0_O)        0.124    17.814 f  controller/controller/control/control/scheduler/channel[0].last_tick[0][63]_i_10/O
+                         net (fo=1, routed)           0.609    18.423    controller/controller/control/control/scheduler/channel[0].last_tick[0][63]_i_10_n_0
+    SLICE_X14Y43         LUT6 (Prop_lut6_I0_O)        0.124    18.547 r  controller/controller/control/control/scheduler/channel[0].last_tick[0][63]_i_4/O
+                         net (fo=7, routed)           0.346    18.893    controller/controller/control/control/scheduler/channel[0].last_tick[0][63]_i_4_n_0
+    SLICE_X12Y43         LUT4 (Prop_lut4_I0_O)        0.124    19.017 r  controller/controller/control/control/scheduler/channel[3].faults[3]_i_2/O
+                         net (fo=2, routed)           0.294    19.311    controller/controller/control/control/scheduler/channel[3].faults[3]_i_2_n_0
+    SLICE_X12Y43         LUT5 (Prop_lut5_I0_O)        0.124    19.435 r  controller/controller/control/control/scheduler/previous_inhibit_i_6/O
+                         net (fo=1, routed)           0.570    20.005    controller/controller/control/control/scheduler/previous_inhibit_i_6_n_0
+    SLICE_X11Y44         LUT6 (Prop_lut6_I5_O)        0.124    20.129 r  controller/controller/control/control/scheduler/previous_inhibit_i_4/O
+                         net (fo=2, routed)           0.451    20.580    controller/controller/control/control/scheduler/previous_inhibit_i_4_n_0
+    SLICE_X11Y44         LUT3 (Prop_lut3_I0_O)        0.118    20.698 r  controller/controller/control/control/scheduler/previous_inhibit_i_3/O
+                         net (fo=12, routed)          0.901    21.598    controller/controller/control/control/scheduler/previous_inhibit_i_3_n_0
+    SLICE_X21Y39         LUT6 (Prop_lut6_I1_O)        0.326    21.924 r  controller/controller/control/control/scheduler/pending_invalidate[3]_i_3/O
+                         net (fo=5, routed)           0.456    22.380    controller/controller/control/control/scheduler/fault_reg_0
+    SLICE_X22Y39         LUT3 (Prop_lut3_I0_O)        0.124    22.504 r  controller/controller/control/control/scheduler/poisoned_i_4/O
+                         net (fo=2, routed)           0.730    23.234    controller/controller/control/control/scheduler/stop_event_reg[0]
+    SLICE_X19Y39         LUT4 (Prop_lut4_I3_O)        0.124    23.358 f  controller/controller/control/control/scheduler/poisoned_i_2/O
+                         net (fo=2, routed)           0.361    23.719    controller/controller/control/protocol/transport/request_bank_reg[96]_1
+    SLICE_X18Y39         LUT5 (Prop_lut5_I0_O)        0.124    23.843 f  controller/controller/control/protocol/transport/request_bank[96]_i_3/O
+                         net (fo=73, routed)          0.613    24.456    controller/controller/control/protocol/transport/request_bank[96]_i_3_n_0
+    SLICE_X17Y39         LUT4 (Prop_lut4_I3_O)        0.124    24.580 r  controller/controller/control/protocol/transport/host_response_okay_i_5/O
+                         net (fo=40, routed)          0.734    25.314    controller/controller/control/protocol/transport/host_response_okay_i_5_n_0
+    SLICE_X21Y38         LUT3 (Prop_lut3_I0_O)        0.124    25.438 f  controller/controller/control/protocol/transport/engine_motor[1]_i_4/O
+                         net (fo=4, routed)           0.890    26.328    controller/controller/control/control/scheduler/admission_done
+    SLICE_X24Y34         LUT4 (Prop_lut4_I0_O)        0.124    26.452 r  controller/controller/control/control/scheduler/state[2]_i_6/O
+                         net (fo=4, routed)           0.512    26.964    controller/controller/control/protocol/transport/fault_reg_4
+    SLICE_X24Y34         LUT5 (Prop_lut5_I4_O)        0.124    27.088 r  controller/controller/control/protocol/transport/fault_i_6/O
+                         net (fo=2, routed)           0.692    27.780    controller/controller/control/control/scheduler/fault_reg_8
+    SLICE_X22Y37         LUT6 (Prop_lut6_I4_O)        0.124    27.904 f  controller/controller/control/control/scheduler/state[2]_i_4/O
+                         net (fo=6, routed)           0.713    28.617    controller/controller/control/control/scheduler/state[2]_i_4_n_0
+    SLICE_X26Y35         LUT2 (Prop_lut2_I1_O)        0.124    28.741 f  controller/controller/control/control/scheduler/state[2]_i_1/O
+                         net (fo=293, routed)         1.322    30.063    controller/channel[3].safety/engine_reset
+    SLICE_X34Y50         LUT4 (Prop_lut4_I3_O)        0.124    30.187 f  controller/channel[3].safety/direct_sequence[31]_i_9/O
+                         net (fo=3, routed)           0.615    30.803    controller/channel[3].safety/controller_blocked
+    SLICE_X26Y49         LUT5 (Prop_lut5_I2_O)        0.124    30.927 f  controller/channel[3].safety/atomic_owner_i_2/O
+                         net (fo=5, routed)           0.635    31.562    bus/refresh_sequences_reg[0]
+    SLICE_X26Y42         LUT2 (Prop_lut2_I1_O)        0.116    31.678 r  bus/request_bank[96]_i_8/O
+                         net (fo=2, routed)           0.707    32.385    bus/host_valid0
+    SLICE_X22Y44         LUT6 (Prop_lut6_I1_O)        0.328    32.713 r  bus/completed_session[31]_i_6/O
+                         net (fo=2, routed)           0.478    33.190    controller/controller/control/control/scheduler/invalidate0
+    SLICE_X22Y44         LUT5 (Prop_lut5_I4_O)        0.124    33.314 f  controller/controller/control/control/scheduler/FSM_sequential_state[1]_i_11/O
+                         net (fo=12, routed)          2.128    35.442    controller/controller/cleanup/saved_config_reg[620]
+    SLICE_X41Y77         LUT6 (Prop_lut6_I0_O)        0.124    35.566 f  controller/controller/cleanup/operation[2]_i_7/O
+                         net (fo=137, routed)         1.624    37.190    controller/controller/cleanup/state_reg[1]_0
+    SLICE_X36Y51         LUT6 (Prop_lut6_I2_O)        0.124    37.314 f  controller/controller/cleanup/initialized[3]_i_2/O
+                         net (fo=9, routed)           0.650    37.964    controller/controller/engine/transport/stop_sent_reg[0]
+    SLICE_X43Y56         LUT3 (Prop_lut3_I0_O)        0.124    38.088 f  controller/controller/engine/transport/FSM_sequential_state[1]_i_4/O
+                         net (fo=18, routed)          0.819    38.907    controller/controller/engine/transport/fault_reg_2
+    SLICE_X47Y62         LUT2 (Prop_lut2_I0_O)        0.124    39.031 r  controller/controller/engine/transport/ready_mask[3]_i_5/O
+                         net (fo=140, routed)         0.880    39.910    controller/controller/engine/transport/ready_mask[3]_i_5_n_0
+    SLICE_X49Y69         LUT4 (Prop_lut4_I3_O)        0.118    40.028 r  controller/controller/engine/transport/saved_apply_i_1/O
+                         net (fo=389, routed)         3.063    43.091    controller/controller/engine/transport_n_132
+    SLICE_X66Y145        FDRE                                         r  controller/controller/engine/saved_snapshot_reg[40]/CE
+  -------------------------------------------------------------------    -------------------
+
+                         (clock controller_clk rise edge)
+                                                     50.000    50.000 r  <hidden>
+                                                      0.000    50.000 r  clk
+                         net (fo=56540, unset)        0.924    50.924    controller/controller/engine/clk
+    SLICE_X66Y145        FDRE                                         r  controller/controller/engine/saved_snapshot_reg[40]/C
+                         clock pessimism              0.000    50.924    <hidden>
+                         clock uncertainty           -0.035    50.889    <hidden>
+    SLICE_X66Y145        FDRE (Setup_fdre_C_CE)      -0.371    50.518    controller/controller/engine/saved_snapshot_reg[40]
+  -------------------------------------------------------------------
+                         required time                         50.518    <hidden>
+                         arrival time                         -43.091    <hidden>
+  -------------------------------------------------------------------
+                         slack                                  7.427    <hidden>
+
+
+
+
+
+Min Delay Paths
+--------------------------------------------------------------------------------------
+Slack (MET) :             0.090ns  (arrival time - required time)
+  Source:                 controller/controller/engine/transport/core/contexts_controller_prepared_words_0_addr_reg_7704_reg[0]_rep__0/C
+                            (rising edge-triggered cell FDRE clocked by controller_clk  {rise@0.000ns fall@25.000ns period=50.000ns})
+  Destination:            controller/controller/engine/transport/core/contexts_controller_prepared_words_7_U/dmotor_mailbox_shared_contexts_controller_prepared_words_0_RAM_AUTO_1R1W_ram_u/ram_reg_0_3_20_20/SP/ADR0
+                            (rising edge-triggered cell RAMS32 clocked by controller_clk  {rise@0.000ns fall@25.000ns period=50.000ns})
+  Path Group:             controller_clk
+  Path Type:              Hold (Min at Fast Process Corner)
+  Requirement:            0.000ns  (controller_clk rise@0.000ns - controller_clk rise@0.000ns)
+  Data Path Delay:        0.422ns  (logic 0.141ns (33.406%)  route 0.281ns (66.594%))
+  Logic Levels:           0
+  Clock Path Skew:        0.022ns (DCD - SCD - CPR)
+    Destination Clock Delay (DCD):    0.432ns
+    Source Clock Delay      (SCD):    0.410ns
+    Clock Pessimism Removal (CPR):    -0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock controller_clk rise edge)
+                                                      0.000     0.000 r  <hidden>
+                                                      0.000     0.000 r  clk
+                         net (fo=56540, unset)        0.410     0.410    controller/controller/engine/transport/core/clk
+    SLICE_X89Y53         FDRE                                         r  controller/controller/engine/transport/core/contexts_controller_prepared_words_0_addr_reg_7704_reg[0]_rep__0/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X89Y53         FDRE (Prop_fdre_C_Q)         0.141     0.551 r  controller/controller/engine/transport/core/contexts_controller_prepared_words_0_addr_reg_7704_reg[0]_rep__0/Q
+                         net (fo=181, routed)         0.281     0.832    controller/controller/engine/transport/core/contexts_controller_prepared_words_7_U/dmotor_mailbox_shared_contexts_controller_prepared_words_0_RAM_AUTO_1R1W_ram_u/ram_reg_0_3_20_20/A0
+    SLICE_X86Y54         RAMS32                                       r  controller/controller/engine/transport/core/contexts_controller_prepared_words_7_U/dmotor_mailbox_shared_contexts_controller_prepared_words_0_RAM_AUTO_1R1W_ram_u/ram_reg_0_3_20_20/SP/ADR0
+  -------------------------------------------------------------------    -------------------
+
+                         (clock controller_clk rise edge)
+                                                      0.000     0.000 r  <hidden>
+                                                      0.000     0.000 r  clk
+                         net (fo=56540, unset)        0.432     0.432    controller/controller/engine/transport/core/contexts_controller_prepared_words_7_U/dmotor_mailbox_shared_contexts_controller_prepared_words_0_RAM_AUTO_1R1W_ram_u/ram_reg_0_3_20_20/WCLK
+    SLICE_X86Y54         RAMS32                                       r  controller/controller/engine/transport/core/contexts_controller_prepared_words_7_U/dmotor_mailbox_shared_contexts_controller_prepared_words_0_RAM_AUTO_1R1W_ram_u/ram_reg_0_3_20_20/SP/CLK
+                         clock pessimism              0.000     0.432    <hidden>
+    SLICE_X86Y54         RAMS32 (Hold_rams32_CLK_ADR0)
+                                                      0.310     0.742    controller/controller/engine/transport/core/contexts_controller_prepared_words_7_U/dmotor_mailbox_shared_contexts_controller_prepared_words_0_RAM_AUTO_1R1W_ram_u/ram_reg_0_3_20_20/SP
+  -------------------------------------------------------------------
+                         required time                         -0.742    <hidden>
+                         arrival time                           0.832    <hidden>
+  -------------------------------------------------------------------
+                         slack                                  0.090    <hidden>
+
+
+
+
+
+Pulse Width Checks
+--------------------------------------------------------------------------------------
+Clock Name:         controller_clk
+Waveform(ns):       { 0.000 25.000 }
+Period(ns):         50.000
+Sources:            { clk }
+
+Check Type        Corner  Lib Pin             Reference Pin  Required(ns)  Actual(ns)  Slack(ns)  Location      Pin
+Min Period        n/a     RAMB36E1/CLKARDCLK  n/a            2.944         50.000      47.056     RAMB36_X4Y8   controller/controller/engine/transport/core/grp_service_fu_1616/grp_step_impl_1_fu_2702/words_U/ram_reg/CLKARDCLK
+Low Pulse Width   Slow    RAMS32/CLK          n/a            1.250         25.000      23.750     SLICE_X94Y45  controller/controller/engine/transport/core/contexts_controller_prepared_words_0_U/dmotor_mailbox_shared_contexts_controller_prepared_words_0_RAM_AUTO_1R1W_ram_u/ram_reg_0_3_0_0/SP/CLK
+High Pulse Width  Slow    RAMS32/CLK          n/a            1.250         25.000      23.750     SLICE_X94Y45  controller/controller/engine/transport/core/contexts_controller_prepared_words_0_U/dmotor_mailbox_shared_contexts_controller_prepared_words_0_RAM_AUTO_1R1W_ram_u/ram_reg_0_3_0_0/SP/CLK

@@ -1,5 +1,7 @@
 # Current unresolved system issues
 
+> Architecture update (2026-11-07): main uses the [1 ms PS motor executor](../DMOTOR_ARCH.md) with independent PL capture/PWM/protection and a matched PSF1 driver/daemon. Client contracts, commissioning-first scope, U0 evidence, the hardware pause and pending live recovery are unchanged.
+
 This is the current issue register, extracted from the plan at `20f5972`.
 Robert Klinkhammer is the accountable owner for every row; listed subsystem roles
 identify the expertise/evidence needed. Time-separated self-review is the selected
@@ -41,7 +43,7 @@ checks passed; U1 build/test evidence exists but physical results are pending.
   gate review records remain open. Self-review is not automatic gate acceptance.
 - **U02:** [source audit](g1a_cleanup_admission.md) finds per-motor lazy RESET_CONTEXT
   initialization in the baseline. CLN1 now exposes combined cleanup completion,
-  with kernel/PS verification. Actual motor-HLS/AXI cleanup tests and matched ARM build now pass. Remaining
+  with kernel/PS verification. The previous motor-HLS/AXI cleanup and ARM builds passed; current PSF1 qualification is tracked in [system status](system_status.md). Remaining
   boundary/race coverage, board qualification, review and recovery admission
   integration remain open; build/test success does not close G1a.
 - **U01–U07/U09:** remain open as scoped above. Use the [G1 work package](g1_work_package.md)

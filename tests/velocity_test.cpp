@@ -152,7 +152,7 @@ int main() {
                         uint64_t{events} * (60ULL * dmotor::timing::fabric_hz * 1000) * den;
                     const uint64_t denominator = uint64_t{test_timing::tick_cycles} * num;
                     const uint64_t expected = (numerator + denominator / 2) / denominator;
-                    if (expected > 1000000) {
+                    if (expected > 400000) {
                         CHECK((status >> 8) == 8 && speed == 0 && !(status & 1));
                     } else {
                         const int32_t signed_speed = static_cast<int32_t>(expected);

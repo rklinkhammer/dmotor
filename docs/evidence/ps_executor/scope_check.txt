@@ -1,0 +1,122 @@
+PASS: 29 board-facing port names/directions/widths unchanged.
+PASS: production rtl/src/include/tools/platforms/software unchanged from 4028a1f.
+PASS: original dmotor worktree clean.
+Experimental MMIO intentionally differs; PSE1 identity. No device access or deployment.
+{
+  "clk": [
+    "input",
+    "scalar"
+  ],
+  "reset": [
+    "input",
+    "scalar"
+  ],
+  "awaddr": [
+    "input",
+    "[15:0]"
+  ],
+  "awvalid": [
+    "input",
+    "scalar"
+  ],
+  "awready": [
+    "output",
+    "scalar"
+  ],
+  "wdata": [
+    "input",
+    "[31:0]"
+  ],
+  "wstrb": [
+    "input",
+    "[3:0]"
+  ],
+  "wvalid": [
+    "input",
+    "scalar"
+  ],
+  "wready": [
+    "output",
+    "scalar"
+  ],
+  "bresp": [
+    "output",
+    "[1:0]"
+  ],
+  "bvalid": [
+    "output",
+    "scalar"
+  ],
+  "bready": [
+    "input",
+    "scalar"
+  ],
+  "araddr": [
+    "input",
+    "[15:0]"
+  ],
+  "arvalid": [
+    "input",
+    "scalar"
+  ],
+  "arready": [
+    "output",
+    "scalar"
+  ],
+  "rdata": [
+    "output",
+    "[31:0]"
+  ],
+  "rresp": [
+    "output",
+    "[1:0]"
+  ],
+  "rvalid": [
+    "output",
+    "scalar"
+  ],
+  "rready": [
+    "input",
+    "scalar"
+  ],
+  "qa": [
+    "input",
+    "[3:0]"
+  ],
+  "qb": [
+    "input",
+    "[3:0]"
+  ],
+  "physical_faults": [
+    "input",
+    "[3:0]"
+  ],
+  "halt_async": [
+    "input",
+    "scalar"
+  ],
+  "hb_async": [
+    "input",
+    "scalar"
+  ],
+  "pwm": [
+    "output",
+    "[3:0]"
+  ],
+  "direction": [
+    "output",
+    "[3:0]"
+  ],
+  "drive_enable": [
+    "output",
+    "[3:0]"
+  ],
+  "shared_halt": [
+    "output",
+    "scalar"
+  ],
+  "coast_req": [
+    "output",
+    "scalar"
+  ]
+}

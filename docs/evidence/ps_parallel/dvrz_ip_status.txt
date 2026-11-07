@@ -1,0 +1,87 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2026.1 (lin64) Build 6511674 Tue Jun 16 11:01:26 MDT 2026
+| Date         : Sat Nov  7 01:16:23 2026
+| Host         : luna running 64-bit Ubuntu 26.04.1 LTS
+| Command      : report_ip_status
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+IP Status Summary
+
+1. Project IP Status
+--------------------
+Your project uses 13 IP. Some of these IP may have undergone changes in this release of the software. Please review the recommended actions.
+
+More information on the Xilinx versioning policy is available at www.xilinx.com.
+
+Project IP Instances
++-----------------------------+------------+---------------------+-----------+--------------------+---------+----------------+------------+----------------------+
+| Instance Name               | Status     | Recommendation      | Change    | IP Name            | IP      | New Version    | New        | Original Part        |
+|                             |            |                     | Log       |                    | Version |                | License    |                      |
++-----------------------------+------------+---------------------+-----------+--------------------+---------+----------------+------------+----------------------+
+| dvrz_axi_gpio_0_0           | Up-to-date | No changes required |  *(1)     | AXI GPIO           | 2.0     | 2.0 (Rev. 38)  | Included   | xc7z020clg400-1      |
+|                             |            |                     |           |                    | (Rev.   |                |            |                      |
+|                             |            |                     |           |                    | 38)     |                |            |                      |
++-----------------------------+------------+---------------------+-----------+--------------------+---------+----------------+------------+----------------------+
+| dvrz_axi_gpio_1_0           | Up-to-date | No changes required |  *(2)     | AXI GPIO           | 2.0     | 2.0 (Rev. 38)  | Included   | xc7z020clg400-1      |
+|                             |            |                     |           |                    | (Rev.   |                |            |                      |
+|                             |            |                     |           |                    | 38)     |                |            |                      |
++-----------------------------+------------+---------------------+-----------+--------------------+---------+----------------+------------+----------------------+
+| dvrz_axi_gpio_2_0           | Up-to-date | No changes required |  *(3)     | AXI GPIO           | 2.0     | 2.0 (Rev. 38)  | Included   | xc7z020clg400-1      |
+|                             |            |                     |           |                    | (Rev.   |                |            |                      |
+|                             |            |                     |           |                    | 38)     |                |            |                      |
++-----------------------------+------------+---------------------+-----------+--------------------+---------+----------------+------------+----------------------+
+| dvrz_axi_iic_0_0            | Up-to-date | No changes required |  *(4)     | AXI IIC            | 2.1     | 2.1 (Rev. 12)  | Included   | xc7z020clg400-1      |
+|                             |            |                     |           |                    | (Rev.   |                |            |                      |
+|                             |            |                     |           |                    | 12)     |                |            |                      |
++-----------------------------+------------+---------------------+-----------+--------------------+---------+----------------+------------+----------------------+
+| dvrz_axi_smc_0              | Up-to-date | No changes required |  *(5)     | AXI SmartConnect   | 1.0     | 1.0 (Rev. 29)  | Included   | xc7z020clg400-1      |
+|                             |            |                     |           |                    | (Rev.   |                |            |                      |
+|                             |            |                     |           |                    | 29)     |                |            |                      |
++-----------------------------+------------+---------------------+-----------+--------------------+---------+----------------+------------+----------------------+
+| dvrz_axi_uartlite_0_0       | Up-to-date | No changes required |  *(6)     | AXI Uartlite       | 2.0     | 2.0 (Rev. 40)  | Included   | xc7z020clg400-1      |
+|                             |            |                     |           |                    | (Rev.   |                |            |                      |
+|                             |            |                     |           |                    | 40)     |                |            |                      |
++-----------------------------+------------+---------------------+-----------+--------------------+---------+----------------+------------+----------------------+
+| dvrz_axi_uartlite_1_0       | Up-to-date | No changes required |  *(7)     | AXI Uartlite       | 2.0     | 2.0 (Rev. 40)  | Included   | xc7z020clg400-1      |
+|                             |            |                     |           |                    | (Rev.   |                |            |                      |
+|                             |            |                     |           |                    | 40)     |                |            |                      |
++-----------------------------+------------+---------------------+-----------+--------------------+---------+----------------+------------+----------------------+
+| dvrz_controller_axi_0_0     | Up-to-date | No changes required | Change    | DMOTOR PSF1        | 0.18    | 0.18 (Rev. 12) | Included   | xc7z020clg400-1      |
+|                             |            |                     | Log not   | parallel           | (Rev.   |                |            |                      |
+|                             |            |                     | available | controller_axi     | 12)     |                |            |                      |
+|                             |            |                     |           | (integration       |         |                |            |                      |
+|                             |            |                     |           | preview)           |         |                |            |                      |
++-----------------------------+------------+---------------------+-----------+--------------------+---------+----------------+------------+----------------------+
+| dvrz_processing_system7_0_0 | Up-to-date | No changes required |  *(8)     | ZYNQ7 Processing   | 5.5     | 5.5 (Rev. 9)   | Included   | xc7z020clg400-1      |
+|                             |            |                     |           | System             | (Rev.   |                |            |                      |
+|                             |            |                     |           |                    | 9)      |                |            |                      |
++-----------------------------+------------+---------------------+-----------+--------------------+---------+----------------+------------+----------------------+
+| dvrz_rst_ps7_0_100M_0       | Up-to-date | No changes required |  *(9)     | Processor System   | 5.0     | 5.0 (Rev. 17)  | Included   | xc7z020clg400-1      |
+|                             |            |                     |           | Reset              | (Rev.   |                |            |                      |
+|                             |            |                     |           |                    | 17)     |                |            |                      |
++-----------------------------+------------+---------------------+-----------+--------------------+---------+----------------+------------+----------------------+
+| dvrz_rst_ps7_0_20M_0        | Up-to-date | No changes required |  *(10)    | Processor System   | 5.0     | 5.0 (Rev. 17)  | Included   | xc7z020clg400-1      |
+|                             |            |                     |           | Reset              | (Rev.   |                |            |                      |
+|                             |            |                     |           |                    | 17)     |                |            |                      |
++-----------------------------+------------+---------------------+-----------+--------------------+---------+----------------+------------+----------------------+
+| dvrz_xadc_wiz_0_0           | Up-to-date | No changes required |  *(11)    | XADC Wizard        | 3.3     | 3.3 (Rev. 15)  | Included   | xc7z020clg400-1      |
+|                             |            |                     |           |                    | (Rev.   |                |            |                      |
+|                             |            |                     |           |                    | 15)     |                |            |                      |
++-----------------------------+------------+---------------------+-----------+--------------------+---------+----------------+------------+----------------------+
+| bd_a655_sc_ul_0             | Up-to-date | No changes required |  *(12)    | Ultralite AXI      | 1.0     | 1.0 (Rev. 1)   | Included   | xc7z020clg400-1      |
+|                             |            |                     |           | Switch             | (Rev.   |                |            |                      |
+|                             |            |                     |           |                    | 1)      |                |            |                      |
++-----------------------------+------------+---------------------+-----------+--------------------+---------+----------------+------------+----------------------+
+*(1) /opt/vitis/2026.1/data/ip/xilinx/axi_gpio_v2_0/doc/axi_gpio_v2_0_changelog.txt
+*(2) /opt/vitis/2026.1/data/ip/xilinx/axi_gpio_v2_0/doc/axi_gpio_v2_0_changelog.txt
+*(3) /opt/vitis/2026.1/data/ip/xilinx/axi_gpio_v2_0/doc/axi_gpio_v2_0_changelog.txt
+*(4) /opt/vitis/2026.1/data/ip/xilinx/axi_iic_v2_1/doc/axi_iic_v2_1_changelog.txt
+*(5) /opt/vitis/2026.1/data/ip/xilinx/smartconnect_v1_0/doc/smartconnect_v1_0_changelog.txt
+*(6) /opt/vitis/2026.1/data/ip/xilinx/axi_uartlite_v2_0/doc/axi_uartlite_v2_0_changelog.txt
+*(7) /opt/vitis/2026.1/data/ip/xilinx/axi_uartlite_v2_0/doc/axi_uartlite_v2_0_changelog.txt
+*(8) /opt/vitis/2026.1/data/ip/xilinx/processing_system7_v5_5/doc/processing_system7_v5_5_changelog.txt
+*(9) /opt/vitis/2026.1/data/ip/xilinx/proc_sys_reset_v5_0/doc/proc_sys_reset_v5_0_changelog.txt
+*(10) /opt/vitis/2026.1/data/ip/xilinx/proc_sys_reset_v5_0/doc/proc_sys_reset_v5_0_changelog.txt
+*(11) /opt/vitis/2026.1/data/ip/xilinx/xadc_wiz_v3_3/doc/xadc_wiz_v3_3_changelog.txt
+*(12) /opt/vitis/2026.1/data/ip/xilinx/sc_ultralite_v1_0/doc/sc_ultralite_v1_0_changelog.txt

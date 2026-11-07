@@ -1,0 +1,74 @@
+{
+  "baseline": {
+    "lut": 39906,
+    "ff": 56036,
+    "dsp": 16,
+    "bram_tiles": 2,
+    "lut_delta": 0,
+    "ff_delta": 0
+  },
+  "counters": {
+    "lut": 39558,
+    "ff": 55854,
+    "dsp": 21,
+    "bram_tiles": 2,
+    "lut_delta": -348,
+    "ff_delta": -182
+  },
+  "decoders": {
+    "lut": 39150,
+    "ff": 55855,
+    "dsp": 21,
+    "bram_tiles": 2,
+    "lut_delta": -756,
+    "ff_delta": -181
+  },
+  "bram": {
+    "lut": 39935,
+    "ff": 52443,
+    "dsp": 21,
+    "bram_tiles": 40,
+    "lut_delta": 29,
+    "ff_delta": -3593
+  },
+  "lutram": {
+    "lut": 39523,
+    "ff": 52182,
+    "dsp": 21,
+    "bram_tiles": 2,
+    "lut_delta": -383,
+    "ff_delta": -3854
+  },
+  "area": {
+    "lut": 37795,
+    "ff": 55847,
+    "dsp": 21,
+    "bram_tiles": 2,
+    "lut_delta": -2111,
+    "ff_delta": -189
+  },
+  "compact": {
+    "lut": 39724,
+    "ff": 51343,
+    "dsp": 21,
+    "bram_tiles": 37.5,
+    "lut_delta": -182,
+    "ff_delta": -4693
+  },
+  "compact_lutram": {
+    "lut": 40186,
+    "ff": 52275,
+    "dsp": 21,
+    "bram_tiles": 2,
+    "lut_delta": 280,
+    "ff_delta": -3761
+  },
+  "compact_registers": {
+    "lut": 39801,
+    "ff": 56014,
+    "dsp": 21,
+    "bram_tiles": 2,
+    "lut_delta": -105,
+    "ff_delta": -22
+  }
+}

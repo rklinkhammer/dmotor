@@ -1,0 +1,10 @@
+{
+  "bram": {
+    "result": "PASS",
+    "files": 41
+  },
+  "lutram": {
+    "result": "PASS",
+    "files": 41
+  }
+}

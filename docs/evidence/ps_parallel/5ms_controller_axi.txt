@@ -1,0 +1,16 @@
+enable request f cfg=f initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=           454600000
+fault time=         25609700000 hls_fault=00000000 reject=00000000 core_fault=0 scheduler=0 stop=f
+enable request 3 cfg=f initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=         25714500000
+enable request 1 cfg=1 initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=         26946750000
+enable request 1 cfg=1 initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=         27604800000
+fault time=         28608050000 hls_fault=00000000 reject=00000000 core_fault=0 scheduler=0 stop=0
+enable request 1 cfg=1 initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=         28633800000
+fault time=         29635450000 hls_fault=00000000 reject=00000000 core_fault=0 scheduler=0 stop=0
+enable request 1 cfg=1 initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=         29660150000
+fault time=         29723700000 hls_fault=00000000 reject=00000000 core_fault=0 scheduler=0 stop=0
+enable request 1 cfg=1 initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=         29748450000
+enable request 1 cfg=1 initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=         29836750000
+monitor integration PASS: gating, loss, status, protected ACK, reset and no restart
+direct-duty PASS: 0/25/50/100 percent, signed ceiling, mode lock, replay rejection, STOP, expiry, watchdog, faults and HALT
+controller_axi PASS: real AXI, atomic HLS + actual C++ PS engine, configuration, four-motor targets, encoder capture, telemetry shared physical fault, explicit recovery and watchdog expiration
+/home/rklinkhammer/workspace/dmotor-mipi-opt/build/ps_parallel/loop5_v2/cosim/controller_axi_tb.sv:249: $finish called at 30042476000 (1ps)

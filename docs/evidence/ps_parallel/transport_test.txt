@@ -1,0 +1,2 @@
+PASS: PS transport immutable capture, full mask, stale tickets, backpressure, cancellation, reset, timeout and equality priority
+experiments/ps_parallel/transport_tb.sv:56: $finish called at 8820000 (1ps)

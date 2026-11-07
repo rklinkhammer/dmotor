@@ -1,11 +1,13 @@
-# Combined C++ HLS controller tick
+# Combined C++ PS controller tick
+
+> Current main: PSF1 motor execution runs on the PS at 1 ms; the atomic mailbox, scheduler, PWM and protection remain in PL. See [current architecture](../DMOTOR_ARCH.md) and [PSF1 contract](ps_executor.md). Older component measurements below retain their original scope.
 
 > Current product builds: [build guide](build.md). Commands below are specialized
 > component/experiment reproduction or historical evidence, not the default build.
 
 
 `dmotor_controller` combines the existing velocity estimator and motion executor
-in one hardware-scheduled C++ HLS transaction. It consumes a coherent encoder
+in one hardware-scheduled C++ PS engine transaction. It consumes a coherent encoder
 snapshot and one pending command mailbox at each 1 kHz control boundary. It is
 not yet the AXI ring dispatcher, a complete FPGA top, or a board-ready controller.
 
@@ -60,7 +62,7 @@ The top receives reset, live authorization, decoder capture fault, fabric timest
 accepted-event count, latest edge time, direction epoch, invalid-transition count,
 direction, signed position, session, command-valid, a 16-word descriptor,
 completion acknowledgment and immediate-stop event. All are coherent and stable
-for the HLS transaction. A command remains pending until acceptance is returned;
+for the PS engine transaction. A command remains pending until acceptance is returned;
 stop and acknowledgment are single sampled events. Live protection must mask a
 late retired result and cancel queued/active work separately.
 
@@ -131,8 +133,8 @@ with the same generation, latches controller configuration fault bit 0, inhibits
 drive and refuses activation. Reserved wire words still invalidate generation.
 A newly constructed controller requires reset or a disabled preparation call
 before enabling. For the dispatcher, issue a disabled tick after reset/configuration
-commit and wait for the HLS transaction to finish before enabling. The configuration
-snapshot must remain coherent and stable throughout each HLS transaction.
+commit and wait for the PS engine transaction to finish before enabling. The configuration
+snapshot must remain coherent and stable throughout each PS engine transaction.
 
 Disabled reconfiguration restarts estimator qualification with a fresh measurement
 epoch. It does not clear sticky faults or suppress simultaneous capture/encoder

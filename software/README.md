@@ -1,5 +1,7 @@
 # DMOTOR software — Zynq runtime and planned ESP32 firmware
 
+> Architecture update (2026-11-07): main uses the [1 ms PS motor executor](../DMOTOR_ARCH.md) with independent PL capture/PWM/protection and a matched PSF1 driver/daemon. Client contracts, commissioning-first scope, U0 evidence, the hardware pause and pending live recovery are unchanged.
+
 Build and cross-compilation instructions: [component guide](../docs/build.md) and
 EDF `docs/build.md`. This document describes software interfaces and board use.
 

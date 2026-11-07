@@ -1,22 +1,21 @@
 # Current IP export
 
-2026-11-03: controller revision 10 registers the drive-enable diagnostic output
-before the GPIO clock-domain crossing (one controller-clock readout delay).
-Revision 9 adds `hb_async`, integrates mandatory heartbeat
-supervision, and retains the dedicated `coast_req` output from revision 8.
-See [PL monitor progress](pl_monitor_progress.md) for the additive registers,
-matching driver/runtime requirement and remaining qualification. Existing
-physical_faults and drive_enable ports remain; board wiring is user-maintained.
+Main exports revision **13** of `dmotor.org:user:controller_axi:0.18` at
+`build/current_ip/controller_axi/ip`. The 1 ms PSF1 implementation replaces motor
+HLS computation with the C++ daemon worker and retains atomic mailbox HLS, CLN1,
+heartbeat supervision, coherent PWM and all existing board ports.
 
-Use **[the component build guide](build.md)**. `python3 tools/build.py ip` now
-prepares the current shared profile, validates both HLS kernels, exports IP and
-runs the full AXI simulation. EDF's complete build invokes it automatically.
+`python3 tools/build.py ip` runs atomic HLS simulation/synthesis/co-simulation,
+native/controller/PS software tests and full AXI/cleanup co-simulation before
+packaging the controller. `project` also recreates the board project; EDF's
+complete build invokes this pipeline and then routes the full board and builds
+matched ARM software. See [build instructions](build.md) and
+[current qualification and artifact status](system_status.md).
 
-The board uses `build/current_ip/controller_axi/ip` (`dmotor.org:user:controller_axi:0.18`).
-Separate mailbox/engine packages remain available for specialist integration, but
-are not additional board dependencies. Source constraints and topology now live
-under `platforms/arty-z7-20`; do not manually add a sibling DVRMC IP repository.
+Sources are direct `src/`, `include/`, `rtl/` and `software/` inputs. No generated
+motor profile or separate motor HLS IP is a product dependency. Board topology
+and constraints remain in `platforms/arty-z7-20`.
 
-Previous revision/measurement instructions are retained in the
-[historical export log](history/ip-export-log.md). For interface/qualification
-limits see [controller AXI](controller_axi.md).
+Previous revision/measurement instructions remain in the
+[historical export log](history/ip-export-log.md). For interfaces and remaining
+qualification see [controller AXI](controller_axi.md) and [PSF1](ps_executor.md).

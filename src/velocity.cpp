@@ -1,4 +1,5 @@
 #include "dmotor/velocity.hpp"
+#include "dmotor/operating_limits.hpp"
 #include "dmotor/detail/arithmetic.hpp"
 #include "dmotor/timing.hpp"
 namespace dmotor {
@@ -73,7 +74,7 @@ VelocityResult VelocityEstimator::step(bool reset, uint64_t now, const EncoderSa
                 const uint64_t denominator =
                     static_cast<uint64_t>(static_cast<uint32_t>(interval)) * (num & 0xfffffU);
                 const uint64_t speed = detail::divide(numerator + denominator / 2, denominator);
-                if (speed > 1000000) {
+                if (speed > static_cast<uint64_t>(operating::max_speed_mrpm)) {
                     result_.fault |= 8;
                 } else {
                     result_.mrpm =

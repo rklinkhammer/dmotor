@@ -11,7 +11,7 @@ reproduce those experiments and are not the current product build.
 | Input | Owner / generated output |
 | --- | --- |
 | HLS/RTL and ABI schemas | DMOTOR `src`, `include`, `rtl`, `abi` |
-| Four-motor 400 RPM profile | `tools/prepare_shared_mailbox.py` and its tested transformations |
+| Four-motor 400 RPM profile | Direct `src/` and `include/dmotor/` sources, executed on PS |
 | Board topology | `platforms/arty-z7-20/vivado/design_1.bd` |
 | Board pin/clock constraints | `platforms/arty-z7-20/constraints/arty-z7-20.xdc` |
 | Vivado project | Generated `build/product/vivado/dvrmc.xpr` |
@@ -22,8 +22,8 @@ reproduce those experiments and are not the current product build.
 The board BD/XDC were migrated from the latest saved root `dvrmc/dvrmc.xpr`
 project, as selected by the user on 2026-10-17, and subsequently updated for
 four motor channels and the ESP32 monitor. The current development controller
-IP source is revision 11, adding CLN1 disabled cleanup to the heartbeat/global
-coast interface. See the current evidence in [system status](system_status.md);
+IP source is revision 13: PSF1 1 ms execution, retaining CLN1 disabled cleanup
+and the heartbeat/global coast interface. See the current evidence in [system status](system_status.md);
 source revision alone does not establish a rebuilt or qualified image. Physical-fault
 inputs remain on the controller, currently tied inactive in the saved BD;
 drive-enable diagnostics connect to internal GPIO. The old checkout is retained as reference;
@@ -45,14 +45,18 @@ python3 tools/build.py project --force
 
 Override `--amd-root /path/to/2026.1` if needed. Install Digilent Arty Z7-20
 board files version 1.1; `DMOTOR_BOARD_REPO` can point to a board repository if
-it is not already in Vivado or its local XHub board store. The pipeline runs profile native
-regression tests; atomic-mailbox and shared-engine HLS C simulation, synthesis and
-co-simulation; IP packaging; complete AXI lifecycle and interrupted-cleanup simulation using both
-actual HLS kernels; and board project recreation.
-The prepared engine is always `build/product/engine`; no implicit selection of an
-old `shared_mailbox_copy` or `rpm400_*` directory occurs. Historical transformation
-patches remain inputs for now, included in the fingerprint; they are not disposable
-build output. Promoting that generated profile to direct sources is separate work.
+it is not already in Vivado or its local XHub board store. Install Icarus Verilog
+with VPI development headers and a C++14 compiler. The pipeline builds atomic
+mailbox HLS (C simulation/synthesis/co-simulation), direct product C++ sources,
+all current native/RTL tests, actual PS-C++/full-controller AXI co-simulation,
+PS software/client/U1 tests, controller IP and the original board project.
+
+The control period is fixed at 1 ms. Native artifacts are in `build/product/native`,
+PS binaries in `build/product/software`, and packaged controller IP in
+`build/current_ip/controller_axi`. No generated motor-engine profile or second
+motor HLS kernel is used. Historical preparation scripts/patches are reference
+experiments, not default build inputs. `python3 tools/build.py test` runs the
+same required component checks and IP generation without board-project recreation.
 
 A successful IP build records its source fingerprint. HLS/RTL/build-test source changes invalidate
 reuse; board-only BD/XDC changes do not repeat HLS. Packaged IP hashes are checked; `--force` handles changed external tool installations or suspect outputs.
@@ -155,9 +159,8 @@ BD, locate its path using the Vivado Tcl command `get_files */design_1.bd`,
 then copy that saved file back to
 `platforms/arty-z7-20/vivado/design_1.bd` and review the diff. The next build replaces
 the generated project. Do not use a GUI project concurrently with its rebuild.
-HLS components are `build/vitis_atomic` and
-`build/product/engine/build/vitis_dispatcher`; their configs are respectively
-`platforms/vitis/atomic.cfg` and the prepared engine's `platforms/vitis/dispatcher.cfg`.
+The only product HLS component is `build/vitis_atomic`, configured by
+`platforms/vitis/atomic.cfg`. Motor execution is compiled into the PS daemon.
 
 ## Software iteration and ABI checks
 

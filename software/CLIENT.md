@@ -1,5 +1,7 @@
 # Daemon client library
 
+> Architecture update (2026-11-07): main uses the [1 ms PS motor executor](../DMOTOR_ARCH.md) with independent PL capture/PWM/protection and a matched PSF1 driver/daemon. Client contracts, commissioning-first scope, U0 evidence, the hardware pause and pending live recovery are unchanged.
+
 **All applications that communicate with `dmotord` must use `dmotor_client`.**
 Do not copy socket code, serialize `Request` yourself, or use the driver to bypass
 the daemon. `dmotor-maint` is the first consumer. Independent protocol test peers

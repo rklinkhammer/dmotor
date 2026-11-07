@@ -16,7 +16,9 @@ module dmotor_cleanup_sequencer #(
     localparam WAIT_SAFE=0,RELEASE=1,START=2,SWEEP=3,COMPLETE=4,OPERATING=5,FAILED=6;
     reg [2:0] state;
     reg motors_clean;
-    reg [31:0] elapsed,saved_session;
+    localparam integer ELAPSED_BITS = MAX_CYCLES > 1 ? $clog2(MAX_CYCLES+64'd1) : 1;
+    reg [ELAPSED_BITS-1:0] elapsed;
+    reg [31:0] saved_session;
     reg [2559:0] saved_configurations;
     wire changed=session!=saved_session || configurations!=saved_configurations;
     assign hold_outputs=reset || (state!=COMPLETE && state!=OPERATING);

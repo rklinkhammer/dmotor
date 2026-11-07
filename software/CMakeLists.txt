@@ -235,3 +235,25 @@ add_executable(dmotor-gpio-diagnostic-tests tests/gpio_diagnostic_test.cpp)
 target_link_libraries(dmotor-gpio-diagnostic-tests PRIVATE dmotor_semantics)
 target_compile_options(dmotor-gpio-diagnostic-tests PRIVATE -Wall -Wextra -Werror -Wconversion)
 add_test(NAME software_gpio_diagnostic COMMAND dmotor-gpio-diagnostic-tests)
+
+# Default 1 kHz PS motor executor; PL retains scheduling and protection.
+find_package(Threads REQUIRED)
+add_library(dmotor_ps_engine STATIC
+ ../src/protocol.cpp ../src/arithmetic.cpp ../src/control.cpp ../src/command_engine.cpp
+ ../src/motion.cpp ../src/velocity.cpp ../src/controller.cpp ../src/mailbox.cpp)
+target_include_directories(dmotor_ps_engine PUBLIC ../include include)
+target_compile_features(dmotor_ps_engine PUBLIC cxx_std_14)
+target_compile_options(dmotor_ps_engine PRIVATE -Wall -Wextra -Werror)
+target_sources(dmotord PRIVATE linux/ps_device.cpp)
+target_link_libraries(dmotord PRIVATE dmotor_ps_engine Threads::Threads)
+
+if(DMOTOR_SW_SANITIZE)
+ target_compile_options(dmotor_ps_engine PUBLIC -fsanitize=undefined -fno-sanitize-recover=all)
+ target_link_options(dmotor_ps_engine PUBLIC -fsanitize=undefined)
+endif()
+
+foreach(test worker cadence fused)
+ add_executable(dmotor-ps-${test}-tests ../tests/ps_${test}_test.cpp)
+ target_link_libraries(dmotor-ps-${test}-tests PRIVATE dmotor_ps_engine)
+ add_test(NAME software_ps_${test} COMMAND dmotor-ps-${test}-tests)
+endforeach()

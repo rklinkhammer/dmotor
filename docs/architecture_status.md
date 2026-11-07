@@ -1,5 +1,7 @@
 # Architecture, priorities and integration status — 2026-10-12
 
+> Historical implementation/evaluation record. Main now uses the [1 ms PS executor](../DMOTOR_ARCH.md); current build and acceptance state are in [build.md](build.md) and [system_status.md](system_status.md). HLS motor sizing/build instructions below do not select the current product.
+
 **Current update — 2026-10-17:** This review's revision-3/4 tables are historical.
 Revision 6 (400 RPM) has passed full Arty routing and EDF integration. UIO and
 encoder movement have been observed on the board. Version 0.6.0 now implements

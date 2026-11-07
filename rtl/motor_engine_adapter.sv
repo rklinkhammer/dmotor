@@ -1,5 +1,10 @@
-// Serialized adaptation to the measured C++ HLS engine. No motor arithmetic here.
+// Serialized adaptation to the PS fixed-point motor engine. No motor arithmetic here.
 module dmotor_motor_engine_adapter(
+
+    input wire ps_power_reset,ps_valid,ps_write,
+    input wire [15:0] ps_address,input wire [31:0] ps_wdata,input wire [3:0] ps_strobes,
+    output wire ps_ready,ps_response_valid,input wire ps_response_ready,
+    output wire ps_response_okay,output wire [31:0] ps_rdata,
     input wire clk, reset,
     input wire start,
     // Internal primitive: caller must hold independent output inhibition and
@@ -63,8 +68,12 @@ module dmotor_motor_engine_adapter(
             STAGE_SPEED:record[13*32 +:32]=saved_target;
             endcase
         end else if(operation==COMMIT_TARGET)record[11*32 +:32]=2;
+        if(operation==TICK && saved_apply)begin
+            record[11*32 +:32]=3;record[12*32 +:32]=selected_sequence;
+            record[13*32 +:32]=saved_target;
+        end
     end
-    dmotor_shared_engine_transport transport(.clk(clk),.reset(reset || fault),
+    dmotor_shared_engine_transport transport(.ps_power_reset(ps_power_reset),.ps_valid(ps_valid),.ps_write(ps_write),.ps_address(ps_address),.ps_wdata(ps_wdata),.ps_strobes(ps_strobes),.ps_ready(ps_ready),.ps_response_valid(ps_response_valid),.ps_response_ready(ps_response_ready),.ps_response_okay(ps_response_okay),.ps_rdata(ps_rdata),.clk(clk),.reset(reset || fault),
         .command_valid(state==SEND && !fault),.command_ready(transport_ready),
         .command_record(record),.response_valid(response_valid),.response_ready(state==WAIT_REPLY),
         .response_words(reply),.response_error(response_error),.fault(transport_fault),
@@ -106,7 +115,7 @@ module dmotor_motor_engine_adapter(
                    (apply_target && (!ready_mask[motor] || stop[motor] || sequences[motor*32 +:32]==32'hffffffff)))begin
                     fault<=1;result_duty<=0;state<=FINISH;
                 end else begin
-                    operation<=!initialized[motor] ? RESET_CONTEXT : (apply_target ? STAGE_SESSION : TICK);
+                    operation<=!initialized[motor] ? RESET_CONTEXT : TICK;
                     state<=SEND;
                 end
             end

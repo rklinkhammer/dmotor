@@ -1,0 +1,10 @@
+make: Entering directory '/usr/src/linux-headers-7.0.0-43-generic'
+make[1]: Entering directory '/home/rklinkhammer/workspace/dmotor-mipi-opt/build/ps_parallel/final_5ms/software/linux/driver'
+  CC [M]  dmotor_access.o
+  MODPOST Module.symvers
+  CC [M]  dmotor_access.mod.o
+  CC [M]  .module-common.o
+  LD [M]  dmotor_access.ko
+  BTF [M] dmotor_access.ko
+make[1]: Leaving directory '/home/rklinkhammer/workspace/dmotor-mipi-opt/build/ps_parallel/final_5ms/software/linux/driver'
+make: Leaving directory '/usr/src/linux-headers-7.0.0-43-generic'

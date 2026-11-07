@@ -1,3 +1,31 @@
+# Current verification — 1 ms PSF1 product
+
+`python3 tools/build.py project` is the required current component pipeline.
+It runs native fixed-point/controller/protocol tests, RTL encoder/PWM/protection/
+scheduler tests, atomic HLS simulation/synthesis/co-simulation, PS transport tests,
+and full-controller AXI/cleanup co-simulation with the real PS C++ engine.
+The PS software suite includes existing client/runtime/monitor/U1 tests and
+executor packing, cadence and fused-operation checks. Yocto also executes the
+new worker/cadence/fused tests under ARM QEMU, alongside the existing five semantic
+executables. No native, QEMU or co-simulation result is a Linux deadline measurement.
+
+Old FPGA position/dwell `motion_queue` and `position_error` tests are no longer
+product tests: these opcodes were already excluded by the prepared 400 RPM product.
+The protocol test retains ring ownership/rejection coverage and now explicitly
+checks rejection of unsupported opcodes. The standalone motor HLS adapter test is
+replaced by PS transport plus actual full-controller cleanup/cancellation tests.
+Atomic HLS and independent hardware tests remain. No protection limit is relaxed.
+
+Physical U0 remains PASS for its recorded image. U1 GPIO/heartbeat and subsequent
+physical gates remain pending and paused. On resumption, run U0/U1 against the
+matched new image, then measure the 1 ms/800 us worker budget, stalls/crashes,
+late replies, CPU/memory contention and electrical inhibition. Keep original
+HALT/heartbeat/authorization/target-age/STOP requirements.
+
+See [status](system_status.md), [PSF1](ps_executor.md) and [build](build.md).
+
+## Earlier component evidence (historical scope)
+
 # Verification record — 2026-10-11
 
 > Current product builds: [build guide](build.md). Commands below are specialized

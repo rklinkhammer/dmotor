@@ -12,7 +12,7 @@ int64_t signed_pair(uint32_t low, uint32_t high) {
 }
 Error validate(const Descriptor& d, uint32_t sequence, uint32_t epoch, uint32_t generation,
                int64_t position, int32_t max_speed_mrpm) {
-    if (d[0] < 1 || d[0] > 6) {
+    if (d[0] != 1 && d[0] != 6) {
         return Error::opcode;
     }
     if (d[1] || d[12] || d[13] || d[14] || d[15]) {
@@ -28,28 +28,12 @@ Error validate(const Descriptor& d, uint32_t sequence, uint32_t epoch, uint32_t 
         return Error::generation;
     }
     const int32_t speed = signed_word(d[5]);
-    const int32_t duty = signed_word(d[8]);
-    const bool position_mode = d[0] == 2 || d[0] == 3;
+    (void)position;
     if (max_speed_mrpm <= 0 || max_speed_mrpm > 1000000 || speed < -max_speed_mrpm ||
-        speed > max_speed_mrpm || duty < -65536 || duty > 65536 || (position_mode && speed <= 0)) {
-        return Error::range;
-    }
-    if ((!position_mode && (d[6] || d[7])) || (d[0] != 1 && !position_mode && d[5]) ||
-        (d[0] != 4 && d[8]) || (d[0] != 5 && (d[9] || d[10])) ||
-        (!position_mode && d[0] != 6 && d[11])) {
-        return Error::reserved;
-    }
-    if ((d[0] == 5 && !d[9] && !d[10]) || ((position_mode || d[0] == 6) && !d[11])) {
-        return Error::range;
-    }
-    // Signed addition overflows exactly when equal-sign operands produce an
-    // opposite-sign result. Unsigned arithmetic defines wrap for all bit patterns.
-    const uint64_t displacement = (static_cast<uint64_t>(d[7]) << 32) | d[6];
-    const uint64_t position_bits = static_cast<uint64_t>(position);
-    const uint64_t sum = position_bits + displacement;
-    if (d[0] == 3 && (((position_bits ^ sum) & (displacement ^ sum)) >> 63)) {
-        return Error::overflow;
-    }
+        speed > max_speed_mrpm) return Error::range;
+    if (d[6] || d[7] || d[8] || d[9] || d[10] || (d[0] != 1 && d[5]) ||
+        (d[0] != 6 && d[11])) return Error::reserved;
+    if (d[0] == 6 && !d[11]) return Error::range;
     return Error::none;
 }
 bool CommandRing::reopen(bool drained, uint32_t generation, uint32_t initial_counter) {

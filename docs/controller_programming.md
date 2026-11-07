@@ -1,5 +1,7 @@
 # Controller programming guide — Zynq PS
 
+> Current main: PSF1 motor execution runs on the PS at 1 ms; the atomic mailbox, scheduler, PWM and protection remain in PL. See [current architecture](../DMOTOR_ARCH.md) and [PSF1 contract](ps_executor.md). Older component measurements below retain their original scope.
+
 This is the consolidated programming reference for the **implemented** PS
 commissioning software. It covers interfaces, ownership, sequencing, units and
 failure handling. Use [build.md](build.md) for hardware/EDF builds and
@@ -143,7 +145,8 @@ not every public API method catches transport errors internally.
 
 | Quantity | Current default / representation |
 |---|---|
-| Service tick | 5 ms, absolute monotonic schedule, missed ticks skipped |
+| Client/lease service tick | 5 ms, absolute monotonic schedule, missed ticks skipped |
+| Motor control frame | 1 ms, issued by PL to the PS worker; 800 us frame deadline |
 | Target publication | 10 ms (100 Hz) |
 | Authorization refresh / expiry | 20 ms / 100 ms |
 | Target-age timeout | 100 ms, independent of authorization |

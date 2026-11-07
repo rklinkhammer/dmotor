@@ -1,4 +1,8 @@
+#ifdef DMOTOR_TEST_SERVICE
 #include "dmotor_sw/kernel_device.hpp"
+#else
+#include "dmotor_sw/ps_device.hpp"
+#endif
 #include "dmotor_sw/service_protocol.hpp"
 #include "dmotor_sw/version.hpp"
 #include <sys/socket.h>
@@ -91,7 +95,11 @@ int main(int argc, char** argv) {
             throw IoError("Socket path too long");
         std::array<MotorConfiguration, 4> configs{};
         const auto mask = load(argv[3], configs);
+#ifdef DMOTOR_TEST_SERVICE
         KernelDevice device(argv[2]);
+#else
+        dmotor_ps::PsDevice device(argv[2]);
+#endif
         RuntimePolicy policy;
         policy.commissioning = commissioning;
         if (direct) {

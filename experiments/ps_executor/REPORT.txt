@@ -1,0 +1,210 @@
+PS executor and slice reduction prototype
+2026-11-07 | dmotor_mipi_opt | experimental PSE1 endpoint
+
+Result and evidence boundary
+----------------------------
+A C++14 four-wheel executor, register transport and independent PL endpoint are
+implemented as sandbox experiments. The production build and ESP32 firmware/wire
+schema are unchanged. Board-facing port names/directions/widths match the existing
+controller; the experimental MMIO map intentionally differs and has a distinct
+PSE1 identity. Neither tools/build.py nor IP packaging selects this endpoint.
+No board was connected, programmed or armed. Hardware testing remains paused.
+
+Vivado 2026.1, xc7z020clg400-1, 20 MHz, OOC place/route:
+                              Retained controller      PSE1 prototype
+  Occupied slices             13,250 / 13,300           1,354 / 13,300
+  Slice utilization           99.62%                    10.18%
+  LUTs                        37,342                   2,746
+  Flip-flops                  55,847                   4,458
+  DSPs                        21                       4
+  BRAM tiles                  2                        0
+  Worst setup slack           +7.427 ns                 +25.741 ns
+  Worst hold slack            +0.090 ns                 +0.100 ns
+
+This is an architectural capacity comparison, NOT a feature-equivalent product
+saving. The prototype removes HLS velocity computation, context transfer and
+large configuration/telemetry banks. Several production features still need a
+new implementation, listed below, so the 1,354-slice figure is not a final budget.
+Camera IP and complete PS/PL board integration are absent. OOC timing does not
+qualify board IO; DRC has DSP-pipelining and standalone missing-PS warnings but
+no errors. First-stage asynchronous inputs alone are timing-excepted; second
+synchronizer stages and downstream logic remain timed.
+
+Implemented C++ executor
+------------------------
+executor.hpp uses four independent PI integrators/ramps, signed encoder velocity,
+configured limits, actual elapsed sample time, zero-speed timeout, reversal
+through zero, anti-windup, and sticky STOP/failure. Intended nominal period is
+100,000 fabric clocks (5 ms at 20 MHz); sample intervals exceeding 200,000 clocks
+are rejected. A failed step never produces a new publishable frame. STOP remains
+latched; it does not automatically admit later velocity targets.
+
+This is floating-point C++14, not a bit-exact port of the old fixed-point HLS.
+Its estimator uses accepted-event count differences and holds the last estimate
+until the zero timeout. Unqualified feedback produces zero duty. Production
+edge-interval estimation, bounded acquisition, settling/completion semantics and
+controlled-stop deadline handling still need porting and validation. These
+omissions are significant: no powered operation is authorized by this prototype.
+Config values and gains used in tests are fictional, not commissioned settings.
+
+transport.hpp operates on an abstract RegisterIo. It refuses the production DMI2
+identity, captures a coherent four-encoder snapshot, detects capture-token changes,
+and stages all four duties before a commit. Commit acceptance and output application
+are separate observations. It has no automatic ARM/enable, retry, refresh or
+recovery. It is not connected to the production ioctl driver or daemon. A future
+normal runtime stays inside dmotor; applications continue through dmotor_client.
+
+PL datapath and independent protection
+-------------------------------------
+ps_controller_axi.sv reuses the existing AXI host, quadrature decoder, encoder
+snapshot collector, PWM/reversal and monitor-heartbeat modules. Four PWM phases
+start aligned and consume one complete vector at a common boundary. A reversing
+channel retains the existing zero-drive reversal interval; coherent request
+application does not mean every channel is driving immediately after a reversal.
+
+The endpoint has independent checks for:
+  - All seven staging words present, full-width writes, four Q16 ranges.
+  - Armed session, monotonic frame sequence and fresh fabric-issued snapshot token.
+  - Capture after ARM and capture age strictly below 9.95 ms at acceptance
+    and common-boundary request adoption; equality loses. The remaining 50 us
+    reserves one PWM period for the existing reversal interval. Snapshot capture alone never refreshes duty.
+  - Last-applied capture age below an experimental 20 ms duty watchdog.
+  - Separate 100 ms authorization watchdog with its own ordered refresh sequence.
+  - HALT, synchronized physical faults, monitor heartbeat loss, encoder diagnostics
+    and count-capture faults. Their inhibition does not wait for software or AXI.
+
+Faults latch and inhibit all four outputs. AXI response backpressure cannot stop
+these checks. DISABLE is immediate and discards pending/staged work; re-enabling
+requires a new session. Faults cannot be cleared through MMIO in this prototype;
+a hardware reset is required. That restriction is not a proposed monitor recovery
+implementation. Reset/ARM still requires the external monitor/permit architecture
+and eventual integration with the reviewed lifecycle coordinator.
+
+The 10 ms capture-age bound, 20 ms stale-duty bound and 100 ms authorization bound
+serve different purposes. A command must normally fit the <=10 ms capture-to-output
+budget; the 20 ms watchdog is a fault response, not permission for 20 ms normal
+control latency. These are experimental policies, not revisions to the currently
+accepted production timing constants.
+
+PSE1 register map (byte offsets, little-endian 32-bit words)
+----------------------------------------------------------
+  0x00 R  identity 0x50534531
+  0x04 R  status: armed[0], fault[1], monitor_qualified[2], pending[3]
+  0x08 RW session; write a newer nonzero session to ARM while disarmed/healthy
+  0x0c W  authorization refresh sequence, starting at 1 after ARM
+  0x10 RW capture request / returned snapshot token
+  0x14 R  snapshot tick low; 0x18 high
+  0x1c R  accepted frame sequence; 0x20 applied frame sequence
+  0x24 R  captured encoder direction bits [3:0]
+  0x40 W  staged session
+  0x44 W  staged frame sequence
+  0x48 W  staged snapshot token
+  0x4c..0x58 W four signed Q16 duties
+  0x5c W  commit=1; every attempt clears the staging-written mask
+  0x60 W  disable=1 (all channels)
+  0x64 W  halt=1 (sticky)
+  0x80+i*0x20 R encoder i: signed position low/high, count low/high,
+                  last-edge tick low/high, direction epoch, invalid-transition count
+  0x100+i*4 R actual applied duty for motor i
+
+Snapshot tokens and frame sequences cannot wrap/reuse during a session. Only one
+pending frame exists; a second commit while pending is rejected. No backlog of
+motion commands can accumulate. A capture buffer may be replaced, but an accepted
+frame stores its own capture timestamp so later capture requests cannot renew it.
+
+Validation completed
+--------------------
+  - C++14 native tests with -Wall -Wextra -Werror and UBSan: per-wheel signed duty,
+    limits, variable dt, stale/repeated snapshot, NaN rejection, sticky STOP/failure.
+  - Transport tests: signed snapshot decoding, coherent token validation, exact
+    four-duty packing, identity guard, no implicit ARM, acceptance versus application.
+  - Actual C++ executor in eight simulated four-motor plant cases: 1 kHz and
+    200 Hz, nominal/jittered releases, and 100 ms PS stalls. Plants assume
+    400 RPM free speed, 80/100/120/140 ms wheel response constants and 400 ms coast,
+    2,048 counts/revolution, a 100 us simulation grid, 500 us delivery delay,
+    targets +/-60/90 RPM, and independent simulated 20 ms stale-duty expiry.
+    This is not a measured Zynq execution-time or calibrated motor model.
+  - At 200 Hz, nominal/jittered tracking RMS is 5.276/5.118 RPM in the selected
+    observation window. At 1 kHz it is 7.875/11.190 RPM. The simple estimator and
+    quantization differ with rate; this is not proof that slower control is better.
+    The 100 ms stall causes inhibition approximately 15 ms after stall onset at
+    200 Hz, without automatic restart. Inhibit does not instantaneously stop motion.
+  - RTL tests drive actual AXI handshakes with scaled timer/PWM/heartbeat parameters:
+    moving-encoder position/count snapshot alignment, reserved reversal deadline,
+    four independent positive/negative duties, common-boundary updates, partial
+    staging, invalid duty, wrong session, reused sample, replay, stale capture,
+    stale output, authorization independent of fresh duties, DISABLE/new session,
+    sticky HALT, physical fault, heartbeat loss, encoder diagnostics and stalled AXI
+    response consumption. These tests are not electrical-timing qualification.
+  - Default-parameter complete prototype synthesis, placement, routing and setup/
+    hold/DRC error gates passed. No full production equivalence is claimed.
+
+Target timing and remaining integration work
+--------------------------------------------
+There is no ARM/Linux target benchmark or runnable production daemon in this
+experiment. The 5 ms loop and <=10 ms end-to-end requirement remain target
+acceptance criteria, not achieved hardware measurements. Capture, scheduling,
+C++ calculation, driver transfer, admission and common PWM application must be
+measured together under camera, navigation and memory contention.
+
+Before adoption, implement/review at least:
+  - Production estimator/acquisition, settling, controlled-stop timeout and result
+    semantics, target/client freshness, fault attribution and numerical regression.
+  - Per-motor configuration/limits, polarity/mode initialization, enable/disable
+    masks, configuration generation validation, and full telemetry/status contract.
+    Prototype encoder mode is fixed X4 with uninverted input and zero initial
+    position, and ARM/DISABLE currently operate on all four motors.
+  - Driver/daemon backend and transaction ownership for the new MMIO profile;
+    board packaging, constraints, compatibility identity and release migration.
+  - Accepted monitor/lifecycle admission and explicit recovery sequencing. A
+    healthy heartbeat alone is not proof of physical ARM or completed recovery.
+  - Reset/clock/power failure behavior, electrical coast/permit qualification,
+    complete board timing and resource placement with camera infrastructure.
+
+The prototype independently implements a smaller set of fault/timer guards; it
+does not instantiate the complete production dmotor_safety, target_age, cleanup
+or mailbox stacks. Their required semantics must be accounted for explicitly,
+not assumed preserved because the pin names match. Only the existing default
+production implementation retains its previous qualification evidence.
+
+ESP32 offload assessment
+-----------------------
+Keep the ESP32 in its independent monitor role: current/voltage/temperature
+acquisition, protection policy, physical ARM/STOP, permits, qualified heartbeat,
+and bounded diagnostic reporting. Those responsibilities are already assigned to
+it; the operational monitor application is still unimplemented in this checkout.
+The UART bench diagnostic is not operational protection firmware.
+
+Do not move this new wheel loop to the monitor as part of this change. Encoder
+and PWM wiring belongs to PL, and the existing monitor protocol has no four-duty
+control exchange. At 115,200 baud / 8N1 the link transports at most 11,520 bytes/s
+per direction before higher-level framing overhead. The existing 31-byte header,
+CRC and delimiters make even an illustrative 16-byte duty payload about 51 bytes,
+or 10,200 bytes/s at 200 Hz BEFORE escaping. A minimal 40-byte feedback payload
+(4 positions plus one timestamp) becomes about 75 bytes, or 15,000 bytes/s, already
+above one direction's capacity. Full feedback is larger. This calculation is not
+an implemented message definition. Extra MCU computation does not solve this
+transport/interface constraint, and loading the independent monitor would require
+fresh response-time and failure-independence evidence.
+
+The remaining PL footprint is small enough that preserving hardware capture,
+PWM and local inhibition is preferable to adding a fast MCU round trip. No ESP32
+protocol, pins, firmware, baud rate or monitor admission behavior was changed.
+Revisit offload only if measurements identify a remaining material bottleneck;
+there is no measured FPGA saving attributed to ESP32 changes in this prototype.
+
+PS memory and camera
+--------------------
+The C++ integrators, ramps and estimator history now live in ordinary PS memory.
+They do not require PL reads of a DRAM context ring. A bounded PS diagnostic ring
+can store history, but it must not queue stale control commands. Camera PS-DRAM
+connectivity remains a separate subsystem and has not been added or measured here.
+
+Reproduction
+------------
+  python3 experiments/ps_executor/run_tests.py
+  /opt/vitis/2026.1/Vivado/bin/vivado -mode batch -nojournal -nolog \
+    -source experiments/ps_executor/measure.tcl -tclargs build/ps_executor/measurement
+
+Native tests and RTL use only the sandbox. Reports and verification evidence are
+in docs/evidence/ps_executor/; full generated Vivado artifacts remain under build/.

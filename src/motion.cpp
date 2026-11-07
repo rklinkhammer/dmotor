@@ -1,4 +1,5 @@
 #include "dmotor/motion.hpp"
+#include "dmotor/operating_limits.hpp"
 #include "dmotor/timing.hpp"
 #include "dmotor/detail/arithmetic.hpp"
 #include "dmotor/detail/bounded.hpp"
@@ -13,7 +14,11 @@ int64_t rounded(int64_t value, int64_t denominator) {
     const uint64_t absolute =
         negative ? uint64_t{0} - static_cast<uint64_t>(value) : static_cast<uint64_t>(value);
     const uint64_t divisor = static_cast<uint64_t>(denominator);
-    const int64_t quotient = static_cast<int64_t>(divide(absolute + divisor / 2, divisor));
+    // Bounded exact milliRPM: |error| <= 800000, gain <= 1048576.
+    // P rounded numerator <= 838860800500; clamped I <= 65536500000.
+    // Divisors are 1000 and 1000000. Both calls fit the shared 40/20 core.
+    const int64_t quotient = static_cast<int64_t>(
+        divide_pi(absolute + divisor / 2, static_cast<uint32_t>(divisor)));
     return negative ? -quotient : quotient;
 }
 } // namespace detail
@@ -22,7 +27,7 @@ namespace {
 constexpr uint32_t ramp_ticks_per_second = timing::control_hz;
 constexpr uint64_t clocks_per_tick = timing::control_tick_cycles;
 constexpr uint64_t clocks_per_us = timing::clocks_per_us;
-constexpr int64_t integral_scale = 1000000000LL;
+constexpr int64_t integral_scale = operating::integral_scale;
 int64_t magnitude(int32_t value) {
     return value < 0 ? -static_cast<int64_t>(value) : value;
 }
@@ -30,7 +35,7 @@ int32_t clamp(int64_t value, int32_t limit) {
     return value > limit ? limit : value < -limit ? -limit : static_cast<int32_t>(value);
 }
 bool valid_config(const MotionConfig& c) {
-    const bool valid = c.generation && c.max_speed_mrpm >= 1000 && c.max_speed_mrpm <= 1000000 &&
+    const bool valid = c.generation && c.max_speed_mrpm >= 1000 && c.max_speed_mrpm <= operating::max_speed_mrpm &&
            c.acceleration_mrpm_s && c.acceleration_mrpm_s <= 10000000 && c.deceleration_mrpm_s &&
            c.deceleration_mrpm_s <= 10000000 && c.counts_num && c.counts_num <= 1000000 &&
            c.counts_den && c.counts_den <= 1000000 &&
@@ -53,11 +58,6 @@ PreparedMotionConfig prepare_motion_config(const MotionConfig& c) {
     PreparedMotionConfig p;
     p.valid = valid_config(c);
     if (p.valid) {
-        // Valid configuration: deceleration needs 24 bits, CPR denominator
-        // 20 bits, and the nonnegative integral limit 17 bits.
-        const uint32_t denominator = c.counts_den & 0xfffffU;
-        p.braking_denominator = 120000ULL * (c.deceleration_mrpm_s & 0xffffffU) * denominator;
-        p.lookahead_denominator = 60000000ULL * denominator;
         p.integral_limit = static_cast<int64_t>(static_cast<uint32_t>(c.integral_limit_q16) &
                                                 0x1ffffU) * integral_scale;
     }
@@ -149,7 +149,7 @@ MotionResult MotionExecutor::step_impl(bool reset, bool authorized, bool command
         started_ = now;
         timeout_us_ = c.stop_timeout_us;
         settling_ = 0;
-        // Transfer open-loop to a speed ramp using measured speed.
+        // Controlled stop starts from qualified measured speed.
         if (velocity_valid) {
             result_.ramp_mrpm = velocity_mrpm;
         }
@@ -170,13 +170,13 @@ MotionResult MotionExecutor::step_impl(bool reset, bool authorized, bool command
         if (error != Error::none) {
             result_.activation = 0;
             finish(now, 1, static_cast<uint32_t>(error));
-        } else if ((command[0] == 1 || command[0] == 2 || command[0] == 3 || command[0] == 6) &&
+        } else if ((command[0] == 1 || command[0] == 6) &&
                    (!velocity_valid || magnitude(velocity_mrpm) > c.max_speed_mrpm)) {
             // Reject unsafe activation before an immediate command can complete.
             fail(now, 8);
         } else {
             opcode_ = static_cast<uint8_t>(command[0] & 7U);
-            if ((opcode_ == 1 || opcode_ == 2 || opcode_ == 3 || opcode_ == 6) &&
+            if ((opcode_ == 1 || opcode_ == 6) &&
                 motion_mode_ != 1) {
                 result_.ramp_mrpm = velocity_mrpm;
                 ramp_remainder_ = 0;
@@ -184,40 +184,18 @@ MotionResult MotionExecutor::step_impl(bool reset, bool authorized, bool command
             timeout_us_ = command[11];
             if (opcode_ == 1) {
                 target_mrpm_ =
-                    static_cast<int32_t>(detail::narrow_signed<21>(signed_word(command[5])));
+                    static_cast<int32_t>(detail::narrow_signed<operating::velocity_bits>(signed_word(command[5])));
                 motion_mode_ = 1;
                 finish(now, 0, 0);
-            } else if (opcode_ == 4) {
-                open_duty_ = static_cast<int32_t>(detail::narrow_signed<18>(
-                    clamp(signed_word(command[8]), c.duty_limit_q16)));
-                motion_mode_ = 2;
-                result_.ramp_mrpm = 0;
-                ramp_remainder_ = 0;
-                integral_nano_ = 0;
-                finish(now, 0, 0);
-            } else if (opcode_ == 2 || opcode_ == 3) {
-                target_position_ = signed_pair(command[6], command[7]);
-                if (opcode_ == 3) {
-                    target_position_ += position; // validate proved no overflow.
-                }
-                speed_cap_ =
-                    static_cast<int32_t>(detail::narrow_signed<21>(signed_word(command[5])));
-                motion_mode_ = 1;
-            } else if (opcode_ == 5) {
-                duration_us_ = (static_cast<uint64_t>(command[10]) << 32) | command[9];
             } else if (opcode_ == 6) {
-                if (motion_mode_ == 2) {
-                    result_.ramp_mrpm = velocity_mrpm;
-                }
                 target_mrpm_ = 0;
                 motion_mode_ = 1;
             }
         }
     }
-    // Expiration wins settling on the boundary. Divide elapsed ticks to avoid
-    // overflowing a 64-bit dwell duration when converting it to fabric cycles.
-    const uint64_t elapsed_us = detail::divide(now - started_, clocks_per_us);
-    if ((stopping_ || opcode_ == 2 || opcode_ == 3 || opcode_ == 6) && elapsed_us >= timeout_us_) {
+    // No 64-bit dwell conversion: the 32-bit stop duration safely fits in cycles.
+    if ((stopping_ || opcode_ == 6) &&
+        now - started_ >= static_cast<uint64_t>(timeout_us_) * clocks_per_us) {
         fail(now, 4);
     }
     if (result_.faults) {
@@ -233,28 +211,6 @@ MotionResult MotionExecutor::step_impl(bool reset, bool authorized, bool command
             result_.duty_q16 = 0;
         }
         return result_;
-    }
-    if (opcode_ == 5 && elapsed_us >= duration_us_) {
-        finish(now, 0, 0);
-    }
-    bool in_position = false;
-    if (opcode_ == 2 || opcode_ == 3) {
-        const bool forward = target_position_ >= position;
-        const uint64_t distance =
-            forward ? static_cast<uint64_t>(target_position_) - static_cast<uint64_t>(position)
-                    : static_cast<uint64_t>(position) - static_cast<uint64_t>(target_position_);
-        in_position = distance <= c.position_tolerance;
-        const uint64_t speed = static_cast<uint64_t>(magnitude(result_.ramp_mrpm));
-        const uint64_t denominator = prepared.braking_denominator;
-        const uint64_t stop_distance =
-            detail::divide(speed * speed * c.counts_num + denominator - 1, denominator);
-        const uint64_t step_denominator = prepared.lookahead_denominator;
-        const uint64_t lookahead =
-            detail::divide(speed * c.counts_num + step_denominator - 1, step_denominator);
-        const bool moving_toward = (result_.ramp_mrpm >= 0) == forward;
-        target_mrpm_ = (in_position || (moving_toward && distance <= stop_distance + lookahead)) ? 0
-                       : forward ? speed_cap_
-                                 : -speed_cap_;
     }
     if (motion_mode_ == 1) {
         if (!velocity_valid || magnitude(velocity_mrpm) > c.max_speed_mrpm) {
@@ -280,34 +236,35 @@ MotionResult MotionExecutor::step_impl(bool reset, bool authorized, bool command
                 result_.ramp_mrpm +=
                     change > 0 ? static_cast<int32_t>(advance) : -static_cast<int32_t>(advance);
             }
-            // Valid feedback/ramp: error +/-2000000; gains 0..1048576.
-            const int64_t error = detail::narrow_signed<22>(
+            // Validate in public milliRPM before narrowing. Keep the fractional
+            // milliRPM ramp for very slow acceleration; quantize only PI inputs.
+            const int64_t error = detail::narrow_signed<operating::velocity_error_bits>(
                 static_cast<int64_t>(result_.ramp_mrpm) - velocity_mrpm);
             const uint32_t ki = static_cast<uint32_t>(c.ki_q16) & 0x1fffffU;
             const uint32_t kp = static_cast<uint32_t>(c.kp_q16) & 0x1fffffU;
             const int64_t limit = prepared.integral_limit;
             int64_t candidate =
-                integral_nano_ + static_cast<int64_t>(ki) * error * timing::control_period_us;
+                integral_nano_ + static_cast<int64_t>(ki) * error;
             candidate = candidate > limit ? limit : candidate < -limit ? -limit : candidate;
             const int64_t proportional =
-                detail::rounded(static_cast<int64_t>(kp) * error, 1000);
+                detail::rounded(static_cast<int64_t>(kp) * error, operating::velocity_scale);
             const int64_t effort = proportional + detail::rounded(candidate, integral_scale);
             if ((effort <= c.duty_limit_q16 && effort >= -c.duty_limit_q16) ||
                 (effort > c.duty_limit_q16 && error < 0) ||
                 (effort < -c.duty_limit_q16 && error > 0)) {
-                integral_nano_ = detail::narrow_signed<47>(candidate);
+                integral_nano_ = detail::narrow_signed<operating::integral_bits>(candidate);
             }
             result_.duty_q16 = clamp(proportional + detail::rounded(integral_nano_, integral_scale),
                                      c.duty_limit_q16);
         }
     } else {
-        result_.duty_q16 = motion_mode_ == 2 ? open_duty_ : 0;
+        result_.duty_q16 = 0;
     }
-    const bool settling_command = stopping_ || opcode_ == 6 || opcode_ == 2 || opcode_ == 3;
+    const bool settling_command = stopping_ || opcode_ == 6;
     if (!result_.faults && settling_command) {
         const bool settled =
             velocity_valid && magnitude(velocity_mrpm) <= c.velocity_tolerance_mrpm &&
-            result_.ramp_mrpm == 0 && ((opcode_ != 2 && opcode_ != 3) || in_position);
+            result_.ramp_mrpm == 0;
         settling_ = settled ? (settling_ + 1) & 0xfffffU : 0;
         if (settling_ >= c.settle_ticks) {
             motion_mode_ = 0;

@@ -1,5 +1,7 @@
 # Mailbox-to-scheduler integration
 
+> Current main: PSF1 motor execution runs on the PS at 1 ms; the atomic mailbox, scheduler, PWM and protection remain in PL. See [current architecture](../DMOTOR_ARCH.md) and [PSF1 contract](ps_executor.md). Older component measurements below retain their original scope.
+
 > Current product builds: [build guide](build.md). Commands below are specialized
 > component/experiment reproduction or historical evidence, not the default build.
 
@@ -93,5 +95,5 @@ control, host AXI integration, full safety-path verification and board integrati
 No new resource estimate or routed timing result is claimed for this wrapper.
 
 The next milestone has begun with the [shared-engine transport](shared_engine_transport.md).
-It verifies actual motor HLS ports separately; this wrapper's motor connection
+It verifies actual PS motor ports separately; this wrapper's motor connection
 remains behavioral until warm-up/readiness and per-motor publication are adapted.

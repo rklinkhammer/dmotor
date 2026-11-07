@@ -1,5 +1,7 @@
 # G1a cleanup proof and recovery admission specification
 
+> Current main: PSF1 motor execution runs on the PS at 1 ms; the atomic mailbox, scheduler, PWM and protection remain in PL. See [current architecture](../DMOTOR_ARCH.md) and [PSF1 contract](ps_executor.md). Older component measurements below retain their original scope.
+
 **Status: source audit, combined PL cleanup and PS verification implemented; actual-HLS regressions and matched hardware/ARM build passed; system qualification open, 2026-11-04.**
 Initial audit baseline: `a334d99`. CLN1 integration below is current source;
 Robert Klinkhammer's time-separated review is pending. The PL ABI now exposes
@@ -77,14 +79,14 @@ A verified eager reset guarantee with equivalent observability could replace thi
 mechanism, but requires generated-HLS/RTL evidence for every context and transaction
 boundary. Merely exposing existing `quiescent` or `busy==0` is insufficient: neither
 establishes all motor contexts were reset. The combined PL operation and MMIO completion record are implemented below.
-Actual generated-motor-HLS and system recovery qualification remain required.
+Actual PS executor/full-PL integration and system recovery qualification remain required.
 
 ## 4. Attestation proof obligations
 
 | Wire flag | Required evidence immediately before request | Current gap |
 |---|---|---|
 | outputs_disabled | All STATUS enabled bits zero, exclusive ownership, admission hold prevents enable/target admission, no pending software intent | Admission hold/coordinator not implemented; repeated reads alone cannot replace it |
-| reset_drain_complete | Current-session/config-bound cleanup completion, all contexts cleared, old transactions/replies excluded | CLN1 combined sweep/completion exists; generated-motor-HLS evidence and coordinator hold still required |
+| reset_drain_complete | Current-session/config-bound cleanup completion, all contexts cleared, old transactions/replies excluded | CLN1 combined sweep/completion exists; PS executor/full-PL evidence and coordinator hold still required |
 | causes_cleared | Local fault/HALT/blocked status clear, HB qualified with no HB fault, required cleanup completion still valid | Readable status exists; coordinator must order checks and invalidate proof on new events |
 
 Compose flags only after all obligations succeed. A later fault must invalidate
@@ -197,18 +199,21 @@ while internal reset is released. Protection latches keep their existing ACK rul
 Velocity-mode `Runtime::prepare()` now requires CLN1, waits within its transition
 budget, checks incremented request/session and rereads completion after local health
 checks. Failure attempts HALT and keeps preparation false. The kernel driver exposes
-only read access to CLN1 registers and requires the capability at probe. The exported
-controller IP revision is 11; the deployed revision-10 image is not updated by this
-source change. Full UART recovery/ARM admission is still absent, and no wire
+only read access to CLN1 registers and requires the capability at probe. The exported controller IP revision is 13 with the PSF1 executor;
+source changes do not update any deployed image. Full UART recovery/ARM admission is still absent, and no wire
 attestation flag is emitted by this work.
 
 [Combined evidence](evidence/g1a_cleanup_integration/inputs.json) separates sequencer
 unit tests, controller/AXI tests with **actual atomic HLS and a stub motor transport**,
-PS failure injection, and a native Linux kernel module compilation. That earlier run did not qualify shared motor HLS RTL, routed timing or the
+PS failure injection, and a native Linux kernel module compilation. That earlier run did not qualify shared PS motor RTL, routed timing or the
 ARM image. The product run below supplies those build/test results; physical
 behavior remains unqualified.
 
-The next product run uses `build/product/engine`, not the historical experiment path.
+### Historical revision-11 build evidence
+
+The previous HLS product run used `build/product/engine`. Main now compiles the
+PS executor directly and tests CLN1 through real PS-C++/PL co-simulation.
+The following revision-11 results remain historical evidence only.
 Its native/HLS C tests and C/RTL co-simulation pass (2,449 shared-context transactions).
 The full AXI lifecycle bench and CLN1 bench now pass with both actual generated HLS
 kernels, including interruption of an accepted context reset, stale-completion

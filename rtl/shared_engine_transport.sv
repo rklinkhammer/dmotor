@@ -1,89 +1,97 @@
-// Transport only for the measured four-context C++ HLS motor engine.
-// Record packing is defined in docs/shared_engine_transport.md.
+// Parallel PS implementation of the original 35-word engine transaction.
+// Hardware scheduler, motor adapter, cleanup and safety remain authoritative.
 module dmotor_shared_engine_transport #(
-    parameter integer MAX_CYCLES=dmotor_timing::CONTROL_DEADLINE_CYCLES
+ parameter integer MAX_CYCLES=dmotor_timing::CONTROL_DEADLINE_CYCLES
 )(
-    input wire clk, reset,
-    input wire command_valid,
-    output wire command_ready,
-    input wire [1119:0] command_record,
-    output reg response_valid,
-    input wire response_ready,
-    output wire [511:0] response_words,
-    output reg response_error, fault,
-    output reg [31:0] last_latency, maximum_latency
+ input wire clk,reset,command_valid, output wire command_ready,
+ input wire [1119:0] command_record, output reg response_valid,
+ input wire response_ready, output wire [511:0] response_words,
+ output reg response_error,fault, output reg [31:0] last_latency,maximum_latency,
+ input wire ps_power_reset,ps_valid,ps_write,
+ input wire [15:0] ps_address,input wire [31:0] ps_wdata,input wire [3:0] ps_strobes,
+ output wire ps_ready,output reg ps_response_valid,input wire ps_response_ready,
+ output reg ps_response_okay,output reg [31:0] ps_rdata
 );
-    localparam IDLE=0, RUN=1, FINISH=2, RESPONSE=3;
-    reg [1:0] state;
-    reg [1119:0] record_bank;
-    reg [511:0] reply_bank;
-
-    reg [31:0] age;
-    reg hls_start;
-    wire hls_done,hls_ready;
-    wire [1:0] request_address0,request_address1;
-    wire [4:0] configuration_address0,configuration_address1;
-    wire [3:0] reply_address0,reply_address1;
-    wire request_ce0,request_ce1,configuration_ce0,configuration_ce1;
-    wire reply_ce0,reply_ce1,reply_we0,reply_we1;
-    reg [31:0] request_q0,request_q1,configuration_q0,configuration_q1;
-    wire [31:0] reply_d0,reply_d1;
-    assign command_ready=state==IDLE && !reset && !fault;
-    assign response_words=reply_bank;
-    dmotor_mailbox_shared core(.ap_clk(clk),.ap_rst(reset || fault),.ap_start(hls_start),
-        .ap_done(hls_done),.ap_ready(hls_ready),.ap_idle(),
-        .request_address0(request_address0),.request_ce0(request_ce0),.request_q0(request_q0),
-        .request_address1(request_address1),.request_ce1(request_ce1),.request_q1(request_q1),
-        .motor(record_bank[0*32 +:32]),.reset(record_bank[32]),
-        .tick(record_bank[33]),.authorized(record_bank[34]),.stop(record_bank[35]),
-        .capture_fault(record_bank[36]),.negative(record_bank[37]),
-        .session(record_bank[2*32 +:32]),.now(record_bank[3*32 +:64]),
-        .count(record_bank[5*32 +:64]),.last_edge(record_bank[7*32 +:64]),
-        .direction_epoch(record_bank[9*32 +:32]),.invalid_transitions(record_bank[10*32 +:32]),
-        .configuration_r_address0(configuration_address0),.configuration_r_ce0(configuration_ce0),
-        .configuration_r_q0(configuration_q0),
-        .configuration_r_address1(configuration_address1),.configuration_r_ce1(configuration_ce1),
-        .configuration_r_q1(configuration_q1),.reply_address0(reply_address0),.reply_ce0(reply_ce0),
-        .reply_we0(reply_we0),.reply_d0(reply_d0),.reply_address1(reply_address1),
-        .reply_ce1(reply_ce1),.reply_we1(reply_we1),.reply_d1(reply_d1));
-    always @(posedge clk) begin
-        if(reset)begin
-            state<=IDLE;record_bank<=0;reply_bank<=0;age<=0;
-            request_q0<=0;request_q1<=0;configuration_q0<=0;configuration_q1<=0;
-            response_valid<=0;response_error<=0;fault<=0;hls_start<=0;
-            last_latency<=0;maximum_latency<=0;
-        end else begin
-            // HLS expects one-clock synchronous memory reads, not combinational muxes.
-            if(request_ce0)request_q0<=record_bank[(11+request_address0)*32 +:32];
-            if(request_ce1)request_q1<=record_bank[(11+request_address1)*32 +:32];
-            if(configuration_ce0)configuration_q0<=configuration_address0<20 ? record_bank[(15+configuration_address0)*32 +:32] : 0;
-            if(configuration_ce1)configuration_q1<=configuration_address1<20 ? record_bank[(15+configuration_address1)*32 +:32] : 0;
-            if(state==RUN || state==FINISH)begin
-                if(reply_ce0 && reply_we0)reply_bank[reply_address0*32 +:32]<=reply_d0;
-                if(reply_ce1 && reply_we1)reply_bank[reply_address1*32 +:32]<=reply_d1;
-            end
-            case(state)
-            IDLE: if(command_valid && !fault)begin
-                record_bank<=command_record;
-                reply_bank<=0;age<=0;hls_start<=1;response_error<=0;state<=RUN;
-            end
-            RUN: begin
-                age<=age+1'b1;
-                if(hls_ready)hls_start<=0;
-                if(age>=MAX_CYCLES-1)begin
-                    fault<=1;hls_start<=0;reply_bank<=0;response_error<=1;
-                    response_valid<=1;state<=RESPONSE;
-                end else if(hls_done)begin
-                    hls_start<=0;state<=FINISH;
-                    last_latency<=age+1'b1;
-                    if(age+1'b1>maximum_latency)maximum_latency<=age+1'b1;
-                end
-            end
-            // Separate finalization lets the last reply write settle before valid.
-            FINISH:begin response_valid<=1;state<=RESPONSE;end
-            RESPONSE:if(response_ready)begin response_valid<=0;state<=IDLE;end
-            default:begin fault<=1;hls_start<=0;state<=IDLE;end
-            endcase
-        end
+ reg pending,attached;
+ reg [63:0] ticket,echo_ticket,accepted_ticket;
+ reg [1119:0] record_bank;
+ reg [511:0] reply_bank,staging;
+ reg [17:0] written;
+ localparam AGE_BITS=$clog2(MAX_CYCLES+1);
+ reg [AGE_BITS-1:0] age;
+ wire expired=pending && age>=MAX_CYCLES-1;
+ assign command_ready=!reset&&!fault&&!pending&&!response_valid&&attached&&ticket!=64'hffffffffffffffff;
+ assign response_words=reply_bank;
+ assign ps_ready=!ps_response_valid;
+ // Ticket/attach and bus response survive logical engine resets. Physical reset
+ // invalidates attachment, so an old userspace reply cannot reattach itself.
+ always @(posedge clk)begin
+  if(ps_power_reset)begin
+   ticket<=0;attached<=0;accepted_ticket<=0;echo_ticket<=0;written<=0;
+   ps_response_valid<=0;ps_response_okay<=0;ps_rdata<=0;
+   pending<=0;record_bank<=0;reply_bank<=0;staging<=0;age<=0;
+   response_valid<=0;response_error<=0;fault<=0;last_latency<=0;maximum_latency<=0;
+  end else begin
+   if(ps_response_valid&&ps_response_ready)ps_response_valid<=0;
+   if(reset)begin
+    pending<=0;response_valid<=0;response_error<=0;fault<=0;written<=0;
+    reply_bank<=0;age<=0;last_latency<=0;maximum_latency<=0;
+   end else begin
+    if(response_valid&&response_ready)response_valid<=0;
+    if(command_valid&&command_ready)begin
+     pending<=1;ticket<=ticket+1'b1;record_bank<=command_record;age<=0;written<=0;
+     response_error<=0;
     end
+    if(pending)age<=age+1'b1;
+    if(expired)begin
+     pending<=0;fault<=1;response_valid<=1;response_error<=1;reply_bank<=0;written<=0;
+    end
+    if(ticket==64'hffffffffffffffff && !pending && !response_valid)fault<=1;
+   end
+   if(ps_valid&&ps_ready)begin
+    ps_response_valid<=1;ps_response_okay<=0;ps_rdata<=0;
+    if(!ps_write)begin
+     case(ps_address)
+      'h4000:begin ps_rdata<=32'h50534631;ps_response_okay<=1;end
+      'h4004:begin ps_rdata<=dmotor_timing::CONTROL_PERIOD_US;ps_response_okay<=1;end
+      'h4008:begin ps_rdata<={29'd0,attached,fault,pending&&!reset&&!expired};ps_response_okay<=1;end
+      'h4010:begin ps_rdata<=ticket[31:0];ps_response_okay<=1;end
+      'h4014:begin ps_rdata<=ticket[63:32];ps_response_okay<=1;end
+      'h4024:begin ps_rdata<={31'd0,attached};ps_response_okay<=1;end
+      'h4028:begin ps_rdata<=accepted_ticket[31:0];ps_response_okay<=1;end
+      'h402c:begin ps_rdata<=accepted_ticket[63:32];ps_response_okay<=1;end
+      default:for(integer i=0;i<35;i=i+1)if(ps_address=='h4080+4*i)begin
+       ps_rdata<=record_bank[i*32+:32];ps_response_okay<=1;
+      end
+     endcase
+    end else if(ps_strobes==15)begin
+     if(ps_address=='h4024 && ps_wdata==1 && (!attached || reset) && !pending)begin attached<=1;ps_response_okay<=1;end
+     else if(ps_address=='h4018 || ps_address=='h401c || ps_address=='h4020 ||
+             (ps_address>='h4140 && ps_address<'h4180 && ps_address[1:0]==0))begin
+      // A reset/cancel racing a userspace write is a normal discarded reply.
+      // Bus completion is not engine acceptance; PS reads accepted_ticket.
+      ps_response_okay<=1;
+      if(!reset&&!expired&&!fault&&pending)begin
+      case(ps_address)
+       'h4018:begin echo_ticket[31:0]<=ps_wdata;written[16]<=1;ps_response_okay<=1;end
+       'h401c:begin echo_ticket[63:32]<=ps_wdata;written[17]<=1;ps_response_okay<=1;end
+       'h4020:begin
+        written<=0;
+        if(ps_wdata==1 && (&written) && echo_ticket==ticket)begin
+         pending<=0;reply_bank<=staging;response_valid<=1;response_error<=0;
+         accepted_ticket<=ticket;last_latency<=age+1'b1;
+         if(age+1'b1>maximum_latency)maximum_latency<=age+1'b1;
+         ps_response_okay<=1;
+        end
+       end
+       default:for(integer i=0;i<16;i=i+1)if(ps_address=='h4140+4*i)begin
+        staging[i*32+:32]<=ps_wdata;written[i]<=1;ps_response_okay<=1;
+       end
+      endcase
+      end
+     end
+    end
+   end
+  end
+ end
 endmodule
