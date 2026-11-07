@@ -1,0 +1,28 @@
+{
+  "result": "PASS",
+  "source_version": {
+    "controller_abi": "DMI2/DMB1-schema1/PSF1-1000us",
+    "dirty": false,
+    "git_commit": "5d0616a102c531b2f61e43456728f3ae1cf01052",
+    "source_sha256": "28bae64bac0d3af3771e7ffe276c890d1b58b73d174cc6d896208320bb2daced",
+    "version": "0.10.0"
+  },
+  "rootfs_files": {
+    "usr/bin/dmotor-uart-test": {
+      "bytes": 13764,
+      "sha256": "0a5f14a6815fbc043058666f1b1e9371d447376008df2a55e07e2f9b522ee7ac"
+    },
+    "usr/bin/dmotord": {
+      "bytes": 58860,
+      "sha256": "dc9ceebced07f251feb94085f6d392cbbaf604e4a5c5ca00b4e2877fc7161fdc"
+    },
+    "usr/lib/modules/6.18.10-xilinx-g4f7afe14f724/updates/dmotor_access.ko": {
+      "bytes": 11876,
+      "sha256": "ddf3af2d7207c23ad109be80e96e517b4c94830c9dc50e40fb793b5b57163d4c"
+    },
+    "usr/share/dmotor/source-version.json": {
+      "bytes": 14544,
+      "sha256": "67fe2064da15f6b8b2511f5b6c1ef7c6dfd2e2021bbba96d38f5241fb6cb8a60"
+    }
+  }
+}

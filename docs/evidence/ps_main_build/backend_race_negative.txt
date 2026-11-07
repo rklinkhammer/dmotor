@@ -1,0 +1,2 @@
+Old backend rejected as expected: -6
+ps_backend_race_negative: tests/ps_backend_test.cpp:65: int main(): Assertion `!changed.wait_for(g,std::chrono::milliseconds(20),[&]{return assertions!=before;})' failed.

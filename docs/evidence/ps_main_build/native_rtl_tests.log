@@ -1,0 +1,686 @@
+Start testing: Nov 07 01:56 EST
+----------------------------------------------------------
+1/36 Testing: arithmetic
+1/36 Test: arithmetic
+Command: "/home/rklinkhammer/workspace/dmotor/build/product/native/arithmetic_test"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/native
+"arithmetic" start time: Nov 07 01:56 EST
+Output:
+----------------------------------------------------------
+arithmetic: exact division, full-width boundaries and 100000 random pairs passed
+<end of output>
+Test time =   0.03 sec
+----------------------------------------------------------
+Test Passed.
+"arithmetic" end time: Nov 07 01:56 EST
+"arithmetic" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/36 Testing: protocol
+2/36 Test: protocol
+Command: "/home/rklinkhammer/workspace/dmotor/build/product/native/protocol_test"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/native
+"protocol" start time: Nov 07 01:56 EST
+Output:
+----------------------------------------------------------
+protocol: wrap, ownership, rejection, cancellation, backpressure passed
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"protocol" end time: Nov 07 01:56 EST
+"protocol" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/36 Testing: generated_abi
+3/36 Test: generated_abi
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/generate_abi.py" "--check"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/native
+"generated_abi" start time: Nov 07 01:56 EST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.04 sec
+----------------------------------------------------------
+Test Passed.
+"generated_abi" end time: Nov 07 01:56 EST
+"generated_abi" time elapsed: 00:00:00
+----------------------------------------------------------
+
+4/36 Testing: rtl_cleanup_sequencer
+4/36 Test: rtl_cleanup_sequencer
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/rtl_test.py" "--iverilog" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/bin/iverilog" "--vvp" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/bin/vvp" "--base" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/lib/x86_64-linux-gnu/ivl" "--source" "/home/rklinkhammer/workspace/dmotor" "--build" "/home/rklinkhammer/workspace/dmotor/build/product/native" "--test" "cleanup_sequencer"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/native
+"rtl_cleanup_sequencer" start time: Nov 07 01:56 EST
+Output:
+----------------------------------------------------------
+warning: Some design elements have no explicit time unit and/or
+       : time precision. This may cause confusing timing results.
+       : Affected design elements are:
+       :   -- module dmotor_cleanup_sequencer declared here: /home/rklinkhammer/workspace/dmotor/rtl/cleanup_sequencer.sv:3
+       :   -- package dmotor_timing declared here: /home/rklinkhammer/workspace/dmotor/rtl/timing.sv:2
+cleanup_sequencer PASS: drain, inhibition, validity, races, timeout and reset
+/home/rklinkhammer/workspace/dmotor/tests/cleanup_sequencer_tb.sv:49: $finish called at 1176000 (1ps)
+<end of output>
+Test time =   0.06 sec
+----------------------------------------------------------
+Test Passed.
+"rtl_cleanup_sequencer" end time: Nov 07 01:56 EST
+"rtl_cleanup_sequencer" time elapsed: 00:00:00
+----------------------------------------------------------
+
+5/36 Testing: rtl_monitor_heartbeat
+5/36 Test: rtl_monitor_heartbeat
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/rtl_test.py" "--iverilog" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/bin/iverilog" "--vvp" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/bin/vvp" "--base" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/lib/x86_64-linux-gnu/ivl" "--source" "/home/rklinkhammer/workspace/dmotor" "--build" "/home/rklinkhammer/workspace/dmotor/build/product/native" "--test" "monitor_heartbeat"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/native
+"rtl_monitor_heartbeat" start time: Nov 07 01:56 EST
+Output:
+----------------------------------------------------------
+warning: Some design elements have no explicit time unit and/or
+       : time precision. This may cause confusing timing results.
+       : Affected design elements are:
+       :   -- module dmotor_monitor_heartbeat declared here: /home/rklinkhammer/workspace/dmotor/rtl/monitor_heartbeat.sv:3
+       :   -- package dmotor_timing declared here: /home/rklinkhammer/workspace/dmotor/rtl/timing.sv:2
+/home/rklinkhammer/workspace/dmotor/tests/monitor_heartbeat_tb.sv:28: vvp.tgt sorry: procedural continuous assignments are not yet fully supported. The RHS of this assignment will only be evaluated once, at the time the assignment statement is executed.
+/home/rklinkhammer/workspace/dmotor/tests/monitor_heartbeat_tb.sv:32: vvp.tgt sorry: procedural continuous assignments are not yet fully supported. The RHS of this assignment will only be evaluated once, at the time the assignment statement is executed.
+monitor_heartbeat PASS: startup, qualification, loss, sticky recovery, reset and precedence
+/home/rklinkhammer/workspace/dmotor/tests/monitor_heartbeat_tb.sv:35: $finish called at 2146000 (1ps)
+<end of output>
+Test time =   0.06 sec
+----------------------------------------------------------
+Test Passed.
+"rtl_monitor_heartbeat" end time: Nov 07 01:56 EST
+"rtl_monitor_heartbeat" time elapsed: 00:00:00
+----------------------------------------------------------
+
+6/36 Testing: rtl_safety
+6/36 Test: rtl_safety
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/rtl_test.py" "--iverilog" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/bin/iverilog" "--vvp" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/bin/vvp" "--base" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/lib/x86_64-linux-gnu/ivl" "--source" "/home/rklinkhammer/workspace/dmotor" "--build" "/home/rklinkhammer/workspace/dmotor/build/product/native" "--test" "safety"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/native
+"rtl_safety" start time: Nov 07 01:56 EST
+Output:
+----------------------------------------------------------
+warning: Some design elements have no explicit time unit and/or
+       : time precision. This may cause confusing timing results.
+       : Affected design elements are:
+       :   -- module dmotor_halt_aggregator declared here: /home/rklinkhammer/workspace/dmotor/rtl/safety.sv:77
+       :   -- module dmotor_safety declared here: /home/rklinkhammer/workspace/dmotor/rtl/safety.sv:4
+       :   -- package dmotor_timing declared here: /home/rklinkhammer/workspace/dmotor/rtl/timing.sv:2
+safety: 36 fault/source cases, recovery, stale refresh, expiry boundary passed
+/home/rklinkhammer/workspace/dmotor/tests/safety_tb.sv:80: $finish called at 41676000 (1ps)
+<end of output>
+Test time =   0.07 sec
+----------------------------------------------------------
+Test Passed.
+"rtl_safety" end time: Nov 07 01:56 EST
+"rtl_safety" time elapsed: 00:00:00
+----------------------------------------------------------
+
+7/36 Testing: rtl_scheduler
+7/36 Test: rtl_scheduler
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/rtl_test.py" "--iverilog" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/bin/iverilog" "--vvp" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/bin/vvp" "--base" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/lib/x86_64-linux-gnu/ivl" "--source" "/home/rklinkhammer/workspace/dmotor" "--build" "/home/rklinkhammer/workspace/dmotor/build/product/native" "--test" "scheduler"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/native
+"rtl_scheduler" start time: Nov 07 01:56 EST
+Output:
+----------------------------------------------------------
+warning: Some design elements have no explicit time unit and/or
+       : time precision. This may cause confusing timing results.
+       : Affected design elements are:
+       :   -- module dmotor_scheduler declared here: /home/rklinkhammer/workspace/dmotor/rtl/scheduler.sv:3
+       :   -- package dmotor_timing declared here: /home/rklinkhammer/workspace/dmotor/rtl/timing.sv:2
+scheduler: handshake, result, deadline priority, inhibit passed
+/home/rklinkhammer/workspace/dmotor/tests/scheduler_tb.sv:23: $finish called at 2676000 (1ps)
+<end of output>
+Test time =   0.05 sec
+----------------------------------------------------------
+Test Passed.
+"rtl_scheduler" end time: Nov 07 01:56 EST
+"rtl_scheduler" time elapsed: 00:00:00
+----------------------------------------------------------
+
+8/36 Testing: rtl_qcencoder
+8/36 Test: rtl_qcencoder
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/rtl_test.py" "--iverilog" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/bin/iverilog" "--vvp" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/bin/vvp" "--base" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/lib/x86_64-linux-gnu/ivl" "--source" "/home/rklinkhammer/workspace/dmotor" "--build" "/home/rklinkhammer/workspace/dmotor/build/product/native" "--test" "qcencoder"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/native
+"rtl_qcencoder" start time: Nov 07 01:56 EST
+Output:
+----------------------------------------------------------
+warning: Some design elements have no explicit time unit and/or
+       : time precision. This may cause confusing timing results.
+       : Affected design elements are:
+       :   -- module qcencoder declared here: /home/rklinkhammer/workspace/dmotor/rtl/qcencoder.sv:3
+       :   -- package dmotor_timing declared here: /home/rklinkhammer/workspace/dmotor/rtl/timing.sv:2
+qcencoder: X1/X2/X4, reverse, invalid, saturation at capture envelope passed
+/home/rklinkhammer/workspace/dmotor/tests/qcencoder_tb.sv:31: $finish called at 261550000 (1ps)
+<end of output>
+Test time =   0.07 sec
+----------------------------------------------------------
+Test Passed.
+"rtl_qcencoder" end time: Nov 07 01:56 EST
+"rtl_qcencoder" time elapsed: 00:00:00
+----------------------------------------------------------
+
+9/36 Testing: rtl_pwm
+9/36 Test: rtl_pwm
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/rtl_test.py" "--iverilog" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/bin/iverilog" "--vvp" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/bin/vvp" "--base" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/lib/x86_64-linux-gnu/ivl" "--source" "/home/rklinkhammer/workspace/dmotor" "--build" "/home/rklinkhammer/workspace/dmotor/build/product/native" "--test" "pwm"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/native
+"rtl_pwm" start time: Nov 07 01:56 EST
+Output:
+----------------------------------------------------------
+warning: Some design elements have no explicit time unit and/or
+       : time precision. This may cause confusing timing results.
+       : Affected design elements are:
+       :   -- module dmotor_pwm declared here: /home/rklinkhammer/workspace/dmotor/rtl/pwm.sv:4
+       :   -- package dmotor_timing declared here: /home/rklinkhammer/workspace/dmotor/rtl/timing.sv:2
+PWM: duty, reversal blanking, immediate inhibit passed
+/home/rklinkhammer/workspace/dmotor/tests/pwm_tb.sv:27: $finish called at 4200000 (1ps)
+<end of output>
+Test time =   0.06 sec
+----------------------------------------------------------
+Test Passed.
+"rtl_pwm" end time: Nov 07 01:56 EST
+"rtl_pwm" time elapsed: 00:00:00
+----------------------------------------------------------
+
+10/36 Testing: rtl_latency
+10/36 Test: rtl_latency
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/rtl_test.py" "--iverilog" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/bin/iverilog" "--vvp" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/bin/vvp" "--base" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/lib/x86_64-linux-gnu/ivl" "--source" "/home/rklinkhammer/workspace/dmotor" "--build" "/home/rklinkhammer/workspace/dmotor/build/product/native" "--test" "latency"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/native
+"rtl_latency" start time: Nov 07 01:56 EST
+Output:
+----------------------------------------------------------
+warning: Some design elements have no explicit time unit and/or
+       : time precision. This may cause confusing timing results.
+       : Affected design elements are:
+       :   -- module dmotor_halt_aggregator declared here: /home/rklinkhammer/workspace/dmotor/rtl/safety.sv:77
+       :   -- module dmotor_safety declared here: /home/rklinkhammer/workspace/dmotor/rtl/safety.sv:4
+       :   -- package dmotor_timing declared here: /home/rklinkhammer/workspace/dmotor/rtl/timing.sv:2
+latency: 10 phases, HALT <=10000 ns budget and <=250 ns pipeline bound passed
+/home/rklinkhammer/workspace/dmotor/tests/latency_tb.sv:35: $finish called at 4700000 (1ps)
+<end of output>
+Test time =   0.06 sec
+----------------------------------------------------------
+Test Passed.
+"rtl_latency" end time: Nov 07 01:56 EST
+"rtl_latency" time elapsed: 00:00:00
+----------------------------------------------------------
+
+11/36 Testing: rtl_axi_bridge
+11/36 Test: rtl_axi_bridge
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/rtl_test.py" "--iverilog" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/bin/iverilog" "--vvp" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/bin/vvp" "--base" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/lib/x86_64-linux-gnu/ivl" "--source" "/home/rklinkhammer/workspace/dmotor" "--build" "/home/rklinkhammer/workspace/dmotor/build/product/native" "--test" "axi_bridge"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/native
+"rtl_axi_bridge" start time: Nov 07 01:56 EST
+Output:
+----------------------------------------------------------
+warning: Some design elements have no explicit time unit and/or
+       : time precision. This may cause confusing timing results.
+       : Affected design elements are:
+       :   -- module dmotor_axi_bridge declared here: /home/rklinkhammer/workspace/dmotor/rtl/axi_bridge.sv:4
+       :   -- package dmotor_timing declared here: /home/rklinkhammer/workspace/dmotor/rtl/timing.sv:2
+AXI bridge: split channels, stalled responses, idle polling, errors, timeout passed
+/home/rklinkhammer/workspace/dmotor/tests/axi_bridge_tb.sv:74: $finish called at 7026000 (1ps)
+<end of output>
+Test time =   0.06 sec
+----------------------------------------------------------
+Test Passed.
+"rtl_axi_bridge" end time: Nov 07 01:56 EST
+"rtl_axi_bridge" time elapsed: 00:00:00
+----------------------------------------------------------
+
+12/36 Testing: rtl_encoder_snapshot
+12/36 Test: rtl_encoder_snapshot
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/rtl_test.py" "--iverilog" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/bin/iverilog" "--vvp" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/bin/vvp" "--base" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/lib/x86_64-linux-gnu/ivl" "--source" "/home/rklinkhammer/workspace/dmotor" "--build" "/home/rklinkhammer/workspace/dmotor/build/product/native" "--test" "encoder_snapshot"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/native
+"rtl_encoder_snapshot" start time: Nov 07 01:56 EST
+Output:
+----------------------------------------------------------
+warning: Some design elements have no explicit time unit and/or
+       : time precision. This may cause confusing timing results.
+       : Affected design elements are:
+       :   -- module dmotor_encoder_snapshot declared here: /home/rklinkhammer/workspace/dmotor/rtl/encoder_snapshot.sv:5
+       :   -- package dmotor_timing declared here: /home/rklinkhammer/workspace/dmotor/rtl/timing.sv:2
+encoder snapshot: count, direction epochs, invalid exclusion and fault latching passed
+/home/rklinkhammer/workspace/dmotor/tests/encoder_snapshot_tb.sv:37: $finish called at 1000000 (1ps)
+<end of output>
+Test time =   0.07 sec
+----------------------------------------------------------
+Test Passed.
+"rtl_encoder_snapshot" end time: Nov 07 01:56 EST
+"rtl_encoder_snapshot" time elapsed: 00:00:00
+----------------------------------------------------------
+
+13/36 Testing: rtl_target_age
+13/36 Test: rtl_target_age
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/rtl_test.py" "--iverilog" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/bin/iverilog" "--vvp" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/bin/vvp" "--base" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/lib/x86_64-linux-gnu/ivl" "--source" "/home/rklinkhammer/workspace/dmotor" "--build" "/home/rklinkhammer/workspace/dmotor/build/product/native" "--test" "target_age"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/native
+"rtl_target_age" start time: Nov 07 01:56 EST
+Output:
+----------------------------------------------------------
+warning: Some design elements have no explicit time unit and/or
+       : time precision. This may cause confusing timing results.
+       : Affected design elements are:
+       :   -- module dmotor_halt_aggregator declared here: /home/rklinkhammer/workspace/dmotor/rtl/safety.sv:77
+       :   -- module dmotor_safety declared here: /home/rklinkhammer/workspace/dmotor/rtl/safety.sv:4
+       :   -- module dmotor_target_age declared here: /home/rklinkhammer/workspace/dmotor/rtl/target_age.sv:3
+       :   -- package dmotor_timing declared here: /home/rklinkhammer/workspace/dmotor/rtl/timing.sv:2
+target_age PASS: lifecycle, atomic renewal, expiration priority, four-motor attribution, watchdog independence, wrap and configuration
+/home/rklinkhammer/workspace/dmotor/tests/target_age_tb.sv:132: $finish called at 10476000 (1ps)
+<end of output>
+Test time =   0.07 sec
+----------------------------------------------------------
+Test Passed.
+"rtl_target_age" end time: Nov 07 01:56 EST
+"rtl_target_age" time elapsed: 00:00:00
+----------------------------------------------------------
+
+14/36 Testing: rtl_shared_scheduler
+14/36 Test: rtl_shared_scheduler
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/rtl_test.py" "--iverilog" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/bin/iverilog" "--vvp" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/bin/vvp" "--base" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/lib/x86_64-linux-gnu/ivl" "--source" "/home/rklinkhammer/workspace/dmotor" "--build" "/home/rklinkhammer/workspace/dmotor/build/product/native" "--test" "shared_scheduler"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/native
+"rtl_shared_scheduler" start time: Nov 07 01:56 EST
+Output:
+----------------------------------------------------------
+warning: Some design elements have no explicit time unit and/or
+       : time precision. This may cause confusing timing results.
+       : Affected design elements are:
+       :   -- module dmotor_pwm declared here: /home/rklinkhammer/workspace/dmotor/rtl/pwm.sv:4
+       :   -- module dmotor_shared_control declared here: /home/rklinkhammer/workspace/dmotor/rtl/shared_control.sv:4
+       :   -- module dmotor_shared_scheduler declared here: /home/rklinkhammer/workspace/dmotor/rtl/shared_scheduler.sv:3
+       :   -- module dmotor_target_age declared here: /home/rklinkhammer/workspace/dmotor/rtl/target_age.sv:3
+       :   -- package dmotor_timing declared here: /home/rklinkhammer/workspace/dmotor/rtl/timing.sv:2
+shared_scheduler PASS: captured inputs, four-channel PWM commit, target-age/retirement gating, cancellation, stale tags and deadlines
+/home/rklinkhammer/workspace/dmotor/tests/shared_scheduler_tb.sv:148: $finish called at 106026000 (1ps)
+<end of output>
+Test time =   0.13 sec
+----------------------------------------------------------
+Test Passed.
+"rtl_shared_scheduler" end time: Nov 07 01:56 EST
+"rtl_shared_scheduler" time elapsed: 00:00:00
+----------------------------------------------------------
+
+15/36 Testing: rtl_vivado_dev
+15/36 Test: rtl_vivado_dev
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/rtl_test.py" "--iverilog" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/bin/iverilog" "--vvp" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/bin/vvp" "--base" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/lib/x86_64-linux-gnu/ivl" "--source" "/home/rklinkhammer/workspace/dmotor" "--build" "/home/rklinkhammer/workspace/dmotor/build/product/native" "--test" "vivado_dev"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/native
+"rtl_vivado_dev" start time: Nov 07 01:56 EST
+Output:
+----------------------------------------------------------
+warning: Some design elements have no explicit time unit and/or
+       : time precision. This may cause confusing timing results.
+       : Affected design elements are:
+       :   -- module dmotor_vivado_dev declared here: /home/rklinkhammer/workspace/dmotor/rtl/vivado_dev.sv:3
+       :   -- package dmotor_timing declared here: /home/rklinkhammer/workspace/dmotor/rtl/timing.sv:2
+vivado_dev PASS: split AXI channels, backpressure, invalid accesses, reset and permanent inhibit
+/home/rklinkhammer/workspace/dmotor/tests/vivado_dev_tb.sv:55: $finish called at 7850000 (1ps)
+<end of output>
+Test time =   0.06 sec
+----------------------------------------------------------
+Test Passed.
+"rtl_vivado_dev" end time: Nov 07 01:56 EST
+"rtl_vivado_dev" time elapsed: 00:00:00
+----------------------------------------------------------
+
+16/36 Testing: control
+16/36 Test: control
+Command: "/home/rklinkhammer/workspace/dmotor/build/product/native/control_test"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/native
+"control" start time: Nov 07 01:56 EST
+Output:
+----------------------------------------------------------
+PI: signed rounding, limits, anti-windup, range checks passed
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"control" end time: Nov 07 01:56 EST
+"control" time elapsed: 00:00:00
+----------------------------------------------------------
+
+17/36 Testing: command_engine
+17/36 Test: command_engine
+Command: "/home/rklinkhammer/workspace/dmotor/build/product/native/command_engine_test"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/native
+"command_engine" start time: Nov 07 01:56 EST
+Output:
+----------------------------------------------------------
+command engine: publication, activation, stale completion, cancellation, full ring passed
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"command_engine" end time: Nov 07 01:56 EST
+"command_engine" time elapsed: 00:00:00
+----------------------------------------------------------
+
+18/36 Testing: peripheral
+18/36 Test: peripheral
+Command: "/home/rklinkhammer/workspace/dmotor/build/product/native/peripheral_test"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/native
+"peripheral" start time: Nov 07 01:56 EST
+Output:
+----------------------------------------------------------
+peripheral: decode, strobe/alignment errors, queue, cancellation, actions passed
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"peripheral" end time: Nov 07 01:56 EST
+"peripheral" time elapsed: 00:00:00
+----------------------------------------------------------
+
+19/36 Testing: configuration
+19/36 Test: configuration
+Command: "/home/rklinkhammer/workspace/dmotor/build/product/native/configuration_test"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/native
+"configuration" start time: Nov 07 01:56 EST
+Output:
+----------------------------------------------------------
+configuration: bounds, atomic commit, authorization and acknowledgment guards passed
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"configuration" end time: Nov 07 01:56 EST
+"configuration" time elapsed: 00:00:00
+----------------------------------------------------------
+
+20/36 Testing: motion
+20/36 Test: motion
+Command: "/home/rklinkhammer/workspace/dmotor/build/product/native/motion_test"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/native
+"motion" start time: Nov 07 01:56 EST
+Output:
+----------------------------------------------------------
+velocity-only motion: ramps, PI, controlled stop, timeout and inhibition passed
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"motion" end time: Nov 07 01:56 EST
+"motion" time elapsed: 00:00:00
+----------------------------------------------------------
+
+21/36 Testing: velocity
+21/36 Test: velocity
+Command: "/home/rklinkhammer/workspace/dmotor/build/product/native/velocity_test"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/native
+"velocity" start time: Nov 07 01:56 EST
+Output:
+----------------------------------------------------------
+velocity: both-direction 1/5/30/130 RPM sweep, zero timeout, restart, reversal, invalid edges and snapshot faults passed
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"velocity" end time: Nov 07 01:56 EST
+"velocity" time elapsed: 00:00:00
+----------------------------------------------------------
+
+22/36 Testing: controller
+22/36 Test: controller
+Command: "/home/rklinkhammer/workspace/dmotor/build/product/native/controller_test"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/native
+"controller" start time: Nov 07 01:56 EST
+Output:
+----------------------------------------------------------
+controller: warmup, bounded acquisition, startup/reversal, stop, deadline priority and protective faults passed
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"controller" end time: Nov 07 01:56 EST
+"controller" time elapsed: 00:00:00
+----------------------------------------------------------
+
+23/36 Testing: dispatcher
+23/36 Test: dispatcher
+Command: "/home/rklinkhammer/workspace/dmotor/build/product/native/dispatcher_test"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/native
+"dispatcher" start time: Nov 07 01:56 EST
+Output:
+----------------------------------------------------------
+dispatcher: exact activation, ordered completion, backpressure, stop, rejection and cancellation priority passed
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"dispatcher" end time: Nov 07 01:56 EST
+"dispatcher" time elapsed: 00:00:00
+----------------------------------------------------------
+
+24/36 Testing: atomic_mailbox
+24/36 Test: atomic_mailbox
+Command: "/home/rklinkhammer/workspace/dmotor/build/product/native/atomic_mailbox_test"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/native
+"atomic_mailbox" start time: Nov 07 01:56 EST
+Output:
+----------------------------------------------------------
+atomic mailbox: publication/retirement races, host ABI checks, and 60 mask invalidation cases passed
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"atomic_mailbox" end time: Nov 07 01:56 EST
+"atomic_mailbox" time elapsed: 00:00:00
+----------------------------------------------------------
+
+25/36 Testing: generated_mailbox_abi
+25/36 Test: generated_mailbox_abi
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/generate_mailbox_abi.py" "--check"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/native
+"generated_mailbox_abi" start time: Nov 07 01:56 EST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.04 sec
+----------------------------------------------------------
+Test Passed.
+"generated_mailbox_abi" end time: Nov 07 01:56 EST
+"generated_mailbox_abi" time elapsed: 00:00:00
+----------------------------------------------------------
+
+26/36 Testing: atomic_mailbox_top
+26/36 Test: atomic_mailbox_top
+Command: "/home/rklinkhammer/workspace/dmotor/build/product/native/atomic_mailbox_top_test"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/native
+"atomic_mailbox_top" start time: Nov 07 01:56 EST
+Output:
+----------------------------------------------------------
+atomic mailbox HLS: 1165 transactions matched all 16 reply words
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"atomic_mailbox_top" end time: Nov 07 01:56 EST
+"atomic_mailbox_top" time elapsed: 00:00:00
+----------------------------------------------------------
+
+27/36 Testing: rtl_atomic_adapter
+27/36 Test: rtl_atomic_adapter
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/atomic_adapter_rtl.py" "--iverilog" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/bin/iverilog" "--vvp" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/bin/vvp" "--base" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/lib/x86_64-linux-gnu/ivl"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/native
+"rtl_atomic_adapter" start time: Nov 07 01:56 EST
+Output:
+----------------------------------------------------------
+atomic_adapter PASS: 49 generated-RTL transactions, dual-port memory timing, immutable capture, backpressure, cancellation and timeout
+/home/rklinkhammer/workspace/dmotor/tests/atomic_adapter_tb.sv:78: $finish called at 112450000 (1ps)
+<end of output>
+Test time =   0.47 sec
+----------------------------------------------------------
+Test Passed.
+"rtl_atomic_adapter" end time: Nov 07 01:56 EST
+"rtl_atomic_adapter" time elapsed: 00:00:00
+----------------------------------------------------------
+
+28/36 Testing: rtl_mailbox_control
+28/36 Test: rtl_mailbox_control
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/atomic_adapter_rtl.py" "--test" "mailbox_control" "--iverilog" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/bin/iverilog" "--vvp" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/bin/vvp" "--base" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/lib/x86_64-linux-gnu/ivl"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/native
+"rtl_mailbox_control" start time: Nov 07 01:56 EST
+Output:
+----------------------------------------------------------
+mailbox_control PASS: generated HLS admission/retirement, host backpressure, atomic PWM, no-batch tick, cancellation, ownership/retirement races, timeout and session protection
+/home/rklinkhammer/workspace/dmotor/tests/mailbox_control_tb.sv:159: $finish called at 731276000 (1ps)
+<end of output>
+Test time =   2.18 sec
+----------------------------------------------------------
+Test Passed.
+"rtl_mailbox_control" end time: Nov 07 01:56 EST
+"rtl_mailbox_control" time elapsed: 00:00:02
+----------------------------------------------------------
+
+29/36 Testing: controller_host
+29/36 Test: controller_host
+Command: "/home/rklinkhammer/workspace/dmotor/build/product/native/controller_host_test"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/native
+"controller_host" start time: Nov 07 01:56 EST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"controller_host" end time: Nov 07 01:56 EST
+"controller_host" time elapsed: 00:00:00
+----------------------------------------------------------
+
+30/36 Testing: generated_controller_abi
+30/36 Test: generated_controller_abi
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/generate_controller_abi.py" "--check"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/native
+"generated_controller_abi" start time: Nov 07 01:56 EST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.04 sec
+----------------------------------------------------------
+Test Passed.
+"generated_controller_abi" end time: Nov 07 01:56 EST
+"generated_controller_abi" time elapsed: 00:00:00
+----------------------------------------------------------
+
+31/36 Testing: mailbox
+31/36 Test: mailbox
+Command: "/home/rklinkhammer/workspace/dmotor/build/product/native/mailbox_test"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/native
+"mailbox" start time: Nov 07 01:56 EST
+Output:
+----------------------------------------------------------
+mailbox: 740 control snapshots match existing controller; atomicity, supersession, stop, authorization and replay tests passed
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"mailbox" end time: Nov 07 01:56 EST
+"mailbox" time elapsed: 00:00:00
+----------------------------------------------------------
+
+32/36 Testing: shared_mailbox
+32/36 Test: shared_mailbox
+Command: "/home/rklinkhammer/workspace/dmotor/build/product/native/shared_mailbox_test"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/native
+"shared_mailbox" start time: Nov 07 01:56 EST
+Output:
+----------------------------------------------------------
+shared mailbox: 2449 interleaved transactions, all 16 reply words match four independent contexts
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"shared_mailbox" end time: Nov 07 01:56 EST
+"shared_mailbox" time elapsed: 00:00:00
+----------------------------------------------------------
+
+33/36 Testing: ps_executor_native
+33/36 Test: ps_executor_native
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/ps_native_tests.py" "--build" "/home/rklinkhammer/workspace/dmotor/build/product/native"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/native
+"ps_executor_native" start time: Nov 07 01:56 EST
+Output:
+----------------------------------------------------------
+shared mailbox: 2449 interleaved transactions, all 16 reply words match four independent contexts
+
+PASS: PS identity, complete packing, context isolation, speculative cancellation, accepted tickets, physical reset rejection
+
+PASS: 1000 us cadence, physical ramp scaling, maximum encoder event rate, missed-tick fault
+
+PASS: 188 fused four-stage/commit/tick operations match serial original operations, all reply words
+
+PASS: threaded PS backend starts inhibited, attaches without enabling, latches failure, serializes failure HALT after in-flight release, blocks later release, joins on shutdown
+
+<end of output>
+Test time =   2.13 sec
+----------------------------------------------------------
+Test Passed.
+"ps_executor_native" end time: Nov 07 01:56 EST
+"ps_executor_native" time elapsed: 00:00:02
+----------------------------------------------------------
+
+34/36 Testing: ps_transport
+34/36 Test: ps_transport
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/ps_transport_test.py" "--iverilog" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/bin/iverilog" "--vvp" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/bin/vvp" "--base" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/lib/x86_64-linux-gnu/ivl" "--build" "/home/rklinkhammer/workspace/dmotor/build/product/native"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/native
+"ps_transport" start time: Nov 07 01:56 EST
+Output:
+----------------------------------------------------------
+PASS: PS transport immutable capture, full mask, stale tickets, backpressure, cancellation, reset, timeout and equality priority
+/home/rklinkhammer/workspace/dmotor/tests/ps_transport_tb.sv:56: $finish called at 8820000 (1ps)
+<end of output>
+Test time =   0.06 sec
+----------------------------------------------------------
+Test Passed.
+"ps_transport" end time: Nov 07 01:56 EST
+"ps_transport" time elapsed: 00:00:00
+----------------------------------------------------------
+
+35/36 Testing: ps_controller_axi
+35/36 Test: ps_controller_axi
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/ps_cosim.py" "--build" "/home/rklinkhammer/workspace/dmotor/build/product/native" "--bench" "controller_axi" "--iverilog" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/bin/iverilog" "--vvp" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/bin/vvp" "--base" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/lib/x86_64-linux-gnu/ivl"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/native
+"ps_controller_axi" start time: Nov 07 01:56 EST
+Output:
+----------------------------------------------------------
+enable request f cfg=f initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=           454600000
+fault time=          7609900000 hls_fault=00000000 reject=00000000 core_fault=0 scheduler=0 stop=f
+enable request 3 cfg=f initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=          7714700000
+enable request 1 cfg=1 initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=          8947200000
+enable request 1 cfg=1 initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=          9605250000
+fault time=         10608500000 hls_fault=00000000 reject=00000000 core_fault=0 scheduler=0 stop=0
+enable request 1 cfg=1 initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=         10634250000
+fault time=         11635900000 hls_fault=00000000 reject=00000000 core_fault=0 scheduler=0 stop=0
+enable request 1 cfg=1 initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=         11660600000
+fault time=         11724150000 hls_fault=00000000 reject=00000000 core_fault=0 scheduler=0 stop=0
+enable request 1 cfg=1 initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=         11748900000
+enable request 1 cfg=1 initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=         11837200000
+monitor integration PASS: gating, loss, status, protected ACK, reset and no restart
+direct-duty PASS: 0/25/50/100 percent, signed ceiling, mode lock, replay rejection, STOP, expiry, watchdog, faults and HALT
+controller_axi PASS: real AXI, atomic HLS + actual C++ PS engine, configuration, four-motor targets, encoder capture, telemetry shared physical fault, explicit recovery and watchdog expiration
+/home/rklinkhammer/workspace/dmotor/build/product/native/ps_controller_axi/controller_axi_tb.sv:249: $finish called at 12042926000 (1ps)
+
+<end of output>
+Test time =  35.34 sec
+----------------------------------------------------------
+Test Passed.
+"ps_controller_axi" end time: Nov 07 01:57 EST
+"ps_controller_axi" time elapsed: 00:00:35
+----------------------------------------------------------
+
+36/36 Testing: ps_controller_cleanup
+36/36 Test: ps_controller_cleanup
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/tools/ps_cosim.py" "--build" "/home/rklinkhammer/workspace/dmotor/build/product/native" "--bench" "controller_cleanup" "--iverilog" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/bin/iverilog" "--vvp" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/bin/vvp" "--base" "/home/rklinkhammer/workspace/dmotor/build/tools/usr/lib/x86_64-linux-gnu/ivl"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/native
+"ps_controller_cleanup" start time: Nov 07 01:57 EST
+Output:
+----------------------------------------------------------
+controller_cleanup PASS: combined cleanup; completion, session, request, reset, fault, exhaustion
+/home/rklinkhammer/workspace/dmotor/build/product/native/ps_controller_cleanup/controller_cleanup_tb.sv:98: $finish called at 253500000 (1ps)
+
+<end of output>
+Test time =   1.15 sec
+----------------------------------------------------------
+Test Passed.
+"ps_controller_cleanup" end time: Nov 07 01:57 EST
+"ps_controller_cleanup" time elapsed: 00:00:01
+----------------------------------------------------------
+
+End testing: Nov 07 01:57 EST

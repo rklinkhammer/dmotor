@@ -1,5 +1,7 @@
 # HLS register peripheral and AXI bridge
 
+> Standalone legacy component reference. Current motor execution is the [1 ms PSF1 path](ps_executor.md); use the [product build](build.md). Historical HLS flows and position/ring capabilities below do not select the current velocity-only product.
+
 > Current product builds: [build guide](build.md). Commands below are specialized
 > component/experiment reproduction or historical evidence, not the default build.
 

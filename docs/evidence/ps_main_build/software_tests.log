@@ -1,0 +1,463 @@
+Start testing: Nov 07 01:57 EST
+----------------------------------------------------------
+1/27 Testing: software_semantics
+1/27 Test: software_semantics
+Command: "/home/rklinkhammer/workspace/dmotor/build/product/software/dmotor-semantic-tests"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/software
+"software_semantics" start time: Nov 07 01:57 EST
+Output:
+----------------------------------------------------------
+dmotor-semantic-tests: DMOTOR 0.10.0 commit=5d0616a102c531b2f61e43456728f3ae1cf01052 dirty=false source=28bae64bac0d3af3771e7ffe276c890d1b58b73d174cc6d896208320bb2daced ABI=DMI2/DMB1-schema1/PSF1-1000us
+PASS: mailbox atomicity, replay/range checks, timeout precedence, ownership and HALT lifecycle
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"software_semantics" end time: Nov 07 01:57 EST
+"software_semantics" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/27 Testing: software_protocol
+2/27 Test: software_protocol
+Command: "/home/rklinkhammer/workspace/dmotor/build/product/software/dmotor-protocol-tests"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/software
+"software_protocol" start time: Nov 07 01:57 EST
+Output:
+----------------------------------------------------------
+dmotor-protocol-tests: DMOTOR 0.10.0 commit=5d0616a102c531b2f61e43456728f3ae1cf01052 dirty=false source=28bae64bac0d3af3771e7ffe276c890d1b58b73d174cc6d896208320bb2daced ABI=DMI2/DMB1-schema1/PSF1-1000us
+PASS: typed configuration, ABI checks, telemetry decoding/coherence and transport failure propagation
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"software_protocol" end time: Nov 07 01:57 EST
+"software_protocol" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/27 Testing: software_linux
+3/27 Test: software_linux
+Command: "/home/rklinkhammer/workspace/dmotor/build/product/software/dmotor-linux-tests"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/software
+"software_linux" start time: Nov 07 01:57 EST
+Output:
+----------------------------------------------------------
+dmotor-linux-tests: DMOTOR 0.10.0 commit=5d0616a102c531b2f61e43456728f3ae1cf01052 dirty=false source=28bae64bac0d3af3771e7ffe276c890d1b58b73d174cc6d896208320bb2daced ABI=DMI2/DMB1-schema1/PSF1-1000us
+PASS: Linux mapping, cross-process ownership, inspection allowlists and cleanup
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"software_linux" end time: Nov 07 01:57 EST
+"software_linux" time elapsed: 00:00:00
+----------------------------------------------------------
+
+4/27 Testing: software_runtime
+4/27 Test: software_runtime
+Command: "/home/rklinkhammer/workspace/dmotor/build/product/software/dmotor-runtime-tests"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/software
+"software_runtime" start time: Nov 07 01:57 EST
+Output:
+----------------------------------------------------------
+dmotor-runtime-tests: DMOTOR 0.10.0 commit=5d0616a102c531b2f61e43456728f3ae1cf01052 dirty=false source=28bae64bac0d3af3771e7ffe276c890d1b58b73d174cc6d896208320bb2daced ABI=DMI2/DMB1-schema1/PSF1-1000us
+PASS: lifecycle, 400RPM limits, atomic masks, STOP/rearm, watchdog refresh, lease/fault/access loss and readiness deadlines
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"software_runtime" end time: Nov 07 01:57 EST
+"software_runtime" time elapsed: 00:00:00
+----------------------------------------------------------
+
+5/27 Testing: software_client
+5/27 Test: software_client
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/software/tests/client_test.py" "/home/rklinkhammer/workspace/dmotor/build/product/software/dmotor-client-tests"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/software
+"software_client" start time: Nov 07 01:57 EST
+Output:
+----------------------------------------------------------
+Client operations, wire validation, rejection, deadlines and disconnect passed
+<end of output>
+Test time =   0.68 sec
+----------------------------------------------------------
+Test Passed.
+"software_client" end time: Nov 07 01:57 EST
+"software_client" time elapsed: 00:00:00
+----------------------------------------------------------
+
+6/27 Testing: software_client_package
+6/27 Test: software_client_package
+Command: "/usr/bin/cmake" "-DPROJECT_BUILD=/home/rklinkhammer/workspace/dmotor/build/product/software" "-DTEST_SOURCE=/home/rklinkhammer/workspace/dmotor/software/tests/client_consumer" "-DTEST_ROOT=/home/rklinkhammer/workspace/dmotor/build/product/software/client-package-test" "-DTEST_COMPILER=/usr/bin/c++" "-P" "/home/rklinkhammer/workspace/dmotor/software/tests/client_package_test.cmake"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/software
+"software_client_package" start time: Nov 07 01:57 EST
+Output:
+----------------------------------------------------------
+-- Install configuration: ""
+-- Installing: /home/rklinkhammer/workspace/dmotor/build/product/software/client-package-test/install/bin/dmotor-semantic-tests
+-- Installing: /home/rklinkhammer/workspace/dmotor/build/product/software/client-package-test/install/bin/dmotor-protocol-tests
+-- Installing: /home/rklinkhammer/workspace/dmotor/build/product/software/client-package-test/install/bin/dmotor-uart-test
+-- Up-to-date: /home/rklinkhammer/workspace/dmotor/build/product/software/client-package-test/install/lib/libdmotor_client.a
+-- Up-to-date: /home/rklinkhammer/workspace/dmotor/build/product/software/client-package-test/install/include/dmotor_sw/client.hpp
+-- Up-to-date: /home/rklinkhammer/workspace/dmotor/build/product/software/client-package-test/install/lib/cmake/dmotorClient/dmotorClientTargets.cmake
+-- Up-to-date: /home/rklinkhammer/workspace/dmotor/build/product/software/client-package-test/install/lib/cmake/dmotorClient/dmotorClientTargets-noconfig.cmake
+-- Up-to-date: /home/rklinkhammer/workspace/dmotor/build/product/software/client-package-test/install/lib/cmake/dmotorClient/dmotorClientConfig.cmake
+-- Installing: /home/rklinkhammer/workspace/dmotor/build/product/software/client-package-test/install/bin/dmotord
+-- Installing: /home/rklinkhammer/workspace/dmotor/build/product/software/client-package-test/install/bin/dmotor-maint
+-- Installing: /home/rklinkhammer/workspace/dmotor/build/product/software/client-package-test/install/bin/dmotor-encoder
+-- Installing: /home/rklinkhammer/workspace/dmotor/build/product/software/client-package-test/install/bin/dmotor-inspect
+-- Installing: /home/rklinkhammer/workspace/dmotor/build/product/software/client-package-test/install/bin/dmotor-linux-tests
+-- Installing: /home/rklinkhammer/workspace/dmotor/build/product/software/client-package-test/install/share/dmotor/source-version.json
+-- Installing: /home/rklinkhammer/workspace/dmotor/build/product/software/client-package-test/install/bin/dmotor-runtime-tests
+-- Up-to-date: /home/rklinkhammer/workspace/dmotor/build/product/software/client-package-test/install/share/dmotor/powered-direct-duty.conf
+-- Up-to-date: /home/rklinkhammer/workspace/dmotor/build/product/software/client-package-test/install/share/dmotor/output-validation.conf
+-- Up-to-date: /home/rklinkhammer/workspace/dmotor/build/product/software/client-package-test/install/share/dmotor/inhibited-example.conf
+-- Installing: /home/rklinkhammer/workspace/dmotor/build/product/software/client-package-test/install/bin/dmotor-monitor-tests
+-- Installing: /home/rklinkhammer/workspace/dmotor/build/product/software/client-package-test/install/bin/dmotor-monitor-uart-tests
+-- Up-to-date: /home/rklinkhammer/workspace/dmotor/build/product/software/client-package-test/install/share/dmotor/monitor/wire.json
+-- Up-to-date: /home/rklinkhammer/workspace/dmotor/build/product/software/client-package-test/install/share/dmotor/monitor/README.md
+-- Configuring done (0.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/rklinkhammer/workspace/dmotor/build/product/software/client-package-test/build
+[100%] Built target client-consumer
+<end of output>
+Test time =   0.08 sec
+----------------------------------------------------------
+Test Passed.
+"software_client_package" end time: Nov 07 01:57 EST
+"software_client_package" time elapsed: 00:00:00
+----------------------------------------------------------
+
+7/27 Testing: software_startup
+7/27 Test: software_startup
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/software/tests/startup_test.py" "/home/rklinkhammer/workspace/dmotor/build/product/software/dmotord-fixture" "/home/rklinkhammer/workspace/dmotor/build/product/software/dmotor-maint-fixture"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/software
+"software_startup" start time: Nov 07 01:57 EST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.04 sec
+----------------------------------------------------------
+Test Passed.
+"software_startup" end time: Nov 07 01:57 EST
+"software_startup" time elapsed: 00:00:00
+----------------------------------------------------------
+
+8/27 Testing: software_powered
+8/27 Test: software_powered
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/software/tests/service_test.py" "/home/rklinkhammer/workspace/dmotor/build/product/software/dmotord-fixture" "/home/rklinkhammer/workspace/dmotor/build/product/software/dmotor-maint-fixture" "--powered"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/software
+"software_powered" start time: Nov 07 01:57 EST
+Output:
+----------------------------------------------------------
+PASS: exclusive client, lease expiry, disconnect, stale enable rejection, idle menu lease, partial-input HALT, quit, EOF and killed client
+<end of output>
+Test time =   2.86 sec
+----------------------------------------------------------
+Test Passed.
+"software_powered" end time: Nov 07 01:57 EST
+"software_powered" time elapsed: 00:00:02
+----------------------------------------------------------
+
+9/27 Testing: software_direct
+9/27 Test: software_direct
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/software/tests/service_test.py" "/home/rklinkhammer/workspace/dmotor/build/product/software/dmotord-fixture" "/home/rklinkhammer/workspace/dmotor/build/product/software/dmotor-maint-fixture" "--direct"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/software
+"software_direct" start time: Nov 07 01:57 EST
+Output:
+----------------------------------------------------------
+PASS: exclusive client, lease expiry, disconnect, stale enable rejection, idle menu lease, partial-input HALT, quit, EOF and killed client
+<end of output>
+Test time =   2.12 sec
+----------------------------------------------------------
+Test Passed.
+"software_direct" end time: Nov 07 01:57 EST
+"software_direct" time elapsed: 00:00:02
+----------------------------------------------------------
+
+10/27 Testing: software_commissioning
+10/27 Test: software_commissioning
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/software/tests/service_test.py" "/home/rklinkhammer/workspace/dmotor/build/product/software/dmotord-fixture" "/home/rklinkhammer/workspace/dmotor/build/product/software/dmotor-maint-fixture" "--commissioning"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/software
+"software_commissioning" start time: Nov 07 01:57 EST
+Output:
+----------------------------------------------------------
+PASS: exclusive client, lease expiry, disconnect, stale enable rejection, idle menu lease, partial-input HALT, quit, EOF and killed client
+<end of output>
+Test time =   2.12 sec
+----------------------------------------------------------
+Test Passed.
+"software_commissioning" end time: Nov 07 01:57 EST
+"software_commissioning" time elapsed: 00:00:02
+----------------------------------------------------------
+
+11/27 Testing: software_service
+11/27 Test: software_service
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/software/tests/service_test.py" "/home/rklinkhammer/workspace/dmotor/build/product/software/dmotord-fixture" "/home/rklinkhammer/workspace/dmotor/build/product/software/dmotor-maint-fixture"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/software
+"software_service" start time: Nov 07 01:57 EST
+Output:
+----------------------------------------------------------
+PASS: exclusive client, lease expiry, disconnect, stale enable rejection, idle menu lease, partial-input HALT, quit, EOF and killed client
+<end of output>
+Test time =   1.72 sec
+----------------------------------------------------------
+Test Passed.
+"software_service" end time: Nov 07 01:57 EST
+"software_service" time elapsed: 00:00:01
+----------------------------------------------------------
+
+12/27 Testing: software_monitor
+12/27 Test: software_monitor
+Command: "/home/rklinkhammer/workspace/dmotor/build/product/software/dmotor-monitor-tests"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/software
+"software_monitor" start time: Nov 07 01:57 EST
+Output:
+----------------------------------------------------------
+monitor codec PASS
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"software_monitor" end time: Nov 07 01:57 EST
+"software_monitor" time elapsed: 00:00:00
+----------------------------------------------------------
+
+13/27 Testing: software_monitor_uart
+13/27 Test: software_monitor_uart
+Command: "/home/rklinkhammer/workspace/dmotor/build/product/software/dmotor-monitor-uart-tests"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/software
+"software_monitor_uart" start time: Nov 07 01:57 EST
+Output:
+----------------------------------------------------------
+monitor UART PASS
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"software_monitor_uart" end time: Nov 07 01:57 EST
+"software_monitor_uart" time elapsed: 00:00:00
+----------------------------------------------------------
+
+14/27 Testing: software_monitor_schema
+14/27 Test: software_monitor_schema
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/software/protocol/monitor/generate.py" "--check"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/software
+"software_monitor_schema" start time: Nov 07 01:57 EST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.04 sec
+----------------------------------------------------------
+Test Passed.
+"software_monitor_schema" end time: Nov 07 01:57 EST
+"software_monitor_schema" time elapsed: 00:00:00
+----------------------------------------------------------
+
+15/27 Testing: software_recovery_model
+15/27 Test: software_recovery_model
+Command: "/home/rklinkhammer/workspace/dmotor/build/product/software/dmotor-recovery-model-tests"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/software
+"software_recovery_model" start time: Nov 07 01:57 EST
+Output:
+----------------------------------------------------------
+recovery model PASS: admission hold, challenged ARM, lost ACK, retries, uncertainty, identity, faults and local recheck
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"software_recovery_model" end time: Nov 07 01:57 EST
+"software_recovery_model" time elapsed: 00:00:00
+----------------------------------------------------------
+
+16/27 Testing: software_endpoint_session
+16/27 Test: software_endpoint_session
+Command: "/home/rklinkhammer/workspace/dmotor/build/product/software/dmotor-endpoint-session-tests"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/software
+"software_endpoint_session" start time: Nov 07 01:57 EST
+Output:
+----------------------------------------------------------
+endpoint session PASS: reopen, concurrency, short writes, EINTR, torn/corrupt stores, uncertain sync, crash after sync, permissions and exhaustion
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"software_endpoint_session" end time: Nov 07 01:57 EST
+"software_endpoint_session" time elapsed: 00:00:00
+----------------------------------------------------------
+
+17/27 Testing: software_session_link
+17/27 Test: software_session_link
+Command: "/home/rklinkhammer/workspace/dmotor/build/product/software/dmotor-session-link-tests"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/software
+"software_session_link" start time: Nov 07 01:57 EST
+Output:
+----------------------------------------------------------
+session link PASS: symmetric discovery, retries, restart, lifetime echoes, immutable duplicates, eviction, malformed frames and exhaustion
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"software_session_link" end time: Nov 07 01:57 EST
+"software_session_link" time elapsed: 00:00:00
+----------------------------------------------------------
+
+18/27 Testing: software_recovery_link
+18/27 Test: software_recovery_link
+Command: "/home/rklinkhammer/workspace/dmotor/build/product/software/dmotor-recovery-link-tests"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/software
+"software_recovery_link" start time: Nov 07 01:57 EST
+Output:
+----------------------------------------------------------
+recovery link PASS: wire identity, exact retries, single commit, lost ACK, challenged ARM, final proof, restart and uncertainty
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"software_recovery_link" end time: Nov 07 01:57 EST
+"software_recovery_link" time elapsed: 00:00:00
+----------------------------------------------------------
+
+19/27 Testing: software_monitor_simulator
+19/27 Test: software_monitor_simulator
+Command: "/home/rklinkhammer/workspace/dmotor/build/product/software/dmotor-monitor-simulator-tests"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/software
+"software_monitor_simulator" start time: Nov 07 01:57 EST
+Output:
+----------------------------------------------------------
+monitor simulator PASS: fault epochs, commit/expiry races, held/bouncing ARM, ten checks, lost ACK, reset and admission
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"software_monitor_simulator" end time: Nov 07 01:57 EST
+"software_monitor_simulator" time elapsed: 00:00:00
+----------------------------------------------------------
+
+20/27 Testing: software_recovery_coordinator
+20/27 Test: software_recovery_coordinator
+Command: "/home/rklinkhammer/workspace/dmotor/build/product/software/dmotor-recovery-coordinator-tests"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/software
+"software_recovery_coordinator" start time: Nov 07 01:57 EST
+Output:
+----------------------------------------------------------
+coordinator PASS: joint recovery, local proof, ownership loss, stale ingress tickets, lease, restart and HALT failure
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"software_recovery_coordinator" end time: Nov 07 01:57 EST
+"software_recovery_coordinator" time elapsed: 00:00:00
+----------------------------------------------------------
+
+21/27 Testing: software_coordinator_session
+21/27 Test: software_coordinator_session
+Command: "/home/rklinkhammer/workspace/dmotor/build/product/software/dmotor-coordinator-session-tests"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/software
+"software_coordinator_session" start time: Nov 07 01:57 EST
+Output:
+----------------------------------------------------------
+session integration PASS: inhibited reservation, exact discovery retry, restart, sync failure, no provisioning, burned IDs and HALT failure
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"software_coordinator_session" end time: Nov 07 01:57 EST
+"software_coordinator_session" time elapsed: 00:00:00
+----------------------------------------------------------
+
+22/27 Testing: software_uart_diagnostic_codec
+22/27 Test: software_uart_diagnostic_codec
+Command: "/home/rklinkhammer/workspace/dmotor/build/product/software/dmotor-uart-codec-tests"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/software
+"software_uart_diagnostic_codec" start time: Nov 07 01:57 EST
+Output:
+----------------------------------------------------------
+diagnostic codec PASS: CRC golden vector, payload sizes, escaping, oversize/resync and operational rejection
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"software_uart_diagnostic_codec" end time: Nov 07 01:57 EST
+"software_uart_diagnostic_codec" time elapsed: 00:00:00
+----------------------------------------------------------
+
+23/27 Testing: software_uart_diagnostic_pty
+23/27 Test: software_uart_diagnostic_pty
+Command: "/usr/bin/python3" "/home/rklinkhammer/workspace/dmotor/software/tests/uart_diagnostic_test.py" "/home/rklinkhammer/workspace/dmotor/build/product/software/dmotor-uart-test"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/software
+"software_uart_diagnostic_pty" start time: Nov 07 01:57 EST
+Output:
+----------------------------------------------------------
+UART diagnostic PTY PASS: independent CRC/payload peer, fragmented I/O, corruption, stale run, absent replies
+<end of output>
+Test time =   3.20 sec
+----------------------------------------------------------
+Test Passed.
+"software_uart_diagnostic_pty" end time: Nov 07 01:57 EST
+"software_uart_diagnostic_pty" time elapsed: 00:00:03
+----------------------------------------------------------
+
+24/27 Testing: software_gpio_diagnostic
+24/27 Test: software_gpio_diagnostic
+Command: "/home/rklinkhammer/workspace/dmotor/build/product/software/dmotor-gpio-diagnostic-tests"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/software
+"software_gpio_diagnostic" start time: Nov 07 01:57 EST
+Output:
+----------------------------------------------------------
+U1 parser, default off, repeated/stale start, stop, expiry, disconnect and missed-edge tests PASS
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"software_gpio_diagnostic" end time: Nov 07 01:57 EST
+"software_gpio_diagnostic" time elapsed: 00:00:00
+----------------------------------------------------------
+
+25/27 Testing: software_ps_worker
+25/27 Test: software_ps_worker
+Command: "/home/rklinkhammer/workspace/dmotor/build/product/software/dmotor-ps-worker-tests"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/software
+"software_ps_worker" start time: Nov 07 01:57 EST
+Output:
+----------------------------------------------------------
+PASS: PS identity, complete packing, context isolation, speculative cancellation, accepted tickets, physical reset rejection
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"software_ps_worker" end time: Nov 07 01:57 EST
+"software_ps_worker" time elapsed: 00:00:00
+----------------------------------------------------------
+
+26/27 Testing: software_ps_cadence
+26/27 Test: software_ps_cadence
+Command: "/home/rklinkhammer/workspace/dmotor/build/product/software/dmotor-ps-cadence-tests"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/software
+"software_ps_cadence" start time: Nov 07 01:57 EST
+Output:
+----------------------------------------------------------
+PASS: 1000 us cadence, physical ramp scaling, maximum encoder event rate, missed-tick fault
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"software_ps_cadence" end time: Nov 07 01:57 EST
+"software_ps_cadence" time elapsed: 00:00:00
+----------------------------------------------------------
+
+27/27 Testing: software_ps_fused
+27/27 Test: software_ps_fused
+Command: "/home/rklinkhammer/workspace/dmotor/build/product/software/dmotor-ps-fused-tests"
+Directory: /home/rklinkhammer/workspace/dmotor/build/product/software
+"software_ps_fused" start time: Nov 07 01:57 EST
+Output:
+----------------------------------------------------------
+PASS: 188 fused four-stage/commit/tick operations match serial original operations, all reply words
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"software_ps_fused" end time: Nov 07 01:57 EST
+"software_ps_fused" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Nov 07 01:57 EST

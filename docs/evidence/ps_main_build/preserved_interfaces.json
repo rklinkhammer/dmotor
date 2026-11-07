@@ -1,0 +1,9 @@
+{
+  "platforms/arty-z7-20/vivado/design_1.bd": true,
+  "platforms/arty-z7-20/constraints": true,
+  "software/esp32": true,
+  "software/include/dmotor_sw/monitor_wire.hpp": true,
+  "abi": true,
+  "include/dmotor/timing.hpp": true,
+  "rtl/timing.sv": true
+}

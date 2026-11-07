@@ -1,0 +1,69 @@
+{
+  "build_commit": "5d0616a102c531b2f61e43456728f3ae1cf01052",
+  "dirty": false,
+  "software_version": "0.10.0",
+  "control_period_us": 1000,
+  "frame_deadline_us": 800,
+  "hardware_stage": "arty-hardware/20261107T065816Z-3543b389",
+  "sd_export": "arty-z7-20/20261107T072059Z-7b68607f",
+  "hardware_source_sha256": "f8354b71c42b3455f20a6823aff76dc0ecfb44c1cdcb1b1b177f01c12795398a",
+  "component_source_sha256": "78b32ad9113cbe0d0d8ba0abc3e41a53d7958dbc58eb1bd02503023165350ce8",
+  "software_source_sha256": "28bae64bac0d3af3771e7ffe276c890d1b58b73d174cc6d896208320bb2daced",
+  "command": "EDF_DMOTOR_SOURCE=../dmotor ./edf --target arty-z7-20 build",
+  "result": "passed; no board programmed, SD card written, or physical test performed",
+  "full_board_placement": {
+    "slices": 10430,
+    "LUTs": 22646,
+    "registers": 33904,
+    "DSPs": 5,
+    "BRAM_tiles": 0
+  },
+  "previous_revision_11_placement": {
+    "slices": 13289,
+    "LUTs": 41203,
+    "registers": 57773,
+    "DSPs": 16,
+    "BRAM_tiles": 2
+  },
+  "timing": {
+    "WNS_ns": 2.157,
+    "TNS_ns": 0.0,
+    "WHS_ns": 0.013,
+    "THS_ns": 0.0,
+    "DRC_errors": 0,
+    "bus_skew": "all constraints met"
+  },
+  "tests": {
+    "controller_native_RTL": 36,
+    "PS_software": 27,
+    "atomic_HLS_transactions": 1165,
+    "PS_reference_transactions": 2449,
+    "fused_operations": 188,
+    "PS_PL_cosimulation": [
+      "controller_axi",
+      "controller_cleanup"
+    ],
+    "ARM_QEMU": [
+      "semantic",
+      "protocol",
+      "Linux backend",
+      "runtime",
+      "monitor codec",
+      "PS worker",
+      "PS cadence",
+      "PS fused operations"
+    ],
+    "ARM_driver": "compiled",
+    "ESP32_S3_diagnostics": "built; no flash",
+    "failure_release_race": "fixed; regression passes and rejects previous backend",
+    "PS_native_CI": "clang-tidy 18 / UBSan build and 27 tests passed"
+  },
+  "limits": [
+    "Physical testing remains paused; U0 PASS belongs to its recorded prior image.",
+    "U1 physical measurements and motor/monitor qualification remain open.",
+    "1 ms execution and the 800 us frame budget require target measurements under load.",
+    "No operational monitor firmware or live recovery is enabled."
+  ],
+  "EDF_state": "Hardware/recipe inputs regenerated locally by EDF; EDF gitlink/pin and repository were not committed or pushed.",
+  "controller_ip_revision": 13
+}

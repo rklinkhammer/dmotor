@@ -1,17 +1,16 @@
-# Integrated controller: priorities 1–4 implementation
+# Controller AXI and PS/PL integration
 
 > Current main: PSF1 motor execution runs on the PS at 1 ms; the atomic mailbox, scheduler, PWM and protection remain in PL. See [current architecture](../DMOTOR_ARCH.md) and [PSF1 contract](ps_executor.md). Older component measurements below retain their original scope.
 
-> Current product builds: [build guide](build.md). Commands below are specialized
-> component/experiment reproduction or historical evidence, not the default build.
+> Current product builds: [build guide](build.md). Earlier HLS integration measurements
+> are retained in the linked historical record.
 
 
-The first complete logical control path is now implemented in
-`rtl/controller_axi.sv`. It connects AXI4-Lite, the actual atomic-mailbox HLS IP,
-the scheduler, the actual shared four-context PS motor IP, four encoder channels,
-independent authorization/target-age protection and four PWM outputs. It is an
-integration preview with a provisional register map, with revision 3 routed evidence but not a board-qualified
-controller. The separate DMD1 diagnostics endpoint is unchanged.
+`rtl/controller_axi.sv` connects AXI4-Lite, atomic-mailbox HLS, the 1 kHz
+scheduler, the PSF1 motor transaction bridge, four encoder channels, independent
+protection and four PWM outputs. The C++ motor contexts execute in the daemon on
+Zynq PS. Board ports and public DMI2/DMB1 registers are retained; physical system
+qualification remains open. The separate DMD1 diagnostic endpoint is unchanged.
 
 ```mermaid
 flowchart LR
@@ -19,7 +18,8 @@ flowchart LR
     HOST --> BOX[Atomic batch mailbox: C++ HLS]
     BOX <--> SCHED[1 kHz scheduler]
     SCHED --> ADAPT[Motor invocation adapter]
-    ADAPT <--> ENGINE[Shared four-context velocity/ramp/PI: C++ HLS]
+    ADAPT <--> BRIDGE[PSF1 ticketed bridge]
+    BRIDGE <--> ENGINE[PS C++: four velocity/ramp/PI contexts]
     ENGINE --> BANK[Complete result frame]
     BANK --> PWM[Four common-boundary PWM outputs]
     ENC[Four quadrature decoders and coherent snapshots] --> SCHED
@@ -35,14 +35,18 @@ actual engine status. A new target requires four staging writes, commit and tick
 all responses and actual per-motor applied sequence are checked before returning
 a successful tagged duty. Per-context internal publication sequences are separate
 from the global batch sequence. Sequence exhaustion faults rather than wrapping.
-Motor arithmetic and algorithm state remain in the measured C++ HLS kernel.
+Motor arithmetic and algorithm state reside in the C++ PS worker. Staging, commit
+and tick are fused into one private PS transaction, preserving their execution
+order and reply validation. The worker commits speculative state only after
+hardware accepts the matching ticket; a partially executed frame still has no
+whole-frame rollback guarantee.
 
 STOP is latched by the processor interface and serviced at the next complete
 control-frame boundary. An already executing frame finishes; the request is not
 lost or rejected because the engine is busy. This boundary policy avoids skipping
-an HLS tick, which would violate its exact 1 kHz timing contract. STOP closes target
+a motor-control tick, which would violate its exact 1 kHz timing contract. STOP closes target
 admission, invalidates pending intent, disarms target age and uses the existing
-HLS deceleration/settling behavior. STOP completion requires zero ramp and duty.
+PS controller deceleration/settling behavior. STOP completion requires zero ramp and duty.
 STOP remains latched until an explicit disabled controller reset/rearm. HALT and
 disable do not wait for this controlled-stop boundary.
 
@@ -53,13 +57,14 @@ Cancellation after partial context execution remains fail-closed; no context
 rollback is claimed. Routine per-channel enable/disable changes during a frame
 still require further stress qualification, including their effect on peer ticks.
 
-## Priority 2: actual generated-RTL integration
+## Priority 2: actual PS/PL integration
 
-`sim_integrated.tcl` runs both real HLS kernels with the scheduler, target age and
-PWM. It checks warm-up, four-channel target acceptance, common output release,
-STOP and inhibit. The tested new-target frame took **1,941 cycles / 97.05 us** at
-20 MHz, below the 16,000-cycle frame deadline. This is one observed scenario, not
-a new worst-case proof or resource estimate.
+The product pipeline runs full-controller AXI and CLN1 cleanup co-simulation
+using actual atomic HLS, production RTL and the real PS C++ engine through VPI.
+It checks four-motor publication, coherent output release, STOP, faults, reset,
+cleanup interruption and direct-duty behavior. This proves simulated behavior;
+it does not measure Linux execution latency. The **800 us full-frame deadline**
+and **1 ms control period** remain unchanged and require target load testing.
 
 ## Priority 3: encoder and independent protection
 
@@ -101,7 +106,7 @@ All offsets are peripheral-relative; no address was assigned in the user's dvrmc
 | 0x1000 | IDENTITY | Read 0x444D4932 (DMI2) |
 | 0x1004 | STATUS | Enabled[3:0], configured[7:4], ready[11:8], stopped[15:12], fault[16], local shared HALT[17], blocked[18], per-motor target-age faults[22:19] |
 | 0x1008 | SESSION | Nonzero; writable while disabled and core reset held |
-| 0x100c | ENABLE | Write motor mask; watchdog arms and HLS initialization/warm-up follows |
+| 0x100c | ENABLE | Write motor mask; watchdog arms and PS context initialization/warm-up follows |
 | 0x1010 | DISABLE | Write motor mask |
 | 0x1014 | STOP | Write motor mask; latched until disabled reset/rearm |
 | 0x1018 | REFRESH_SESSION | Session for subsequent watchdog refresh strobes |
@@ -116,7 +121,7 @@ All offsets are peripheral-relative; no address was assigned in the user's dvrmc
 | 0x3000 + 84*m | TELEMETRY | Captured 21-word record for motor m |
 
 Configuration commit establishes a complete candidate; numeric validation remains
-in HLS during initial service before output release. An invalid candidate faults
+in PS C++ during initial service before output release. An invalid candidate faults
 rather than enabling drive. Do not interpret configured status as numeric acceptance;
 wait for actual readiness while servicing the watchdog. Initial default watchdog and
 target-age limits are 100 ms; the watchdog must also be refreshed throughout warm-up.
@@ -141,63 +146,33 @@ integration obligation before sessions may be reused.
 
 ```sh
 python3 tools/generate_controller_abi.py --check
-cmake -S . -B build/atomic_protocol
-cmake --build build/atomic_protocol -j2
-ctest --test-dir build/atomic_protocol --output-on-failure
-/opt/vitis/2026.1/Vivado/bin/vivado -mode batch -source platforms/vivado/sim_integrated.tcl
-/opt/vitis/2026.1/Vivado/bin/vivado -mode batch -source platforms/vivado/sim_controller_axi.tcl
-/opt/vitis/2026.1/Vivado/bin/vivado -mode batch -source platforms/vivado/export_current.tcl
+python3 tools/build.py project
 ```
 
-The AXI XSim test uses both real HLS blocks. It covers configuration, write rejection
-while enabled, four-motor publication, coherent telemetry, STOP requested during
-computation, actual Gray-code capture, shared physical fault, explicit recovery,
-watchdog expiry and external-HALT access/recovery without HALT echo. The previous
-33-test regression passes; affected mailbox and host/ABI tests were rerun after
-admission cleanup changes. Evidence is in `docs/evidence/priority_integration/`.
+The required pipeline includes native/controller/RTL tests, atomic HLS C/RTL
+co-simulation, PS software/client tests, and actual PS-C++/full-controller AXI and
+cleanup co-simulation. EDF then routes the board and builds the matched ARM image.
+See [build instructions](build.md), [verification](verification.md) and
+[current resource, timing and artifact evidence](system_status.md).
 
-An encoder pulse-burst followed by silence during STOP triggered the existing HLS
-acquisition fault under the accelerated test configuration; shared HALT responded.
-Successful STOP is tested separately with stationary feedback. This is not a motor
-plant simulation or evidence of mechanical stopping performance.
+The packaged controller remains `dmotor.org:user:controller_axi:0.18`, now core
+revision 13. Earlier revision-1–4 HLS integration measurements and board-validation
+findings remain in the [historical integration record](archive/pre-ps-executor-2026-11-07/controller_axi.md).
+They are not current resource or timing measurements. Physical qualification,
+loaded Linux deadlines, lifecycle stress and electrical behavior remain open.
 
-The integrated IP is packaged as `controller_axi.zip`, VLNV
-`dmotor.org:user:controller_axi:0.18`. Prior component exports remain available.
-Priorities 1–4 now have an executable integrated implementation, but qualification
-is not complete: adversarial lifecycle/configuration timing, realistic feedback,
-full reset isolation and operating-envelope tests remain. MMIO is still provisional.
-Revision 3 completed board synthesis/place-and-route with passing specified timing.
-Revision 4 must repeat board implementation after the shared HALT CDC update.
-CDC/external-I/O closure, driver integration and powered motor tests remain open.
-No component resource estimate is presented as integrated utilization.
+## Revision 13 private PSF1 executor extension
 
-## Vivado board-project validation
-
-The 2026-10-12 `dvrmc` synthesis audit found device-capacity, combinational-loop,
-and external fault-pin constraint blockers. See [the validation report](dvrmc_validation.md)
-before attempting implementation or motor bring-up. Passing functional simulation
-does not establish that this integration preview fits the XC7Z020.
-
-Protection-loop follow-up: the [scheduler/arbiter repair](protection_feedback.md)
-now passes fresh complete-controller out-of-context LUTLP-1 checks with zero
-violations. Updated IP is version 0.18, core revision 2. The original board-audit
-reports remain historical evidence; LUT capacity and fault-pin constraints are
-still unresolved.
-
-MMIO optimization update (2026-10-12): [fixed bank decoding](mmio_logic.md)
-reduces the controller from 72,104 to **34,129 LUTs**, with zero LUTLP-1 violations
-and passing expanded AXI/HLS simulation. The controller archive is now core
-revision **3** (version 0.18). Earlier resource-overflow reports are historical;
-board-level regeneration, implementation and physical fault-pin constraints
-remain outstanding.
-
-Current architecture/milestone analysis and revision 4 shared HALT CDC details:
-[architecture_status.md](architecture_status.md).
+Offsets **0x4000–0x417c** inside the existing 64 KiB AXI window carry identity,
+cadence, immutable request tickets, the captured 35-word record and staged
+16-word replies. They are private to the matched daemon/driver. The public
+client API and DMI2/DMB1 offsets are unchanged. See the complete
+[PSF1 register and cancellation contract](ps_executor.md).
 
 ## Revision 7 direct-duty extension
 
 The endpoint identity is DMI2; software/driver must be upgraded with the bitstream.
-The normal mailbox remains DMB1. Direct mode holds the HLS control engine reset
+The normal mailbox remains DMB1. Direct mode holds the motor invocation path reset
 and selects a separate single-channel PWM path using the same PWM primitive and
 shared protection chain. All nonselected motors remain disabled.
 
@@ -259,6 +234,6 @@ engine reset and reports unsupported, so it cannot supply this recovery attestat
 PS velocity preparation requires CLN1 and verifies request/session/completion, while
 the driver requires CLN1 at probe and allows read-only access. See the
 [cleanup contract and qualification limits](g1a_cleanup_admission.md#8-combined-cln1-integration).
-Revision 11 requires a matched hardware/software build. The latest actual-HLS and
+Revision 13 requires a matched PSF1 driver, daemon and hardware build. Current PS/PL and
 routed evidence is linked from [system status](system_status.md); earlier revision
 evidence does not qualify the new reset-ownership path. No new external block-diagram ports are added.

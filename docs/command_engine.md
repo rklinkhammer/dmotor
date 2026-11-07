@@ -1,5 +1,7 @@
 # HLS command engine
 
+> Standalone legacy component reference. Current motor execution is the [1 ms PSF1 path](ps_executor.md); use the [product build](build.md). Historical HLS flows and position/ring capabilities below do not select the current velocity-only product.
+
 `dmotor_command_engine` synthesizes `CommandRing` directly from C++14. Static
 ring state persists across internal hardware transactions. The same code runs in
 native tests, Vitis C simulation, synthesis, and RTL co-simulation. The public

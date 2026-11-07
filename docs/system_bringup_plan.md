@@ -1,13 +1,15 @@
 # Integrated Zynq and ESP32 development and bring-up plan
 
-## Current work direction — 2026-11-06
+## Current work direction — 2026-11-07
 
 Further physical testing is **paused at Robert's request until the assembled
 monitor and motor boards are available**. U0 UART exchange/restart/reconnection
-checks passed. U1 GPIO/HB modes are implemented, with 24 native tests and an
-ESP32-S3 build passing; U1 flashing and physical measurements are not recorded.
-The next focus is [autonomous-motion architecture](autonomous_motion_architecture.md),
-not another bench test. Commissioning remains the first release; no hardware gate
+checks passed. U1 GPIO/HB modes are implemented, covered by the current 27-test native PS suite
+and a passing ESP32-S3 build; U1 flashing and physical measurements are not recorded.
+Main now uses the [1 ms PS motor executor](ps_executor.md), with the matched
+board/ARM rebuild recorded in [system status](system_status.md).
+[Autonomous-motion architecture](autonomous_motion_architecture.md) remains a
+separate workstream; no new physical bench run was performed. Commissioning remains the first release; no hardware gate
 is closed or waived by this pause.
 
 
@@ -16,7 +18,7 @@ This amended proposal incorporates the supplied plan review and retains the seve
 bring-up stages B1–B7, with a separate optional vehicle-development workstream BV.
 It does not approve powered operation, adopt the proposed recovery contract, or
 claim completion of hardware tests. B1–B7 and BV are integrated-plan identifiers;
-they must not be confused with the older PS-only Phases 0–6 in `DMOTOR_SW.md`.
+they must not be confused with the older PS-only Phases 0–6 in the [archived software plan](archive/pre-ps-executor-2026-11-07/DMOTOR_SW.md).
 The inspected implementation baseline remains `63d5cdb`; the review document
 revision is its Git commit (`git log -1 -- docs/system_bringup_plan.md`).
 

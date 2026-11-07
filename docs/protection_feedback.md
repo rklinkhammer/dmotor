@@ -1,4 +1,4 @@
-# Protection feedback repair
+# Historical protection feedback repair — 2026-10-12
 
 > Current main: PSF1 motor execution runs on the PS at 1 ms; the atomic mailbox, scheduler, PWM and protection remain in PL. See [current architecture](../DMOTOR_ARCH.md) and [PSF1 contract](ps_executor.md). Older component measurements below retain their original scope.
 
@@ -8,7 +8,8 @@
 
 The 2026-10-12 Vivado board-project audit exposed combinational feedback in the
 integrated controller. This repair preserves the 20 MHz clock, MMIO contract,
-and immediate PWM inhibition. Control computations remain in C++ HLS.
+and immediate PWM inhibition. At that time motor computations remained in C++ HLS; current main executes them
+on PS while retaining these protection dependencies.
 
 Three RTL dependencies were corrected:
 
@@ -38,7 +39,8 @@ that all outputs are inhibited, the fault latches, and no frame is committed.
 The strengthened scheduler test stalls with the old scheduler and passes with
 the repair.
 
-Reproduce the complete-controller synthesis and loop DRC with:
+Historical reproduction requires the pre-PSF1 source/profile and HLS outputs.
+Current qualification uses the [product build](build.md). The earlier command was:
 
 ```sh
 /opt/vitis/2026.1/Vivado/bin/vivado -mode batch \

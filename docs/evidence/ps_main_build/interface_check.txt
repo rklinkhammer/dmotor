@@ -1,0 +1,2 @@
+PASS: saved four-motor wiring, monitor UART/HB/coast and internal GPIO
+Pins: coast_req=V13, mc0_dir=Y18, mc0_pwm=Y19, mc0_qa=Y16, mc0_qb=Y17, mc1_dir=U18, mc1_pwm=U19, mc1_qa=W18, mc1_qb=W19, mc2_dir=W14, mc2_pwm=Y14, mc2_qa=T11, mc2_qb=T10, mc3_dir=V16, mc3_pwm=W16, mc3_qa=V12, mc3_qb=W13, mon_hb=U13, mon_rx=U12, mon_tx=T14

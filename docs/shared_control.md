@@ -8,11 +8,11 @@
 
 `rtl/shared_control.sv` connects an autonomous four-channel scheduler, the real
 independent target-age module, and four phase-aligned PWM output blocks. It exposes
-normalized protocol and engine handshakes for the next generated-HLS integration.
+normalized protocol and engine handshakes for atomic-mailbox and PSF1 integration.
 It is not a board top or a complete connection to the atomic-mailbox/PS motor IP.
 
-The algorithms remain C++ HLS: mailbox validation/management, velocity estimation,
-ramp/PI, and per-motor control state. RTL here handles clock-level scheduling,
+Mailbox validation/management remains C++ HLS. Velocity estimation, ramp/PI
+and per-motor state execute in C++ on the PS. RTL here handles clock-level scheduling,
 coherent capture, result gating and protection. It contains no replacement motor
 control algorithm. Existing RTL PWM remains the tested reference output block.
 
@@ -23,7 +23,7 @@ and all encoder snapshot payloads. The snapshot payload width is a parameter and
 opaque to this module; its actual field packing belongs to the engine adapter.
 The default synthesis measurement uses 256 bits per channel, not a frozen encoder
 record format. Timestamp comes from an independent free-running counter in the
-scheduler and continues even if HLS does not complete.
+scheduler and continues even if either computation path stalls.
 
 1. Hold `admission_request` until a protocol response arrives. Its adapter must
    reserve a pending atomic batch for this effective tick, or report no new batch.
@@ -33,7 +33,7 @@ scheduler and continues even if HLS does not complete.
 2. Service enabled motors in ascending index order. Hold engine start until ready;
    hold motor/session/generation/tick/target and snapshot throughout the invocation.
    Accept completion only for an accepted start, with matching returned tags.
-   Generated-HLS adapters must echo captured launch tags and present one-shot done.
+   The motor adapter must echo captured launch tags and present one-shot done.
 3. Store each duty in a staging bank. No partial bank is visible to PWM. All selected
    calculations must succeed before requesting target-age acceptance for a new batch.
 4. On target-age acceptance, request protocol retirement. On successful retirement,
@@ -43,7 +43,7 @@ scheduler and continues even if HLS does not complete.
    motor, so atomic duty intent does not promise simultaneous mechanical reversal.
 
 The protocol response must be validated against the captured session, mask and
-configuration generations. The future adapter must not prematurely report applied
+configuration generations. The mailbox adapter must not prematurely report applied
 sequence before successful retirement. New batches affect selected channels only;
 all enabled channels still run their periodic control step.
 
@@ -70,7 +70,7 @@ not physical motor response. Period/deadline constants default to generated
 
 `cancel_frame` or a changed enabled mask discards the current frame without claiming
 it completed. An already accepted engine call is drained, discarding its result,
-rather than resetting all peer HLS contexts; a stuck drain still hits the deadline.
+rather than resetting all peer PS contexts; a stuck drain still hits the deadline.
 Disabled channels clear retained duty so re-enable cannot replay an old command.
 
 Cancellation is a trusted integration action, not a complete controlled-stop
@@ -85,9 +85,14 @@ peer duty until the next valid frame. Faults still override cancellation.
 applied records remain diagnostic and are not proof of a PWM update. All final
 outputs are also gated by per-channel enable. External fault qualification, watchdog
 refresh/recovery registers, shared HALT aggregation, electrical adapter behavior,
-and generated-HLS port adapters remain integration responsibilities.
+and transaction adapters belong to the surrounding full-controller integration.
 
 ## Verification
+
+Full PS/PL integration is checked by the [product pipeline](build.md). The
+standalone checks and historical size measurements below retain their component
+scope and are not the current full-board resource results.
+
 
 `shared_scheduler_tb.sv` instantiates the production `dmotor_shared_control`, actual
 target-age and actual four-channel PWM modules. It supplies behavioral protocol and

@@ -1,0 +1,5 @@
+{
+  "dmotor_uart_bench.bin": "037459978b05587738e617c293937087b1705f479ee0a30fc94792e891f45be6",
+  "bootloader/bootloader.bin": "3d948e1de4ce197d5e1fdcd9b0f9d3d71b6c82a9f0902fb510b5d15d81550ccb",
+  "partition_table/partition-table.bin": "7f00b6c042a89b15b0cac534f82ed988caf29278ff5700b0c511eb1b5bb7c820"
+}

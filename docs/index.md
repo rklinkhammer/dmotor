@@ -23,6 +23,8 @@ U0 passed; U1 is implemented/build-tested with physical verification pending.
 
 ## Current contracts and interfaces
 
+- [Current 1 ms PS motor executor and private PSF1 interface](ps_executor.md)
+
 - [Architecture](../DMOTOR_ARCH.md) and [protection circuitry](../DMOTOR_CONTROL.md).
 - [Joint recovery contract](recovery_transition_contract.md): PROPOSED v4; not yet accepted or fully implemented.
 - [Arty wiring/monitor interface](arty_monitor_interface.md).
@@ -66,5 +68,4 @@ is the entry point for previous review rounds, milestones and build records.
 - [U1 GPIO and bounded synthetic heartbeat procedure](u1_gpio_bench.md)
 - [Experimental PS executor and coherent four-wheel endpoint: slice measurements and adoption gaps](../experiments/ps_executor/REPORT.txt)
 
-- [Current 1 ms PS motor executor and private PSF1 interface](ps_executor.md)
 - [Historical 1 ms / 5 ms parallel-path evaluation](../experiments/ps_parallel/REPORT.txt)

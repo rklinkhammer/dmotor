@@ -1,4 +1,4 @@
-# Velocity mailbox measurement
+# Historical velocity mailbox measurement
 
 > Current main: PSF1 motor execution runs on the PS at 1 ms; the atomic mailbox, scheduler, PWM and protection remain in PL. See [current architecture](../DMOTOR_ARCH.md) and [PSF1 contract](ps_executor.md). Older component measurements below retain their original scope.
 

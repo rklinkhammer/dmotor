@@ -1,0 +1,345 @@
+DMOTOR source: /home/rklinkhammer/workspace/dmotor
+Hardware fingerprint: 78b32ad9113cbe0d0d8ba0abc3e41a53d7958dbc58eb1bd02503023165350ce8
++ /usr/bin/python3 tools/vitis_check.py --kernel atomic --vitis /opt/vitis/2026.1/Vitis
+csim: /home/rklinkhammer/workspace/dmotor/build/vitis_atomic_csim.log
+synth: /home/rklinkhammer/workspace/dmotor/build/vitis_atomic_synth.log
+cosim: /home/rklinkhammer/workspace/dmotor/build/vitis_atomic_cosim.log
++ cmake -S /home/rklinkhammer/workspace/dmotor -B /home/rklinkhammer/workspace/dmotor/build/product/native -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DIVERILOG=/home/rklinkhammer/workspace/dmotor/build/tools/usr/bin/iverilog -DVVP=/home/rklinkhammer/workspace/dmotor/build/tools/usr/bin/vvp -DIVERILOG_BASE=/home/rklinkhammer/workspace/dmotor/build/tools/usr/lib/x86_64-linux-gnu/ivl
+-- Configuring done (0.1s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/rklinkhammer/workspace/dmotor/build/product/native
++ cmake --build /home/rklinkhammer/workspace/dmotor/build/product/native -j4
+[ 33%] Built target dmotor
+[ 48%] Built target control_test
+[ 48%] Built target protocol_test
+[ 48%] Built target arithmetic_test
+[ 51%] Built target command_engine_test
+[ 55%] Built target velocity_test
+[ 68%] Built target configuration_test
+[ 68%] Built target motion_test
+[ 68%] Built target peripheral_test
+[ 77%] Built target atomic_mailbox_test
+[ 77%] Built target controller_test
+[ 82%] Built target atomic_mailbox_top_test
+[ 86%] Built target dispatcher_test
+[ 91%] Built target shared_mailbox_test
+[ 95%] Built target controller_host_test
+[100%] Built target mailbox_test
++ ctest --test-dir /home/rklinkhammer/workspace/dmotor/build/product/native --output-on-failure
+Test project /home/rklinkhammer/workspace/dmotor/build/product/native
+      Start  1: arithmetic
+ 1/36 Test  #1: arithmetic .......................   Passed    0.03 sec
+      Start  2: protocol
+ 2/36 Test  #2: protocol .........................   Passed    0.00 sec
+      Start  3: generated_abi
+ 3/36 Test  #3: generated_abi ....................   Passed    0.04 sec
+      Start  4: rtl_cleanup_sequencer
+ 4/36 Test  #4: rtl_cleanup_sequencer ............   Passed    0.06 sec
+      Start  5: rtl_monitor_heartbeat
+ 5/36 Test  #5: rtl_monitor_heartbeat ............   Passed    0.06 sec
+      Start  6: rtl_safety
+ 6/36 Test  #6: rtl_safety .......................   Passed    0.07 sec
+      Start  7: rtl_scheduler
+ 7/36 Test  #7: rtl_scheduler ....................   Passed    0.05 sec
+      Start  8: rtl_qcencoder
+ 8/36 Test  #8: rtl_qcencoder ....................   Passed    0.07 sec
+      Start  9: rtl_pwm
+ 9/36 Test  #9: rtl_pwm ..........................   Passed    0.06 sec
+      Start 10: rtl_latency
+10/36 Test #10: rtl_latency ......................   Passed    0.06 sec
+      Start 11: rtl_axi_bridge
+11/36 Test #11: rtl_axi_bridge ...................   Passed    0.06 sec
+      Start 12: rtl_encoder_snapshot
+12/36 Test #12: rtl_encoder_snapshot .............   Passed    0.07 sec
+      Start 13: rtl_target_age
+13/36 Test #13: rtl_target_age ...................   Passed    0.07 sec
+      Start 14: rtl_shared_scheduler
+14/36 Test #14: rtl_shared_scheduler .............   Passed    0.13 sec
+      Start 15: rtl_vivado_dev
+15/36 Test #15: rtl_vivado_dev ...................   Passed    0.06 sec
+      Start 16: control
+16/36 Test #16: control ..........................   Passed    0.00 sec
+      Start 17: command_engine
+17/36 Test #17: command_engine ...................   Passed    0.00 sec
+      Start 18: peripheral
+18/36 Test #18: peripheral .......................   Passed    0.00 sec
+      Start 19: configuration
+19/36 Test #19: configuration ....................   Passed    0.00 sec
+      Start 20: motion
+20/36 Test #20: motion ...........................   Passed    0.01 sec
+      Start 21: velocity
+21/36 Test #21: velocity .........................   Passed    0.00 sec
+      Start 22: controller
+22/36 Test #22: controller .......................   Passed    0.00 sec
+      Start 23: dispatcher
+23/36 Test #23: dispatcher .......................   Passed    0.00 sec
+      Start 24: atomic_mailbox
+24/36 Test #24: atomic_mailbox ...................   Passed    0.00 sec
+      Start 25: generated_mailbox_abi
+25/36 Test #25: generated_mailbox_abi ............   Passed    0.04 sec
+      Start 26: atomic_mailbox_top
+26/36 Test #26: atomic_mailbox_top ...............   Passed    0.00 sec
+      Start 27: rtl_atomic_adapter
+27/36 Test #27: rtl_atomic_adapter ...............   Passed    0.47 sec
+      Start 28: rtl_mailbox_control
+28/36 Test #28: rtl_mailbox_control ..............   Passed    2.18 sec
+      Start 29: controller_host
+29/36 Test #29: controller_host ..................   Passed    0.00 sec
+      Start 30: generated_controller_abi
+30/36 Test #30: generated_controller_abi .........   Passed    0.04 sec
+      Start 31: mailbox
+31/36 Test #31: mailbox ..........................   Passed    0.00 sec
+      Start 32: shared_mailbox
+32/36 Test #32: shared_mailbox ...................   Passed    0.01 sec
+      Start 33: ps_executor_native
+33/36 Test #33: ps_executor_native ...............   Passed    2.13 sec
+      Start 34: ps_transport
+34/36 Test #34: ps_transport .....................   Passed    0.06 sec
+      Start 35: ps_controller_axi
+35/36 Test #35: ps_controller_axi ................   Passed   35.34 sec
+      Start 36: ps_controller_cleanup
+36/36 Test #36: ps_controller_cleanup ............   Passed    1.15 sec
+
+100% tests passed, 0 tests failed out of 36
+
+Total Test time (real) =  42.36 sec
++ cmake -S /home/rklinkhammer/workspace/dmotor/software -B /home/rklinkhammer/workspace/dmotor/build/product/software -DDMOTOR_SW_SANITIZE=ON
+-- Configuring done (0.1s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/rklinkhammer/workspace/dmotor/build/product/software
++ cmake --build /home/rklinkhammer/workspace/dmotor/build/product/software -j4
+[  3%] Built target dmotor-recovery-model-tests
+[  5%] Built target dmotor_client
+[ 14%] Built target dmotor_ps_engine
+[ 16%] Built target dmotor-client-tests
+[ 18%] Built target dmotor-ps-worker-tests
+[ 21%] Built target dmotor-endpoint-session-tests
+[ 23%] Built target dmotor-ps-cadence-tests
+[ 26%] Built target dmotor-ps-fused-tests
+[ 26%] Built target dmotor_version
+[ 27%] Building CXX object CMakeFiles/dmotor_semantics.dir/src/version.cpp.o
+[ 28%] Linking CXX static library libdmotor_semantics.a
+[ 33%] Built target dmotor_semantics
+[ 34%] Linking CXX executable dmotor-protocol-tests
+[ 36%] Linking CXX executable dmotor-semantic-tests
+[ 36%] Linking CXX executable dmotor-uart-test
+[ 40%] Built target dmotor_linux
+[ 41%] Linking CXX executable dmotor-maint
+[ 42%] Built target dmotor-semantic-tests
+[ 43%] Built target dmotor-protocol-tests
+[ 44%] Built target dmotor-uart-test
+[ 45%] Linking CXX executable dmotor-encoder
+[ 47%] Linking CXX executable dmotor-inspect
+[ 47%] Built target dmotor-maint
+[ 48%] Linking CXX executable dmotor-linux-tests
+[ 50%] Linking CXX executable dmotor-runtime-tests
+[ 51%] Built target dmotor-encoder
+[ 52%] Built target dmotor-inspect
+[ 53%] Built target dmotor-linux-tests
+[ 54%] Linking CXX executable dmotord-fixture
+[ 55%] Linking CXX executable dmotor-maint-fixture
+[ 57%] Linking CXX executable dmotor-monitor-tests
+[ 57%] Built target dmotor-runtime-tests
+[ 58%] Linking CXX executable dmotor-monitor-uart-tests
+[ 59%] Built target dmotor-maint-fixture
+[ 60%] Built target dmotor-monitor-tests
+[ 62%] Built target dmotord-fixture
+[ 63%] Linking CXX executable dmotor-session-link-tests
+[ 64%] Built target dmotor-monitor-uart-tests
+[ 65%] Linking CXX executable dmotor-recovery-link-tests
+[ 66%] Linking CXX executable dmotor-monitor-simulator-tests
+[ 67%] Linking CXX executable dmotor-recovery-coordinator-tests
+[ 69%] Built target dmotor-session-link-tests
+[ 75%] Linking CXX executable dmotor-coordinator-session-tests
+[ 80%] Built target dmotor-recovery-link-tests
+[ 80%] Built target dmotor-monitor-simulator-tests
+[ 86%] Built target dmotor-recovery-coordinator-tests
+[ 87%] Linking CXX executable dmotor-gpio-diagnostic-tests
+[ 88%] Linking CXX executable dmotor-uart-codec-tests
+[ 89%] Building CXX object CMakeFiles/dmotord.dir/apps/daemon.cpp.o
+[ 90%] Built target dmotor-gpio-diagnostic-tests
+[ 91%] Built target dmotor-uart-codec-tests
+[ 92%] Building CXX object CMakeFiles/dmotord.dir/linux/ps_device.cpp.o
+[ 98%] Built target dmotor-coordinator-session-tests
+[100%] Linking CXX executable dmotord
+[100%] Built target dmotord
++ ctest --test-dir /home/rklinkhammer/workspace/dmotor/build/product/software --output-on-failure
+Test project /home/rklinkhammer/workspace/dmotor/build/product/software
+      Start  1: software_semantics
+ 1/27 Test  #1: software_semantics ...............   Passed    0.00 sec
+      Start  2: software_protocol
+ 2/27 Test  #2: software_protocol ................   Passed    0.01 sec
+      Start  3: software_linux
+ 3/27 Test  #3: software_linux ...................   Passed    0.00 sec
+      Start  4: software_runtime
+ 4/27 Test  #4: software_runtime .................   Passed    0.00 sec
+      Start  5: software_client
+ 5/27 Test  #5: software_client ..................   Passed    0.68 sec
+      Start  6: software_client_package
+ 6/27 Test  #6: software_client_package ..........   Passed    0.08 sec
+      Start  7: software_startup
+ 7/27 Test  #7: software_startup .................   Passed    0.04 sec
+      Start  8: software_powered
+ 8/27 Test  #8: software_powered .................   Passed    2.86 sec
+      Start  9: software_direct
+ 9/27 Test  #9: software_direct ..................   Passed    2.12 sec
+      Start 10: software_commissioning
+10/27 Test #10: software_commissioning ...........   Passed    2.12 sec
+      Start 11: software_service
+11/27 Test #11: software_service .................   Passed    1.72 sec
+      Start 12: software_monitor
+12/27 Test #12: software_monitor .................   Passed    0.00 sec
+      Start 13: software_monitor_uart
+13/27 Test #13: software_monitor_uart ............   Passed    0.00 sec
+      Start 14: software_monitor_schema
+14/27 Test #14: software_monitor_schema ..........   Passed    0.04 sec
+      Start 15: software_recovery_model
+15/27 Test #15: software_recovery_model ..........   Passed    0.00 sec
+      Start 16: software_endpoint_session
+16/27 Test #16: software_endpoint_session ........   Passed    0.00 sec
+      Start 17: software_session_link
+17/27 Test #17: software_session_link ............   Passed    0.00 sec
+      Start 18: software_recovery_link
+18/27 Test #18: software_recovery_link ...........   Passed    0.00 sec
+      Start 19: software_monitor_simulator
+19/27 Test #19: software_monitor_simulator .......   Passed    0.00 sec
+      Start 20: software_recovery_coordinator
+20/27 Test #20: software_recovery_coordinator ....   Passed    0.01 sec
+      Start 21: software_coordinator_session
+21/27 Test #21: software_coordinator_session .....   Passed    0.00 sec
+      Start 22: software_uart_diagnostic_codec
+22/27 Test #22: software_uart_diagnostic_codec ...   Passed    0.00 sec
+      Start 23: software_uart_diagnostic_pty
+23/27 Test #23: software_uart_diagnostic_pty .....   Passed    3.20 sec
+      Start 24: software_gpio_diagnostic
+24/27 Test #24: software_gpio_diagnostic .........   Passed    0.00 sec
+      Start 25: software_ps_worker
+25/27 Test #25: software_ps_worker ...............   Passed    0.00 sec
+      Start 26: software_ps_cadence
+26/27 Test #26: software_ps_cadence ..............   Passed    0.00 sec
+      Start 27: software_ps_fused
+27/27 Test #27: software_ps_fused ................   Passed    0.01 sec
+
+100% tests passed, 0 tests failed out of 27
+
+Total Test time (real) =  12.94 sec
++ /opt/vitis/2026.1/Vivado/bin/vivado -mode batch -source platforms/vivado/export_current.tcl
+INFO: [Common 17-3922] A valid Vivado Design Suite BASIC license has been detected. Your current license is active and will expire on 02-oct-2027.
+
+****** Vivado v2026.1 (64-bit)
+  **** SW Build 6511674 on Tue Jun 16 11:01:26 MDT 2026
+  **** IP Build 6504888 on Tue Jun 09 09:05:25 MDT 2026
+  **** SharedData Build 6501428 on Mon Jun 08 17:34:18 MDT 2026
+  **** Start of session at: Sat Nov  7 01:57:51 2026
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source platforms/vivado/export_current.tcl
+# set root [file normalize [file join [file dirname [info script]] ../..]]
+# set out [file join $root build current_ip]
+# file mkdir $out
+# proc export_block {root out name top generated sources} {
+#     foreach directory $generated {if {![file exists $directory]} {error "Missing generated HLS RTL: $directory"}}
+#     create_project -force $name [file join $out $name project] -part xc7z020clg400-1
+#     # IP packager cannot parse package-qualified parameter defaults. Resolve only
+#     # those references in staged copies from the generated timing package.
+#     set f [open [file join $root rtl timing.sv] r]; set timing [read $f]; close $f
+#     set staged [file join $out $name staged]
+#     file mkdir $staged
+#     foreach source $sources {
+#         set f [open [file join $root rtl $source] r]; set text [read $f]; close $f
+#         foreach {whole key value} [regexp -all -inline {localparam integer ([A-Z_]+) = ([0-9]+);} $timing] {
+#             set text [string map [list "dmotor_timing::$key" $value] $text]
+#         }
+#         set f [open [file join $staged $source] w]; puts -nonewline $f $text; close $f
+#         add_files [file join $staged $source]
+#     }
+#     foreach directory $generated {
+#         add_files [glob [file join $directory *.v]]
+#         foreach pattern {*.dat *.mem} {
+#             foreach data [glob -nocomplain [file join $directory $pattern]] {add_files $data}
+#         }
+#     }
+#     if {$name eq "controller_axi"} {
+#         add_files [file join $root constraints controller_halt.xdc]
+#     }
+#     set_property top $top [current_fileset]
+#     update_compile_order -fileset sources_1
+#     ipx::package_project -root_dir [file join $out $name ip] -vendor dmotor.org -library user -taxonomy /UserIP -import_files -set_current true
+#     set core [ipx::current_core]
+#     set_property name $name $core
+#     set_property version 0.18 $core
+#     # Scheduler feedback-loop repair: advertise a new revision to existing BDs.
+#     if {$name in {mailbox_control controller_axi}} {set_property core_revision 2 $core}
+#     if {$name eq "mailbox_control"} {set_property core_revision 3 $core}
+#     if {$name eq "controller_axi"} {set_property core_revision 13 $core}
+#     set_property display_name "DMOTOR current $name (integration preview)" $core
+#     set_property description "PSF1 1 ms PS motor executor with independent PL protection; see docs/ps_executor.md." $core
+#     ipx::infer_bus_interfaces xilinx.com:signal:clock_rtl:1.0 $core
+#     ipx::infer_bus_interfaces xilinx.com:signal:reset_rtl:1.0 $core
+#     if {$name eq "controller_axi"} {
+#         foreach old [ipx::get_bus_interfaces -of_objects $core -filter {BUS_TYPE_NAME == aximm}] {
+#             ipx::remove_bus_interface [get_property NAME $old] $core
+#         }
+#         foreach old [ipx::get_memory_maps -of_objects $core] {
+#             ipx::remove_memory_map [get_property NAME $old] $core
+#         }
+#         set bus [ipx::add_bus_interface S_AXI $core]
+#         set_property bus_type_vlnv xilinx.com:interface:aximm:1.0 $bus
+#         set_property abstraction_type_vlnv xilinx.com:interface:aximm_rtl:1.0 $bus
+#         set_property interface_mode slave $bus
+#         foreach port {AWADDR AWVALID AWREADY WDATA WSTRB WVALID WREADY BRESP BVALID BREADY ARADDR ARVALID ARREADY RDATA RRESP RVALID RREADY} {
+#             set map [ipx::add_port_map $port $bus];set_property physical_name [string tolower $port] $map
+#         }
+#         foreach {key value} {PROTOCOL AXI4LITE DATA_WIDTH 32 ADDR_WIDTH 16} {
+#             set param [ipx::add_bus_parameter $key $bus];set_property value $value $param
+#         }
+#         set mmap [ipx::add_memory_map registers $core]
+#         set block [ipx::add_address_block registers $mmap]
+#         set_property range 65536 $block;set_property width 32 $block;set_property usage register $block
+#         set_property slave_memory_map_ref registers $bus
+#         ipx::associate_bus_interfaces -busif S_AXI -clock clk $core
+#         set clockif [ipx::get_bus_interfaces clk -of_objects $core]
+#         set assoc [ipx::get_bus_parameters ASSOCIATED_BUSIF -of_objects $clockif]
+#         set_property value S_AXI $assoc
+#         set resetif [ipx::get_bus_interfaces reset -of_objects $core]
+#         set polarity [ipx::add_bus_parameter POLARITY $resetif]
+#         set_property value ACTIVE_HIGH $polarity
+#         set hz [ipx::get_bus_parameters FREQ_HZ -of_objects $clockif]
+#         if {![llength $hz]} {set hz [ipx::add_bus_parameter FREQ_HZ $clockif]}
+#         set_property value 20000000 $hz
+#     }
+#     ipx::create_xgui_files $core
+#     ipx::update_checksums $core
+#     ipx::check_integrity $core
+#     ipx::save_core $core
+#     ipx::archive_core [file join $out ${name}.zip] $core
+#     close_project
+# }
+# export_block $root $out controller_axi dmotor_controller_axi \
+#     [list [file join $root build vitis_atomic hls syn verilog]] \
+#     {timing.sv controller_registers.sv batch_registers.sv atomic_hls_adapter.sv atomic_mailbox_arbiter.sv shared_scheduler.sv target_age.sv pwm.sv shared_control.sv mailbox_control.sv shared_engine_transport.sv motor_engine_adapter.sv cleanup_sequencer.sv integrated_control.sv safety.sv qcencoder.sv encoder_snapshot.sv motor_io.sv monitor_heartbeat.sv axi_host.sv controller_axi.sv}
+WARNING: [IP_Flow 19-3833] Unreferenced file from the top module is not packaged: '/home/rklinkhammer/workspace/dmotor/build/current_ip/controller_axi/staged/batch_registers.sv'.
+WARNING: [IP_Flow 19-5101] Packaging a component with a SystemVerilog top file is not fully supported. Please refer to UG1118 'Creating and Packaging Custom IP'.
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/opt/vitis/2026.1/data/ip'.
+INFO: [IP_Flow 19-5107] Inferred bus interface 'interface_aximm' of definition 'xilinx.com:interface:aximm:1.0' (from Xilinx Repository).
+INFO: [IP_Flow 19-5107] Inferred bus interface 'reset' of definition 'xilinx.com:signal:reset:1.0' (from Xilinx Repository).
+INFO: [IP_Flow 19-5107] Inferred bus interface 'clk' of definition 'xilinx.com:signal:clock:1.0' (from Xilinx Repository).
+INFO: [IP_Flow 19-4728] Bus Interface 'clk': Added interface parameter 'ASSOCIATED_BUSIF' with value 'interface_aximm'.
+INFO: [IP_Flow 19-4728] Bus Interface 'clk': Added interface parameter 'ASSOCIATED_RESET' with value 'reset'.
+WARNING: [IP_Flow 19-11888] Component Definition 'dmotor.org:user:dmotor_controller_axi:1.0 (dmotor_controller_axi_v1_0)': IP description "dmotor_controller_axi_v1_0" is not meaningful: same as name or display name
+WARNING: [IP_Flow 19-11770] Clock interface 'clk' has no FREQ_HZ parameter.
+INFO: [IP_Flow 19-2181] Payment is not required for this core.
+WARNING: [IP_Flow 19-2187] The Product Guide file is missing.
+INFO: [IP_Flow 19-3166] Bus Interface 'interface_aximm': References existing memory map 'interface_aximm'.
+INFO: [IP_Flow 19-3166] Bus Interface 'interface_aximm': References existing memory map 'interface_aximm'.
+INFO: [IP_Flow 19-7067] Note that bus interface 'clk' has a fixed FREQ_HZ of '20000000'. This value will be respected whenever this IP is instantiated in IP Integrator.
+INFO: [IP_Flow 19-2181] Payment is not required for this core.
+WARNING: [IP_Flow 19-2187] The Product Guide file is missing.
+INFO: [Ipptcl 7-1486] check_integrity: Integrity check passed.
+# puts "PSF1 1 ms controller IP exported."
+PSF1 1 ms controller IP exported.
+INFO: [Common 17-206] Exiting Vivado at Sat Nov  7 01:57:57 2026...
+Complete: /home/rklinkhammer/workspace/dmotor/build/product

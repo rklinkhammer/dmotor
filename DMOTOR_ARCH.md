@@ -59,10 +59,12 @@ atomic mailbox remains HLS. See [build instructions](docs/build.md),
 and [verification](docs/verification.md). Main uses software version 0.10.0 and
 controller IP revision 13, with PSF1-1000us provenance.
 
-The sandbox's 1 ms full-controller OOC route used 9,542/13,300 slices, versus
-13,250 previously (28% fewer), with +6.543 ns setup and +0.096 ns hold slack.
-These are standalone controller figures; current main's full-board results and
-matched ARM/image evidence are recorded separately in system_status.md.
+The matched full-board build uses **10,430/13,300 slices (78.42%)**, versus
+13,289 previously (21.5% fewer used). Full-board LUTs drop from 41,203 to
+22,646; setup/hold slack is +2.157/+0.013 ns with no DRC errors.
+These are full-board placement figures followed by passing routing; earlier
+controller-only OOC figures remain historical. See [matched build evidence](docs/evidence/ps_main_build/inputs.json)
+and [artifact/qualification status](docs/system_status.md).
 
 Hardware testing remains paused pending assembled monitor and motor boards.
 U0 UART results remain historical evidence for their recorded image; U1 GPIO/HB

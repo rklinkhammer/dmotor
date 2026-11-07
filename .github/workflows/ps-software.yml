@@ -2,9 +2,9 @@ name: PS software
 on:
   workflow_dispatch:
   push:
-    paths: ['software/**', 'include/dmotor/**', 'src/atomic_mailbox.cpp', '.github/workflows/ps-software.yml']
+    paths: ['software/**', 'include/dmotor/**', 'src/**', 'tests/ps_*_test.cpp', '.github/workflows/ps-software.yml']
   pull_request:
-    paths: ['software/**', 'include/dmotor/**', 'src/atomic_mailbox.cpp', '.github/workflows/ps-software.yml']
+    paths: ['software/**', 'include/dmotor/**', 'src/**', 'tests/ps_*_test.cpp', '.github/workflows/ps-software.yml']
 permissions:
   contents: read
 jobs:

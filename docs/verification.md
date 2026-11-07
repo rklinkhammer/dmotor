@@ -22,6 +22,13 @@ matched new image, then measure the 1 ms/800 us worker budget, stalls/crashes,
 late replies, CPU/memory contention and electrical inhibition. Keep original
 HALT/heartbeat/authorization/target-age/STOP requirements.
 
+The [2026-11-07 matched main build](evidence/ps_main_build/inputs.json) records
+36 controller/native/RTL tests, 27 PS software tests, eight ARM QEMU executables,
+ARM driver/package QA, ESP32-S3 build, full-board routing and SD export.
+The clang-tidy 18/UBSan CI configuration also builds and passes all 27 PS tests.
+The worker-failure/HALT-release race regression passes and rejects the previous
+backend. These results do not change physical gate status.
+
 See [status](system_status.md), [PSF1](ps_executor.md) and [build](build.md).
 
 ## Earlier component evidence (historical scope)

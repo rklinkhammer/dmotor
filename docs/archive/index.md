@@ -38,3 +38,4 @@ into the current PL design/ABI documents. Removing old references from the main
 index does not by itself complete their review or transfer their requirements.
 
 - [Previous motion component/HLS reference](pre-ps-executor-2026-11-07/motion_executor.md)
+- [Previous controller/HLS integration record](pre-ps-executor-2026-11-07/controller_axi.md)

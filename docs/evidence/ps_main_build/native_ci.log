@@ -1,0 +1,199 @@
+-- The CXX compiler identification is GNU 15.2.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found Python3: /usr/bin/python3 (found version "3.14.4") found components: Interpreter
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Configuring done (0.4s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/rklinkhammer/workspace/dmotor/build/main_ps_ci
+[  1%] Building CXX object CMakeFiles/dmotor_client.dir/linux/client.cpp.o
+[  3%] Building CXX object CMakeFiles/dmotor_ps_engine.dir/home/rklinkhammer/workspace/dmotor/src/protocol.cpp.o
+[  3%] Building CXX object CMakeFiles/dmotor-recovery-model-tests.dir/tests/recovery_model_test.cpp.o
+[  3%] Built target dmotor_version
+[  4%] Building CXX object CMakeFiles/dmotor-endpoint-session-tests.dir/tests/endpoint_session_test.cpp.o
+[  5%] Building CXX object CMakeFiles/dmotor_ps_engine.dir/home/rklinkhammer/workspace/dmotor/src/arithmetic.cpp.o
+[  6%] Building CXX object CMakeFiles/dmotor_ps_engine.dir/home/rklinkhammer/workspace/dmotor/src/control.cpp.o
+[  7%] Building CXX object CMakeFiles/dmotor_ps_engine.dir/home/rklinkhammer/workspace/dmotor/src/command_engine.cpp.o
+[  8%] Building CXX object CMakeFiles/dmotor_ps_engine.dir/home/rklinkhammer/workspace/dmotor/src/motion.cpp.o
+[  9%] Building CXX object CMakeFiles/dmotor_ps_engine.dir/home/rklinkhammer/workspace/dmotor/src/velocity.cpp.o
+[ 10%] Building CXX object CMakeFiles/dmotor_ps_engine.dir/home/rklinkhammer/workspace/dmotor/src/controller.cpp.o
+[ 11%] Building CXX object CMakeFiles/dmotor_ps_engine.dir/home/rklinkhammer/workspace/dmotor/src/mailbox.cpp.o
+[ 12%] Linking CXX static library libdmotor_client.a
+[ 13%] Linking CXX static library libdmotor_ps_engine.a
+[ 13%] Built target dmotor_client
+[ 14%] Building CXX object CMakeFiles/dmotor_semantics.dir/src/model.cpp.o
+[ 14%] Built target dmotor_ps_engine
+[ 15%] Building CXX object CMakeFiles/dmotor-client-tests.dir/tests/client_test.cpp.o
+[ 16%] Building CXX object CMakeFiles/dmotor-endpoint-session-tests.dir/linux/endpoint_session.cpp.o
+[ 17%] Building CXX object CMakeFiles/dmotor-recovery-model-tests.dir/src/recovery_model.cpp.o
+[ 18%] Linking CXX executable dmotor-recovery-model-tests
+[ 18%] Built target dmotor-recovery-model-tests
+[ 19%] Building CXX object CMakeFiles/dmotor-ps-worker-tests.dir/home/rklinkhammer/workspace/dmotor/tests/ps_worker_test.cpp.o
+[ 20%] Linking CXX executable dmotor-client-tests
+[ 21%] Linking CXX executable dmotor-endpoint-session-tests
+[ 21%] Built target dmotor-client-tests
+[ 21%] Built target dmotor-endpoint-session-tests
+[ 23%] Building CXX object CMakeFiles/dmotor-ps-cadence-tests.dir/home/rklinkhammer/workspace/dmotor/tests/ps_cadence_test.cpp.o
+[ 23%] Building CXX object CMakeFiles/dmotor-ps-fused-tests.dir/home/rklinkhammer/workspace/dmotor/tests/ps_fused_test.cpp.o
+[ 25%] Linking CXX executable dmotor-ps-cadence-tests
+[ 25%] Built target dmotor-ps-cadence-tests
+[ 26%] Building CXX object CMakeFiles/dmotor_semantics.dir/src/runtime.cpp.o
+[ 27%] Linking CXX executable dmotor-ps-worker-tests
+[ 28%] Linking CXX executable dmotor-ps-fused-tests
+[ 28%] Built target dmotor-ps-fused-tests
+[ 28%] Built target dmotor-ps-worker-tests
+[ 30%] Building CXX object CMakeFiles/dmotor_semantics.dir/src/protocol.cpp.o
+[ 30%] Building CXX object CMakeFiles/dmotor_semantics.dir/src/monitor_protocol.cpp.o
+[ 31%] Building CXX object CMakeFiles/dmotor_semantics.dir/src/version.cpp.o
+[ 32%] Building CXX object CMakeFiles/dmotor_semantics.dir/home/rklinkhammer/workspace/dmotor/src/atomic_mailbox.cpp.o
+[ 33%] Linking CXX static library libdmotor_semantics.a
+[ 33%] Built target dmotor_semantics
+[ 34%] Building CXX object CMakeFiles/dmotor_linux.dir/linux/inspection.cpp.o
+[ 35%] Building CXX object CMakeFiles/dmotor-protocol-tests.dir/tests/protocol_test.cpp.o
+[ 37%] Building CXX object CMakeFiles/dmotor-uart-test.dir/apps/uart_test.cpp.o
+[ 37%] Building CXX object CMakeFiles/dmotor-semantic-tests.dir/tests/model_test.cpp.o
+[ 38%] Linking CXX executable dmotor-semantic-tests
+[ 38%] Built target dmotor-semantic-tests
+[ 39%] Building CXX object CMakeFiles/dmotor-maint.dir/apps/maintenance.cpp.o
+[ 40%] Building CXX object CMakeFiles/dmotor_linux.dir/linux/kernel_device.cpp.o
+[ 41%] Linking CXX executable dmotor-protocol-tests
+[ 41%] Built target dmotor-protocol-tests
+[ 42%] Building CXX object CMakeFiles/dmotor-runtime-tests.dir/tests/runtime_test.cpp.o
+[ 43%] Building CXX object CMakeFiles/dmotor_linux.dir/linux/monitor_uart.cpp.o
+[ 44%] Linking CXX static library libdmotor_linux.a
+[ 44%] Built target dmotor_linux
+[ 45%] Building CXX object CMakeFiles/dmotord-fixture.dir/apps/daemon.cpp.o
+[ 46%] Linking CXX executable dmotor-runtime-tests
+[ 46%] Built target dmotor-runtime-tests
+[ 47%] Linking CXX executable dmotor-uart-test
+[ 48%] Building CXX object CMakeFiles/dmotor-maint-fixture.dir/apps/maintenance.cpp.o
+[ 48%] Built target dmotor-uart-test
+[ 50%] Building CXX object CMakeFiles/dmotor-monitor-tests.dir/tests/monitor_protocol_test.cpp.o
+[ 51%] Linking CXX executable dmotor-monitor-tests
+[ 51%] Built target dmotor-monitor-tests
+[ 52%] Building CXX object CMakeFiles/dmotor-monitor-uart-tests.dir/tests/monitor_uart_test.cpp.o
+[ 53%] Linking CXX executable dmotor-monitor-uart-tests
+[ 54%] Linking CXX executable dmotor-maint
+[ 54%] Built target dmotor-monitor-uart-tests
+[ 55%] Building CXX object CMakeFiles/dmotor-session-link-tests.dir/tests/session_link_test.cpp.o
+[ 55%] Built target dmotor-maint
+[ 56%] Building CXX object CMakeFiles/dmotor-recovery-link-tests.dir/tests/recovery_link_test.cpp.o
+[ 57%] Building CXX object CMakeFiles/dmotor-session-link-tests.dir/src/session_link.cpp.o
+[ 58%] Building CXX object CMakeFiles/dmotord-fixture.dir/tests/fake_kernel.cpp.o
+[ 59%] Linking CXX executable dmotor-maint-fixture
+[ 59%] Built target dmotor-maint-fixture
+[ 60%] Building CXX object CMakeFiles/dmotor-monitor-simulator-tests.dir/tests/monitor_simulator_test.cpp.o
+[ 61%] Linking CXX executable dmotord-fixture
+[ 61%] Built target dmotord-fixture
+[ 62%] Building CXX object CMakeFiles/dmotor-recovery-coordinator-tests.dir/tests/recovery_coordinator_test.cpp.o
+[ 63%] Building CXX object CMakeFiles/dmotor-recovery-link-tests.dir/src/recovery_link.cpp.o
+[ 64%] Building CXX object CMakeFiles/dmotor-monitor-simulator-tests.dir/tests/support/monitor_simulator.cpp.o
+[ 65%] Building CXX object CMakeFiles/dmotor-recovery-link-tests.dir/src/recovery_model.cpp.o
+[ 66%] Building CXX object CMakeFiles/dmotor-monitor-simulator-tests.dir/src/recovery_link.cpp.o
+[ 67%] Building CXX object CMakeFiles/dmotor-recovery-link-tests.dir/src/session_link.cpp.o
+[ 68%] Linking CXX executable dmotor-session-link-tests
+[ 68%] Built target dmotor-session-link-tests
+[ 69%] Building CXX object CMakeFiles/dmotor-recovery-coordinator-tests.dir/tests/support/monitor_simulator.cpp.o
+[ 70%] Building CXX object CMakeFiles/dmotor-coordinator-session-tests.dir/tests/coordinator_session_test.cpp.o
+[ 71%] Building CXX object CMakeFiles/dmotor-monitor-simulator-tests.dir/src/recovery_model.cpp.o
+[ 72%] Building CXX object CMakeFiles/dmotor-recovery-coordinator-tests.dir/src/recovery_coordinator.cpp.o
+[ 73%] Building CXX object CMakeFiles/dmotor-monitor-simulator-tests.dir/src/session_link.cpp.o
+[ 75%] Building CXX object CMakeFiles/dmotor-recovery-coordinator-tests.dir/src/recovery_link.cpp.o
+[ 76%] Building CXX object CMakeFiles/dmotor-coordinator-session-tests.dir/linux/endpoint_session.cpp.o
+[ 77%] Building CXX object CMakeFiles/dmotor-recovery-coordinator-tests.dir/src/recovery_model.cpp.o
+[ 78%] Building CXX object CMakeFiles/dmotor-recovery-coordinator-tests.dir/src/session_link.cpp.o
+[ 79%] Building CXX object CMakeFiles/dmotor-coordinator-session-tests.dir/src/recovery_coordinator.cpp.o
+[ 80%] Linking CXX executable dmotor-recovery-link-tests
+[ 80%] Built target dmotor-recovery-link-tests
+[ 81%] Building CXX object CMakeFiles/dmotor-uart-codec-tests.dir/tests/uart_diagnostic_codec_test.cpp.o
+[ 82%] Building CXX object CMakeFiles/dmotor-coordinator-session-tests.dir/src/recovery_link.cpp.o
+[ 83%] Building CXX object CMakeFiles/dmotor-coordinator-session-tests.dir/src/recovery_model.cpp.o
+[ 84%] Linking CXX executable dmotor-monitor-simulator-tests
+[ 84%] Built target dmotor-monitor-simulator-tests
+[ 85%] Building CXX object CMakeFiles/dmotor-gpio-diagnostic-tests.dir/tests/gpio_diagnostic_test.cpp.o
+[ 86%] Linking CXX executable dmotor-uart-codec-tests
+[ 87%] Building CXX object CMakeFiles/dmotor-coordinator-session-tests.dir/src/session_link.cpp.o
+[ 87%] Built target dmotor-uart-codec-tests
+[ 88%] Building CXX object CMakeFiles/dmotord.dir/apps/daemon.cpp.o
+[ 89%] Linking CXX executable dmotor-gpio-diagnostic-tests
+[ 89%] Built target dmotor-gpio-diagnostic-tests
+[ 90%] Building CXX object CMakeFiles/dmotor-encoder.dir/apps/encoder.cpp.o
+[ 91%] Linking CXX executable dmotor-recovery-coordinator-tests
+[ 91%] Built target dmotor-recovery-coordinator-tests
+[ 92%] Building CXX object CMakeFiles/dmotor-inspect.dir/apps/inspect.cpp.o
+[ 93%] Linking CXX executable dmotor-inspect
+[ 93%] Built target dmotor-inspect
+[ 94%] Building CXX object CMakeFiles/dmotor-linux-tests.dir/tests/linux_inspection_test.cpp.o
+[ 95%] Linking CXX executable dmotor-encoder
+[ 95%] Built target dmotor-encoder
+[ 96%] Linking CXX executable dmotor-coordinator-session-tests
+[ 97%] Building CXX object CMakeFiles/dmotord.dir/linux/ps_device.cpp.o
+[ 97%] Built target dmotor-coordinator-session-tests
+[ 98%] Linking CXX executable dmotor-linux-tests
+[ 98%] Built target dmotor-linux-tests
+[100%] Linking CXX executable dmotord
+[100%] Built target dmotord
+Test project /home/rklinkhammer/workspace/dmotor/build/main_ps_ci
+      Start  1: software_semantics
+ 1/27 Test  #1: software_semantics ...............   Passed    0.00 sec
+      Start  2: software_protocol
+ 2/27 Test  #2: software_protocol ................   Passed    0.00 sec
+      Start  3: software_linux
+ 3/27 Test  #3: software_linux ...................   Passed    0.00 sec
+      Start  4: software_runtime
+ 4/27 Test  #4: software_runtime .................   Passed    0.01 sec
+      Start  5: software_client
+ 5/27 Test  #5: software_client ..................   Passed    0.68 sec
+      Start  6: software_client_package
+ 6/27 Test  #6: software_client_package ..........   Passed    0.46 sec
+      Start  7: software_startup
+ 7/27 Test  #7: software_startup .................   Passed    0.05 sec
+      Start  8: software_powered
+ 8/27 Test  #8: software_powered .................   Passed    2.87 sec
+      Start  9: software_direct
+ 9/27 Test  #9: software_direct ..................   Passed    2.12 sec
+      Start 10: software_commissioning
+10/27 Test #10: software_commissioning ...........   Passed    2.12 sec
+      Start 11: software_service
+11/27 Test #11: software_service .................   Passed    1.72 sec
+      Start 12: software_monitor
+12/27 Test #12: software_monitor .................   Passed    0.00 sec
+      Start 13: software_monitor_uart
+13/27 Test #13: software_monitor_uart ............   Passed    0.00 sec
+      Start 14: software_monitor_schema
+14/27 Test #14: software_monitor_schema ..........   Passed    0.04 sec
+      Start 15: software_recovery_model
+15/27 Test #15: software_recovery_model ..........   Passed    0.00 sec
+      Start 16: software_endpoint_session
+16/27 Test #16: software_endpoint_session ........   Passed    0.00 sec
+      Start 17: software_session_link
+17/27 Test #17: software_session_link ............   Passed    0.00 sec
+      Start 18: software_recovery_link
+18/27 Test #18: software_recovery_link ...........   Passed    0.00 sec
+      Start 19: software_monitor_simulator
+19/27 Test #19: software_monitor_simulator .......   Passed    0.00 sec
+      Start 20: software_recovery_coordinator
+20/27 Test #20: software_recovery_coordinator ....   Passed    0.01 sec
+      Start 21: software_coordinator_session
+21/27 Test #21: software_coordinator_session .....   Passed    0.00 sec
+      Start 22: software_uart_diagnostic_codec
+22/27 Test #22: software_uart_diagnostic_codec ...   Passed    0.00 sec
+      Start 23: software_uart_diagnostic_pty
+23/27 Test #23: software_uart_diagnostic_pty .....   Passed    3.15 sec
+      Start 24: software_gpio_diagnostic
+24/27 Test #24: software_gpio_diagnostic .........   Passed    0.00 sec
+      Start 25: software_ps_worker
+25/27 Test #25: software_ps_worker ...............   Passed    0.00 sec
+      Start 26: software_ps_cadence
+26/27 Test #26: software_ps_cadence ..............   Passed    0.00 sec
+      Start 27: software_ps_fused
+27/27 Test #27: software_ps_fused ................   Passed    0.01 sec
+
+100% tests passed, 0 tests failed out of 27
+
+Total Test time (real) =  13.29 sec
