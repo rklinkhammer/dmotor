@@ -13,7 +13,11 @@ module dmotor_monitor_heartbeat #(
 );
  (* ASYNC_REG="TRUE" *) reg hb_meta,hb_sync;
  reg previous,seen;
- reg [31:0] age,window_age;
+ localparam integer AGE_LIMIT = STARTUP_CYCLES > TIMEOUT_CYCLES ? STARTUP_CYCLES : TIMEOUT_CYCLES;
+ localparam integer AGE_BITS = AGE_LIMIT > 1 ? $clog2(AGE_LIMIT+64'd1) : 1;
+ localparam integer WINDOW_BITS = QUALIFY_CYCLES > 1 ? $clog2(QUALIFY_CYCLES+64'd1) : 1;
+ reg [AGE_BITS-1:0] age;
+ reg [WINDOW_BITS-1:0] window_age;
  wire edge_seen=hb_sync!=previous;
  wire expired=seen ? age>=TIMEOUT_CYCLES-1 : age>=STARTUP_CYCLES-1;
  wire too_fast=seen && edge_seen && age<MIN_EDGE_CYCLES-1;

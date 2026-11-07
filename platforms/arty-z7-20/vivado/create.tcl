@@ -22,6 +22,8 @@ validate_bd_design
 save_bd_design
 add_files -fileset constrs_1 [file join $root platforms arty-z7-20 constraints arty-z7-20.xdc]
 generate_target all [get_files */design_1.bd]
+source [file join $root platforms vivado controller_area.tcl]
+dmotor_controller_area [get_files */design_1.bd]
 set wrapper [make_wrapper -files [get_files */design_1.bd] -top]
 add_files $wrapper
 set_property top design_1_wrapper [current_fileset]

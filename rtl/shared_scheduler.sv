@@ -44,7 +44,13 @@ module dmotor_shared_scheduler #(
 );
     localparam IDLE=0, ADMIT=1, RUN=2, AGE=3, AGE_ACK=4, RETIRE=5, PWM_WAIT=6, DRAIN=7;
     reg [2:0] state;
-    reg [31:0] tick_count, pwm_phase, age;
+    localparam integer TICK_BITS = TICK_CYCLES > 1 ? $clog2(TICK_CYCLES) : 1;
+    localparam integer PWM_BITS = PWM_CYCLES > 1 ? $clog2(PWM_CYCLES) : 1;
+    // Include the terminal increment; external latency fields remain 32 bits.
+    localparam integer AGE_BITS = DEADLINE_CYCLES > 1 ? $clog2(DEADLINE_CYCLES+64'd1) : 1;
+    reg [TICK_BITS-1:0] tick_count;
+    reg [PWM_BITS-1:0] pwm_phase;
+    reg [AGE_BITS-1:0] age;
     reg [31:0] saved_session, saved_sequence;
     reg [127:0] saved_generations, saved_targets, staged_duties;
     reg [4*SNAPSHOT_BITS-1:0] saved_snapshots;

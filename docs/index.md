@@ -14,6 +14,8 @@
 - [G1 work package](g1_work_package.md): concrete contract, proof and experiment tasks.
 - [Requirements-to-test matrix](system_requirements_matrix.md): acceptance traceability.
 
+- [Sandbox LUT optimization](lut_optimization.md): measured implementation changes, tradeoffs and preserved contracts.
+
 ## Current contracts and interfaces
 
 - [Architecture](../DMOTOR_ARCH.md) and [protection circuitry](../DMOTOR_CONTROL.md).

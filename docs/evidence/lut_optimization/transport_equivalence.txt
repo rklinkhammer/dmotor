@@ -1,0 +1,4 @@
+TRANSPORT_EQUIVALENCE_PASS: shared_engine_transport, 5000 cycles
+/home/rklinkhammer/workspace/dmotor-mipi-opt/build/opt/transport_equivalence/shared_engine_transport_tb.sv:46: $finish called at 50030000 (1ps)
+TRANSPORT_EQUIVALENCE_PASS: atomic_hls_adapter, 5000 cycles
+/home/rklinkhammer/workspace/dmotor-mipi-opt/build/opt/transport_equivalence/atomic_hls_adapter_tb.sv:48: $finish called at 50030000 (1ps)

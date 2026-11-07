@@ -1,0 +1,7 @@
+monitor integration PASS: gating, loss, status, protected ACK, reset and no restart
+direct-duty PASS: 0/25/50/100 percent, signed ceiling, mode lock, replay rejection, STOP, expiry, watchdog, faults and HALT
+controller_axi PASS: real AXI, both HLS kernels, configuration, four-motor targets, encoder capture, telemetry shared physical fault, explicit recovery and watchdog expiration
+controller_cleanup PASS: combined cleanup; completion, session, request, reset, fault, exhaustion
+shared mailbox: 2449 interleaved transactions, all 16 reply words match four independent contexts
+shared mailbox: 2449 interleaved transactions, all 16 reply words match four independent contexts
+INFO: [COSIM 212-1000] *** C/RTL co-simulation finished: PASS ***

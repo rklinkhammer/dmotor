@@ -1,0 +1,48 @@
+## final_export
+
+mailbox_control PASS: generated HLS admission/retirement, host backpressure, atomic PWM, no-batch tick, cancellation, ownership/retirement races, timeout and session protection
+# if {![string match {*mailbox_control PASS:*} $result]} {error "Host simulation did not report PASS: $log_path"}
+# puts "Current IP exported and SystemVerilog host simulation completed. Check PASS in simulate.log."
+Current IP exported and SystemVerilog host simulation completed. Check PASS in simulate.log.
+INFO: [Common 17-206] Exiting Vivado at Fri Nov  6 23:30:45 2026...
+
+## final_arty
+
+PASS: saved four-motor wiring, monitor UART/HB/coast and internal GPIO
+##     puts "DMOTOR_CONTROLLER_AREA_PASS: $runs = AreaOptimized_high"
+DMOTOR_CONTROLLER_AREA_PASS: design_1_controller_axi_0_0_synth_1 = AreaOptimized_high
+INFO: [Common 17-206] Exiting Vivado at Fri Nov  6 23:31:12 2026...
+
+## final_dvrz
+
+##     puts "DMOTOR_CONTROLLER_AREA_PASS: $runs = AreaOptimized_high"
+DMOTOR_CONTROLLER_AREA_PASS: dvrz_controller_axi_0_0_synth_1 = AreaOptimized_high
+INFO: [Common 17-206] Exiting Vivado at Fri Nov  6 23:31:40 2026...
+
+## axi_test
+
+monitor integration PASS: gating, loss, status, protected ACK, reset and no restart
+direct-duty PASS: 0/25/50/100 percent, signed ceiling, mode lock, replay rejection, STOP, expiry, watchdog, faults and HALT
+controller_axi PASS: real AXI, both HLS kernels, configuration, four-motor targets, encoder capture, telemetry shared physical fault, explicit recovery and watchdog expiration
+# if {![string match "*${bench} PASS:*" $result]} {error "Integrated test did not PASS"}
+INFO: [Common 17-206] Exiting Vivado at Fri Nov  6 22:51:41 2026...
+
+## cleanup_test
+
+controller_cleanup PASS: combined cleanup; completion, session, request, reset, fault, exhaustion
+# if {![string match "*${bench} PASS:*" $result]} {error "Integrated test did not PASS"}
+INFO: [Common 17-206] Exiting Vivado at Fri Nov  6 22:52:29 2026...
+
+## compact_registers_axi_test
+
+monitor integration PASS: gating, loss, status, protected ACK, reset and no restart
+direct-duty PASS: 0/25/50/100 percent, signed ceiling, mode lock, replay rejection, STOP, expiry, watchdog, faults and HALT
+controller_axi PASS: real AXI, both HLS kernels, configuration, four-motor targets, encoder capture, telemetry shared physical fault, explicit recovery and watchdog expiration
+# if {![string match "*${bench} PASS:*" $result]} {error "Integrated test did not PASS"}
+INFO: [Common 17-206] Exiting Vivado at Fri Nov  6 23:20:15 2026...
+
+## compact_registers_cleanup_test
+
+controller_cleanup PASS: combined cleanup; completion, session, request, reset, fault, exhaustion
+# if {![string match "*${bench} PASS:*" $result]} {error "Integrated test did not PASS"}
+INFO: [Common 17-206] Exiting Vivado at Fri Nov  6 23:21:13 2026...

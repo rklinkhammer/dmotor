@@ -18,7 +18,8 @@ module dmotor_shared_engine_transport #(
     reg [1119:0] record_bank;
     reg [511:0] reply_bank;
 
-    reg [31:0] age;
+    localparam integer AGE_BITS = MAX_CYCLES > 1 ? $clog2(MAX_CYCLES+64'd1) : 1;
+    reg [AGE_BITS-1:0] age;
     reg hls_start;
     wire hls_done,hls_ready;
     wire [1:0] request_address0,request_address1;
@@ -46,6 +47,25 @@ module dmotor_shared_engine_transport #(
         .configuration_r_q1(configuration_q1),.reply_address0(reply_address0),.reply_ce0(reply_ce0),
         .reply_we0(reply_we0),.reply_d0(reply_d0),.reply_address1(reply_address1),
         .reply_ce1(reply_ce1),.reply_we1(reply_we1),.reply_d1(reply_d1));
+    // Fixed word selection: preserve the HLS one-clock read contract.
+    reg [31:0] request_read0,request_read1;
+    reg [31:0] configuration_read0,configuration_read1;
+    always @* begin
+        request_read0=0;request_read1=0;
+        for(integer word_no=0;word_no<4;word_no=word_no+1)begin
+            request_read0=request_read0 |
+                (record_bank[(11+word_no)*32 +:32] & {32{request_address0==word_no}});
+            request_read1=request_read1 |
+                (record_bank[(11+word_no)*32 +:32] & {32{request_address1==word_no}});
+        end
+        configuration_read0=0;configuration_read1=0;
+        for(integer word_no=0;word_no<20;word_no=word_no+1)begin
+            configuration_read0=configuration_read0 |
+                (record_bank[(15+word_no)*32 +:32] & {32{configuration_address0==word_no}});
+            configuration_read1=configuration_read1 |
+                (record_bank[(15+word_no)*32 +:32] & {32{configuration_address1==word_no}});
+        end
+    end
     always @(posedge clk) begin
         if(reset)begin
             state<=IDLE;record_bank<=0;reply_bank<=0;age<=0;
@@ -54,13 +74,18 @@ module dmotor_shared_engine_transport #(
             last_latency<=0;maximum_latency<=0;
         end else begin
             // HLS expects one-clock synchronous memory reads, not combinational muxes.
-            if(request_ce0)request_q0<=record_bank[(11+request_address0)*32 +:32];
-            if(request_ce1)request_q1<=record_bank[(11+request_address1)*32 +:32];
-            if(configuration_ce0)configuration_q0<=configuration_address0<20 ? record_bank[(15+configuration_address0)*32 +:32] : 0;
-            if(configuration_ce1)configuration_q1<=configuration_address1<20 ? record_bank[(15+configuration_address1)*32 +:32] : 0;
+            if(request_ce0)request_q0<=request_read0;
+            if(request_ce1)request_q1<=request_read1;
+            if(configuration_ce0)configuration_q0<=configuration_read0;
+            if(configuration_ce1)configuration_q1<=configuration_read1;
             if(state==RUN || state==FINISH)begin
-                if(reply_ce0 && reply_we0)reply_bank[reply_address0*32 +:32]<=reply_d0;
-                if(reply_ce1 && reply_we1)reply_bank[reply_address1*32 +:32]<=reply_d1;
+                // Port 1 retains priority on a same-address write collision.
+                for(integer word_no=0;word_no<16;word_no=word_no+1)begin
+                    if(reply_ce0 && reply_we0 && reply_address0==word_no)
+                        reply_bank[word_no*32 +:32]<=reply_d0;
+                    if(reply_ce1 && reply_we1 && reply_address1==word_no)
+                        reply_bank[word_no*32 +:32]<=reply_d1;
+                end
             end
             case(state)
             IDLE: if(command_valid && !fault)begin

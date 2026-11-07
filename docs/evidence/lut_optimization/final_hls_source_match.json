@@ -1,0 +1,7 @@
+{
+  "result": "PASS",
+  "compared_files": 41,
+  "reference": "build/opt/engine",
+  "candidate": "build/opt/final_profile",
+  "meaning": "Default HLS sources/configuration are byte-identical to pre-change prepared profile; rejected storage/status experiments are not defaults"
+}

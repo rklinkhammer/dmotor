@@ -1,0 +1,2 @@
+EQUIVALENCE_PASS: 150000 cycles, 5 PWM periods, 3 heartbeat profiles
+/home/rklinkhammer/workspace/dmotor-mipi-opt/build/opt/equivalence/bench.sv:46: $finish called at 1500030000 (1ps)

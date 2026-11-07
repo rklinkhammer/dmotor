@@ -1,0 +1,11 @@
+{
+  "atomic_hls_adapter_ports_unchanged": true,
+  "shared_engine_transport_ports_unchanged": true,
+  "shared_scheduler_ports_unchanged": true,
+  "pwm_ports_unchanged": true,
+  "monitor_heartbeat_ports_unchanged": true,
+  "cleanup_sequencer_ports_unchanged": true,
+  "bram_hls_ports_unchanged": true,
+  "lutram_hls_ports_unchanged": true,
+  "compact_hls_ports_unchanged": true
+}
