@@ -195,3 +195,13 @@ Keep U03/U04/U06 and 10 ms feasibility open until measured maxima plus justified
 margin fit the reviewed allocations. If they do not, revise the acquisition design,
 period or independently supervised execution architecture explicitly. No thresholds
 or gate acceptance follow from host tests or an IDF build.
+
+## Isolated measurement preparation
+
+The [INA + battery ADC diagnostic](../software/esp32/diagnostics/ina_timing/README.md)
+implements a finite RAM capture of both battery ADC channels followed by the same
+INA read four times (twelve transactions), with per-call times and errors. Optional
+IPROPI acquisition and ADC sample counts extend the analog workload. A separately
+labelled 100 Hz raw-timeout probe deliberately measures zero-tick driver behavior;
+it does not weaken the operational adapter guard. No physical measurement or target
+build is recorded by this preparation increment.

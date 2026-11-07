@@ -1,0 +1,27 @@
+2026-11-07 — isolated INA + ADC diagnostic preparation on esp32
+Parent: 0d53353
+
+Portable combined cycle test:
+g++ -std=c++14 -Wall -Wextra -Werror -Wconversion \
+  -fsanitize=undefined,address -fno-omit-frame-pointer \
+  -Isoftware/esp32/components/acquisition/include \
+  -Isoftware/esp32/diagnostics/ina_timing/main \
+  software/esp32/tests/timing_cycle_test.cpp -o /tmp/dmotor-timing-cycle-test
+ASAN_OPTIONS=detect_leaks=0 /tmp/dmotor-timing-cycle-test
+Result: exit 0, INA plus battery ADC timing cycle tests passed.
+
+Optimized -O2 combined cycle test: exit 0, same message.
+Existing acquisition_test.cpp rebuilt with address/undefined behavior sanitizers:
+exit 0, acquisition deterministic tests passed.
+Leak detection disabled due to known ptrace environment limitation.
+
+Tests cover both battery ADC channels, optional six-channel ADC workload with
+repeated sampling, ADC error/deadline abort before I2C, late release/preemption,
+all twelve I2C failure and late-return positions, four-slot register ordering,
+100 Hz bounded rejection versus deliberately raw diagnostic timeout behavior,
+and invalid sample configuration. No healthy output exists in this application.
+
+Reviewed v6.1 primary headers for adc_oneshot API and I2C bus/device fields.
+No ESP-IDF/toolchain or cmake available: target compile/link and CTest not run.
+The host tests do NOT compile main.cpp or validate target timing/electrical behavior.
+No hardware attached, flashed, or enabled. No actual timing results recorded.

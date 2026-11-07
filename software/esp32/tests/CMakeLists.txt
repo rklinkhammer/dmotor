@@ -6,3 +6,9 @@ target_include_directories(acquisition_test PRIVATE ../components/acquisition/in
 target_compile_features(acquisition_test PRIVATE cxx_std_14)
 target_compile_options(acquisition_test PRIVATE -Wall -Wextra -Werror -Wconversion -UNDEBUG)
 add_test(NAME acquisition COMMAND acquisition_test)
+add_executable(timing_cycle_test timing_cycle_test.cpp)
+target_include_directories(timing_cycle_test PRIVATE ../components/acquisition/include
+    ../diagnostics/ina_timing/main)
+target_compile_features(timing_cycle_test PRIVATE cxx_std_14)
+target_compile_options(timing_cycle_test PRIVATE -Wall -Wextra -Werror -Wconversion -UNDEBUG)
+add_test(NAME ina_adc_timing_cycle COMMAND timing_cycle_test)
