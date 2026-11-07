@@ -113,7 +113,8 @@ these tests do not establish closed-loop motor dynamics or vehicle performance.
 Run `python3 tools/vitis_check.py --kernel controller`. This top already contains
 estimator, profiles and PI; do not add separate motion/velocity IPs in series.
 See [verification evidence](verification.md). The new [dispatcher](dispatcher.md)
-now owns the ring/controller acceptance and completion sequence in C++ HLS.
+provides the ring/controller component reference. The product uses four PS
+VelocityMailbox contexts; the standalone dispatcher HLS flow is historical.
 Next adapt AXI and wire collector/scheduler/PWM and shared safety, then implement
 tuning MMIO and motor-model tests. Integrated resource fit and routed timing remain
 requirements.

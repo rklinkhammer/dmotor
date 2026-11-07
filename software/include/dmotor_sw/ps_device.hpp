@@ -1,6 +1,7 @@
 #pragma once
 #include "dmotor_sw/kernel_device.hpp"
 #include <atomic>
+#include <mutex>
 #include <thread>
 namespace dmotor_ps {
 // Owns one kernel fd, one controller executor and one explicit worker lifetime.
@@ -9,6 +10,7 @@ namespace dmotor_ps {
 class PsDevice final : public dmotor_sw::Platform {
     dmotor_sw::KernelDevice device_;
     std::atomic<bool> stopping_{false}, failed_{false};
+    std::mutex control_mutex_;
     std::thread thread_;
     void check() const;
 

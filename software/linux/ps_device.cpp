@@ -36,6 +36,9 @@ PsDevice::PsDevice(const std::string& path) : device_(path) {
             }
         } catch (...) {
             failed_ = true;
+            // Finish any in-flight Runtime operation before the final HALT.
+            // No checked write/release may overtake failure inhibition.
+            std::lock_guard<std::mutex> lock(control_mutex_);
             try {
                 device_.halt(true);
             } catch (...) {
@@ -53,18 +56,22 @@ PsDevice::~PsDevice() {
         thread_.join();
 }
 uint32_t PsDevice::read32(uint32_t a) {
+    std::lock_guard<std::mutex> lock(control_mutex_);
     check();
     return device_.read32(a);
 }
 void PsDevice::write32(uint32_t a, uint32_t v) {
+    std::lock_guard<std::mutex> lock(control_mutex_);
     check();
     device_.write32(a, v);
 }
 void PsDevice::fence() {
+    std::lock_guard<std::mutex> lock(control_mutex_);
     check();
     device_.fence();
 }
 void PsDevice::halt(bool asserted) {
+    std::lock_guard<std::mutex> lock(control_mutex_);
     if (!asserted)
         check();
     device_.halt(asserted);

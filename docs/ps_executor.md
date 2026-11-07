@@ -12,7 +12,9 @@ missing/late reply or stale transaction cannot extend the hardware deadline.
 The kernel descriptor is exclusive; Runtime and the worker share it but operate
 on separate register sets. The worker never grants motion authority or refreshes
 application/authorization leases. It starts inhibited, checks identity/cadence,
-and asserts HALT on failure. Physical reset requires explicit worker restart;
+and asserts HALT on failure. Runtime writes/HALT release are serialized with
+failure inhibition, so an in-flight release completes before the failure HALT
+and cannot subsequently override it. Physical reset requires explicit worker restart;
 logical reset invalidates pending work and requires the original cleanup sweep.
 
 ## Transaction contract

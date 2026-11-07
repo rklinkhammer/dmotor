@@ -36,3 +36,5 @@ issues. No additional platform or generated ABI is deprecated by this archive.
 The inventory links every remaining component reference while it awaits extraction
 into the current PL design/ABI documents. Removing old references from the main
 index does not by itself complete their review or transfer their requirements.
+
+- [Previous motion component/HLS reference](pre-ps-executor-2026-11-07/motion_executor.md)

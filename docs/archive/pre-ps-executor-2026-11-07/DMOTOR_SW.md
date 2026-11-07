@@ -3,8 +3,8 @@
 # DMOTOR processor software implementation plan
 
 **Date:** 2026-10-17
-**Architecture baseline:** [DMOTOR_ARCH.md](../../../DMOTOR_ARCH.md), revision 0.18  
-**Initial platform:** Zynq-7000 ARM processor running EDF Linux on Arty Z7-20  
+**Architecture baseline:** [DMOTOR_ARCH.md](../../../DMOTOR_ARCH.md), revision 0.18
+**Initial platform:** Zynq-7000 ARM processor running EDF Linux on Arty Z7-20
 **Status:** Semantic model, typed protocol, UIO inspection and encoder utilities are
 implemented. User-observed encoder movement confirms the initial board readout
 path. Version 0.6.0 adds an exclusive kernel-access foundation, lifecycle/velocity
