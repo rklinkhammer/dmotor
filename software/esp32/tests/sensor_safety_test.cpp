@@ -1,4 +1,5 @@
 #include "physical_acquisition.hpp"
+#include "health_capture.hpp"
 #include "release_wait.hpp"
 #include "safety_core.hpp"
 #include <cassert>
@@ -15,6 +16,7 @@ PhysicalSample sample(Us start=20000) {
 }
 SafetyProof proof(Us oldest=0) {
     SafetyProof p; p.population=p.valid_sensors=1;
+    p.monitoring_complete=true;
     p.battery0=p.battery1=p.calibration=p.policy=p.recovery=p.physical_arm=true;
     p.oldest_conversion=oldest; return p;
 }
@@ -29,6 +31,22 @@ struct TestBus : Bus {
     }
 };
 int main() {
+    {
+        HealthCapture<3> c;
+        HealthRecord r; r.health=Health::warming; r.complete=true; c.add(r);
+        for(unsigned i=1;i<10000;++i) {
+            r.cycle=i; r.health=Health::good; r.age=20000; r.duration=3500; c.add(r);
+        }
+        assert(c.cycles==10000 && c.health_counts[0]==9999 && !c.has_bad);
+        assert(c.retained()==3 && c.at(0).cycle==9997 && c.at(2).cycle==9999);
+        r.cycle=10000; r.health=Health::io; r.complete=false; r.bus_error=263;
+        r.error_reg=0xfe; r.lateness=1000; r.duration=11000; r.age=-1; c.add(r);
+        assert(c.bus_errors==1 && c.guarded==0 && c.late_releases==1 && c.deadline_misses==1);
+        r.cycle=10001; r.bus_error=0; c.add(r);
+        assert(c.guarded==1 && c.first_bad.cycle==10000 && c.first_bad.error_reg==0xfe);
+        assert(c.max_age==20000 && c.max_duration==11000 && c.max_lateness==1000);
+    }
+
     {
         TestClock clock;
         const Us base=clock.t;
@@ -94,7 +112,43 @@ int main() {
         t=core.begin(16000,16000);
         assert(core.finish(t,17000,proof(16000)) && !core.heartbeat());
         core.observe(40999); assert(core.permits());
-        core.observe(41000); assert(core.faulted() && !core.permits()); // Freshness expires.
+        core.observe(41000); assert(core.permits()); // D10: sample age is not a continuous permit timer.
+        core.observe(44000); assert(core.faulted() && !core.permits()); // Next work deadline wins.
+    }
+    {
+        SafetyCore core{1}; auto t=core.begin(100000,100000);
+        assert(core.finish(t,104000,proof(83760))); // 20,240 us old at commit.
+        core.observe(109000); assert(core.permits()); // Old sample age exceeds 25 ms now.
+        t=core.begin(116000,116000);
+        assert(core.finish(t,120000,proof(99760))); // New independently qualified sample.
+        core.observe(144000); assert(core.faulted()); // Missing next completion still inhibits.
+    }
+    {
+        SafetyCore core{1}; auto p=proof(); p.recovery=p.physical_arm=false;
+        auto t=core.begin(0,0); assert(!core.finish(t,1000,p));
+        assert(core.monitoring_live() && core.heartbeat() && !core.permits());
+        t=core.begin(16000,16000); p.oldest_conversion=16000; p.policy=false;
+        assert(!core.finish(t,17000,p) && core.faulted());
+        assert(core.monitoring_live() && !core.heartbeat() && !core.permits());
+        t=core.begin(32000,32000); p=proof(32000);
+        assert(!core.finish(t,33000,p)); // Latched fault prevents permission, not monitoring.
+        assert(core.heartbeat() && core.monitoring_live());
+        core.observe(60000); assert(!core.heartbeat() && !core.monitoring_live());
+        t=core.begin(64000,64000); p=proof(64000);
+        assert(!core.finish(t,65000,p) && core.heartbeat() && core.faulted());
+        t=core.begin(80000,80000); p=proof(80000); p.monitoring_complete=false;
+        assert(!core.finish(t,81000,p) && !core.monitoring_live());
+    }
+    {
+        SafetyCore core{1}; auto p=proof(); p.recovery=false;
+        auto t=core.begin(0,0); assert(!core.finish(t,100,p) && core.heartbeat());
+        assert(!core.finish(t,200,p) && core.heartbeat()); // Duplicate completion cannot toggle.
+        t=core.begin(0,300); assert(!core.finish(t,400,p) && !core.monitoring_live());
+        t=core.begin(16000,16000); p=proof(16000);
+        assert(!core.finish(t,16100,p) && core.heartbeat()); // Latch still holds permits low.
+        t=core.begin(32000,32000); p=proof(32000);
+        assert(!core.finish(t,32100,p) && !core.heartbeat() && core.monitoring_live());
+        core.observe(60000); assert(!core.monitoring_live()); // Low waveform phase still expires.
     }
     for(bool fault_first:{false,true}) {
         SafetyCore core{1}; auto t=core.begin(0,0);

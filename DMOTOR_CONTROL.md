@@ -287,3 +287,13 @@ any DMOTOR_ARCH evidence.
    pins disappoint.
 
 None of these gates is claimed complete by this document.
+
+## D10 amendment — accepted motor-damage risk
+
+[Decision D10](docs/decisions.md#d10--best-effort-motor-overload-protection-and-accepted-motor-damage-risk)
+adopts best-effort firmware current/stall monitoring, with motor damage from delayed
+response accepted conditional on correctly configured and verified ITRIP. No
+motor-survival deadline is claimed. Current-sample age qualifies each completed
+cycle; independent next-cycle liveness replaces continuous current-age permit
+expiry. Stop/HALT, fault latching, invalid-data handling, explicit recovery and
+non-motor electrical requirements remain. [Implementation](docs/monitor_policy.md).

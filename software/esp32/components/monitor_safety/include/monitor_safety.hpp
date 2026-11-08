@@ -26,6 +26,7 @@ class MonitorSafety {
             gpio_set_level(pin,0);
     }
 public:
+    explicit MonitorSafety(unsigned population=15):core_(population) {}
     bool start() {
         if(started_) return false;
         gpio_config_t cfg{};

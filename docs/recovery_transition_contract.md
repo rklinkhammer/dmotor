@@ -28,6 +28,10 @@ not a second firmware implementation or competing recovery specification.
 may emit HB in SAFE or FAULT if required measurements are fresh and the cycle
 completed within its budget. A latched operational fault alone does not stop HB;
 missing/stale measurements or a failed cycle do. Permits are low outside ARMED.
+The candidate implementation now separates `monitoring_complete` from motion
+policy approval: new valid cycles can resume modeled HB after a monitoring
+failure while motor faults stay latched. This is not automatic motor recovery.
+See [HB format, truth table and physical-output limitation](monitor_policy.md#heartbeat-is-independent-of-motor-permission).
 A monitor-only fault need not clear PL intent immediately: UART fault events
 are best-effort during operation. Recovery must clear and hold PL intent before
 permits can return. UART is required equipment for boot arming and recovery.
@@ -257,3 +261,14 @@ configuration/reset/power/clock-loss cases separately; evaluate any candidate
 external bias network with measured base current and ENABLE voltage. There is
 no XDC-only pre-configuration qualification path. Test stdout backpressure,
 I2C faults, monitor hang and watchdog recovery without reset before powered use.
+
+## D10 current-monitor policy amendment
+
+Motor damage from delayed overload detection/shutdown is accepted conditional on
+verified ITRIP. This does not change the recovery/ARM sequence or authorize live
+rearm. Snapshot age <25 ms is required at monitor commit; continuous age-based
+permit expiry is superseded by next scheduled release+12 ms liveness inhibition.
+Bad/missing/stale acquisition, calibration faults, hard inputs and policy/deadline
+faults still inhibit and latch. The 16 ms cadence and <12 ms work budget remain.
+See [D10](decisions.md#d10--best-effort-motor-overload-protection-and-accepted-motor-damage-risk)
+and [implementation](monitor_policy.md). No operational wire ABI is changed.

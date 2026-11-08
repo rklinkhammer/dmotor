@@ -10,4 +10,8 @@ config DMOTOR_CONVERSION_BOUND_US
     int "Conservative conversion window bound us (requires board qualification)"
     range 1 24999
     default 2500
+config DMOTOR_HEALTH_CYCLES
+    int "Capture cycles (16 ms each; fixed 100-record tail)"
+    range 100 100000
+    default 10000
 endmenu

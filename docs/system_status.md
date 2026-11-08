@@ -26,6 +26,14 @@ is inferred from starting the plan.
 
 ## Current work direction — 2026-11-08
 
+**Requirement update — D10:** Motor damage caused by delayed overload detection
+or shutdown is accepted, conditional on verified ITRIP. No guaranteed motor-survival
+deadline is required. The [bounded monitor workload/policy candidate](monitor_policy.md)
+is implemented; sample age qualifies cycle completion while independent liveness
+expires at the next release+12 ms. Physical outputs remain hard-inhibited. No gate
+closes from this decision; stop/fault behavior, configuration and electrical tests remain.
+
+
 Integrated monitor/motor-board testing remains paused pending assembled boards.
 Robert has resumed standalone ESP32/INA bench characterization; see the
 [measured I2C results and revised 16 ms requirement](ina_bench_timing.md).
@@ -34,8 +42,8 @@ standalone fixture: maximum release-to-end 7.697 ms, INA window 7.272 ms, ADC
 0.315 ms and lateness 0.110 ms. See the linked raw excerpt and validation scope.
 The revised diagnostic implements the 16 ms loop with 4 ms (25%) reserve;
 the recovery model now uses 16 ms; operational deployment and assembled/loaded timing validation remain pending. U0 UART exchange/restart/reconnection
-checks passed. The current software suite passes 32/32 tests and portable sanitizer
-tests pass 4/4. U1 GPIO/HB modes are implemented, covered by the historical native PS suite
+checks passed. The current software suite passes 33/33 tests and portable sanitizer
+tests pass 5/5. U1 GPIO/HB modes are implemented, covered by the historical native PS suite
 and a passing ESP32-S3 build; U1 flashing and physical measurements are not recorded.
 Main now uses the [1 ms PS motor executor](ps_executor.md), with the matched
 board/ARM rebuild recorded in [system status](system_status.md).
@@ -60,7 +68,7 @@ and bumper routing/PS notification and qualification are pending.
 | Zynq PL | Revision-13 PSF1 1 ms controller built and routed; atomic HLS, independent protection, coherent PWM and CLN1 retained; setup +2.157 ns, hold +0.013 ns, no DRC errors | Electrical response on the assembled system; independent shutdown for PL-only failures |
 | Zynq PS | Four-context C++ motor worker integrated in daemon; matched PSF1 driver/daemon compiled for ARM; ten QEMU executable checks pass | Loaded 1 ms/800 us execution measurements; full monitor recovery/ARM coordinator and vehicle planner |
 | Client API | `dmotor_client`, installed `dmotor::client` CMake target and Yocto packaging retained; 29 native PS tests pass, including installed/staged consumer and recovery model | Physical board/client qualification remains |
-| ESP32 | 16 ms acquisition, physical health/calibration and hard-inhibited safety candidates implemented; 4/4 portable sanitizer tests pass. Concurrent diagnostic: 10,000 acquisitions / 1,000 replies PASS, max 8.215 ms. Physical-health: warm-up + 99 good, max 3.918 ms; wrong-address: 100/100 rejected, max 0.739 ms ([matrix](gates/G2.md)) | Full operational application, independent conversion-bound proof, four-device/ADC timing, calibration and electrical protection qualification remain open |
+| ESP32 | 16 ms acquisition, physical health/calibration and hard-inhibited safety candidates implemented; 5/5 portable sanitizer tests pass; complete workload/current-policy and IDF task adapters build. Concurrent diagnostic: 10,000 acquisitions / 1,000 replies PASS, max 8.215 ms. Physical-health long run: warm-up + 9,999 good, max 3.905 ms, max age bound 20.240 ms; wrong-address: 100/100 rejected, max 0.739 ms ([matrix](gates/G2.md)) | Full operational application, independent conversion-bound proof, four-device/ADC timing, calibration and electrical protection qualification remain open |
 | Integration | 36 controller/native/RTL tests pass, including real PS-C++/full-PL AXI and interrupted-cleanup co-simulation | Measured timing, electrical joint-state behavior and accepted system release |
 | Build evidence | [Matched revision-13 hardware/ARM build and SD export](evidence/esp32_main_merge/inputs.json); source identity, exported checksums and rootfs contents verified | Historical matched-build evidence; subsequent diagnostic hardware runs are recorded separately, without supplied image hashes |
 
@@ -100,9 +108,9 @@ see [implementation, exact scope, build and fixture procedure](monitor_next_step
 | Priority / availability | Next implementation | Validation / gate impact |
 |---|---|---|
 | Completed current-fixture follow-up | Explicit UART failure reason physically verified; 400 injected failures, zero skips/expirations, max 5.747 ms. Register-mismatch step reported completed in another chat | [G2 evidence](gates/G2.md); link that existing mismatch result when available, do not require a repeat. U05/U06 remain open beyond these subcases |
-| 2 — host + current fixture | Add configurable long physical-health capture and release/age/bus-error telemetry; establish a defensible conversion-age bound | Long-run nominal, stalled/readable conversion and analyzer timing. Preserve 25 ms age limit; do not infer sustained permit validity from 99 good snapshots. U03/U06/G1c/G3 |
-| 3 — host + current fixture | Resolve 24-read four-device timing strategy; complete calibration storage/validation and policy integration using reviewed parameters | Compare added ID/config traffic against <11 ms acquisition and <12 ms total work; evaluate alternatives before changing bus rate. Known-reference ADC calibration; missing/corrupt coefficients must inhibit. U03/U06/G1c/G3 |
-| 4 — host + inhibited fixture | Integrate accepted policy, STOP/HALT ISR and watchdog paths with epoch-serialized supervisor; then recovery/ARM coordination | Blocked workers, late results, scheduler starvation, fresh-data expiry, HB compatibility and real output latency. Keep outputs hard-inhibited until qualified; no automatic/live recovery. G1a/G3–G5 |
+| 2 — host + current fixture | Implemented configurable long physical-health capture and release/age/bus-error telemetry; establish a defensible conversion-age bound | [10,000-cycle nominal run passed](monitor_next_steps.md#long-physical-health-capture--nominal-physical-run-passed). Next: stalled/readable conversion and analyzer timing; worst observed age bound leaves 4.760 ms validity. D10 retains 25 ms validity at commit but replaces continuous age expiry with next-cycle liveness. No motor-survival guarantee. U03/U06/G1c/G3 |
+| 3 — host + current fixture | Resolve 24-read four-device timing strategy; complete calibration storage and supply reviewed parameters to the implemented workload/policy | Compare added ID/config traffic against <11 ms acquisition and <12 ms total work; evaluate alternatives before changing bus rate. Known-reference ADC calibration; missing/corrupt coefficients must inhibit. U03/U06/G1c/G3 |
+| 4 — host + inhibited fixture | Integrate configured workload/policy with STOP/HALT ISR and watchdog paths with epoch-serialized supervisor; then recovery/ARM coordination | Blocked workers, late results, scheduler starvation, fresh-data expiry, HB compatibility and real output latency. Keep outputs hard-inhibited until qualified; no automatic/live recovery. G1a/G3–G5 |
 | 5 — assembled boards | Four physical INAs, all ADC channels, filtering and policy/output work; full electrical integration | Work <12 ms and >=4 ms reserve; actual sensor mapping, U1 boot/reset-low, STOP/HALT/ALERT, PL-only failures and recovery/ARM traces. U01/U03/U04/U06/G2–G6 remain open |
 
 Synthetic nominal mode, real bus stalls and physical boot-ID rejection are not
@@ -231,3 +239,9 @@ User-reported bench progress: both Zynq and ESP32 boot; the native USB console
 shows the ESP32 diagnostic banner. The [U0 UART tests passed](gates/G2.md): initial 100 exchanges plus four
 1,000-exchange runs, including both endpoint restarts and reconnection. An
 interrupted run correctly timed out at 203 sent / 202 verified. Electrical permit/HB measurements remain unreported.
+
+**Heartbeat implementation correction:** monitoring completion is independent of
+motor permission. Valid disarmed/fault-latched cycles can advance modeled HB;
+invalid/late monitoring cannot. Motor faults stay latched and never auto-rearm.
+[Contract and tests](monitor_policy.md#heartbeat-is-independent-of-motor-permission).
+GPIO HB and permits remain hard-inhibited; physical HB/G2 acceptance is unchanged.

@@ -402,3 +402,11 @@ configured address changed to 0x43 (physical INA assumed unchanged at 0x44), all
 durations. [Capture and remaining tests](monitor_next_steps.md#wrong-address-negative-test--2026-11-08). This does not establish
 register-configuration mismatch handling or an electrical shutdown result.
 Overall gates remain open.
+
+**Long one-INA physical-health result:** [10,000-cycle nominal capture](evidence/sensor_health_long/physical-run.txt)
+passes with 9,999 good and one warming, max 3,905 us, lateness 24 us, calculated
+age bound 20,240 us, and zero bus/guard/late/deadline counts. This advances U03/U06
+and G2 diagnostic evidence only. The 4,760 us remaining age validity does not
+cover another 16 ms cycle; conversion-bound proof, sustained output qualification,
+four-device timing, calibration and electrical gates remain open. See
+[next work](monitor_next_steps.md#validated-10000-cycle-result).

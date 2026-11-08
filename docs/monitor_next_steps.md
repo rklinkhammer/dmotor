@@ -98,8 +98,9 @@ remain 100 ms; those are not monitor periods. These are host models, not live re
 12 ms work expiry, monotonic time, missed-cycle checks and a latched fault state.
 Late or pre-fault results cannot reauthorize outputs. Final decisions require the
 configured sensor mask, both battery proofs, calibration, policy, recovery and
-physical ARM. Missing recovery/ARM alone leaves outputs inhibited. A successful
-commit toggles the modeled heartbeat once; the resulting nominal waveform is
+physical ARM. Missing recovery/ARM alone leaves outputs inhibited. A completed, valid monitoring/policy evaluation toggles modeled HB independently
+of ARM and operational fault latches; motor permission additionally requires a
+clear policy and explicit authorization. Each such evaluation toggles HB once; the resulting nominal waveform is
 31.25 Hz, which remains subject to PL watchdog compatibility qualification.
 
 An independent `monitor_safety` FreeRTOS task observes the core every 1 ms at high
@@ -110,11 +111,11 @@ no enable switch. The sensor diagnostic exercises this adapter but lacks the
 battery/calibration/policy/recovery proofs, so it cannot qualify operational outputs.
 The compile-check harness references the adapter without starting it.
 
-The supervisor also expires a previous permit decision if the next worker never
-starts, or the conversion-age bound expires first. With the conservative age
+The supervisor expires a previous permit decision if the next worker never
+starts/completes by the next release+12 ms. D10 removes continuous conversion-age expiry. With the conservative age
 estimate above, 25 ms validity can end before the next 16 ms cycle completes.
-That deliberately inhibits; sustained operation needs a tighter validated age
-proof. This work does not relax freshness to conceal the conflict.
+That was the pre-D10 policy. D10 explicitly accepts motor-damage risk and retains
+age checking at commit, with independent next-cycle liveness instead.
 
 The task is independently scheduled, not an interrupt-level deadline guarantee.
 STOP/HALT ISR integration, watchdog behavior under scheduler starvation, measured
@@ -244,8 +245,121 @@ Zynq rejects the first decoded reply with `Sample rejected: failure`;
 ESP32 records 9,600 complete and 400 failed cycles, no skips/expirations,
 maximum 5,747 us. This completes the requested updated-receiver negative test.
 
-Next implementation is configurable long physical-health capture with release,
-conversion-age and bus-error telemetry. Validate sustained timing and the
+Configurable long physical-health capture with release, conversion-age and
+bus-error telemetry is implemented and its nominal physical run passed. Validate the
 conversion-age bound, then resolve the four-device 24-read workload and complete
 calibration/policy integration. Preserve the 16 ms period, 12 ms work ceiling,
 4 ms reserve and hard-inhibited outputs. Physical qualification gates remain open.
+
+## Long physical-health capture — nominal physical run passed
+
+The one-INA diagnostic now supports `DMOTOR_HEALTH_CYCLES` from 100 to 100,000,
+default **10,000 cycles (about 160 seconds)**. RAM remains fixed: aggregate counts
+cover the entire run; the last 100 records and first unexpected failure are retained.
+There is no console formatting during acquisition. The initial cycle's warming
+status is expected and does not become `first_bad`. Later warming is retained.
+
+Use a separate build/config directory so previous mismatch-test settings do not
+carry into the nominal capture. From the dmotor repository:
+
+```sh
+../esp32-dev/esp32 \
+  --project software/esp32/diagnostics/sensor_health \
+  --target esp32s3 --port /dev/ttyACM0 idf \
+  -B "$PWD/build/sensor_health_long/esp32/build" \
+  -D SDKCONFIG="$PWD/build/sensor_health_long/esp32/sdkconfig" \
+  -D SDKCONFIG_DEFAULTS=sdkconfig.defaults \
+  build flash monitor
+```
+
+Confirm `address=0x44 config=0x4127 conversion_bound_us=2500` and
+`capture_v2 cycles=10000 period_us=16000 retained_tail=100` at startup.
+The console then stays quiet during capture. Keep motor drive power disconnected.
+**No Zynq application is required**; this profile has no acquisition UART server.
+Use the same host command with `menuconfig` instead of `build flash monitor` to
+change cycle count. Saved config overrides defaults; verify the banner every time.
+
+CSV v2 rows contain `kind,cycle,health,release_us,lateness_us,duration_us,age_upper_us,
+shunt,bus,attempts,esp_error,error_reg,transport_complete`. The old CSV layout is
+superseded only for this standalone diagnostic; no operational UART contract changes.
+
+- Age is a conservative upper bound at acquisition return, using the configured
+  conversion-window bound; `-1` means unqualified, not a fresh reading.
+- `esp_error` is the IDF return code of the first failed bus call that cycle;
+  `error_reg` identifies the register. A code alone does not prove electrical cause.
+- `guarded_cycles` counts incomplete acquisition without an actual bus error
+  (e.g. deadline/clock guard); it is distinct from `bus_error_cycles`.
+- `late_releases` counts start lateness >=1,000 us; `acquisition_deadline_misses`
+  counts duration >=11,000 us. Overdue releases are not rebased or silently skipped.
+- All nine health-status totals, maxima and first-failure evidence survive tail
+  buffer rollover. No samples or records are streamed during the timed loop.
+
+Expected nominal result: one warming, **9,999 good**, no other health statuses,
+no bus-error/guarded cycles, no late releases or acquisition deadline misses.
+Qualified age bounds must stay below 25,000 us. Report the full startup banner,
+status totals, summary and any `first_bad` row. Do not interpret successful snapshots
+as a guarantee that a permit can remain valid until the next cycle.
+
+Portable sanitizer tests pass 4/4, including rollover over 10,000 records, first
+failure retention and timing/error counts. ESP32 target build evidence is under
+`docs/evidence/sensor_health_long/`. The nominal physical run passed as recorded below.
+Next validation is analyzer confirmation of conversion timing and stale-readable rejection;
+four-device timing, calibration and operational safety gates remain open.
+
+### Validated 10,000-cycle result
+
+[Unmodified user capture](evidence/sensor_health_long/physical-run.txt), reported
+ELF prefix `45d41942d`, address 0x44, expected configuration 0x4127, assumed
+conversion bound 2,500 us: **PASS for the nominal one-INA long-run diagnostic**.
+
+| Measurement | Whole-run result |
+|---|---|
+| Cycles / qualified / warming | 10,000 / 9,999 / 1 |
+| Other health statuses | All zero |
+| Maximum release-to-end | 3,905 us |
+| Maximum release lateness | 24 us |
+| Maximum qualified age upper bound | 20,240 us |
+| Bus errors / guard rejections | 0 / 0 |
+| Late releases (>=1 ms) / acquisition deadline misses | 0 / 0 |
+
+The retained tail covers cycles 9900–9999, all good with six successful reads,
+16,000 us between scheduled releases, 5 us lateness, 3,533 us duration and
+20,239 us age bound. Counts/maxima cover the whole run; raw rows cover only the
+tail. No `first_bad` appears. The application-return timestamp is not an exact
+capture duration; the nominal schedule spans about 160 seconds.
+
+The maximum leaves 7,095 us before the 11 ms acquisition ceiling for this
+single-device workload. The age bound leaves only **4,760 us** before the 25 ms
+freshness limit at the worst observed qualified sample, less than the 16 ms
+inter-cycle spacing. Thus this is a snapshot-health pass, not sustained permit
+validity. Do not relax the age limit to conceal that gap. The 2,500 us sensor
+conversion bound still requires independent evidence; this telemetry is calculated,
+not a direct conversion-latency measurement.
+
+The supplied ELF prefix is not a full image hash. Software-reported LOW does not
+measure electrical outputs. No four-device/ADC/policy timing or operational
+protection acceptance follows. G1c/G2 and G3–G5 remain open. Next work: validate
+conversion timing/clear semantics with the analyzer and stale-but-readable tests,
+then address the tighter freshness proof and 24-read four-device timing strategy.
+
+## Adopted best-effort current protection — D10
+
+The historical freshness-window findings above remain measurements of the earlier
+policy. [D10](decisions.md#d10--best-effort-motor-overload-protection-and-accepted-motor-damage-risk)
+now accepts motor damage from delayed monitoring/shutdown, conditional on verified
+ITRIP. The 25 ms check applies at snapshot commit, not continuously between cycles;
+next release+12 ms liveness, invalid-data inhibition and fault epochs remain.
+Steps 1 and 2 of that decision are implemented as the [complete workload/policy
+candidate](monitor_policy.md). Physical outputs remain hard-inhibited. Calibration,
+actual thresholds, four-device timing and ISR/recovery integration remain open;
+motor-survival deadline proof is no longer a release blocker. No new hardware run
+or gate acceptance is claimed.
+
+## Heartbeat/permission implementation correction
+
+The candidate supervisor and policy pipeline now separate monitoring health from
+motor permission, matching the recovery contract. Healthy monitoring while
+SAFE/disarmed or FAULT-latched advances modeled HB; failed monitoring stops HB.
+Resumed HB never clears a motor-fault latch or grants permission. See the
+[truth table and implementation semantics](monitor_policy.md#heartbeat-is-independent-of-motor-permission).
+The GPIO adapter remains hard-inhibited and this change is not a physical HB test.

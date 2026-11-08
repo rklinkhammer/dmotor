@@ -12,3 +12,7 @@ Permits GPIO8–11 and HB GPIO21 remain LOW. The high-priority supervisor adapte
 cannot enable outputs. No ADC calibration, protection threshold, ARM or live
 recovery qualification is provided by this diagnostic. Motor drive power must
 remain disconnected. Firmware build success is not a physical test result.
+
+Long-run capture defaults to 10,000 cycles (160 seconds), with fixed RAM, a
+100-record tail, first failure and whole-run health/timing/error counters.
+See [CSV v2 and separate nominal build](../../../../docs/monitor_next_steps.md#long-physical-health-capture--nominal-physical-run-passed). No Zynq receiver is needed.

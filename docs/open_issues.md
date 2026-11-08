@@ -89,3 +89,22 @@ hard-inhibited task adapter. U03–U06 and G1a/G1c/G3–G5 remain open: no calib
 operational application, sustained conversion-age proof, ISR/watchdog qualification
 or new electrical hardware result is asserted. The one-INA six-read path and
 four-INA 24-read path require new timing evidence. G1b/G2 are not closed by builds.
+
+**Long one-INA physical-health result:** [10,000-cycle nominal capture](evidence/sensor_health_long/physical-run.txt)
+passes with 9,999 good and one warming, max 3,905 us, lateness 24 us, calculated
+age bound 20,240 us, and zero bus/guard/late/deadline counts. This advances U03/U06
+and G2 diagnostic evidence only. The 4,760 us remaining age validity does not
+cover another 16 ms cycle; conversion-bound proof, sustained output qualification,
+four-device timing, calibration and electrical gates remain open. See
+[next work](monitor_next_steps.md#validated-10000-cycle-result).
+
+## D10 best-effort current monitoring
+
+[Accepted requirement change](decisions.md#d10--best-effort-motor-overload-protection-and-accepted-motor-damage-risk)
+waives guaranteed motor-damage prevention timing, conditional on verified ITRIP.
+[Workload/policy implementation](monitor_policy.md) adds full ADC/INA acquisition,
+calibrated current/time/stall and battery policy, plus independent next-cycle
+liveness. Physical outputs remain hard-inhibited. U03/U06 no longer require motor
+thermal-survival proofs but still require configured thresholds, measured budgets
+and valid sensor/calibration behavior. Stop/fault/recovery and electrical gates
+remain open. Existing physical diagnostic evidence is not policy qualification.

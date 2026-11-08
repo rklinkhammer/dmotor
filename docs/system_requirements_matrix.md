@@ -28,9 +28,9 @@ characterization experiment from discovering the needed data.
 | SYS-01 | Saved connector/pin mapping, voltage levels and direction; [Arty interface](arty_monitor_interface.md) | Hardware + PL | Harness continuity, rail/back-power checks; PL TX T14 → monitor RX and monitor TX → PL RX U12; scope traces | G2; approved G1b fixture and electrical limits |
 | SYS-02 | Safe startup and separate PL clock/reset/configuration/power failures; [recovery contract §1](recovery_transition_contract.md#1-authority-and-physical-behavior) | Hardware + PL + system | G1b candidate experiment records in B2; final B5 frozen-active/undriven output traces, rework and retest records | G1b conditional; U01 remains open until final G5 scope/bounds disposition |
 | SYS-03 | Permits low before firmware initialization and outside authorized monitor state; recovery contract §§1–2 | ESP32 + hardware | Reset/boot-order/state tests plus physical permit/DRVOFF measurements | G3/G5; U02/U04, approved startup/response limits |
-| SYS-04 | HB only after fresh, valid, on-budget monitoring work; recovery contract §§1,5 | ESP32 | Absolute acquisition budget; I2C timeout/stale-data/overrun tests; timestamped HB/permit traces | G1c/G3/G5; U03, exact budget/age/detection limits |
+| SYS-04 | HB only after fresh-at-commit, valid, on-budget monitoring work; D10 next-cycle liveness and recovery contract §§1,5 | ESP32 | Absolute acquisition budget; I2C timeout/stale-data/overrun tests; timestamped HB/permit traces | G1c/G3/G5; U03, exact budget/age/detection limits |
 | SYS-05 | Independent task/external watchdog and ISR/flash isolation; recovery contract §5 | ESP32 | ISR dependency audit; task stall, cache/flash and watchdog recovery measurements | G3/G5; U04, approved watchdog/reset latency limits |
-| SYS-06 | Valid population/calibration and complete protection policy; [ESP32 plan](../software/esp32/README.md) | Hardware + ESP32 | Missing expected sensor/battery tap, corruption/version, calibration interruption and threshold boundary tests | G1c/G3/G6; U06, threshold/persistence/hysteresis/error limits |
+| SYS-06 | Valid population/calibration and complete best-effort current/stall policy under D10; [ESP32 plan](../software/esp32/README.md) | Hardware + ESP32 | Missing expected sensor/battery tap, corruption/version, calibration interruption and threshold boundary tests | G1c/G3/G6; U06, threshold/persistence/hysteresis/error limits |
 | SYS-07 | Verified PL cleanup, no stale motion admission and acyclic recovery; recovery contract §§2–3 | PS + PL + ESP32 | Simulator transition coverage; attestation/readback proof; queued intent, cleanup failure and new fault at every transition | G1a/G4/G5; U02, CLN1 implemented and actual-HLS tested; joint admission/attestation qualification remains |
 | SYS-08 | Session/epoch/transaction freshness and bounded uncertainty; recovery contract §§3–4 | PS + ESP32 | Both boot orders, rapid restart, allocator failure, exhaustion, replay/mutated duplicate/reordering, lost COMMIT_ACK and query exhaustion | G4/G5; U02, adopted protocol and reply/query deadlines |
 | SYS-09 | Physical ARM is deliberate and cannot reuse stale eligibility; recovery contract §§2–3 | ESP32 + PS | Held ARM, fault during ARM, epoch change and fresh ARMED-query admission tests; physical switch/permit traces | G4/G5; U02/U06, switch qualification and timing |
@@ -85,3 +85,13 @@ U03/U06 evidence, not SYS-03–06 or electrical acceptance. G1a/G1b/G1c/G2 remai
 open; G3–G6 and G7 remain unaccepted. Commissioning-first scope, 1 ms PS loop,
 16 ms monitor/25% reserve and assembled-board pause are unchanged.
 [Next implementation and validation](system_status.md#next-implementation-and-validation).
+
+## D10 acceptance amendment
+
+[D10](decisions.md#d10--best-effort-motor-overload-protection-and-accepted-motor-damage-risk)
+removes guaranteed motor survival and motor thermal damage deadlines from SYS-06/
+SYS-14 acceptance, conditional on verified ITRIP. SYS-04 retains <25 ms snapshot
+age at commit and independently requires next-release+12 ms liveness. Other
+startup, fault, STOP, recovery, watchdog and electrical requirements remain.
+Motor damage from delayed current detection/shutdown is an explicitly accepted
+risk, not evidence of passing an unperformed test. [Implemented path](monitor_policy.md).

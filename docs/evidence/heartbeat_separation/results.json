@@ -1,0 +1,20 @@
+{
+  "change": "Separate monitoring heartbeat from motor permission; retain latched inhibit",
+  "validation": {
+    "native": "33/33",
+    "asan_ubsan": "5/5",
+    "arm_qemu": "sensor_safety_test and monitor_policy_test PASS",
+    "esp32": "compile/link harness PASS"
+  },
+  "physical": "No flash or physical test; HB and permits forced LOW in adapter",
+  "sha256": {
+    "software/esp32/components/safety_core/include/safety_core.hpp": "048f22b7652dbac3b082213d4cfb16347b4eafbe7163bb4c5e97464818f9de20",
+    "software/esp32/components/safety_core/include/monitor_policy.hpp": "2f1b54ee25a1c1791e19860ae67137bdc3b14c02e8cf638d2147351a78206d77",
+    "software/esp32/components/safety_core/include/monitor_cycle.hpp": "2601370c919539551ca873892f809197548617423eb30f1e9103a374f161e674",
+    "software/esp32/tests/sensor_safety_test.cpp": "aa90c37f53eebd0be5d6ca29576da54b36929db98d20aded5dfc5b0ed3c519ef",
+    "software/esp32/tests/monitor_policy_test.cpp": "d11e7bec2f2cbeb07d9a85d7bc1de62aad8b71b3e069e5357300294b032b34db",
+    "build/monitor_policy/esp32/build/dmotor_acquisition_compile_check.bin": "ea65b6e78e56a2d12cef1afce3e94ad580244e50dd7b7514971b4fb413ffaab1",
+    "build/heartbeat-separation/arm/sensor_safety_test": "d73931701bd1392701de9040ba121a4d393f7a3037eb002961162921f5254d37",
+    "build/heartbeat-separation/arm/monitor_policy_test": "196164428273b46425c5b89c2666aaf854937c6d27f5f83cac82f57d9391ac80"
+  }
+}

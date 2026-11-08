@@ -158,3 +158,14 @@ U03/U06 evidence, not SYS-03–06 or electrical acceptance. G1a/G1b/G1c/G2 remai
 open; G3–G6 and G7 remain unaccepted. Commissioning-first scope, 1 ms PS loop,
 16 ms monitor/25% reserve and assembled-board pause are unchanged.
 [Next implementation and validation](../system_status.md#next-implementation-and-validation).
+
+## D10 best-effort current monitoring
+
+[Accepted requirement change](../decisions.md#d10--best-effort-motor-overload-protection-and-accepted-motor-damage-risk)
+waives guaranteed motor-damage prevention timing, conditional on verified ITRIP.
+[Workload/policy implementation](../monitor_policy.md) adds full ADC/INA acquisition,
+calibrated current/time/stall and battery policy, plus independent next-cycle
+liveness. Physical outputs remain hard-inhibited. U03/U06 no longer require motor
+thermal-survival proofs but still require configured thresholds, measured budgets
+and valid sensor/calibration behavior. Stop/fault/recovery and electrical gates
+remain open. Existing physical diagnostic evidence is not policy qualification.

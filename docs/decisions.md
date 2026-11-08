@@ -112,7 +112,8 @@ policy/output, 4 ms unused margin. [Evidence, derivation, dependent timing and
 current test procedures](ina_bench_timing.md) distinguish measured individual
 reads from the unproven full-cycle budget. This is a requirement/documentation
 change, followed by the standalone diagnostic/core timing migration on the same
-date. Operational firmware and recovery-model timing migration remain outstanding.
+date. Recovery-model timing migration is now implemented; full operational deployment
+and assembled timing qualification remain outstanding.
 Keep Zynq's 1 ms executor, hardware interfaces, independent protection and
 commissioning-first scope. No operational monitor/recovery acceptance is implied.
 
@@ -128,3 +129,39 @@ changes the default deployment guidance, not hardware interfaces or release scop
 Copying a file is not installation or activation: document those steps separately,
 including target ABI/runtime dependencies and any required matching system components.
 No target hostname, account, SSH keys or automatic deployment are assumed configured.
+
+## D10 — Best-effort motor overload protection and accepted motor-damage risk
+
+Robert accepts motor damage caused by current-monitor detection or shutdown being
+too slow, conditional on correctly configured and verified driver ITRIP. Firmware
+monitors at the supported bounded cadence and inhibits when its configured
+current/stall policy detects a fault; it does not guarantee motor survival or a
+motor-damage-prevention deadline. Exhaustive elimination of short-circuit risk is
+not claimed. This is an explicit amendment of the relevant acceptance criteria,
+not an assertion that all shorts are safe or that every electrical risk is waived.
+
+Motor thermal characterization and proof of shutdown before motor damage are no
+longer commissioning release blockers. Correct ITRIP setup/verification remains a
+powered-test prerequisite. STOP/HALT, nFAULT/ALERT, monitor liveness, invalid-data
+rejection, no unintended restart, and electrical test procedures remain required.
+Battery/wiring/driver limits are not silently replaced by the motor-damage waiver.
+Gates accept implementation against these adopted requirements, not guaranteed
+motor survival. No unperformed test is marked passed and no gate closes solely
+because of this decision. D01 commissioning-first scope, the assembled-board
+pause, hardware interfaces, dmotor_client ownership and 1 ms PS loop are unchanged.
+
+Retain D08's 16 ms monitor period, <12 ms work and 4 ms reserve initially.
+The 25 ms conversion-age check qualifies a snapshot at cycle completion, not a
+continuous guarantee that motor current remains non-damaging until the next read.
+Remove the separate permit expiration at `oldest_conversion + 25 ms`. A valid
+committed decision instead expires at the **next scheduled release +12 ms** if
+that cycle does not commit successfully. Any invalid/stale acquisition, hard
+fault, bad calibration, policy fault or deadline violation still inhibits and
+latches; a new sample cannot clear a fault. No automatic/live recovery is added.
+
+INA supply-current monitoring is distinct from IPROPI motor-current monitoring.
+Current limits and persistence times are explicit configuration, not guessed from
+the carrier maximum. Sustained high IPROPI current is a conservative stall proxy
+when motion evidence is unavailable; optional commanded/no-motion confirmation
+requires valid timestamped motion observations. No new encoder/UART interface is
+assumed. [Implementation and qualification limits](monitor_policy.md).

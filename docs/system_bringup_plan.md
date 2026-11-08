@@ -290,7 +290,10 @@ early state-machine tests. G2 hardware evidence is required for target acceptanc
 **Deliverables:** monitor firmware, host tests, firmware configuration/calibration
 schema and tooling, measured acquisition/ISR/watchdog/startup evidence.
 
-**G3 acceptance:** safe GPIO precedes peripheral/task startup; invalid calibration,
+**G3 acceptance (D10 amended):** current/stall monitoring is best-effort with
+accepted motor damage from delayed response; no motor-survival deadline proof is
+required. Snapshot age is checked at commit and next-cycle liveness independently.
+Safe GPIO precedes peripheral/task startup; invalid calibration,
 missing required sensors, stale/over-budget cycles and injected stalls produce the
 specified permits/HB response. Measured timing satisfies the approved G1 bounds.
 Firmware cannot arm merely because it booted or sees heartbeat/UART activity.
@@ -360,7 +363,9 @@ implementation or adopted restriction explicitly available.
 closed/accepted issue dispositions linked to exact software and board revisions,
 and a reviewed integrated powered-test procedure as the B6 entry deliverable.
 
-**G5 acceptance:** every required fault reaches the specified inhibited state within
+**G5 acceptance (D10 amended):** adopted software limits are measured; a
+guaranteed motor-damage-prevention deadline is not required. STOP/HALT, watchdog,
+invalid-data and other retained fault-response bounds still apply. Every required fault reaches the specified inhibited state within
 its approved bound and recovers only through the approved sequence. Any missed
 bound, unexplained permit restoration or unsupported failure class blocks the
 corresponding powered scope. No unrestricted powered acceptance with R4 unresolved.
@@ -383,7 +388,9 @@ from B5, with operator/battery/bystander controls and review mode assigned.
 **Deliverables:** motor profiles, measured single-/multi-motor commissioning records
 and the accepted motor operating envelope.
 
-**G6 acceptance:** each power/load expansion has its own passing record and meets
+**G6 acceptance (D10 amended):** verify ITRIP and record the accepted motor-damage
+risk from monitoring latency; motor thermal-survival proof is not a blocker.
+Each power/load expansion has its own passing record and meets
 approved motor requirements. G6 does not accept vehicle planning or loaded vehicle
 behavior. A commissioning-only release may proceed to G7 with that restriction.
 

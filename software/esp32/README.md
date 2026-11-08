@@ -82,3 +82,14 @@ See [receiver rejection reporting, physical sensor health and 16 ms safety candi
 Host tests and inhibited firmware builds advance implementation evidence only.
 Existing hardware results remain tied to their original diagnostic images;
 operational protection, electrical acceptance and live recovery are not claimed.
+
+## D10 best-effort current monitoring
+
+[Accepted requirement change](../../docs/decisions.md#d10--best-effort-motor-overload-protection-and-accepted-motor-damage-risk)
+waives guaranteed motor-damage prevention timing, conditional on verified ITRIP.
+[Workload/policy implementation](../../docs/monitor_policy.md) adds full ADC/INA acquisition,
+calibrated current/time/stall and battery policy, plus independent next-cycle
+liveness. Physical outputs remain hard-inhibited. U03/U06 no longer require motor
+thermal-survival proofs but still require configured thresholds, measured budgets
+and valid sensor/calibration behavior. Stop/fault/recovery and electrical gates
+remain open. Existing physical diagnostic evidence is not policy qualification.

@@ -1,0 +1,36 @@
+{
+  "date": "2026-11-08",
+  "base_commit": "4bac7ae5699400dd42c58e0b84090a2ba653b5d4",
+  "decision": "D10 accepted motor-damage risk; 25 ms snapshot-at-commit, independent next-cycle liveness",
+  "validation": {
+    "native": "33/33",
+    "asan_ubsan": "5/5",
+    "arm_qemu": "sensor_safety_test and monitor_policy_test PASS",
+    "esp32": "full workload/task/physical ADC+GPIO adapter compile-link harness PASS; non-deployable",
+    "yocto": "isolated source archive policy test compile/run PASS; recipe includes test; no full image build"
+  },
+  "physical_validation": "none; GPIO adapter remains hard-inhibited; prior diagnostic results are not policy validation",
+  "remaining": [
+    "actual calibration/threshold configuration",
+    "four-device budget optimization/measurement",
+    "ISR/watchdog and recovery/ARM integration",
+    "ITRIP verification and assembled electrical qualification"
+  ],
+  "sha256": {
+    "software/esp32/components/safety_core/include/monitor_policy.hpp": "a98c3d5ca5be6954f0e10f13d849f963f9dd6e39aa81845c17eef6665100cb2b",
+    "software/esp32/components/safety_core/include/monitor_cycle.hpp": "d4f5598b6dc292ad54fb11218faffb3c102f2324ee2747431341cd5f7570fcef",
+    "software/esp32/components/safety_core/include/safety_core.hpp": "08a214047d92015ce95061b05cd0c8c1a83f9eff5cb77d7ccab606f07de703ce",
+    "software/esp32/components/monitor_inputs/include/monitor_inputs.hpp": "2e8cf372b095eea90a63296fb8f0610a9ac58bd4dec38a954706c8e37702a636",
+    "software/esp32/components/monitor_inputs/include/monitor_task.hpp": "20c52e603d1ab9ac1489af5f8f80f709dcb306f9f7b3f57b48aa5df8a880c35b",
+    "software/esp32/components/monitor_inputs/monitor_inputs.cpp": "96c23acf6ff8f5bbbc4eb3bc7a1b4d60bf47108157f70e6de066af14a24825f6",
+    "software/esp32/components/monitor_safety/include/monitor_safety.hpp": "f9d05ec923dcd55ff142ecc77c9bfcc57696d8c5e6967197151468621f5f4eb9",
+    "software/esp32/components/acquisition/include/physical_acquisition.hpp": "387db480ec9c7bbb3ad38d50e34aa2d8c92d72173a3bf742026514bbdace39fb",
+    "software/esp32/tests/monitor_policy_test.cpp": "0ca76efc58ac6da00a204062919f311469ea87a8ceb92ccd324af524b9a4b1e4",
+    "software/esp32/tests/sensor_safety_test.cpp": "bee39936fd3de4ed0e9c6c7b3e4544fbd8ae305d885f376c5c2a0d28e2117c37",
+    "software/esp32/build_check/main/main.cpp": "105d36ed77ff7b410a168ed1725f51bbd84334f5dd796caca3ce6614ffc2449b",
+    "build/monitor_policy/esp32/build/dmotor_acquisition_compile_check.bin": "2ff41bab91cfd77bf6652d7daf2eb0007bfbf1de790bcf7e802a504f8c4fb89e",
+    "build/monitor_policy/esp32/sdkconfig": "c6cef080aba1b97f4dfd2df42f75081183b941b0146d0264e733f2cf73e9f409",
+    "build/monitor-policy/arm/monitor_policy_test": "b13cf1ea4b64cfebe9cfa8c5bb0539f2d07199a199e51a043970202c6b7f8413",
+    "build/monitor-policy/arm/sensor_safety_test": "ebe98fb4f7951cc0085cbc6278aa4b1ab2ea67a6819979ee14332d26e8af904e"
+  }
+}

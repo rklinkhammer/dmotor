@@ -96,12 +96,12 @@ inhibited recovery; logging loss cannot lose the inhibit latch.
 | Cause / input | Units / valid range | Trip / persistence / hysteresis | Action and clear |
 |---|---|---|---|
 | STOP, HALT, NFAULT, ALERT | GPIO levels, as above | Immediate assertion; release qualification per v4 | Clear all permits in ISR, target ≤100 µs; exchange and physical ARM required |
-| ACQUISITION / STALE | Monotonic µs; no future timestamp or failed read accepted | 25 ms age and three observations remain proposed; absolute cycle failure inhibits immediately | No healthy HB for failed cycle; bounded fault latch; healthy data alone never rearms |
+| ACQUISITION / STALE | Monotonic µs; no future timestamp or failed read accepted | D10: age <25 ms at cycle commit; no continuous age-based permit expiry. Invalid cycle or next release+12 ms liveness expiry inhibits | No healthy HB for failed cycle; bounded fault latch; healthy data alone never rearms |
 | CALIBRATION / CONFIG | Versioned validated record and population | Missing/corrupt/unsupported is invalid; no startup bypass | Inhibit until explicit valid installation and recovery |
 | BATTERY_RANGE | Full and midpoint mV; 0 < mid < full, ADC not clipped | Calibrated limits and tolerance pending | Inhibit; diagnose wiring separately from low battery |
 | BATTERY_LVC | Lower 2S = mid; upper 2S = full − mid | Trip mV, release mV pending; 500 ms persistence candidate | Proposed 532 ms after first qualifying sample, plus analog/acquisition delay; explicit recovery |
 | BATTERY_IMBALANCE | Absolute difference of the two 2S voltages, mV | Threshold, persistence and release hysteresis independently pending | Inhibit; cannot reuse LVC persistence implicitly |
-| MOTOR_CURRENT | IPROPI mA, INA feed mA as separate quantities | Calibrated ranges, hardware ALERT threshold, persistence/hysteresis pending | Inhibit; feed current is not winding-current proof |
+| MOTOR_CURRENT | IPROPI mA, INA feed mA as separate quantities | D10 best-effort current/time policy implemented; actual calibrated thresholds and hardware ALERT settings pending | Inhibit; feed current is not winding-current proof |
 | INTERNAL / DEADLINE | State, timer, storage and arithmetic validity | Immediate; overflow/exhaustion fails closed | Inhibit; no automatic retry restoring permits |
 
 No per-cell voltage or temperature sensor is fitted in this inventory. Two 2S
@@ -193,3 +193,11 @@ Current physical evidence and pending cases are consolidated in
 [G2](gates/G2.md#physical-ina-health-results--2026-11-08). G1c remains OPEN:
 no independently validated conversion bound, four-device operational budget,
 known-reference calibration or electrical shutdown acceptance is recorded.
+
+**Long one-INA physical-health result:** [10,000-cycle nominal capture](evidence/sensor_health_long/physical-run.txt)
+passes with 9,999 good and one warming, max 3,905 us, lateness 24 us, calculated
+age bound 20,240 us, and zero bus/guard/late/deadline counts. This advances U03/U06
+and G2 diagnostic evidence only. The 4,760 us remaining age validity does not
+cover another 16 ms cycle; conversion-bound proof, sustained output qualification,
+four-device timing, calibration and electrical gates remain open. See
+[next work](monitor_next_steps.md#validated-10000-cycle-result).

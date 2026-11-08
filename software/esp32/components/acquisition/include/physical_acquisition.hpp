@@ -13,11 +13,11 @@ class PhysicalAcquisition {
 public:
     PhysicalAcquisition(Clock& clock, Bus& bus, SensorConfig c)
         : clock_(clock), bus_(bus), config_(c), freshness_(c) {}
-    PhysicalResult run(Us release) {
+    PhysicalResult run(Us release, Us end_offset=acquisition_deadline_us) {
         PhysicalResult out;
-        if(!config_.valid() || release<0 ||
+        if(!config_.valid() || end_offset<=0 || end_offset>acquisition_deadline_us || release<0 ||
            release>std::numeric_limits<Us>::max()-acquisition_deadline_us) return out;
-        const Us deadline=release+acquisition_deadline_us;
+        const Us deadline=release+end_offset;
         bool transport=true;
         for(unsigned d=0;d<4;++d) if(config_.population&(1u<<d)) {
             PhysicalSample s;

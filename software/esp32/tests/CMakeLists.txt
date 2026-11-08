@@ -23,3 +23,9 @@ target_include_directories(sensor_safety_test PRIVATE ../components/acquisition/
 target_compile_features(sensor_safety_test PRIVATE cxx_std_14)
 target_compile_options(sensor_safety_test PRIVATE -Wall -Wextra -Werror -Wconversion -UNDEBUG)
 add_test(NAME sensor_safety COMMAND sensor_safety_test)
+add_executable(monitor_policy_test monitor_policy_test.cpp)
+target_include_directories(monitor_policy_test PRIVATE ../components/acquisition/include
+    ../components/safety_core/include)
+target_compile_features(monitor_policy_test PRIVATE cxx_std_14)
+target_compile_options(monitor_policy_test PRIVATE -Wall -Wextra -Werror -Wconversion -UNDEBUG)
+add_test(NAME monitor_policy COMMAND monitor_policy_test)

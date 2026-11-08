@@ -1,0 +1,29 @@
+{
+  "validation": "4/4 portable ASan/UBSan tests; ESP32-S3 IDF build passed",
+  "physical_validation": "User-supplied nominal run PASS: one warming, 9999 good; no errors/guards/late releases/deadline misses. Overall gates open.",
+  "profile": {
+    "address": "0x44",
+    "expected_config": "0x4127",
+    "cycles": 10000,
+    "period_us": 16000,
+    "retained_tail": 100
+  },
+  "sha256": {
+    "software/esp32/diagnostics/sensor_health/main/main.cpp": "483e6fbbe29bca55517c60d665a7da74a06e6a88654acce61303640090f8149b",
+    "software/esp32/diagnostics/sensor_health/main/Kconfig.projbuild": "bf3f2cf3527d7de55db8a2ba81703f6ff5050772d64e575ce7e876621d2fad67",
+    "software/esp32/components/acquisition/include/health_capture.hpp": "59329071a88d4e6238cb7a9584e23dc146e3e2cb4f07deb81f300adf24a41b12",
+    "software/esp32/tests/sensor_safety_test.cpp": "e49e272852428477c50d7586f25862c1dd67828985fe1733037a19235335c2c2",
+    "build/sensor_health_long/esp32/build/dmotor_sensor_health.bin": "54f176d013d11434afdd7f038bef76ffc753a8442aee9a69682ca0001ebf9c47",
+    "build/sensor_health_long/esp32/sdkconfig": "2982a28dc34580a799c1ad71278ed530e05692f61f6ff814f0c61339652f970d"
+  },
+  "physical_capture": {
+    "file": "physical-run.txt",
+    "sha256": "38738627b1332123088b2af99089ba876c7a5ac554219b5fc1f7190fbdb5910d",
+    "reported_elf_prefix": "45d41942d",
+    "max_release_to_end_us": 3905,
+    "max_release_lateness_us": 24,
+    "max_good_age_upper_us": 20240,
+    "raw_tail_records": 100,
+    "scope": "One INA, six reads/cycle, no ADC/policy; full image identity not supplied; conversion bound remains assumed."
+  }
+}
