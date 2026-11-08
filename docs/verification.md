@@ -1,5 +1,23 @@
 # Current verification — 1 ms PSF1 product
 
+**Gate reconciliation (2026-11-08):** [G2 completed-case matrix](gates/G2.md#pre-pcb-acquisitionuart-results--2026-11-08)
+records all supplied nominal, delayed/I/O-only fault, link-loss and restored-link
+results. [Current next steps](system_status.md#next-implementation-and-validation)
+separate work possible now from assembled-board validation. G1b/G1c/G2 remain
+open with these subcases passed; G3–G6 and release G7 are not accepted.
+
+**Pre-PCB implementation update (2026-11-08):** [Concurrent acquisition/UART diagnostic](prepcb_acquisition.md)
+adds fixed-memory long runs, a Zynq tty receiver, synthetic/error-injection profiles,
+and task-level deadline observation. Existing standalone 100/100 physical evidence
+remains valid for its original image. The concurrent run now reports 10,000/10,000
+acquisitions and 1,000/1,000 Zynq replies, no failures/skips/expirations, max
+acquisition 8.215 ms. Delayed injection also passed its diagnostic criteria: 400 expected failures,
+400 skipped releases and 400 observer expirations; Zynq rejected the supplied
+snapshots. Reboot and two UART-loss cases now show expected receiver timeouts after valid
+samples. An explicit restored-link run passed 1,000/1,000 replies with zero errors in
+69.999 s. I/O-only injection also passed: 400 expected failures, zero skipped releases
+and zero observer expirations, with Zynq rejecting the supplied snapshots. Permits/HB remain inhibited; no operational health or recovery is claimed.
+
 **2026-11-08 standalone INA evidence:** [Measured timing and revised test criteria](ina_bench_timing.md)
 record **100/100 complete bounded acquisition cycles** after the 16 ms update:
 max release-to-end 7.697 ms, INA 7.272 ms, ADC 0.315 ms, lateness 0.110 ms.

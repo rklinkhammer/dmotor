@@ -1,0 +1,17 @@
+Operator label: esp32 reboot
+sample cycle=3461 duration_us=7438 remote_age_us=747 address=68 mask=8 shunt=65533 bus=0 adc0=585 adc1=104
+sample cycle=3465 duration_us=7361 remote_age_us=6795 address=68 mask=8 shunt=65533 bus=0 adc0=573 adc1=56
+FAIL Response/TX timeout sent=45 verified=44 rejected=0 mismatched=0 run=15572121198586570576
+
+Operator label: esp32 disconnected uart
+sample cycle=761 duration_us=7331 remote_age_us=8825 address=68 mask=8 shunt=65533 bus=0 adc0=587 adc1=77
+sample cycle=765 duration_us=7384 remote_age_us=14774 address=68 mask=8 shunt=65533 bus=1 adc0=629 adc1=88
+FAIL Response/TX timeout sent=34 verified=33 rejected=0 mismatched=0 run=7139406267477709683
+
+Operator label: With the RX
+sample cycle=3814 duration_us=7385 remote_age_us=11785 address=68 mask=8 shunt=65534 bus=1 adc0=599 adc1=104
+FAIL Response/TX timeout sent=72 verified=71 rejected=0 mismatched=0 run=14228731105508232842
+
+Subsequent invocation (startup only; result not supplied):
+amd-edf:~$ sudo dmotor-acquisition-test /dev/ttyUL0 1000
+ACQUISITION DIAGNOSTIC v1 (not health-qualified) 115200 8N1 run=7713811897185600682 synthetic=0 count=1000

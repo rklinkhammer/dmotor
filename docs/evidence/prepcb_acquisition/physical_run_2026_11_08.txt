@@ -1,0 +1,19 @@
+Operator-supplied Zynq excerpt:
+sample cycle=6177 duration_us=7324 remote_age_us=9873 address=68 mask=8 shunt=65533 bus=0 adc0=681 adc1=179
+sample cycle=6181 duration_us=7405 remote_age_us=15769 address=68 mask=8 shunt=65533 bus=1 adc0=628 adc1=151
+sample cycle=6186 duration_us=7441 remote_age_us=5724 address=68 mask=8 shunt=65533 bus=0 adc0=595 adc1=97
+sample cycle=6190 duration_us=7384 remote_age_us=11801 address=68 mask=8 shunt=65533 bus=0 adc0=594 adc1=72
+sample cycle=6195 duration_us=7443 remote_age_us=1741 address=68 mask=8 shunt=65533 bus=1 adc0=677 adc1=139
+sample cycle=6199 duration_us=7471 remote_age_us=7695 address=68 mask=8 shunt=65533 bus=2 adc0=685 adc1=167
+sample cycle=6203 duration_us=7386 remote_age_us=13799 address=68 mask=8 shunt=65532 bus=0 adc0=676 adc1=181
+sample cycle=6208 duration_us=7538 remote_age_us=3636 address=68 mask=8 shunt=65533 bus=1 adc0=604 adc1=117
+sample cycle=6212 duration_us=7327 remote_age_us=9865 address=68 mask=8 shunt=65533 bus=0 adc0=589 adc1=87
+sample cycle=6216 duration_us=7405 remote_age_us=15769 address=68 mask=8 shunt=65533 bus=1 adc0=599 adc1=69
+PASS sent=1000 verified=1000 rejected=0 mismatched=0 elapsed_ms=70009
+
+Operator-supplied ESP32 excerpt:
+read,99,ina,11,3,2,160107616,160108187,571,2,2,0,1
+# summary cycles=100 transport_complete=100 max_release_to_end_us=7419 max_complete_adc_us=200 max_ina_attempt_window_us=7113 max_release_lateness_us=120
+# aggregate cycles=10000 complete=10000 failed=0 skipped=0 max_release_to_end_us=8215 max_ina_us=7874 max_adc_us=316 max_lateness_us=577
+# deadline_observer_expirations=0
+# DONE: permits/HB LOW. No freshness, calibration, protection or ARM qualification. Reset for another capture.

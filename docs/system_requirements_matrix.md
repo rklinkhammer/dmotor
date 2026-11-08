@@ -1,5 +1,13 @@
 # Initial system requirements-to-test matrix
 
+**Validation update (2026-11-08):** [G2 operator evidence](gates/G2.md#pre-pcb-acquisitionuart-results--2026-11-08)
+now covers 10,000 successful concurrent acquisitions, 1,000 verified UART replies,
+400/400 delayed-injection expirations, 400 I/O-only failures without overruns,
+link-loss timeouts and explicit restored-link PASS. These are diagnostic subcase
+passes, not acceptance of G1c/G3 or SYS-03–06. Sensor freshness/calibration, loaded
+policy/output work, isolation and electrical shutdown remain open. See the
+[prioritized implementation/validation plan](system_status.md#next-implementation-and-validation).
+
 > Architecture update (2026-11-07): main uses the [1 ms PS motor executor](../DMOTOR_ARCH.md) with independent PL capture/PWM/protection and a matched PSF1 driver/daemon. Client contracts, commissioning-first scope, U0 evidence, the hardware pause and pending live recovery are unchanged.
 
 **Status: DRAFT FOR REVIEW — 2026-11-04.** Seed matrix for the

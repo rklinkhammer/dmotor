@@ -1,5 +1,17 @@
 # Isolated ESP32-S3 INA226 + battery ADC timing test
 
+**Pre-PCB implementation update (2026-11-08):** [Concurrent acquisition/UART diagnostic](../../../../docs/prepcb_acquisition.md)
+adds fixed-memory long runs, a Zynq tty receiver, synthetic/error-injection profiles,
+and task-level deadline observation. Existing standalone 100/100 physical evidence
+remains valid for its original image. The concurrent run now reports 10,000/10,000
+acquisitions and 1,000/1,000 Zynq replies, no failures/skips/expirations, max
+acquisition 8.215 ms. Delayed injection also passed its diagnostic criteria: 400 expected failures,
+400 skipped releases and 400 observer expirations; Zynq rejected the supplied
+snapshots. Reboot and two UART-loss cases now show expected receiver timeouts after valid
+samples. An explicit restored-link run passed 1,000/1,000 replies with zero errors in
+69.999 s. I/O-only injection also passed: 400 expected failures, zero skipped releases
+and zero observer expirations, with Zynq rejecting the supplied snapshots. Permits/HB remain inhibited; no operational health or recovery is claimed.
+
 **2026-11-08 measured status and revised procedure:** See
 [INA timing record](../../../../docs/ina_bench_timing.md). The bench INA responds
 at 0x44. The revised bounded run completed **100/100 full acquisitions**, with

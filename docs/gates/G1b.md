@@ -1,21 +1,15 @@
 # G1b — hobby bench bring-up record
 
-**Latest bounded INA result (2026-11-08):** 100/100 complete standalone cycles;
-max acquisition 7.697 ms. [Evidence and next steps](../ina_bench_timing.md) retain the earlier
-failed baseline and distinguish this transport PASS from open loaded-monitor,
-freshness, protection and assembled-board qualification.
+**Status updated 2026-11-08: G1b remains OPEN.** The pre-PCB diagnostic tools
+are implemented and exercised: nominal acquisition/UART, delayed and I/O-only
+injection, reboot/UART-loss and explicit restoration meet their diagnostic criteria.
+[The G2 result matrix](G2.md#pre-pcb-acquisitionuart-results--2026-11-08) links the
+operator evidence. This establishes readiness/execution for that subset only.
 
-**2026-11-08 update:** Standalone ESP32/INA characterization has resumed;
-see [measured results and revised monitoring test procedure](../ina_bench_timing.md).
-This supersedes the blanket pause below only for that standalone work. Integrated
-board tests and U1 physical acceptance remain pending; synthetic HB is unchanged.
-
-**Current scheduling (2026-11-06):** Further physical testing is paused until
-assembled monitor and motor boards are available, at Robert's request ([D04](../decisions.md)).
-Completed U0 results remain valid; U1 is implemented/build-tested, with no physical
-U1 acceptance recorded. Procedures below are retained for resumption.
-
-**U0 UART run recorded PASS on 2026-11-06; remaining bench cases open.**
+Integrated monitor/motor-board testing remains paused pending assembled boards.
+U1 electrical acceptance, PL-only failure response (U01/R4), supply/front-end
+checks and assembled-fixture readiness remain open. Synthetic heartbeat behavior
+is unchanged. No whole-gate acceptance or powered-operation approval is inferred.
 
 This is a practical checklist for bringing up the boards with motor drive power
 disconnected. Use the existing design files instead of copying their specifications

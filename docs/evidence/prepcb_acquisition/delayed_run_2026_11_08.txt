@@ -1,0 +1,11 @@
+Operator-supplied Zynq output (two invocations):
+ACQUISITION DIAGNOSTIC v1 (not health-qualified) 115200 8N1 run=11828201719131338245 synthetic=1 count=100
+FAIL Response/TX timeout sent=1 verified=0 rejected=0 mismatched=1 run=11828201719131338245
+ACQUISITION DIAGNOSTIC v1 (not health-qualified) 115200 8N1 run=10073920578491308508 synthetic=1 count=100
+FAIL Response/TX timeout sent=1 verified=0 rejected=0 mismatched=1 run=10073920578491308508
+
+Operator-supplied ESP32 output:
+# summary cycles=100 transport_complete=96 max_release_to_end_us=23269 max_complete_adc_us=18 max_ina_attempt_window_us=23197 max_release_lateness_us=65
+# aggregate cycles=10000 complete=9600 failed=400 skipped=400 max_release_to_end_us=23269 max_ina_us=23200 max_adc_us=48 max_lateness_us=135
+# deadline_observer_expirations=400
+# DONE: permits/HB LOW. No freshness, calibration, protection or ARM qualification. Reset for another capture.

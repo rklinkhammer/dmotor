@@ -1,0 +1,38 @@
+{
+  "date": "2026-11-08",
+  "scope": "Build and host/QEMU verification only; no flashing or new physical validation",
+  "native_tests": "31/31 PASS",
+  "arm": "Receiver cross-compile and QEMU --help; portable acquisition_link_test QEMU PASS",
+  "profiles": {
+    "prepcb": {
+      "build/prepcb/esp32/sdkconfig": "83009a7e6a81d4b4c3268b002f37a5b7f80bb9cc43c5e89de0cdc7153667233c",
+      "build/prepcb/esp32/build/dmotor_ina_adc_timing.bin": "74b731770c50ccf15cb9cecaacaaa85ab330c5c159b59a1e664a3d6845d48426"
+    },
+    "prepcb_synthetic": {
+      "build/prepcb_synthetic/esp32/sdkconfig": "1684cbe1b17d5cbd13d6160f59aa0bf9e66e6a379b3ea24550516ffad1249cda",
+      "build/prepcb_synthetic/esp32/build/dmotor_ina_adc_timing.bin": "cce2ebfce7644405176708bdae2043c2a12489bdf28db525ad78b4504d6b3e85"
+    },
+    "prepcb_fault": {
+      "build/prepcb_fault/esp32/sdkconfig": "7c1a64c60e647d5a80cae6a6b32283351cccd8ca6782506ed09a9e75e5793e3f",
+      "build/prepcb_fault/esp32/build/dmotor_ina_adc_timing.bin": "626881dcca178ad2d2e59f38b7c1490f0f380c98aeb5b34bcbce81ab8ac2990c"
+    },
+    "ina_1000hz": {
+      "build/merged_release/esp32/ina_1000hz/sdkconfig": "1739096279ad53cbf2b7f5373fb8eb3d219bfff675a3504367a8b36614d62df4",
+      "build/merged_release/esp32/ina_1000hz/build/dmotor_ina_adc_timing.bin": "47f70d5d6b4d9ca03f8b6db31133647a29442073277374a92a80d449a212ad77"
+    },
+    "ina_probe100": {
+      "build/merged_release/esp32/ina_probe100/sdkconfig": "047596b1678b97a9e6d28f0ba3860a17909605f25fd44add6db526952924a3ab",
+      "build/merged_release/esp32/ina_probe100/build/dmotor_ina_adc_timing.bin": "0f2654653175fd6ba02ea674439c41f4085c30e8ef1e7d3fbb5b178650cd4a59"
+    }
+  },
+  "source_sha256": {
+    "software/esp32/diagnostics/ina_timing/main/main.cpp": "1c6b83810d68042589f13f449f7d70a7a697639e86c19e0282f096e7060215e0",
+    "software/esp32/diagnostics/ina_timing/main/uart_acquisition.hpp": "69cb52d32b3550ea3f112a514f494f465fed50862305305d95b940f1ef271f61",
+    "software/include/dmotor_diag/acquisition.hpp": "77426e7674325fa4d3741c89cbcd6afe206990a5ce5216bb8b0069679cf6f759",
+    "software/include/dmotor_diag/uart.hpp": "9dde90dc595b84216103965c3dfba38ff17f440438cea5f3b025456d0c47bbec",
+    "software/apps/acquisition_test.cpp": "3a789780e4e50ba81772caa66422cacfc27eb15632e18a8b0df77f0bddbbc013",
+    "software/esp32/tests/acquisition_link_test.cpp": "a330fc956f5c8f6554889d25e8b4818c03a9e2f09dacfa081d18dde8a7952caf",
+    "software/tests/acquisition_diagnostic_test.py": "6ac986d94a285f7f642a48b01c5f3f980c8381d95840857d1ccfcfe941059ae2",
+    "build/prepcb/arm/dmotor-acquisition-test": "49525bd283513358fae83bff6e63e35ac4476b66ece15aae83e69642b8cde7db"
+  }
+}

@@ -68,6 +68,66 @@ pipeline automatically, runs board implementation and timing/DRC gates, then
 creates a portable matched hardware bundle. Ordinary software-only EDF builds do
 not invoke HLS/Vivado. A Mac consumes the bundle with Docker/OrbStack.
 
+## Load the installed FPGA image on Zynq
+
+New EDF images package `dmotor-load-fpga` with `dvrmc-firmware`. On the Zynq,
+after boot with motor drive inhibited:
+
+```sh
+sudo dmotor-load-fpga --dry-run
+sudo dmotor-load-fpga
+```
+
+This explicitly programs the installed matching bitstream/overlay with `fpgautil`
+and verifies FPGA Manager state. It does not enable motors, autostart at boot, or
+support live reload. For installing the helper via SCP on an existing image, see
+[EDF board operation](../../edf-dev/docs/arty.md#load-and-inspect).
+
+## Network deployment for future Zynq applications
+
+Per [D09](decisions.md#d09--network-deployment-with-retained-sd-image-workflow-2026-11-08),
+future application builds should provide Zynq ARM executables/packages, source/build
+identity and checksums, runtime dependencies, and explicit `scp`/SSH deployment
+instructions. Host-native executables from `build/product/software` are not Zynq
+binaries. Application-only updates should be deployable over the network without
+rebuilding an entire SD image when compatible with the installed system.
+
+The current deployment will still use the full image procedure below. Maintain
+both paths: network application deployment supplements, and does not retire, the
+hardware/EDF/WIC build, export, packaging and provisioning workflow. Kernel,
+driver, device-tree, PL and boot changes still require matched artifacts and their
+appropriate installation/activation steps. `scp` only transfers files; it does not
+flash a copied WIC or activate a kernel/bitstream. Target account/address and
+installation location are supplied by the operator; no automatic deployment occurs.
+
+## Root filesystem and SD image (.wic)
+
+`python3 tools/build.py project` creates the Vivado project and host-built software;
+it does not create a Linux filesystem, ARM packages, ESP32 firmware or SD image.
+For a software-only image update using the installed matched hardware:
+
+```sh
+cd /home/rklinkhammer/workspace/edf-dev
+EDF_DMOTOR_SOURCE=../dmotor ./edf --target arty-z7-20 image
+EDF_DMOTOR_SOURCE=../dmotor ./edf --target arty-z7-20 export
+```
+
+Export writes `artifacts/arty-z7-20/<run>/sdcard.wic.xz` and `sdcard.wic.bmap`
+under EDF's configured artifacts root. `xz -dk sdcard.wic.xz` produces an
+uncompressed image. Export packages the existing image; it does not rebuild it.
+The current bundle fingerprint also includes software/staging inputs. If the
+launcher reports `Selected DMOTOR hardware sources differ`, even after a software
+edit, use the full matched build rather than editing the saved fingerprint.
+For hardware changes or that mismatch, use `EDF_DMOTOR_SOURCE=../dmotor ./edf --target arty-z7-20 build`
+for the full hardware/image/export flow. No command here flashes an SD card.
+
+EDF stages only files listed in `software/sources.json`. New CMake sources,
+headers and Python tests must be added there, not merely to the working tree.
+The acquisition receiver is assigned to `dmotor-runtime` in the authoritative
+`software/yocto/dmotor-semantic-tests.bb`, which EDF staging copies into its layer.
+Existing exported images are not updated in place. ESP32 profiles still require
+their separate [ESP-IDF builds](prepcb_acquisition.md).
+
 ## Planned platform: Zybo Z7-20
 
 The Zybo Z7-20 with 1 GiB DDR3L is selected for later platform-sensor integration;

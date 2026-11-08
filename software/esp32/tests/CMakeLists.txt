@@ -12,3 +12,8 @@ target_include_directories(timing_cycle_test PRIVATE ../components/acquisition/i
 target_compile_features(timing_cycle_test PRIVATE cxx_std_14)
 target_compile_options(timing_cycle_test PRIVATE -Wall -Wextra -Werror -Wconversion -UNDEBUG)
 add_test(NAME ina_adc_timing_cycle COMMAND timing_cycle_test)
+add_executable(acquisition_link_test acquisition_link_test.cpp)
+target_include_directories(acquisition_link_test PRIVATE ../../include)
+target_compile_features(acquisition_link_test PRIVATE cxx_std_14)
+target_compile_options(acquisition_link_test PRIVATE -Wall -Wextra -Werror -Wconversion -UNDEBUG)
+add_test(NAME acquisition_link COMMAND acquisition_link_test)

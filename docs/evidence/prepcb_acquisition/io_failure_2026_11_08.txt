@@ -1,0 +1,12 @@
+Operator-supplied Zynq output:
+FAIL Response/TX timeout sent=1 verified=0 rejected=0 mismatched=1 run=7264809726430231193
+amd-edf:~$ sudo dmotor-acquisition-test /dev/ttyUL0 100 --synthetic
+ACQUISITION DIAGNOSTIC v1 (not health-qualified) 115200 8N1 run=5605523391440753255 synthetic=1 count=100
+FAIL Response/TX timeout sent=1 verified=0 rejected=0 mismatched=1 run=5605523391440753255
+
+Operator-supplied ESP32 output:
+read,99,ina,6,2,6,160093624,160093625,1,2,2,-1,0
+# summary cycles=100 transport_complete=96 max_release_to_end_us=5570 max_complete_adc_us=14 max_ina_attempt_window_us=5497 max_release_lateness_us=60
+# aggregate cycles=10000 complete=9600 failed=400 skipped=0 max_release_to_end_us=5746 max_ina_us=5566 max_adc_us=46 max_lateness_us=134
+# deadline_observer_expirations=0
+# DONE: permits/HB LOW. No freshness, calibration, protection or ARM qualification. Reset for another capture.

@@ -55,11 +55,11 @@ inline bool pattern(const Packet& p) {
             return false;
     return true;
 }
-inline std::size_t encode(const Packet& p, std::array<uint8_t, max_wire>& out) {
+inline std::size_t encode(const Packet& p, std::array<uint8_t, max_wire>& out, uint8_t magic = 0xd7) {
     if (p.length > max_payload || (p.kind != 1 && p.kind != 2) || !p.run || !p.sequence)
         return 0;
     std::array<uint8_t, max_raw> raw{};
-    raw[0] = 0xd7;
+    raw[0] = magic;
     raw[1] = 1;
     raw[2] = p.kind;
     put(raw.data() + 3, p.run, 8);
@@ -86,6 +86,7 @@ inline std::size_t encode(const Packet& p, std::array<uint8_t, max_wire>& out) {
 enum class Decode { incomplete, packet, rejected };
 class Decoder {
   public:
+    explicit Decoder(uint8_t magic = 0xd7) : magic_(magic) {}
     Decode push(uint8_t b, Packet& p) {
         if (b == 0x7e) {
             const bool had = used_ || bad_ || escape_;
@@ -113,7 +114,7 @@ class Decoder {
 
   private:
     bool unpack(Packet& p) const {
-        if (used_ < 18 || raw_[0] != 0xd7 || raw_[1] != 1 || raw_[15] > max_payload ||
+        if (used_ < 18 || raw_[0] != magic_ || raw_[1] != 1 || raw_[15] > max_payload ||
             used_ != std::size_t{18} + raw_[15])
             return false;
         if (crc(raw_.data(), used_ - 2) != (uint16_t(raw_[used_ - 2]) << 8 | raw_[used_ - 1]))
@@ -129,6 +130,7 @@ class Decoder {
     }
     std::array<uint8_t, max_raw> raw_{};
     std::size_t used_ = 0;
+    uint8_t magic_;
     bool started_ = false, bad_ = false, escape_ = false;
 };
 } // namespace dmotor_diag

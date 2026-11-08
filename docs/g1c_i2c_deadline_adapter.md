@@ -1,5 +1,13 @@
 # G1c I²C deadline adapter candidate — 2026-11-07
 
+**Validation update (2026-11-08):** [G2 operator evidence](gates/G2.md#pre-pcb-acquisitionuart-results--2026-11-08)
+now covers 10,000 successful concurrent acquisitions, 1,000 verified UART replies,
+400/400 delayed-injection expirations, 400 I/O-only failures without overruns,
+link-loss timeouts and explicit restored-link PASS. These are diagnostic subcase
+passes, not acceptance of G1c/G3 or SYS-03–06. Sensor freshness/calibration, loaded
+policy/output work, isolation and electrical shutdown remain open. See the
+[prioritized implementation/validation plan](system_status.md#next-implementation-and-validation).
+
 **2026-11-08 requirement update:** [INA bench evidence and revised budget](ina_bench_timing.md)
 sets a 16 ms monitor cycle, 10 ms INA allocation, final work <12 ms and 4 ms
 reserved margin. The portable adapter and standalone diagnostic now use this

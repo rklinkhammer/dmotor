@@ -1,6 +1,24 @@
 # INA bench timing and revised monitoring budget — 2026-11-08
 
-## Current result — bounded 16 ms profile PASS for standalone transport
+**Gate reconciliation (2026-11-08):** [G2 completed-case matrix](gates/G2.md#pre-pcb-acquisitionuart-results--2026-11-08)
+records all supplied nominal, delayed/I/O-only fault, link-loss and restored-link
+results. [Current next steps](system_status.md#next-implementation-and-validation)
+separate work possible now from assembled-board validation. G1b/G1c/G2 remain
+open with these subcases passed; G3–G6 and release G7 are not accepted.
+
+**Pre-PCB implementation update (2026-11-08):** [Concurrent acquisition/UART diagnostic](prepcb_acquisition.md)
+adds fixed-memory long runs, a Zynq tty receiver, synthetic/error-injection profiles,
+and task-level deadline observation. Existing standalone 100/100 physical evidence
+remains valid for its original image. The concurrent run now reports 10,000/10,000
+acquisitions and 1,000/1,000 Zynq replies, no failures/skips/expirations, max
+acquisition 8.215 ms. Delayed injection also passed its diagnostic criteria: 400 expected failures,
+400 skipped releases and 400 observer expirations; Zynq rejected the supplied
+snapshots. Reboot and two UART-loss cases now show expected receiver timeouts after valid
+samples. An explicit restored-link run passed 1,000/1,000 replies with zero errors in
+69.999 s. I/O-only injection also passed: 400 expected failures, zero skipped releases
+and zero observer expirations, with Zynq rejecting the supplied snapshots. Permits/HB remain inhibited; no operational health or recovery is claimed.
+
+## Earlier standalone result — bounded 16 ms profile PASS
 
 Robert supplied the [verbatim console excerpt](evidence/ina_bench_2026_11_08/bounded_16ms_excerpt.txt)
 on 2026-11-08 after rebuilding/flashing the revised profile. The summary reports
@@ -152,32 +170,20 @@ work; there is no implemented policy/output phase in this standalone test.
 
 ## Next implementation and validation steps (ordered)
 
-1. **Make the baseline reproducible.** Retain full startup/scan headers, all CSV,
-   sdkconfig and flashed image hash on repeat runs. Add bounded multi-batch capture
-   or summary aggregation for longer runs without growing the static capture RAM.
-   Validate 100/100 completions on each baseline run, no skipped releases, ADC/INA
-   deadlines and the distribution/maxima under intended task/interrupt load.
-2. **Finish the acquisition/health implementation.** Keep 1,000 Hz RTOS ticks;
-   implement explicit per-device handles/population, INA identity/configuration
-   checks, conservative conversion-ready/age tracking and calibrated ADC handling.
-   Do not use fixture address discovery as production population selection.
-   Add host tests for stale-but-readable data, missing devices and partial groups.
-3. **Integrate the 16 ms safety task and recovery model.** Migrate model cadence
-   and ARM qualification tests; implement independent deadline inhibit, fault epoch
-   handling and final policy/output checks before <12 ms. Test delayed/blocked
-   I2C and late completion: no healthy HB or permits may be restored by stale work.
-   Validate the 25 ms age target and 89/532 ms conditional bounds rather than simply
-   increasing age limits. Live recovery is still unimplemented/unqualified.
-4. **Validate the assembled population when boards are available.** Exercise four
-   physical INAs, all required ADC channels, harness/pullups and intended filtering.
-   Repeat loaded timing with actual policy/output work; require <12 ms work and
-   >=4 ms reserved per 16 ms loop. Characterize NACK/disconnect/stall and startup
-   paths with an appropriate inhibited fixture, not deliberate powered shorts.
-5. **Complete electrical and integration gates.** U1 reset/boot-low, STOP/HALT,
-   permit-to-DRVOFF and fault/ALERT timing; then validate operational heartbeat
-   cadence against PL/watchdog behavior and joint PS/monitor recovery. Preserve
-   independent PL protection and Zynq's 1 ms loop. Powered commissioning requires
-   the existing gate entry criteria; this transport PASS does not authorize it.
+The completed pre-PCB diagnostic sequence is consolidated in [G2](gates/G2.md).
+Use [current system status](system_status.md#next-implementation-and-validation)
+for the prioritized plan and gate impact:
 
-The raw 100 Hz timeout test remains optional diagnostic characterization of the
-zero-tick hazard, not a prerequisite to adopt the successful bounded 1 kHz profile.
+1. Improve receiver rejection reasons and retain complete run provenance.
+2. Implement physical-device conversion readiness/age and ADC calibration handling;
+   test stale-but-readable, invalid configuration and missing/partial inputs.
+3. Migrate the recovery model to 16 ms and implement operational safety-task,
+   independent inhibition and fault-epoch/output serialization; test late work/races.
+4. With assembled boards, qualify four sensors, all ADC channels and complete
+   loaded work <12 ms with >=4 ms reserve, including real fault/stall behavior.
+5. Complete U1 electrical shutdown, heartbeat/watchdog and joint recovery gates
+   before powered commissioning. No automatic/live motor recovery is implied.
+
+The raw 100 Hz timeout probe remains optional zero-tick characterization, not a
+prerequisite for the successful bounded 1 kHz profile. Neither its negative
+results nor synthetic I/O injection establish real-device freshness/protection.

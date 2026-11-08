@@ -21,4 +21,25 @@ config DMOTOR_RAW_TIMEOUT_PROBE
         Bypasses the acquisition adapter's zero-tick rejection to characterize
         the stock driver. Still checks the absolute deadline after each call.
         No healthy qualification, permit, or heartbeat is ever generated.
+config DMOTOR_TIMING_BATCHES
+    int "Consecutive fixed-memory batches (console output only after final batch)"
+    range 1 10000
+    default 1
+config DMOTOR_ACQUISITION_UART
+    bool "Inhibited pre-PCB acquisition UART snapshots and deadline observer"
+    default n
+    depends on !DMOTOR_RAW_TIMEOUT_PROBE
+config DMOTOR_SYNTHETIC_INPUTS
+    bool "Synthetic ADC/INA data for UART load tests (not physical evidence)"
+    default n
+    depends on DMOTOR_ACQUISITION_UART
+config DMOTOR_INJECT_EVERY
+    int "Inject at every Nth cycle (0 disables)"
+    range 0 1000000
+    default 0
+    depends on DMOTOR_ACQUISITION_UART
+config DMOTOR_INJECT_DELAY
+    bool "Inject a 20 ms delay instead of an I/O failure"
+    default n
+    depends on DMOTOR_ACQUISITION_UART
 endmenu

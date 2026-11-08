@@ -19,6 +19,7 @@ do_semantics() {
     ${@qemu_wrapper_cmdline(d, d.getVar('RECIPE_SYSROOT'), [d.getVar('RECIPE_SYSROOT') + d.getVar('libdir'), d.getVar('RECIPE_SYSROOT') + d.getVar('base_libdir')])} ${B}/dmotor-ps-fused-tests
     ${@qemu_wrapper_cmdline(d, d.getVar('RECIPE_SYSROOT'), [d.getVar('RECIPE_SYSROOT') + d.getVar('libdir'), d.getVar('RECIPE_SYSROOT') + d.getVar('base_libdir')])} ${B}/esp32-tests/acquisition_test
     ${@qemu_wrapper_cmdline(d, d.getVar('RECIPE_SYSROOT'), [d.getVar('RECIPE_SYSROOT') + d.getVar('libdir'), d.getVar('RECIPE_SYSROOT') + d.getVar('base_libdir')])} ${B}/esp32-tests/timing_cycle_test
+    ${@qemu_wrapper_cmdline(d, d.getVar('RECIPE_SYSROOT'), [d.getVar('RECIPE_SYSROOT') + d.getVar('libdir'), d.getVar('RECIPE_SYSROOT') + d.getVar('base_libdir')])} ${B}/esp32-tests/acquisition_link_test
 }
 addtask semantics after do_compile before do_install
 
@@ -36,7 +37,7 @@ RDEPENDS:dmotor-encoder += "dmotor-version"
 
 # Opt-in commissioning service and separate maintenance client; no autostart.
 PACKAGES =+ "dmotor-runtime"
-FILES:dmotor-runtime = "${bindir}/dmotord ${bindir}/dmotor-maint ${bindir}/dmotor-uart-test ${datadir}/dmotor/inhibited-example.conf ${datadir}/dmotor/output-validation.conf ${datadir}/dmotor/powered-direct-duty.conf ${datadir}/dmotor/monitor"
+FILES:dmotor-runtime = "${bindir}/dmotord ${bindir}/dmotor-maint ${bindir}/dmotor-uart-test ${bindir}/dmotor-acquisition-test ${datadir}/dmotor/inhibited-example.conf ${datadir}/dmotor/output-validation.conf ${datadir}/dmotor/powered-direct-duty.conf ${datadir}/dmotor/monitor"
 RDEPENDS:dmotor-runtime += "dmotor-version"
 
 # Client SDK: static library and standalone public header/CMake imported target.

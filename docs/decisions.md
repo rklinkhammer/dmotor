@@ -115,3 +115,16 @@ change, followed by the standalone diagnostic/core timing migration on the same
 date. Operational firmware and recovery-model timing migration remain outstanding.
 Keep Zynq's 1 ms executor, hardware interfaces, independent protection and
 commissioning-first scope. No operational monitor/recovery acceptance is implied.
+
+## D09 — Network deployment with retained SD-image workflow (2026-11-08)
+
+Robert plans to use network connections on Zynq. Future application work should
+provide target ARM artifacts and instructions for transfer with `scp` and execution
+via SSH, without requiring an SD-image rebuild for each application-only change.
+The existing full hardware/EDF/filesystem/WIC build and export procedure remains
+supported and maintained for provisioning, complete releases and system changes.
+Robert will use that existing procedure for the current deployment. This decision
+changes the default deployment guidance, not hardware interfaces or release scope.
+Copying a file is not installation or activation: document those steps separately,
+including target ABI/runtime dependencies and any required matching system components.
+No target hostname, account, SSH keys or automatic deployment are assumed configured.

@@ -1,0 +1,6 @@
+sample cycle=9216 duration_us=7457 remote_age_us=711 address=68 mask=8 shunt=65532 bus=1 adc0=671 adc1=175
+sample cycle=9220 duration_us=7420 remote_age_us=6723 address=68 mask=8 shunt=65533 bus=0 adc0=610 adc1=115
+sample cycle=9224 duration_us=7386 remote_age_us=12785 address=68 mask=8 shunt=65534 bus=0 adc0=591 adc1=85
+sample cycle=9229 duration_us=7394 remote_age_us=2760 address=68 mask=8 shunt=65533 bus=1 adc0=616 adc1=72
+sample cycle=9233 duration_us=7333 remote_age_us=8822 address=68 mask=8 shunt=65533 bus=0 adc0=679 adc1=139
+PASS sent=1000 verified=1000 rejected=0 mismatched=0 elapsed_ms=69999
