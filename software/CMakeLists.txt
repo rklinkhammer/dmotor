@@ -267,7 +267,7 @@ endforeach()
 # ESP-IDF hardware adapters remain separate target projects.
 add_subdirectory(esp32/tests esp32-tests)
 if(DMOTOR_SW_SANITIZE)
- foreach(test acquisition_test timing_cycle_test acquisition_link_test)
+ foreach(test acquisition_test timing_cycle_test acquisition_link_test sensor_safety_test)
   target_compile_options(${test} PRIVATE -fsanitize=undefined -fno-sanitize-recover=all)
   target_link_options(${test} PRIVATE -fsanitize=undefined)
  endforeach()

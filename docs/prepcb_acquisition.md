@@ -171,6 +171,27 @@ still await the assembled fixture. No automatic motor recovery is implemented.
   task-level diagnostic supervision, not a qualified hard-real-time shutdown.
   Outputs never rise, so electrical high-to-low shutdown cannot be measured here.
 
+## Explicit receiver rejection rerun — 2026-11-08
+
+**PASS for I/O-only negative-test criteria**, from [the supplied paired output](evidence/prepcb_acquisition/explicit_rejection_run_2026_11_08.txt).
+Zynq run `13832978125558781453` reports `FAIL Sample rejected: failure` on
+its first request: sent=1, verified=0, rejected=0, mismatched=1. The decoded
+reply was refused because its lifetime failed-acquisition counter was nonzero;
+`rejected=0` refers to decoder rejection, not semantic acceptance. This is the
+expected negative result and replaces the earlier ambiguous timeout wording for
+this receiver version. It does not measure rejection latency.
+
+ESP32 aggregate: 10,000 cycles, 9,600 complete, **400 failed**, zero skipped and
+zero deadline-observer expirations. Maximum release-to-end **5,747 us**, INA
+window 5,566 us, ADC 46 us and lateness 135 us. The final 100-cycle batch has
+96 complete and maximum 5,558 us. These match the configured every-25-cycle
+I/O injection; this synthetic workload is not a real INA timing measurement.
+One rejected UART request is not coverage of every injected event over UART.
+
+Startup/config/image hashes were not included in this capture. Commanded LOW is
+not electrical shutdown evidence. G2's subcase advances; G1c/G2 and operational
+protection gates remain open. No automatic recovery is demonstrated.
+
 ## Build and run
 
 From dmotor with the pinned `esp32-dev` checkout beside it:
@@ -230,11 +251,13 @@ Confirm the ESP32 startup header reports `synthetic=1 inject_every=25 inject_del
 Then, during the acquisition run, invoke on Zynq:
 
 ```sh
-sudo dmotor-acquisition-test /dev/ttyUL0 100 --synthetic
+sudo ~/dmotor-acquisition-test /dev/ttyUL0 100 --synthetic
 ```
 
-Use the actual serial devices on each host. Receiver failure is expected after
-an injected error. With no unrelated faults, expect 400 failed and 9,600 complete
+Use the actual serial devices on each host. Use the newly copied `~/dmotor-acquisition-test` so an older installed binary
+does not hide the rejection reason. Receiver failure is expected after
+an injected error: `FAIL Sample rejected: failure` for I/O-only injection, or
+`FAIL Sample rejected: expiry` for delayed injection once expiry is recorded. With no unrelated faults, expect 400 failed and 9,600 complete
 acquisitions over 10,000 cycles; skips and deadline expirations should remain zero
 because this test injects no delay. Retain the actual aggregate and observer counts.
 
@@ -252,13 +275,13 @@ cmake --build build/prepcb-native -j4
 ctest --test-dir build/prepcb-native --output-on-failure
 ```
 
-A Zynq ARM binary is at `build/prepcb/arm/dmotor-acquisition-test`, cross-compiled
+A Zynq ARM binary is at `build/monitor-next/arm/dmotor-acquisition-test`, cross-compiled
 against the retained EDF Arty sysroot. It is not deployed. EDF source staging and `dmotor-runtime` packaging now include
 the receiver; rebuild/export the Linux image to include it in a new SD image. For future application-only deployment, copy the ARM binary over the network
 (the current full-image procedure remains supported):
 
 ```sh
-scp build/prepcb/arm/dmotor-acquisition-test USER@ZYNQ:~/dmotor-acquisition-test
+scp build/monitor-next/arm/dmotor-acquisition-test USER@ZYNQ:~/dmotor-acquisition-test
 ssh USER@ZYNQ
 chmod +x ~/dmotor-acquisition-test
 ```
@@ -356,3 +379,26 @@ configuration, compilation, semantics and package QA (all 1,034 tasks succeeded,
 This was recipe-only validation, not a new image/export. The installed hardware
 fingerprint predates the staging edits; use the full EDF `build` command to produce
 a new matched bundle/image. The saved fingerprint was not altered to bypass it.
+
+## Implementation follow-up — 2026-11-08
+
+See [receiver rejection reporting, physical sensor health and 16 ms safety candidate](monitor_next_steps.md).
+Host tests and inhibited firmware builds advance implementation evidence only.
+Existing hardware results remain tied to their original diagnostic images;
+operational protection, electrical acceptance and live recovery are not claimed.
+
+## Physical INA health diagnostic result — 2026-11-08
+
+The separate inhibited physical-health firmware passed its corrected 100-cycle
+run: one expected warm-up plus 99 good samples, maximum 3,918 us, no negative
+durations or health errors. See [capture and scope](monitor_next_steps.md#passing-one-ina-physical-health-rerun--2026-11-08).
+This six-read, one-INA test has no acquisition UART service or ADC workload and
+does not replace the concurrent UART/ADC timing evidence above. The configured
+conversion bound and electrical outputs remain independently unqualified.
+
+**Wrong-address physical-health negative subcase (2026-11-08): PASS.** With the
+configured address changed to 0x43 (physical INA assumed unchanged at 0x44), all
+100 cycles reject with `io`, good=0, maximum 739 us; no fallback or negative
+durations. [Capture and remaining tests](monitor_next_steps.md#wrong-address-negative-test--2026-11-08). This does not establish
+register-configuration mismatch handling or an electrical shutdown result.
+Overall gates remain open.

@@ -62,8 +62,9 @@ A first operational acquisition **component candidate** now exists in
 `components/monitor_i2c/` (ESP-IDF adapter). This is not the operational application.
 See [deadline contract, tick analysis, build/test and target qualification](../../docs/g1c_i2c_deadline_adapter.md).
 `tests/` contains portable native and ARM-QEMU policy tests; `build_check/` is a non-deployable IDF compile/link harness.
-No component writes HB or motor permits. Supervisor/output and freshness/policy
-integration remain mandatory before operational use.
+The new monitor_safety adapter writes HB and permits LOW only. Its physical-health
+and safety-core candidates are described below; full policy/recovery integration
+remains mandatory before operational use.
 
 The isolated [INA + battery ADC timing diagnostic](diagnostics/ina_timing/README.md)
 now prepares the actual transport/ADC workload: two battery ADC channels followed
@@ -74,3 +75,10 @@ and all motor permits LOW. Separate 100 Hz raw-timeout and 1 kHz bounded profile
 characterize the timeout hazard without changing the operational adapter. All four ESP32-S3 profiles now pass clean target builds on merged main; see
 [build evidence](../../docs/evidence/esp32_main_merge/inputs.json). No flash, hardware
 timing measurement or safety acceptance is recorded.
+
+## Implementation follow-up — 2026-11-08
+
+See [receiver rejection reporting, physical sensor health and 16 ms safety candidate](../../docs/monitor_next_steps.md).
+Host tests and inhibited firmware builds advance implementation evidence only.
+Existing hardware results remain tied to their original diagnostic images;
+operational protection, electrical acceptance and live recovery are not claimed.

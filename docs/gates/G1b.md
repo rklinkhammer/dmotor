@@ -136,3 +136,25 @@ Update [system status](../system_status.md) when a case is ready or completed.
 A useful result is “these packets passed” or “this pin remained high for this
 interval,” not simply “no movement.” G1b readiness is separate from G2 evidence,
 and neither alone authorizes powered motor tests.
+
+## Monitor follow-up implementation — 2026-11-08
+
+[Implementation and validation record](../monitor_next_steps.md) adds explicit receiver
+rejections, physical-device freshness/configuration checks, calibration integrity,
+16 ms recovery simulation and a serialized safety-core candidate with a
+hard-inhibited task adapter. U03–U06 and G1a/G1c/G3–G5 remain open: no calibrated
+operational application, sustained conversion-age proof, ISR/watchdog qualification
+or new electrical hardware result is asserted. The one-INA six-read path and
+four-INA 24-read path require new timing evidence. G1b/G2 are not closed by builds.
+
+## Consolidated physical-health disposition — 2026-11-08
+
+[Current G2 matrix](../gates/G2.md#physical-ina-health-results--2026-11-08) records
+one-INA nominal PASS (one warm-up + 99 good; max 3,918 us) and wrong-address
+rejection PASS (100 io failures; max 739 us). The updated receiver reason test now passes with explicit `failure` and 400
+injected failures without skips/expirations. Expected-register mismatch is
+operator-reported completed elsewhere; raw-evidence linkage remains pending. These diagnostic subcases advance
+U03/U06 evidence, not SYS-03–06 or electrical acceptance. G1a/G1b/G1c/G2 remain
+open; G3–G6 and G7 remain unaccepted. Commissioning-first scope, 1 ms PS loop,
+16 ms monitor/25% reserve and assembled-board pause are unchanged.
+[Next implementation and validation](../system_status.md#next-implementation-and-validation).

@@ -96,3 +96,13 @@ candidate; target/ESP32 durability is still unqualified. The [wire adapter](g1a_
 in scripted exchanges; durable allocation hookup remains open. The
 [behavioral monitor simulator](g1a_monitor_simulator.md) now extends joint coverage.
 A1's real command queue/hold integration and A8's client schema remain open.
+
+## Monitor follow-up implementation — 2026-11-08
+
+[Implementation and validation record](monitor_next_steps.md) adds explicit receiver
+rejections, physical-device freshness/configuration checks, calibration integrity,
+16 ms recovery simulation and a serialized safety-core candidate with a
+hard-inhibited task adapter. U03–U06 and G1a/G1c/G3–G5 remain open: no calibrated
+operational application, sustained conversion-age proof, ISR/watchdog qualification
+or new electrical hardware result is asserted. The one-INA six-read path and
+four-INA 24-read path require new timing evidence. G1b/G2 are not closed by builds.

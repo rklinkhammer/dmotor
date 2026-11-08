@@ -107,10 +107,13 @@ int main(int argc, char** argv) {
                     if (status == Decode::rejected)
                         ++rejected;
                     if (status == Decode::packet) {
-                        if (done || offset != size || reply.kind != 2 || reply.run != run ||
-                            reply.sequence != seq || !tracker.accept(reply, run, seq, (millis()-requested)*1000, synthetic))
+                        const auto why = (done || offset != size)
+                            ? dmotor_acq_diag::Rejection::sequence
+                            : tracker.check(reply, run, seq, (millis()-requested)*1000, synthetic);
+                        if (why != dmotor_acq_diag::Rejection::none) {
                             ++mismatched;
-                        else {
+                            throw std::runtime_error(std::string("Sample rejected: ") + dmotor_acq_diag::reason(why));
+                        } else {
                             done = true;
                             ++verified;
                             const auto sample=dmotor_acq_diag::unpack(reply);

@@ -60,7 +60,7 @@ struct Joint {
         exchange(); // commit -> ACK
         exchange(); // query -> SAFE; wait for physical ARM
         for (unsigned n = 1; n <= 17; ++n) {
-            io.time = base + uint64_t(n) * 10000;
+            io.time = base + uint64_t(n) * 16000;
             monitor.sample(io.time, 0, n >= 2 && n <= 4);
             coordinator.tick();
         }

@@ -1,9 +1,8 @@
 # G1a behavioral monitor recovery simulator
 
-**Timing migration pending (2026-11-08):** The current model
-and its 10 ms rules below predate the [16 ms monitoring requirement](ina_bench_timing.md).
-Existing passes remain model regression evidence, not validation of the revised
-ARM cadence, freshness or scheduling contract. Model/test migration is required.
+**Cadence migrated (2026-11-08):** The model and joint coordinator tests now use
+16 ms monitoring samples. Host regressions pass; target jitter, physical ARM and
+shutdown qualification remain open. See [implementation evidence](monitor_next_steps.md).
 
 Status: host-only implementation candidate under `software/tests/support`.
 Not ESP32 firmware, not installed or connected to the daemon. G1a remains open.
@@ -27,7 +26,7 @@ the earlier scripted fixture remains as a separate wire-adapter regression.
   rechecks healthy inputs. Faults and expiry invalidate the staged transaction.
 - COMMIT enters SAFE with permits low. ARM must first observe release after
   commit, then a 20 ms stable press and 20 ms stable release. Ten subsequent
-  healthy checks separated by 10 ms are required before permits rise. Held or
+  healthy checks separated by 16 ms are required before permits rise. Held or
   bouncing buttons cannot skip this sequence. Repeated same-time samples do not
   count as elapsed checks. A missed check during ARM_PENDING/ARMED revokes
   eligibility; backwards time locks the simulator until a fresh boot lifetime.
@@ -44,8 +43,8 @@ simulator policy derived from the three 100 ms transmission budget, not an adopt
 firmware timeout. A lost response near that boundary can therefore require a new
 explicit recovery. Completed transactions do not expire on this timer.
 
-Health samples must be no more than 10 ms old for acceptance/commit. The model
-requires exact maximum 10 ms scheduling gaps while ARM_PENDING/ARMED; this is a
+Health samples must be no more than 16 ms old for acceptance/commit. The model
+requires exact maximum 16 ms scheduling gaps while ARM_PENDING/ARMED; this is a
 conservative deterministic policy, not an established target jitter budget.
 A new press during qualification/ARMED invalidates eligibility. Timing violations
 use synthetic cause bit 31, not a frozen sensor/firmware ABI.

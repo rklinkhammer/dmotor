@@ -1597,3 +1597,22 @@ encoder or motor validation. The image build uses the measured 400 RPM profile
 and controller IP revision 6; board results are recorded separately.
 
 The 0.5.0 Arty platform build completed: native 3/3, ARM QEMU 3/3, full AXI/HLS XSim, and routed board timing passed (+2.783 ns setup, +0.012 ns hold). DRC has no errors; 40 DSP pipeline warnings remain. Image `edf-dev/artifacts/arty-z7-20/20261017T033255Z-0b4f36f6` contains the verified ARM utility and matching firmware identity. Export checksums passed; physical board validation is pending. See `edf-dev/docs/encoder-platform-validation.md` for provenance and reproduction.
+
+## Implementation follow-up — 2026-11-08
+
+See [receiver rejection reporting, physical sensor health and 16 ms safety candidate](monitor_next_steps.md).
+Host tests and inhibited firmware builds advance implementation evidence only.
+Existing hardware results remain tied to their original diagnostic images;
+operational protection, electrical acceptance and live recovery are not claimed.
+
+## Consolidated physical-health disposition — 2026-11-08
+
+[Current G2 matrix](gates/G2.md#physical-ina-health-results--2026-11-08) records
+one-INA nominal PASS (one warm-up + 99 good; max 3,918 us) and wrong-address
+rejection PASS (100 io failures; max 739 us). The updated receiver reason test now passes with explicit `failure` and 400
+injected failures without skips/expirations. Expected-register mismatch is
+operator-reported completed elsewhere; raw-evidence linkage remains pending. These diagnostic subcases advance
+U03/U06 evidence, not SYS-03–06 or electrical acceptance. G1a/G1b/G1c/G2 remain
+open; G3–G6 and G7 remain unaccepted. Commissioning-first scope, 1 ms PS loop,
+16 ms monitor/25% reserve and assembled-board pause are unchanged.
+[Next implementation and validation](system_status.md#next-implementation-and-validation).

@@ -115,7 +115,8 @@ partial, failed or late work. The Zynq 1 ms motor loop is unchanged.
 set the 16 ms period, 10 ms INA allocation and 11 ms acquisition ceiling. Both
 bounded and raw-timeout paths use the new envelope. Portable tests cover measured
 read-duration replay, exact deadline rejection, early abort and overflow. The
-operational monitor and recovery simulator migration remain separate outstanding
+operational deployment remains outstanding; the recovery simulator now uses 16 ms.
+See [the candidate supervisor and physical-health implementation](monitor_next_steps.md) for remaining
 work; there is no implemented policy/output phase in this standalone test.
 
 1. Flash the newly rebuilt bounded 1 kHz or 100 Hz raw-timeout profile from its

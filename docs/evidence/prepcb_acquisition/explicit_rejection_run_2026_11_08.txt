@@ -1,0 +1,11 @@
+User-supplied Zynq and ESP32 output, recorded 2026-11-08.
+No ESP32 startup/image hash or full receiver binary identity supplied with this run.
+
+md-edf:~$ sudo ~/dmotor-acquisition-test /dev/ttyUL0 100 --synthetic
+Password:
+ACQUISITION DIAGNOSTIC v1 (not health-qualified) 115200 8N1 run=13832978125558781453 synthetic=1 count=100
+FAIL Sample rejected: failure sent=1 verified=0 rejected=0 mismatched=1 run=13832978125558781453
+esp32:  # summary cycles=100 transport_complete=96 max_release_to_end_us=5558 max_complete_adc_us=14 max_ina_attempt_window_us=5484 max_release_lateness_us=61
+# aggregate cycles=10000 complete=9600 failed=400 skipped=0 max_release_to_end_us=5747 max_ina_us=5566 max_adc_us=46 max_lateness_us=135
+# deadline_observer_expirations=0
+# DONE: permits/HB LOW. No freshness, calibration, protection or ARM qualification. Reset for another capture.

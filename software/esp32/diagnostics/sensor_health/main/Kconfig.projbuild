@@ -1,0 +1,13 @@
+menu "DMOTOR inhibited physical sensor health"
+config DMOTOR_HEALTH_ADDRESS
+    hex "Physical INA226 address (no discovery or alias slots)"
+    range 0x40 0x4f
+    default 0x44
+config DMOTOR_HEALTH_CONFIG
+    hex "Expected INA226 configuration (read-only verification)"
+    default 0x4127
+config DMOTOR_CONVERSION_BOUND_US
+    int "Conservative conversion window bound us (requires board qualification)"
+    range 1 24999
+    default 2500
+endmenu

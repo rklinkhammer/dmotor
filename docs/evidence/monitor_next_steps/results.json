@@ -1,0 +1,56 @@
+{
+  "date": "2026-11-08",
+  "base_commit": "a8c03d6ac4db8a4d27ac309913895476de593ded",
+  "working_tree": "uncommitted implementation candidate",
+  "source_sha256": {
+    "software/CMakeLists.txt": "4a39f517d33e77adec1152ef25b717061f37d151e85248bd7f40aa32bc4680d6",
+    "software/apps/acquisition_test.cpp": "f33dd9e4ccba55220f0517e08e9075a2b5f25a120044980515184cfdeb7988a3",
+    "software/esp32/README.md": "87d329676b6e729c9158e63db5fe4cbaf22c19f312e182933d57ea81532b7d67",
+    "software/esp32/build_check/main/CMakeLists.txt": "f73d1f71718a70d15b710aa7d9862785ab374effcdc90878275e8a727c0208d8",
+    "software/esp32/build_check/main/main.cpp": "5f574385cc04c4fd8ff1ba7176cefb1d7942b31df76e61f8207ffa446f5cff14",
+    "software/esp32/components/acquisition/include/physical_acquisition.hpp": "04eda7744a5fc937af0e5bb446b5dfc79d71a51ed3792a2940624295d7fdb4f8",
+    "software/esp32/components/acquisition/include/sensor_health.hpp": "fe25c24ff1a9b63af26bd43e72c4e3d150f611e9b56cf2a40854593e9385002f",
+    "software/esp32/components/monitor_i2c/include/monitor_i2c.hpp": "ce22a6768addd098ddacea6efc1cc251344439574d21f5da1a53f7807e73a15d",
+    "software/esp32/components/monitor_safety/CMakeLists.txt": "e2a667c56298e76106dce0ca470999b01c7791b2bd1fd2ddda83d3e81816b7ad",
+    "software/esp32/components/monitor_safety/include/monitor_safety.hpp": "6943113b8a8e1fdaa470e280605dca7b36d8b324d1dad7144ac301adbd749332",
+    "software/esp32/components/safety_core/CMakeLists.txt": "2261715807c5bcb1e55ad078f20ce5c2563d6dfbb0fceaae4bd5735adcb40ee7",
+    "software/esp32/components/safety_core/include/safety_core.hpp": "be1409db9d40bcb60bbcc40d27acd78c5c0f4538534f736edcfa7065a74781d9",
+    "software/esp32/diagnostics/sensor_health/CMakeLists.txt": "53c9ea42882f6b753d022b64a282d97877145a6056ec8719c53be1faa374a681",
+    "software/esp32/diagnostics/sensor_health/README.md": "d9efad94b79c6f6dd244133fd2050303858ef70aa4c3a8e305be78ddfd79bc8a",
+    "software/esp32/diagnostics/sensor_health/main/CMakeLists.txt": "94b9afe62562d30cee58bb71e1d5dc77d8daaca2c9af4c4c8d97b8152f4d38dd",
+    "software/esp32/diagnostics/sensor_health/main/Kconfig.projbuild": "0d9356dbc02f64255f825f99191fac99ef8b611341f0165c41d617e55dfd41cf",
+    "software/esp32/diagnostics/sensor_health/main/main.cpp": "3232eb2cca8a477404676a1f71d99cf8505e4eefa0f87f0fe4b15e850d68e0ef",
+    "software/esp32/diagnostics/sensor_health/sdkconfig.defaults": "e8d2552600be41ae557e07b91ced262a829ab612c98277c16fd4c4ff3db06ed4",
+    "software/esp32/tests/CMakeLists.txt": "d1a24d84e4203a040d1c47bbfe9e291d8636604cbafb5a6266aa07b70b8cc372",
+    "software/esp32/tests/acquisition_link_test.cpp": "cd2762b9a83609e4f0d3bd266eb08ab01d4699e45bb059dc3dfda95bcb6d550b",
+    "software/esp32/tests/sensor_safety_test.cpp": "eeb916aa49d8acd3cba3349c885ebc7f28db0f05a1fe71f420a4f19823c98fdb",
+    "software/include/dmotor_diag/acquisition.hpp": "bb8cf117235865971bf1a203e26ea76af6dbc54c537104f6898aa26b1c8f9191",
+    "software/sources.json": "934dfd51e49f713b44658d28da5910f65801754f3f6164ac23ca481467df0352",
+    "software/tests/acquisition_diagnostic_test.py": "afefd436fe691541be0bb11c5532a60c59237a0bf12f304ce830a2a41a885b94",
+    "software/tests/monitor_simulator_test.cpp": "a6c2836b5fc43f4505fe5212031b4c024b7e39073cefdbb1d82481166c73af2e",
+    "software/tests/recovery_coordinator_test.cpp": "8e0a43d7ca826c5eec8dff234f8d3987b0621ddcebe7fdb94ff0372f53c0ae3f",
+    "software/tests/support/monitor_simulator.cpp": "3be5710d5c9ee1e2102191e6a2cf4a435a72e58409dee3346d55e8fdd30c5093",
+    "software/yocto/dmotor-semantic-tests.bb": "daf97258bebcc1374dd7320969754745fbe67f5e6e95930c663c714d43ee23e9"
+  },
+  "artifact_sha256": {
+    "build/monitor-next/arm/dmotor-acquisition-test": "b52e28e2e50e103a14baa5e0cc8e4b9ce488840cc4d13993a2e9a3af46d4f402",
+    "build/monitor-next/arm/sensor_safety_test": "1b4aa12009c4d58a529fd1d4c4276f88560908029bd274d788f26cdf9ca5dcd0",
+    "build/sensor_health/esp32/build/dmotor_sensor_health.bin": "999a02cc1a6e39044321ddb301ee576c1af481f731c00876c56b677f778efca8",
+    "build/sensor_health/esp32/sdkconfig": "e66dc7220cded69e55b649e57f0e018039a71a491174cc8fa91dbf0628fde3ce"
+  },
+  "validation": {
+    "native": "32/32",
+    "asan_ubsan": "4/4",
+    "arm_qemu": "receiver help, acquisition_link_test, sensor_safety_test",
+    "esp32": "ESP32-S3 sensor_health diagnostic build; pinned ESP-IDF v6.1",
+    "yocto": "source archive compile checked in temporary staging; no image rebuilt",
+    "hardware": "not flashed or run"
+  },
+  "limits": [
+    "hard-inhibited GPIO adapter only",
+    "operational policy/calibration/recovery/ISR integration pending",
+    "conversion bound requires physical qualification",
+    "four-device 24-read timing not qualified",
+    "no gate closure"
+  ]
+}

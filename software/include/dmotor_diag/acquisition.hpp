@@ -38,18 +38,44 @@ inline Snapshot unpack(const Packet& p) {
 }
 // Receiver checks transport recency, NOT INA conversion freshness. Different
 // clocks are never subtracted. Age is remote age plus local request round trip.
+enum class Rejection { none, envelope, challenge, sequence, boot, cycle, expiry,
+    skipped, failure, sample, reads, flags, mode, address, duration, age };
+inline const char* reason(Rejection r) {
+    switch(r) {
+#define R(x) case Rejection::x: return #x
+        R(none); R(envelope); R(challenge); R(sequence); R(boot); R(cycle);
+        R(expiry); R(skipped); R(failure); R(sample); R(reads); R(flags);
+        R(mode); R(address); R(duration); R(age);
+#undef R
+    }
+    return "unknown";
+}
 class Tracker {
     uint64_t boot_=0; uint32_t cycle_=0;
 public:
-    bool accept(const Packet& p, uint64_t run, uint32_t seq, uint64_t roundtrip_us, bool synthetic=false) {
-        if(p.kind!=2 || p.length!=64 || p.run!=run || p.sequence!=seq) return false;
+    Rejection check(const Packet& p, uint64_t run, uint32_t seq,
+                    uint64_t roundtrip_us, bool synthetic=false) {
+        if(p.kind!=2 || p.length!=64) return Rejection::envelope;
+        if(p.run!=run) return Rejection::challenge;
+        if(p.sequence!=seq) return Rejection::sequence;
         const auto s=unpack(p);
-        if(!s.boot || !s.cycle || (boot_ && s.boot!=boot_) || s.cycle<=cycle_ ||
-           s.status || s.reads!=12 || (s.injected & 1) || s.injected>3 ||
-           bool(s.injected & 2)!=synthetic || s.failures || s.skipped || s.expired ||
-           s.address<0x40 || s.address>0x4f || s.duration>=11000 ||
-           roundtrip_us>100000 || s.age>50000 || roundtrip_us+s.age>100000) return false;
-        boot_=s.boot; cycle_=s.cycle; return true;
+        if(!s.boot || (boot_ && s.boot!=boot_)) return Rejection::boot;
+        if(!s.cycle || s.cycle<=cycle_) return Rejection::cycle;
+        if(s.expired) return Rejection::expiry;
+        if(s.skipped) return Rejection::skipped;
+        if(s.failures) return Rejection::failure;
+        if(s.status) return Rejection::sample;
+        if(s.reads!=12) return Rejection::reads;
+        if((s.injected & 1) || s.injected>3) return Rejection::flags;
+        if(bool(s.injected & 2)!=synthetic) return Rejection::mode;
+        if(s.address<0x40 || s.address>0x4f) return Rejection::address;
+        if(s.duration>=11000) return Rejection::duration;
+        if(roundtrip_us>100000 || s.age>50000 || roundtrip_us+s.age>100000)
+            return Rejection::age;
+        boot_=s.boot; cycle_=s.cycle; return Rejection::none;
+    }
+    bool accept(const Packet& p, uint64_t run, uint32_t seq, uint64_t elapsed, bool synthetic=false) {
+        return check(p,run,seq,elapsed,synthetic)==Rejection::none;
     }
 };
 // Task-level independent deadline observer. Caller serializes access. No output

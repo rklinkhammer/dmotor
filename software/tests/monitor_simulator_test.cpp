@@ -48,7 +48,7 @@ struct Joint {
     }
     void ticks(unsigned first, unsigned last, bool pressed, uint32_t causes = 0) {
         for (unsigned i = first; i <= last; ++i)
-            mon.sample(uint64_t(i) * 10000, causes, pressed);
+            mon.sample(uint64_t(i) * 16000, causes, pressed);
     }
     void arm() {
         ticks(1, 1, false); // Released observation after commit.
@@ -100,12 +100,12 @@ int main() {
         if (lost) {
             // Host scheduling is independent; retries carry original COMMIT identity.
             auto retry = j.ps.poll(100001);
-            auto ack = j.mon.receive(wire(retry), 170001);
+            auto ack = j.mon.receive(wire(retry), 272001);
             CHECK(ack.type == Type::commit_ack && j.mon.commits() == 1);
             j.ps.poll(200001);
             j.ticks(18, 30, false);
         }
-        const uint64_t now = lost ? 300001 : 170001;
+        const uint64_t now = lost ? 480001 : 272001;
         auto q = j.ps.poll(now);
         CHECK(q.type == Type::state_query);
         auto r = j.mon.receive(wire(q), now);
@@ -157,8 +157,8 @@ int main() {
         j.ticks(2, 4, true);
         j.ticks(5, 7, false);
         for (unsigned i = 0; i < 100; ++i)
-            j.mon.sample(70000, 0, false);
-        CHECK(!j.mon.permits()); // Repeated samples are not elapsed 10 ms checks.
+            j.mon.sample(112000, 0, false);
+        CHECK(!j.mon.permits()); // Repeated samples are not elapsed 16 ms checks.
         j.ticks(8, 16, false);
         CHECK(!j.mon.permits());
         j.ticks(17, 17, false);
@@ -169,7 +169,7 @@ int main() {
         j.commit();
         for (unsigned i = 1; i <= boundary; ++i) {
             bool pressed = i >= 2 && i <= 4;
-            j.mon.sample(uint64_t(i) * 10000, i == boundary ? 1 : 0, pressed);
+            j.mon.sample(uint64_t(i) * 16000, i == boundary ? 1 : 0, pressed);
         }
         CHECK(!j.mon.permits() && j.mon.state() == State::fault);
     }
@@ -217,14 +217,14 @@ int main() {
         CHECK(r.mon.receive(wire(req), 0).type == Type::nak);
         auto good = r.request(2);
         r.mon.receive(wire(good), 0);
-        CHECK(r.mon.receive(wire(r.commit(2)), 10001).type == Type::nak); // Stale health sample.
+        CHECK(r.mon.receive(wire(r.commit(2)), 16001).type == Type::nak); // Stale health sample.
     }
     {
         Joint j;
         j.commit();
         j.ticks(1, 1, false);
         j.ticks(2, 4, true);
-        j.mon.sample(60000, 0, false); // Missed 10 ms check during ARM_PENDING.
+        j.mon.sample(96000, 0, false); // Missed 16 ms check during ARM_PENDING.
         CHECK(!j.mon.permits() && j.mon.state() == State::fault);
         j.mon.sample(1, 0, false); // Backward time locks this boot.
         CHECK(!j.mon.permits());

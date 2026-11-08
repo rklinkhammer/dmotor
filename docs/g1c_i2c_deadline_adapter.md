@@ -221,3 +221,10 @@ labelled 100 Hz raw-timeout probe deliberately measures zero-tick driver behavio
 it does not weaken the operational adapter guard. The merged-main [clean build](evidence/esp32_main_merge/inputs.json) passes both
 target timing profiles and the adapter link harness. No physical measurement,
 flashing or safety acceptance is recorded.
+
+## Implementation follow-up — 2026-11-08
+
+See [receiver rejection reporting, physical sensor health and 16 ms safety candidate](monitor_next_steps.md).
+Host tests and inhibited firmware builds advance implementation evidence only.
+Existing hardware results remain tied to their original diagnostic images;
+operational protection, electrical acceptance and live recovery are not claimed.

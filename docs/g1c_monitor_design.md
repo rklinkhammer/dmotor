@@ -165,8 +165,10 @@ uses 1000 Hz ticks for synthetic HB; this does not qualify operational isolation
 G1c is ready for design review, **not accepted**. Record in the existing gate notes:
 actual populated channels/resistor/shunt values; selected voltage/current/imbalance
 limits and hysteresis; agreement on the budget and calibration/lifetime recovery
-policy. Then implement the operational core and IDF adapters with fake-clock/fault
-unit tests, followed by inhibited timing/calibration tests. Do not infer these
+policy. Candidate physical-health/calibration and safety-core/IDF adapters now
+exist with host fault tests. One-INA health and wrong-address rejection passed on
+the fixture; integrate the full operational application only after these remaining
+policy choices and timing/age proofs are established. Do not infer these
 choices from the successful USB or UART diagnostic.
 
 G1a's [remaining proof checklist](g1a_client_status.md#remaining-g1a-gate) must also
@@ -179,3 +181,15 @@ absolute-deadline acquisition and deterministic fault/preemption tests, plus a
 1000 Hz guarded IDF adapter. Stock-driver timeout reuse/recovery means that an
 argument is not a hard whole-call bound. Independent deadline inhibit and target
 qualification remain required; no operational configuration or gate is accepted.
+
+## Implementation follow-up — 2026-11-08
+
+See [receiver rejection reporting, physical sensor health and 16 ms safety candidate](monitor_next_steps.md).
+Host tests and inhibited firmware builds advance implementation evidence only.
+Existing hardware results remain tied to their original diagnostic images;
+operational protection, electrical acceptance and live recovery are not claimed.
+
+Current physical evidence and pending cases are consolidated in
+[G2](gates/G2.md#physical-ina-health-results--2026-11-08). G1c remains OPEN:
+no independently validated conversion bound, four-device operational budget,
+known-reference calibration or electrical shutdown acceptance is recorded.

@@ -311,3 +311,10 @@ The timing diagnostic now uses a 16 ms acquisition period and 10 ms INA window.
 build/host-test success from pending physical budget acceptance. The
 1 kHz label is the RTOS tick rate, not the acquisition rate. The Zynq 1 ms motor
 loop is unchanged. Builds do not flash devices or qualify hardware timing.
+
+### Physical sensor-health diagnostic and receiver update
+
+The [monitor follow-up procedure](monitor_next_steps.md) builds the new inhibited
+physical INA health diagnostic separately from `python3 tools/build.py project`.
+It also identifies the updated ARM acquisition receiver for SCP deployment.
+The existing timing/UART profiles and full EDF/WIC build procedure are maintained.

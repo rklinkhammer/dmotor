@@ -1,0 +1,18 @@
+User-supplied physical rerun, recorded 2026-11-08.
+Selected rows from the supplied 100-cycle capture; intermediate rows omitted.
+The supplied rows 1..99 all report health=0. The ELF prefix is recorded exactly
+as supplied; a full firmware hash was not provided with this capture.
+
+# physical-health ELF=f6ac4ce3a address=0x44 config=0x4127 conversion_bound_us=2500
+# INHIBITED: one physical INA, no ADC calibration/policy/ARM qualification; no UART protocol change
+# health enum: good=0 config=1 identity=2 io=3 warming=4 not_ready=5 stale=6 overflow=7 clock=8
+health,0,4,3918,0,0,0
+health,1,0,3539,-4,1,6218
+health,2,0,3485,-3,1,21815
+health,3,0,3485,-4,0,37807
+[cycles 4..96 omitted from this excerpt]
+health,97,0,3484,-4,2,1541806
+health,98,0,3484,-4,1,1557806
+health,99,0,3484,-3,1,1573806
+# physical_health cycles=100 good=99 max_release_to_end_us=3918 permits/HB LOW
+I (1697) main_task: Returned from app_main()

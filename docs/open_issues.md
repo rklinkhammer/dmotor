@@ -6,7 +6,12 @@ explicit restored-link PASS. U03 now has a measurement-supported 16 ms diagnosti
 baseline (4 ms reserved); U04 has task-level injected-expiry evidence; U05 has
 receiver rejection/timeout evidence; U07 has concurrent UART evidence. None is
 closed: loaded operational timing, isolation/electrical response, exact rejection
-reasons, sensor freshness/calibration and assembled population remain unresolved.
+reason validation on target, independently bounded conversion age/calibration and
+assembled population remain unresolved. The one-device physical-health run passed
+(warm-up + 99 good, max 3.918 ms), as did wrong-address rejection (100 io failures,
+max 0.739 ms). These advance U03/U06; no issue closes. The updated receiver now has physical explicit-failure evidence (400 injected
+failures, no skips/expirations). Register mismatch is reported complete in another
+chat; its existing capture needs linking. U05/U06 remain open for broader qualification.
 
 The previous 10 ms / 65 ms stale / 520 ms LVC targets are superseded by 16 / 89 /
 532 ms respectively; the derived detection bounds remain conditional/unqualified.
@@ -74,3 +79,13 @@ U03/U04 increment (2026-11-07): [deadline adapter candidate](g1c_i2c_deadline_ad
 rejects partial/late acquisition and zero-tick waits. Stock IDF whole-call execution
 bounds, independent deadline inhibit, operational integration and target measurements
 remain open. This does not close U03/U04/U06 or select thresholds.
+
+## Monitor follow-up implementation — 2026-11-08
+
+[Implementation and validation record](monitor_next_steps.md) adds explicit receiver
+rejections, physical-device freshness/configuration checks, calibration integrity,
+16 ms recovery simulation and a serialized safety-core candidate with a
+hard-inhibited task adapter. U03–U06 and G1a/G1c/G3–G5 remain open: no calibrated
+operational application, sustained conversion-age proof, ISR/watchdog qualification
+or new electrical hardware result is asserted. The one-INA six-read path and
+four-INA 24-read path require new timing evidence. G1b/G2 are not closed by builds.

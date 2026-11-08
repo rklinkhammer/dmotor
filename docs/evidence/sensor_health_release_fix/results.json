@@ -1,0 +1,14 @@
+{
+  "date": "2026-11-08",
+  "change": "Recheck absolute microsecond release after tick wakeups",
+  "validation": "4/4 portable ASan/UBSan tests; ESP32-S3 build",
+  "physical_validation": "User-reported rerun PASS for one-INA diagnostic: one warm-up, 99 good, max 3918 us; see passing-rerun-excerpt.txt. Full gates remain open.",
+  "sha256": {
+    "software/esp32/diagnostics/sensor_health/main/main.cpp": "8204ddbef160af2bad01aacf41cd8fdcac1a5d846aea2c8b0c8f4e2f04537653",
+    "software/esp32/components/acquisition/include/release_wait.hpp": "52069a418eb481110b3b92043bc14d72d96127b6a634fe6e3db98a7ec1b692b9",
+    "software/esp32/tests/sensor_safety_test.cpp": "a08cbc5949b0f634705d14f56e3821e145bdce27f321f6e666bef97bc49f4962",
+    "build/sensor_health/esp32/build/dmotor_sensor_health.bin": "cb38729de016336ed1db36f56da8f63d0a22d3c331daa0e4b383ce2ac48975f8",
+    "build/sensor_health/esp32/sdkconfig": "e66dc7220cded69e55b649e57f0e018039a71a491174cc8fa91dbf0628fde3ce"
+  },
+  "reported_elf_prefix": "f6ac4ce3a"
+}

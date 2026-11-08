@@ -42,6 +42,11 @@ int main() {
     assert(!real_mode.accept(response(q,simulated),456,1,10000));
     assert(synthetic_mode.accept(response(q,simulated),456,1,10000,true));
     Tracker wrong_mode; assert(!wrong_mode.accept(p,456,1,10000,true));
+    Tracker edge;
+    auto aged=unpack(p); aged.age=50000;
+    assert(edge.check(response(q,aged),456,1,50001)==Rejection::age);
+    assert(edge.check(response(q,aged),456,1,UINT64_MAX)==Rejection::age);
+    assert(edge.check(response(q,aged),456,1,50000)==Rejection::none);
     DeadlineGate gate; gate.begin(1,12000);
     assert(!gate.check(11999)); assert(gate.check(12000));
     assert(!gate.finish(1,12001)); // late worker cannot undo expiry

@@ -2,7 +2,7 @@
 namespace dmotor_sw {
 namespace monitor {
 namespace {
-constexpr uint64_t period = 10000, debounce = 20000, staged_lifetime = 300000;
+constexpr uint64_t period = 16000, debounce = 20000, staged_lifetime = 300000;
 constexpr uint32_t scheduling_fault = 0x80000000U;
 } // namespace
 void Simulator::clear_exchange() {

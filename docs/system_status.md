@@ -10,7 +10,9 @@ acquisition 8.215 ms. Delayed injection also passed its diagnostic criteria: 400
 snapshots. Reboot and two UART-loss cases now show expected receiver timeouts after valid
 samples. An explicit restored-link run passed 1,000/1,000 replies with zero errors in
 69.999 s. I/O-only injection also passed: 400 expected failures, zero skipped releases
-and zero observer expirations, with Zynq rejecting the supplied snapshots. Permits/HB remain inhibited; no operational health or recovery is claimed.
+and zero observer expirations, with Zynq rejecting the supplied snapshots. The updated receiver now explicitly reports `Sample rejected: failure`; its paired
+ESP32 rerun has 400 failures, zero skips/expirations and max 5.747 ms.
+Permits/HB remain inhibited; no operational health or recovery is claimed.
 
 Implementation tracking started 2026-11-04 from dmotor `20f5972`.
 [Execution plan](system_bringup_plan.md) · [active decisions](decisions.md) ·
@@ -31,8 +33,9 @@ The revised bounded diagnostic reports **100/100 complete acquisitions** at the
 standalone fixture: maximum release-to-end 7.697 ms, INA window 7.272 ms, ADC
 0.315 ms and lateness 0.110 ms. See the linked raw excerpt and validation scope.
 The revised diagnostic implements the 16 ms loop with 4 ms (25%) reserve;
-operational monitor/recovery-model migration and assembled/loaded timing validation remain pending. U0 UART exchange/restart/reconnection
-checks passed. U1 GPIO/HB modes are implemented, covered by the current 29-test native PS suite
+the recovery model now uses 16 ms; operational deployment and assembled/loaded timing validation remain pending. U0 UART exchange/restart/reconnection
+checks passed. The current software suite passes 32/32 tests and portable sanitizer
+tests pass 4/4. U1 GPIO/HB modes are implemented, covered by the historical native PS suite
 and a passing ESP32-S3 build; U1 flashing and physical measurements are not recorded.
 Main now uses the [1 ms PS motor executor](ps_executor.md), with the matched
 board/ARM rebuild recorded in [system status](system_status.md).
@@ -57,7 +60,7 @@ and bumper routing/PS notification and qualification are pending.
 | Zynq PL | Revision-13 PSF1 1 ms controller built and routed; atomic HLS, independent protection, coherent PWM and CLN1 retained; setup +2.157 ns, hold +0.013 ns, no DRC errors | Electrical response on the assembled system; independent shutdown for PL-only failures |
 | Zynq PS | Four-context C++ motor worker integrated in daemon; matched PSF1 driver/daemon compiled for ARM; ten QEMU executable checks pass | Loaded 1 ms/800 us execution measurements; full monitor recovery/ARM coordinator and vehicle planner |
 | Client API | `dmotor_client`, installed `dmotor::client` CMake target and Yocto packaging retained; 29 native PS tests pass, including installed/staged consumer and recovery model | Physical board/client qualification remains |
-| ESP32 | Revised INA timing profiles rebuilt; portable tests 3/3 pass; concurrent transport **10,000/10,000 acquisitions and 1,000/1,000 UART replies PASS**, max acquisition 8.215 ms ([record](ina_bench_timing.md)); prior UART/U1 and link-harness build evidence retained | Operational application, safety core and U1 physical qualification remain open |
+| ESP32 | 16 ms acquisition, physical health/calibration and hard-inhibited safety candidates implemented; 4/4 portable sanitizer tests pass. Concurrent diagnostic: 10,000 acquisitions / 1,000 replies PASS, max 8.215 ms. Physical-health: warm-up + 99 good, max 3.918 ms; wrong-address: 100/100 rejected, max 0.739 ms ([matrix](gates/G2.md)) | Full operational application, independent conversion-bound proof, four-device/ADC timing, calibration and electrical protection qualification remain open |
 | Integration | 36 controller/native/RTL tests pass, including real PS-C++/full-PL AXI and interrupted-cleanup co-simulation | Measured timing, electrical joint-state behavior and accepted system release |
 | Build evidence | [Matched revision-13 hardware/ARM build and SD export](evidence/esp32_main_merge/inputs.json); source identity, exported checksums and rootfs contents verified | Historical matched-build evidence; subsequent diagnostic hardware runs are recorded separately, without supplied image hashes |
 
@@ -72,9 +75,9 @@ scope, not qualification of the newly integrated monitor system.
 |---|---|---|
 | G1a recovery/admission | Open | [Cleanup/admission specification](g1a_cleanup_admission.md): CLN1 and actual PS/PL integration tests pass; matched PSF1 hardware/ARM build passes; remaining race/boundary qualification, admission hold, persistent sessions and A6–A8 recovery semantics remain open |
 | G1b electrical/R4 | Open | [G1b bench record](gates/G1b.md) references rev-A designs; [diagnostic programs](bench_diagnostic_plan.md) planned, [UART pair built/tested](uart_bench.md); [physical U0 PASS](gates/G2.md): 1,000-exchange runs and endpoint restart/disconnect/reconnect checks pass; other cases remain open |
-| G1c monitor design | Open; 16 ms nominal/negative diagnostic criteria PASS; operational integration and assembled qualification pending | [Design tables](g1c_monitor_design.md); thresholds/population, measured budget and isolation qualification remain open |
+| G1c monitor design | Open; 16 ms nominal/negative and one-INA health/wrong-address subcases PASS; operational integration and assembled qualification pending | [Design tables](g1c_monitor_design.md); thresholds/population, measured budget and isolation qualification remain open |
 | G1d documentation | [Prepared for self-review](gates/G1d.md) | Current records and initial archive created; matrix has 19 seed rows; extraction/self-review and full inventory migration remain open |
-| G2 | Open; U0 and pre-PCB nominal/fault/link cases PASS; assembled electrical checks pending | [Consolidated physical result matrix](gates/G2.md); U1, real sensor freshness/calibration, assembled loading and electrical response remain open |
+| G2 | Open; U0, pre-PCB nominal/fault/link and one-INA health/wrong-address cases PASS; assembled electrical checks pending | [Consolidated physical result matrix](gates/G2.md); U1, independently validated conversion age/calibration, assembled loading and electrical response remain open |
 | G3–G6 | Not accepted | Monitor recovery/protection and powered qualification remain open |
 | BV/GV | Architecture discussion active; implementation/acceptance deferred | [Autonomy proposal](autonomous_motion_architecture.md); first-release scope unchanged |
 | G7 | Not accepted | Matched release, gate records and completed documentation migration required |
@@ -91,13 +94,16 @@ build and export remain maintained; no network deployment has been performed her
 Completed diagnostic cases are consolidated in [G2](gates/G2.md); do not repeat
 them as unfinished work. Preserve their raw excerpts and scope limitations.
 
-| Priority / availability | Implementation | Validation / gate impact |
+The first three items now have implementation candidates and host validation;
+see [implementation, exact scope, build and fixture procedure](monitor_next_steps.md).
+
+| Priority / availability | Next implementation | Validation / gate impact |
 |---|---|---|
-| 1 — current fixture | Return explicit receiver rejection reasons (sample fault, expiry, skipped cycle, age, boot ID, sequence) instead of waiting for a generic timeout after an invalid reply | PTY tests for each reason, then repeat one fault case; retain source/config/image identity. Improves U05/G2 evidence, no gate closure |
-| 2 — current fixture + host | Track actual INA conversion readiness and conservative age per physical device; explicit population/configuration; calibration schema and invalid-data handling | Stale-but-readable, wrong ID/config, partial/missing input and calibration-integrity tests. One-INA physical checks; real ADC calibration needs a known reference. Advances U03/U06 and G1c/G3 |
-| 3 — host + inhibited fixture | Migrate recovery model to 16 ms cadence; implement operational safety task with fault epochs, independent deadline inhibition and serialized output/HB decisions | Boundary/race tests, blocked worker and late-result rejection, conversion-age and heartbeat contract checks. Diagnostic observer alone is not operational protection. Advances G1a/G3–G5 |
-| 4 — assembled boards | Integrate four physical INAs, all ADC channels, filtering and policy/output work | Loaded work <12 ms and >=4 ms reserve; realistic NACK/stall paths, sensor/encoder mapping and calibration. Required for U03/U04/U06/G2/G3 |
-| 5 — assembled boards | Complete electrical shutdown and joint monitor/PS integration | U1 boot/reset-low, STOP/HALT/ALERT to permit/DRVOFF, watchdog/HB and PL-only failure traces; recovery/ARM tests before powered commissioning. G2/G4–G6 remain open |
+| Completed current-fixture follow-up | Explicit UART failure reason physically verified; 400 injected failures, zero skips/expirations, max 5.747 ms. Register-mismatch step reported completed in another chat | [G2 evidence](gates/G2.md); link that existing mismatch result when available, do not require a repeat. U05/U06 remain open beyond these subcases |
+| 2 — host + current fixture | Add configurable long physical-health capture and release/age/bus-error telemetry; establish a defensible conversion-age bound | Long-run nominal, stalled/readable conversion and analyzer timing. Preserve 25 ms age limit; do not infer sustained permit validity from 99 good snapshots. U03/U06/G1c/G3 |
+| 3 — host + current fixture | Resolve 24-read four-device timing strategy; complete calibration storage/validation and policy integration using reviewed parameters | Compare added ID/config traffic against <11 ms acquisition and <12 ms total work; evaluate alternatives before changing bus rate. Known-reference ADC calibration; missing/corrupt coefficients must inhibit. U03/U06/G1c/G3 |
+| 4 — host + inhibited fixture | Integrate accepted policy, STOP/HALT ISR and watchdog paths with epoch-serialized supervisor; then recovery/ARM coordination | Blocked workers, late results, scheduler starvation, fresh-data expiry, HB compatibility and real output latency. Keep outputs hard-inhibited until qualified; no automatic/live recovery. G1a/G3–G5 |
+| 5 — assembled boards | Four physical INAs, all ADC channels, filtering and policy/output work; full electrical integration | Work <12 ms and >=4 ms reserve; actual sensor mapping, U1 boot/reset-low, STOP/HALT/ALERT, PL-only failures and recovery/ARM traces. U01/U03/U04/U06/G2–G6 remain open |
 
 Synthetic nominal mode, real bus stalls and physical boot-ID rejection are not
 claimed passed by the supplied results. Future applications retain SCP/SSH delivery
