@@ -30,12 +30,45 @@ int main() {
         auto r=dmotor_timing::capture(c,bus,adc,0,1000,1,false,false);
         assert(r.adc_complete && r.adc_reads==2 && adc.count==2);
         assert(r.ina.status==Status::complete && bus.count==12 && bus.seen_slots==15);
-        assert(r.adc_end==40 && r.ended==5440 && r.ina.deadline==7040);
+        assert(r.adc_end==40 && r.ended==5440 && r.ina.deadline==10040);
     }
     {
         FakeClock c; FakeAdc adc(c); FakeBus bus(c);
         auto r=dmotor_timing::capture(c,bus,adc,0,1000,2,true,false);
         assert(r.adc_reads==12 && r.adc_end==240 && bus.count==12);
+    }
+    // Replay the supplied successful read durations, extending the three missing
+    // reads with the largest observed duration. This validates budget arithmetic,
+    // not hardware completion or RTOS tick phase.
+    for (bool raw : {false,true}) {
+        struct MeasuredBus : Bus {
+            FakeClock& c; unsigned count=0;
+            explicit MeasuredBus(FakeClock& clock):c(clock) {}
+            bool read(unsigned, std::uint8_t, int wait, std::uint16_t& value) override {
+                const Us duration[]={689,585,571,570,571,572,571,570,571,689,689,689};
+                assert(wait==2 && count<12);
+                c.t+=duration[count++]; value=8; return true;
+            }
+        };
+        FakeClock c; FakeAdc adc(c); MeasuredBus bus(c);
+        auto r=dmotor_timing::capture(c,bus,adc,0,1000,1,false,raw);
+        assert(r.ina.status==Status::complete && bus.count==12);
+        assert(r.ended < monitor_work_us);
+    }
+    // Exclusive INA boundary must abort even in the raw-timeout profile.
+    for (bool raw : {false,true}) {
+        for (Us offset : {-1,0,1}) {
+            FakeClock c; FakeAdc adc(c); FakeBus bus(c);
+            bus.delay_at=11; bus.extra=ina_budget_us-12*bus.delay+offset;
+            auto r=dmotor_timing::capture(c,bus,adc,0,1000,1,false,raw);
+            assert(bus.count==12);
+            assert(r.ina.status==(offset<0 ? Status::complete : Status::deadline));
+            if (offset>=0) assert(r.ina.raw[0][0]==0);
+        }
+        FakeClock c; FakeAdc adc(c); FakeBus bus(c);
+        const Us release=std::numeric_limits<Us>::max()-monitor_period_us+1;
+        auto r=dmotor_timing::capture(c,bus,adc,release,1000,1,false,raw);
+        assert(r.ina.status==Status::config && adc.count==0 && bus.count==0);
     }
     for(unsigned fail=0;fail<2;++fail) {
         FakeClock c; FakeAdc adc(c); FakeBus bus(c); adc.fail_at=fail;

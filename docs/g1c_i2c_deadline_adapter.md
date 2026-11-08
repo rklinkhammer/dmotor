@@ -1,5 +1,11 @@
 # G1c I²C deadline adapter candidate — 2026-11-07
 
+**2026-11-08 requirement update:** [INA bench evidence and revised budget](ina_bench_timing.md)
+sets a 16 ms monitor cycle, 10 ms INA allocation, final work <12 ms and 4 ms
+reserved margin. The portable adapter and standalone diagnostic now use this
+budget. Operational supervision/output integration and physical qualification
+remain outstanding.
+
 Implementation increment for U03/U04, on branch `esp32`. Not G1c/G3 acceptance,
 not a complete operational monitor. No electrical thresholds selected. No hardware
 flash or motor authorization. UART/U1 diagnostics retain their separate configuration.
@@ -11,7 +17,7 @@ flash or motor authorization. UART/U1 diagnostics retain their separate configur
 | Tick quantum | 10 ms | 1 ms |
 | `pdMS_TO_TICKS(2)` in audited IDF | 0 | 2 |
 | Smallest positive integer-ms input yielding a tick | 10 ms | 1 ms |
-| Nominal ticks per proposed 10 ms cycle | 1 | 10 |
+| Tick periods per 16 ms cycle | 1.6 (not integral) | 16 |
 | 1–9 ms requests | zero ticks | 1–9 ticks |
 
 Zero ticks means no blocked wait at the RTOS primitive, not a 0 µs driver-call
@@ -36,11 +42,12 @@ of the tick configuration. Tick scheduling alone is not the deadline clock.
 ## Absolute acquisition contract
 
 The caller supplies the **scheduled release**, never the actual task-start time.
-Keep phase on absolute 10,000 µs releases. On lateness, reject the affected release;
+Keep phase on absolute 16,000 µs releases. On lateness, reject the affected release;
 skip missed releases to the next future one, with no catch-up HB. ADC/GPIO work
 precedes `run()` and must finish by release+1000 µs. All INA reads share
-release+8000 µs as the exclusive deadline. This retains the proposed 1000 µs
-policy/output reserve plus 1000 µs scheduling margin. Allocations are provisional.
+release+11000 µs as the exclusive deadline. This retains the proposed 1000 µs
+policy/output allocation plus 4000 µs reserved loop margin. The diagnostic uses
+ADC-end+10000 µs, which is earlier than release+11000 µs. Allocations require measurement.
 
 `Acquisition::run` has one owner, fixed storage, at most twelve synchronous calls,
 no allocation/log/retry/recovery, and a validated inhibited-only population mask.
@@ -80,12 +87,12 @@ bus. Error exits reset the FSM. Recovery and log output have additional cost.
 Consequently **even a 1 ms argument is not a 1 ms whole-call bound**. Configured
 SCL stretch timeout is another hardware setting, not the acquisition deadline.
 The adapter intentionally does not promise that flooring a timeout cancels an
-in-progress call at release+8000 µs.
+in-progress call at release+11000 µs.
 
 The implemented bound is on transaction count and **acceptance of results**.
 A late return is always rejected and no later device is called. A strict execution
 WCET cannot be established by this wrapper around the stock driver. The 5400 µs
-minimum wire time leaves only 1600 µs in the proposed INA allocation for all other
+minimum wire time leaves 4600 µs in the proposed INA allocation for all other
 costs; it is a feasibility lower bound, never evidence of a worst-case upper bound.
 Summing twelve 2 ms caps (24 ms) is not the cycle policy or a driver WCET either.
 
@@ -105,7 +112,7 @@ Do not hold permits healthy while a blocking driver runs on the assumption its
 argument is a hard bound. If independently scheduled supervision itself stalls,
 no autonomous timer ISR may continue toggling healthy HB. Independent PL HB
 expiry and task/interrupt watchdogs provide separate fallback bounds; they do not
-prove the 8 ms acquisition bound. The operational safety task must be subscribed
+prove the 11 ms acquisition bound. The operational safety task must be subscribed
 to WDT and feed only after a healthy committed cycle. Hardware/cache/interrupt
 failure response remains U01/U04 work.
 
@@ -191,7 +198,7 @@ and PL expiry bounds separately. Check internal RAM/IRAM placement and cross-cor
 fault/output races. Test delayed conversion-ready and identical data, not only
 transport faults. Measure ADC/filter/analog settling and conversion/read skew.
 
-Keep U03/U04/U06 and 10 ms feasibility open until measured maxima plus justified
+Keep U03/U04/U06 and 16 ms feasibility open until measured maxima plus justified
 margin fit the reviewed allocations. If they do not, revise the acquisition design,
 period or independently supervised execution architecture explicitly. No thresholds
 or gate acceptance follow from host tests or an IDF build.

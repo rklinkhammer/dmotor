@@ -1,5 +1,10 @@
 # DMOTOR ESP32-S3 firmware — planned repository location
 
+**2026-11-08:** Standalone INA bench measurements and the revised **16 ms monitoring
+cycle with 25% reserved margin** are recorded in [the timing record](../../docs/ina_bench_timing.md).
+The acquisition core and timing diagnostic now implement the revised envelope; operational
+monitor implementation and assembled-board qualification remain open.
+
 The ESP32-S3 monitor firmware **will be included in this dmotor repository**.
 `software/esp32/` is its implementation root. The operational monitor application is not implemented yet. A standalone
 [UART bench diagnostic](diagnostics/bench/README.md) now builds with ESP-IDF.

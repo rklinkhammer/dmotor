@@ -108,7 +108,7 @@ for review. The tables cover:
 - Isolation audit: ISR call/data placement, locks/shared resources, flash/cache/NVS
   constraints, watchdog API/config and measured reset-to-permits-low behavior.
 
-No operational thresholds are selected by this work package. The 10 ms cycle,
+No operational thresholds are selected by this work package. The revised 16 ms cycle with 25% reserved margin ([basis](ina_bench_timing.md)),
 ISR/staleness/LVC targets in v4 remain proposed until derived and reviewed. The
 ESP-IDF v6.1 tool image is pinned; that does not qualify the firmware's isolation.
 Link the completed tables to SYS-03–06 and U03/U04/U06 before G1c acceptance.

@@ -10,16 +10,22 @@ Vehicle architecture/U08 is now under discussion; BV implementation and GV
 acceptance remain deferred, not completed. No gate acceptance or powered approval
 is inferred from starting the plan.
 
-## Current work direction — 2026-11-07
+## Current work direction — 2026-11-08
 
-Further physical testing is **paused at Robert's request until the assembled
-monitor and motor boards are available**. U0 UART exchange/restart/reconnection
+Integrated monitor/motor-board testing remains paused pending assembled boards.
+Robert has resumed standalone ESP32/INA bench characterization; see the
+[measured I2C results and revised 16 ms requirement](ina_bench_timing.md).
+The revised bounded diagnostic reports **100/100 complete acquisitions** at the
+standalone fixture: maximum release-to-end 7.697 ms, INA window 7.272 ms, ADC
+0.315 ms and lateness 0.110 ms. See the linked raw excerpt and validation scope.
+The revised diagnostic implements the 16 ms loop with 4 ms (25%) reserve;
+operational monitor/recovery-model migration and assembled/loaded timing validation remain pending. U0 UART exchange/restart/reconnection
 checks passed. U1 GPIO/HB modes are implemented, covered by the current 29-test native PS suite
 and a passing ESP32-S3 build; U1 flashing and physical measurements are not recorded.
 Main now uses the [1 ms PS motor executor](ps_executor.md), with the matched
 board/ARM rebuild recorded in [system status](system_status.md).
 [Autonomous-motion architecture](autonomous_motion_architecture.md) remains a
-separate workstream; no new physical bench run was performed. Commissioning remains the first release; no hardware gate
+separate workstream; standalone INA results do not qualify the assembled system. Commissioning remains the first release; no hardware gate
 is closed or waived by this pause.
 
 The planned next sensor-integration platform is **Zybo Z7-20 with 1 GiB DDR3L**
@@ -39,7 +45,7 @@ and bumper routing/PS notification and qualification are pending.
 | Zynq PL | Revision-13 PSF1 1 ms controller built and routed; atomic HLS, independent protection, coherent PWM and CLN1 retained; setup +2.157 ns, hold +0.013 ns, no DRC errors | Electrical response on the assembled system; independent shutdown for PL-only failures |
 | Zynq PS | Four-context C++ motor worker integrated in daemon; matched PSF1 driver/daemon compiled for ARM; ten QEMU executable checks pass | Loaded 1 ms/800 us execution measurements; full monitor recovery/ARM coordinator and vehicle planner |
 | Client API | `dmotor_client`, installed `dmotor::client` CMake target and Yocto packaging retained; 29 native PS tests pass, including installed/staged consumer and recovery model | Physical board/client qualification remains |
-| ESP32 | Four clean ESP32-S3 builds pass: UART/U1, acquisition link harness, bounded INA/ADC timing and raw-timeout probe; pinned ESP-IDF v6.1 | Operational application, safety core and U1 physical qualification remain open |
+| ESP32 | Revised INA timing profiles rebuilt; portable tests 2/2 pass; bounded standalone transport **100/100 PASS**, max acquisition 7.697 ms ([record](ina_bench_timing.md)); prior UART/U1 and link-harness build evidence retained | Operational application, safety core and U1 physical qualification remain open |
 | Integration | 36 controller/native/RTL tests pass, including real PS-C++/full-PL AXI and interrupted-cleanup co-simulation | Measured timing, electrical joint-state behavior and accepted system release |
 | Build evidence | [Matched revision-13 hardware/ARM build and SD export](evidence/esp32_main_merge/inputs.json); source identity, exported checksums and rootfs contents verified | No new physical boot, UART run, SD write or board flash |
 
@@ -54,12 +60,27 @@ scope, not qualification of the newly integrated monitor system.
 |---|---|---|
 | G1a recovery/admission | Open | [Cleanup/admission specification](g1a_cleanup_admission.md): CLN1 and actual PS/PL integration tests pass; matched PSF1 hardware/ARM build passes; remaining race/boundary qualification, admission hold, persistent sessions and A6–A8 recovery semantics remain open |
 | G1b electrical/R4 | Open | [G1b bench record](gates/G1b.md) references rev-A designs; [diagnostic programs](bench_diagnostic_plan.md) planned, [UART pair built/tested](uart_bench.md); [physical U0 PASS](gates/G2.md): 1,000-exchange runs and endpoint restart/disconnect/reconnect checks pass; other cases remain open |
-| G1c monitor design | Prepared for review | [Design tables](g1c_monitor_design.md); thresholds/population, measured budget and isolation qualification remain open |
+| G1c monitor design | 16 ms standalone transport baseline PASS; operational integration and assembled/loaded qualification pending | [Design tables](g1c_monitor_design.md); thresholds/population, measured budget and isolation qualification remain open |
 | G1d documentation | [Prepared for self-review](gates/G1d.md) | Current records and initial archive created; matrix has 19 seed rows; extraction/self-review and full inventory migration remain open |
-| G2 | Open; further physical tests paused; U0 UART PASS | [Recorded UART exchange and restart/reconnect tests](gates/G2.md); other electrical/IO checks remain open |
+| G2 | Open; integrated tests paused; standalone INA characterization active; U0 UART PASS | [Recorded UART exchange and restart/reconnect tests](gates/G2.md); other electrical/IO checks remain open |
 | G3–G6 | Not accepted | Monitor recovery/protection and powered qualification remain open |
 | BV/GV | Architecture discussion active; implementation/acceptance deferred | [Autonomy proposal](autonomous_motion_architecture.md); first-release scope unchanged |
 | G7 | Not accepted | Matched release, gate records and completed documentation migration required |
+
+## Next implementation and validation
+
+Follow the [ordered plan and acceptance checks](ina_bench_timing.md#next-implementation-and-validation-steps-ordered):
+
+1. Repeat and extend bounded captures with full headers/CSV and flashed-image identity;
+   record skipped releases and timing under representative load.
+2. Implement explicit multi-device acquisition, INA configuration/freshness and ADC
+   calibration; add stale/missing/partial-data tests.
+3. Migrate recovery-model cadence and implement the 16 ms safety task, independent
+   deadline inhibit and serialized output/HB commit. Live recovery remains open.
+4. On assembled boards, validate four INAs/all ADCs plus policy work <12 ms with
+   >=4 ms reserve, including fault/stall paths.
+5. Complete U1 electrical shutdown/heartbeat and joint PS/monitor gates before
+   powered commissioning. The standalone transport result closes none of these.
 
 ## Current matched PSF1 / ESP32 merge build — 2026-11-07
 

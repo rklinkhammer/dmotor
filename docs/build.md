@@ -246,5 +246,8 @@ Choose a new output root when repeating the runner; it refuses existing director
 | `diagnostics/ina_timing` | `sdkconfig.defaults` | 1 kHz bounded timing diagnostic |
 | `diagnostics/ina_timing` | `sdkconfig.probe100.defaults` | Explicit 100 Hz raw-timeout probe |
 
-The timing diagnostic's acquisition period is 10 ms; this does not change the
-Zynq 1 ms motor loop. These builds do not flash devices or qualify hardware timing.
+The timing diagnostic now uses a 16 ms acquisition period and 10 ms INA window.
+[Measured INA results and acceptance procedure](ina_bench_timing.md) distinguish
+build/host-test success from pending physical budget acceptance. The
+1 kHz label is the RTOS tick rate, not the acquisition rate. The Zynq 1 ms motor
+loop is unchanged. Builds do not flash devices or qualify hardware timing.

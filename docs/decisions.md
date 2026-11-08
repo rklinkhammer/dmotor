@@ -103,3 +103,15 @@ not imply that source 0 is a motor-0 failure. See the authoritative
 [controller source assignments and telemetry mapping](controller_axi.md#system-physical-fault-sources).
 Arty inputs remain tied low in the saved BD; Zybo wiring/PS notification and
 physical qualification are pending. This decision changes documentation only.
+
+## D08 — Measurement-informed ESP32 monitor cycle (2026-11-08)
+
+At Robert's request, replace the provisional 10 ms monitoring cycle with a
+**16 ms target and 25% whole-loop reserve**: 1 ms GPIO/ADC, 10 ms INA, 1 ms
+policy/output, 4 ms unused margin. [Evidence, derivation, dependent timing and
+current test procedures](ina_bench_timing.md) distinguish measured individual
+reads from the unproven full-cycle budget. This is a requirement/documentation
+change, followed by the standalone diagnostic/core timing migration on the same
+date. Operational firmware and recovery-model timing migration remain outstanding.
+Keep Zynq's 1 ms executor, hardware interfaces, independent protection and
+commissioning-first scope. No operational monitor/recovery acceptance is implied.

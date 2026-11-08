@@ -1,15 +1,21 @@
 # Integrated Zynq and ESP32 development and bring-up plan
 
-## Current work direction — 2026-11-07
+## Current work direction — 2026-11-08
 
-Further physical testing is **paused at Robert's request until the assembled
-monitor and motor boards are available**. U0 UART exchange/restart/reconnection
+Integrated monitor/motor-board testing remains paused pending assembled boards.
+Robert has resumed standalone ESP32/INA bench characterization; see the
+[measured I2C results and revised 16 ms requirement](ina_bench_timing.md).
+The revised bounded diagnostic reports **100/100 complete acquisitions** at the
+standalone fixture: maximum release-to-end 7.697 ms, INA window 7.272 ms, ADC
+0.315 ms and lateness 0.110 ms. See the linked raw excerpt and validation scope.
+The revised diagnostic implements the 16 ms loop with 4 ms (25%) reserve;
+operational monitor/recovery-model migration and assembled/loaded timing validation remain pending. U0 UART exchange/restart/reconnection
 checks passed. U1 GPIO/HB modes are implemented, covered by the current 29-test native PS suite
 and a passing ESP32-S3 build; U1 flashing and physical measurements are not recorded.
 Main now uses the [1 ms PS motor executor](ps_executor.md), with the matched
 board/ARM rebuild recorded in [system status](system_status.md).
 [Autonomous-motion architecture](autonomous_motion_architecture.md) remains a
-separate workstream; no new physical bench run was performed. Commissioning remains the first release; no hardware gate
+separate workstream; standalone INA results do not qualify the assembled system. Commissioning remains the first release; no hardware gate
 is closed or waived by this pause.
 
 

@@ -1,5 +1,10 @@
 # ESP32-S3 UART / GPIO / HB bench diagnostic
 
+For INA226/battery ADC tests 2 and 3, use the separate
+[INA diagnostic](../ina_timing/README.md) and
+[measured timing / revised acceptance procedure](../../../../docs/ina_bench_timing.md).
+This UART/GPIO program has no I2C acquisition; its synthetic HB timing is unchanged.
+
 This is a standalone ESP-IDF application, not the operational monitor firmware.
 GPIO8/9/10/11 permits and GPIO21 HB are driven low before UART startup. There is
 no ARM path or sensor acquisition. Explicit native-USB commands now support

@@ -139,7 +139,7 @@ single status read prove unexposed internal state was cleared.
    and asserts global HALT, retaining the hold until a new explicit recovery.
 6. **Physical ARM and RECOVERY_COMPLETE.** ARM requires an observed released
    button after commit, a debounced press then debounced release (20 ms each),
-   and ten consecutive healthy 10 ms checks with HALT_IN low. A held button
+   and ten consecutive healthy 16 ms checks with HALT_IN low. A held button
    across fault/recovery is not eligible. Any failure invalidates eligibility
    and drops permits. PS issues a fresh STATE_QUERY challenge and accepts only
    its matching reply confirming ARMED, the same completed tuple and epoch.
@@ -216,13 +216,14 @@ missed edges; STOP polling must clear permits in the same cycle, not wait for
 release debounce. Fault detection is enabled in every state after safe GPIO
 initialization; no boot exception may raise permits.
 
-R5 must establish the 10 ms absolute cycle budget. With a 25 ms sensor-age limit,
-three stale observations and at most one subsequent output cycle, 65 ms from
+R5 must establish the revised 16 ms cycle with work <12 ms and 4 ms reserve
+([measurement basis](ina_bench_timing.md)). With a 25 ms sensor-age limit,
+three stale observations and at most one subsequent output cycle, 89 ms from
 last valid conversion is a conservative proposed bound only if cycle and sample
 age bounds are proven. Drop permits in the detecting cycle where possible.
 HB cannot toggle after stale/failed/over-budget cycles. For battery LVC, the
-initial 500 ms persistence plus two 10 ms scheduling allowances gives a proposed
-520 ms bound from the first qualifying sample, excluding front-end sample delay.
+initial 500 ms persistence plus two 16 ms scheduling allowances gives a proposed
+532 ms bound from the first qualifying sample, excluding front-end sample delay.
 Imbalance persistence is a separate unresolved threshold-policy decision; do
 not silently assign the LVC duration to it. The external 2.25 s watchdog bound
 and proposed 500 ms task-WDT reset remain separate from these detection budgets.

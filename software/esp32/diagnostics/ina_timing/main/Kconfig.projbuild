@@ -4,7 +4,7 @@ config DMOTOR_TIMING_CYCLES
     range 1 128
     default 100
 config DMOTOR_INA_ADDRESS
-    hex "Physical INA226 7-bit address (all four logical slots use this address)"
+    hex "Preferred INA226 7-bit address when multiple scan addresses ACK"
     range 0x40 0x4f
     default 0x40
 config DMOTOR_ADC_SAMPLES

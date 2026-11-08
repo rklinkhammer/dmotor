@@ -22,7 +22,7 @@
 #endif
 namespace {
 using namespace dmotor_monitor;
-constexpr Us period=10000;
+constexpr Us period=monitor_period_us;
 struct ClockImpl : Clock { Us now() override { return esp_timer_get_time(); } } clock_us;
 struct ReadTrace {
     Us start=0, end=0;
@@ -38,6 +38,7 @@ struct Record {
 };
 // Static internal RAM. No PSRAM, heap, USB or formatting in measured cycle.
 Record records[CONFIG_DMOTOR_TIMING_CYCLES];
+unsigned selected_address=0;
 static_assert(sizeof(records) <= 160 * 1024,
     "Capture exceeds 160 KiB internal RAM budget: reduce cycles or ADC samples");
 class BusImpl : public Bus {
@@ -105,7 +106,7 @@ void inhibit() {
     cfg.mode=GPIO_MODE_OUTPUT;
     ESP_ERROR_CHECK(gpio_config(&cfg));
 }
-void initialize() {
+bool initialize() {
     adc_oneshot_unit_init_cfg_t ac{}; ac.unit_id=ADC_UNIT_1;
     ESP_ERROR_CHECK(adc_oneshot_new_unit(&ac,&adc.unit));
     adc_oneshot_chan_cfg_t cc{}; cc.atten=ADC_ATTEN_DB_12; cc.bitwidth=ADC_BITWIDTH_12;
@@ -119,15 +120,41 @@ void initialize() {
     // External pull-ups required. Queue depth zero: synchronous, one owner.
     i2c_master_bus_handle_t handle=nullptr;
     ESP_ERROR_CHECK(i2c_new_master_bus(&bc,&handle));
+    // Discovery is outside the measured workload. 100 ms remains representable
+    // for both supported FreeRTOS tick profiles; no register writes are issued.
+    unsigned found=0;
+    std::printf("# I2C scan SDA=15 SCL=16 addresses=0x40..0x4f timeout_ms=100\n");
+    for (unsigned address=0x40;address<=0x4f;++address) {
+        const esp_err_t error=i2c_master_probe(handle,address,100);
+        std::printf("# probe address=0x%02x result=%s error=%d\n",
+            address,esp_err_to_name(error),static_cast<int>(error));
+        if (error==ESP_OK) {
+            ++found;
+            if (!selected_address || address==CONFIG_DMOTOR_INA_ADDRESS)
+                selected_address=address;
+        }
+    }
+    if (!found) {
+        std::printf("# No I2C responder at 0x40..0x4f; timing test skipped. Permits/HB LOW. Reset to retry.\n");
+        std::fflush(stdout);
+        return false;
+    }
+    std::printf("# I2C found=%u selected_address=0x%02x (preferred=0x%02x; otherwise lowest ACK). Device identity not verified.\n",
+        found,selected_address,CONFIG_DMOTOR_INA_ADDRESS);
+    std::fflush(stdout);
     i2c_device_config_t dc{}; dc.dev_addr_length=I2C_ADDR_BIT_LEN_7;
-    dc.device_address=CONFIG_DMOTOR_INA_ADDRESS; dc.scl_speed_hz=100000;
+    dc.device_address=selected_address; dc.scl_speed_hz=100000;
     dc.scl_wait_us=1000; // test parameter, not a qualified protection bound
     ESP_ERROR_CHECK(i2c_master_bus_add_device(handle,&dc,&bus.device));
-    // No INA writes/probes: preserve installed configuration and ALERT thresholds.
+    // No register writes: preserve installed configuration and ALERT thresholds.
+    return true;
 }
 void dump() {
+    std::printf("# monitor_period_us=%lld adc_budget_us=%lld ina_budget_us=%lld work_budget_us=%lld reserved_margin_us=%lld\n",
+        (long long)monitor_period_us,(long long)adc_budget_us,(long long)ina_budget_us,
+        (long long)monitor_work_us,(long long)monitor_margin_us);
     std::printf("# idf=%s tick_hz=%d address=0x%x scl_hz=100000 scl_wait_us=1000 samples_per_adc=%d ipropi=%d raw_probe=%d\n",
-        esp_get_idf_version(),CONFIG_FREERTOS_HZ,CONFIG_DMOTOR_INA_ADDRESS,
+        esp_get_idf_version(),CONFIG_FREERTOS_HZ,selected_address,
         CONFIG_DMOTOR_ADC_SAMPLES,CONFIG_DMOTOR_TIMING_IPROPI,CONFIG_DMOTOR_RAW_TIMEOUT_PROBE);
     std::printf("# Cycle timestamps are monotonic us; raw ADC codes are NOT calibrated pack voltage.\n");
     std::printf("cycle,index,release_us,start_us,adc_end_us,end_us,status,adc_attempts,ina_attempts,ina_completed,skipped_releases\n");
@@ -165,7 +192,9 @@ void dump() {
 } // namespace
 extern "C" void app_main() {
     inhibit();
-    initialize();
+    if (!initialize()) {
+        for (;;) vTaskDelay(pdMS_TO_TICKS(1000));
+    }
     // Avoid formatting/USB/logging during capture, including noisy I2C errors.
     // This profiles a deliberately log-silent configuration, not default error logging.
     esp_log_level_set("*",ESP_LOG_NONE);

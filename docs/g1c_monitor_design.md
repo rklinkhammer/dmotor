@@ -44,7 +44,7 @@ if I²C keeps returning the same valid bytes. These register semantics and the
 
 ## Absolute cycle budget
 
-Candidate cycle remains 10,000 µs, measured from an absolute scheduled release,
+Required target cycle is now 16,000 µs (see [measured basis and migration procedure](ina_bench_timing.md)), measured from an absolute scheduled release,
 not from when a late task eventually runs. No catch-up HB pulses. At each operation,
 check elapsed time and reserve time for output clear/state evaluation. Abort the
 cycle on exhausted budget; retain permits low and do not toggle HB. Never execute
@@ -57,14 +57,15 @@ stretching, software, arbitration and preemption. This is not a worst-case bound
 Three reads × four devices × the historical 2 ms timeout would instead allow
 **24 ms**, already exceeding the cycle. A per-transaction timeout alone is invalid.
 
-Proposed allocation to measure, not an accepted WCET:
+Revised allocation to validate, not an accepted WCET. Scheduled-release deadlines
+are 1 ms ADC, 11 ms INA, 12 ms final commit; the remaining 4 ms is reserved:
 
 | Stage | Budget | Failure at boundary |
 |---|---:|---|
 | GPIO checks and six ADC conversions | 1,000 µs | Inhibit, reject incomplete sample set |
-| All populated INA reads combined | 7,000 µs | Abort at shared deadline, no subsequent reads this cycle |
+| All populated INA reads combined | 10,000 µs | Abort at shared deadline, no subsequent reads this cycle |
 | Policy, freshness, permit commit, HB decision | 1,000 µs | No enable/HB on incomplete commit |
-| Scheduling/interrupt margin | 1,000 µs | Missed absolute deadline inhibits; no phase drift |
+| Reserved loop margin (25% of 16 ms) | 4,000 µs | Work exceeding 12 ms fails the budget; no phase drift |
 
 This envelope is feasible only if measured ADC/I²C execution fits it. Keep 100 kHz
 as the design baseline; raising it requires checking the harness capacitance and
@@ -72,7 +73,7 @@ rise time. Do not silently change to 400 kHz to make the arithmetic pass.
 
 INA refresh is nominally 4.704 ms; using the datasheet's 646 µs maximum conversion
 time gives 5.168 ms for the same averaging setting. Neither figure includes the
-read schedule or analog response. The v4 25 ms age, 65 ms stale-fault and 520 ms LVC
+read schedule or analog response. The retained 25 ms age limit and revised 89 ms stale-fault / 532 ms LVC
 bounds remain conditional. Battery RC settling, ADC filtering and task lateness
 must be added to end-to-end limits. HB is suppressed on the first unhealthy cycle,
 even if a fault persistence policy has not yet latched its final cause.
@@ -90,7 +91,7 @@ inhibited recovery; logging loss cannot lose the inhibit latch.
 | ACQUISITION / STALE | Monotonic µs; no future timestamp or failed read accepted | 25 ms age and three observations remain proposed; absolute cycle failure inhibits immediately | No healthy HB for failed cycle; bounded fault latch; healthy data alone never rearms |
 | CALIBRATION / CONFIG | Versioned validated record and population | Missing/corrupt/unsupported is invalid; no startup bypass | Inhibit until explicit valid installation and recovery |
 | BATTERY_RANGE | Full and midpoint mV; 0 < mid < full, ADC not clipped | Calibrated limits and tolerance pending | Inhibit; diagnose wiring separately from low battery |
-| BATTERY_LVC | Lower 2S = mid; upper 2S = full − mid | Trip mV, release mV pending; 500 ms persistence candidate | Proposed 520 ms after first qualifying sample, plus analog/acquisition delay; explicit recovery |
+| BATTERY_LVC | Lower 2S = mid; upper 2S = full − mid | Trip mV, release mV pending; 500 ms persistence candidate | Proposed 532 ms after first qualifying sample, plus analog/acquisition delay; explicit recovery |
 | BATTERY_IMBALANCE | Absolute difference of the two 2S voltages, mV | Threshold, persistence and release hysteresis independently pending | Inhibit; cannot reuse LVC persistence implicitly |
 | MOTOR_CURRENT | IPROPI mA, INA feed mA as separate quantities | Calibrated ranges, hardware ALERT threshold, persistence/hysteresis pending | Inhibit; feed current is not winding-current proof |
 | INTERNAL / DEADLINE | State, timer, storage and arithmetic validity | Immediate; overflow/exhaustion fails closed | Inhibit; no automatic retry restoring permits |

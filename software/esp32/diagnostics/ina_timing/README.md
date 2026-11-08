@@ -1,6 +1,15 @@
 # Isolated ESP32-S3 INA226 + battery ADC timing test
 
-Preparation only, branch `esp32`. No flash or physical results recorded. This is a
+**2026-11-08 measured status and revised procedure:** See
+[INA timing record](../../../../docs/ina_bench_timing.md). The bench INA responds
+at 0x44. The revised bounded run completed **100/100 full acquisitions**, with
+max release-to-end 7.697 ms, INA window 7.272 ms, ADC 0.315 ms and lateness
+0.110 ms. The earlier 7 ms-budget run failed and is retained as historical evidence. The new requirement is 16 ms
+period / 10 ms INA / 12 ms total work / 4 ms reserve. The diagnostic source now implements the revised envelope; both timing
+profiles must be flashed from their rebuilt images. Follow the linked acceptance
+procedure; a successful build does not establish physical timing or protection.
+
+Standalone bench results are now recorded in the linked timing record. This is a
 standalone ESP-IDF v6.1 diagnostic, not the operational monitor. It has no ARM,
 UART recovery, healthy HB, or motor-permit assertion path. GPIO8/9/10/11 and GPIO21
 are latched LOW before being enabled as outputs, following the existing bench
@@ -9,7 +18,7 @@ must remain disconnected; no Zynq is needed.
 
 ## Workload
 
-Each absolute 10,000 µs release performs:
+Each absolute 16,000 µs release performs:
 
 1. ESP32 ADC1 reads of **both battery taps**: GPIO1 (ADC1 channel 0, full pack),
    then GPIO2 (ADC1 channel 1, midpoint). Default one conversion each.
@@ -17,7 +26,16 @@ Each absolute 10,000 µs release performs:
 3. Four logical INA slots, each reading Mask/Enable (0x06), shunt (0x01) and bus
    (0x02). **All twelve reads use the same physical INA226 handle/address.**
 
-Default address is 0x40, I²C 100 kHz, SDA GPIO15, SCL GPIO16, explicit SCL wait
+Before capture, the diagnostic probes **all addresses 0x40 through 0x4F** with
+a 100 ms timeout per probe and prints each address/result. If any acknowledge,
+it selects the configured preferred address (default 0x40) when present,
+otherwise the lowest responding address, and reports `selected_address`.
+All logical slots then use that address. An ACK does not verify device identity;
+use the isolated INA fixture. If none acknowledge, the timing test is skipped
+and the application idles with permits/HB LOW until reset. Discovery and its
+console output are outside the measured cycles. Probes do not write registers.
+
+I²C uses 100 kHz, SDA GPIO15, SCL GPIO16, explicit SCL wait
 setting 1000 µs, external pull-ups, synchronous bus, one owner, no callbacks/retry.
 This wiring is the diagnostic assignment: verify SDA/SCL against the actual module
 and assembled board before connecting. Both ADC pins and I²C are owned exclusively
@@ -43,7 +61,7 @@ run. `transport_complete` never means a fresh or healthy safety sample.
 
 ## Capture and deadlines
 
-Default capture: 100 cycles (~1 second when on schedule). No USB formatting or
+Default capture: 100 cycles (~1.6 seconds when on schedule). No USB formatting or
 application logging inside the capture. Timestamp and error records use static
 internal RAM; CSV is emitted **after** capture, then firmware remains idle. The
 I²C driver's logs are disabled during capture to avoid distorting error paths.
@@ -52,7 +70,10 @@ separate load case. Timer task/RTOS/interrupt activity still contributes normall
 
 An `esp_timer` one-shot wakes the owner at each absolute release; the timer does
 not read sensors or toggle HB. ADC work must finish strictly before release+1000 µs.
-INA work shares a deadline of ADC-end+7000 µs, therefore before release+8000 µs.
+INA work shares a deadline of ADC-end+10000 µs, therefore before release+11000 µs.
+The CSV header reports the 16000 us period, 10000 us INA allocation, 12000 us
+work budget and 4000 us reserve. The diagnostic does not implement policy/output
+work and cannot validate that final 1 ms allocation.
 There is no deliberate wait/padding to the end of the ADC allocation. Release-to-end
 includes lateness, both battery ADC channels, optional IPROPI work and all INA calls.
 A late start, ADC failure/overrun, I²C error, exhausted budget or late return aborts
@@ -88,7 +109,13 @@ idf.py -B build-1khz -D SDKCONFIG=sdkconfig.1khz set-target esp32s3
 idf.py -B build-1khz -D SDKCONFIG=sdkconfig.1khz build
 ```
 
-The separate 100 Hz / raw-timeout diagnostic profile:
+The separate 100 Hz / raw-timeout diagnostic profile prefers address **0x44**,
+matching the responding bench module. It still scans all 0x4x addresses before
+capture. This profile deliberately passes a 2 ms timeout that converts to zero
+ticks at 100 Hz; it is a timeout-behavior experiment, not a reliable acquisition
+profile.
+
+Build this profile with:
 
 ```sh
 idf.py -B build-probe100 -D SDKCONFIG=sdkconfig.probe100 \
@@ -98,7 +125,7 @@ idf.py -B build-probe100 -D SDKCONFIG=sdkconfig.probe100 \
 ```
 
 Inspect effective sdkconfig; defaults do not override an existing sdkconfig.
-Project menuconfig options select physical INA address, number of measured cycles,
+Project menuconfig options select preferred INA address, number of measured cycles,
 raw conversions/channel (1..16), optional IPROPI channels, and raw-timeout mode.
 For a 100 Hz **bounded** comparison, use a separate configuration with raw mode OFF.
 For a 1 kHz **raw** comparison, use a separate configuration with raw mode ON.

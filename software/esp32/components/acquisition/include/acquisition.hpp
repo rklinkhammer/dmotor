@@ -5,6 +5,14 @@
 
 namespace dmotor_monitor {
 using Us = std::int64_t;
+// Shared monitor budget: 12 ms work + 4 ms reserve = 16 ms period.
+constexpr Us monitor_period_us = 16000;
+constexpr Us adc_budget_us = 1000;
+constexpr Us ina_budget_us = 10000;
+constexpr Us acquisition_deadline_us = adc_budget_us + ina_budget_us;
+constexpr Us monitor_work_us = 12000;
+constexpr Us monitor_margin_us = monitor_period_us - monitor_work_us;
+static_assert(monitor_margin_us * 4 == monitor_period_us, "25% loop reserve");
 struct Clock { virtual Us now() = 0; virtual ~Clock() = default; };
 struct Bus {
     // Synchronous, single owner. No retries or asynchronous callbacks.
@@ -32,7 +40,7 @@ inline int timeout_ms(Us remaining, unsigned hz, unsigned cap_ms = 2) {
 struct Config {
     unsigned population = 15; // inhibited-only installed mask, never discovery
     unsigned tick_hz = 1000;
-    Us ina_start_us = 1000, ina_end_us = 8000; // relative to scheduled release
+    Us ina_start_us = adc_budget_us, ina_end_us = acquisition_deadline_us; // relative to scheduled release
 };
 class Acquisition {
     Clock& clock_; Bus& bus_;
@@ -45,9 +53,9 @@ public:
         Result r; r.release = release;
         auto fail = [&](Status s) { r.status = s; r.raw = {}; faulted_ = true;
                                    r.finished = clock_.now(); return r; };
-        if (release < 0 || release > std::numeric_limits<Us>::max() - 10000 ||
+        if (release < 0 || release > std::numeric_limits<Us>::max() - monitor_period_us ||
             c.population == 0 || c.population > 15 || c.ina_start_us < 0 ||
-            c.ina_end_us <= c.ina_start_us || c.ina_end_us > 8000 ||
+            c.ina_end_us <= c.ina_start_us || c.ina_end_us > acquisition_deadline_us ||
             (c.tick_hz != 100 && c.tick_hz != 1000)) return fail(Status::config);
         r.deadline = release + c.ina_end_us;
         Us last = clock_.now();

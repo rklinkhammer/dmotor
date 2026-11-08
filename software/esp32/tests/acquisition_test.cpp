@@ -32,8 +32,8 @@ int main() {
         assert(r.status == Status::io && b.calls == fail+1 && a.faulted());
         assert(r.raw[0][0] == 0);
         assert(!acquisition_qualified(r,c.t,a.faulted(),true));
-        b.fail_at = 99; c.t = 11000;
-        auto recovered = a.run(10000);
+        b.fail_at = 99; c.t = monitor_period_us + adc_budget_us;
+        auto recovered = a.run(monitor_period_us);
         assert(!acquisition_qualified(recovered,c.t,a.faulted(),true));
     }
     for (unsigned at = 0; at < 12; ++at) {
@@ -47,7 +47,7 @@ int main() {
         assert(r.status==Status::complete && r.reads==12 && c.t==6400);
         assert(acquisition_qualified(r,c.t,false,true));
         assert(!acquisition_qualified(r,c.t,false,false));
-        assert(!acquisition_qualified(r,8000,false,true));
+        assert(!acquisition_qualified(r,11000,false,true));
         assert(!acquisition_qualified(r,6399,false,true));
     }
     {
@@ -55,15 +55,15 @@ int main() {
         assert(a.run(0,cfg).status==Status::unrepresentable && b.calls==0);
     }
     {
-        FakeClock c; c.t=8000; FakeBus b(c); Acquisition a(c,b);
+        FakeClock c; c.t=11000; FakeBus b(c); Acquisition a(c,b);
         assert(a.run(0).status==Status::deadline && b.calls==0);
     }
     {
-        FakeClock c; FakeBus b(c); b.normal=600; Acquisition a(c,b);
+        FakeClock c; FakeBus b(c); b.normal=850; Acquisition a(c,b);
         auto r=a.run(0); assert(r.status==Status::unrepresentable && b.calls==11);
     }
     {
-        FakeClock c; FakeBus b(c); b.delay_at=0; b.delay=6550; Acquisition a(c,b);
+        FakeClock c; FakeBus b(c); b.delay_at=0; b.delay=9550; Acquisition a(c,b);
         assert(a.run(0).status==Status::deadline && b.calls==1); // equality rejects
     }
     {

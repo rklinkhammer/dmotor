@@ -1,5 +1,10 @@
 # G1a behavioral monitor recovery simulator
 
+**Timing migration pending (2026-11-08):** The current model
+and its 10 ms rules below predate the [16 ms monitoring requirement](ina_bench_timing.md).
+Existing passes remain model regression evidence, not validation of the revised
+ARM cadence, freshness or scheduling contract. Model/test migration is required.
+
 Status: host-only implementation candidate under `software/tests/support`.
 Not ESP32 firmware, not installed or connected to the daemon. G1a remains open.
 The simulator replaces scripted state changes in a new joint PS/monitor test;

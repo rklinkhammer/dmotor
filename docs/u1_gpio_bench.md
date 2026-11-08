@@ -1,5 +1,10 @@
 # U1 — inhibited GPIO and synthetic heartbeat diagnostic
 
+**2026-11-08 update:** Standalone ESP32/INA characterization has resumed;
+see [measured results and revised monitoring test procedure](ina_bench_timing.md).
+This supersedes the blanket pause below only for that standalone work. Integrated
+board tests and U1 physical acceptance remain pending; synthetic HB is unchanged.
+
 **Current scheduling (2026-11-06):** Further physical testing is paused until
 assembled monitor and motor boards are available, at Robert's request ([D04](decisions.md)).
 Completed U0 results remain valid; U1 is implemented/build-tested, with no physical

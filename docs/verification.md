@@ -1,5 +1,12 @@
 # Current verification — 1 ms PSF1 product
 
+**2026-11-08 standalone INA evidence:** [Measured timing and revised test criteria](ina_bench_timing.md)
+record **100/100 complete bounded acquisition cycles** after the 16 ms update:
+max release-to-end 7.697 ms, INA 7.272 ms, ADC 0.315 ms, lateness 0.110 ms.
+The 16 ms monitoring requirement reserves 25% of the loop; the revised timing diagnostic
+implements it, while recovery-model tests still use the prior budget. Standalone transport completion is established by the supplied summary;
+assembled-board, loaded full-monitor and protection acceptance remain open.
+
 `python3 tools/build.py project` is the required current component pipeline.
 It runs native fixed-point/controller/protocol tests, RTL encoder/PWM/protection/
 scheduler tests, atomic HLS simulation/synthesis/co-simulation, PS transport tests,

@@ -1,5 +1,17 @@
 # Current unresolved system issues
 
+**Latest bounded INA result (2026-11-08):** 100/100 complete standalone cycles;
+max acquisition 7.697 ms. [Evidence and next steps](ina_bench_timing.md) retain the earlier
+failed baseline and distinguish this transport PASS from open loaded-monitor,
+freshness, protection and assembled-board qualification.
+
+**2026-11-08 U03/U04/U06 update:** [Measured INA timing](ina_bench_timing.md)
+sets the revised 16 ms monitoring target with 4 ms reserved margin. The acquisition core and diagnostic are migrated; migrate the
+recovery model and obtain full-cycle completion,
+loaded timing, freshness and heartbeat evidence before acceptance. The previous
+10 ms cycle / 65 ms stale / 520 ms LVC targets are superseded by 16 / 89 / 532 ms
+respectively, with the detection bounds still conditional and unqualified.
+
 > Architecture update (2026-11-07): main uses the [1 ms PS motor executor](../DMOTOR_ARCH.md) with independent PL capture/PWM/protection and a matched PSF1 driver/daemon. Client contracts, commissioning-first scope, U0 evidence, the hardware pause and pending live recovery are unchanged.
 
 This is the current issue register, extracted from the plan at `20f5972`.
