@@ -23,7 +23,7 @@ find_program(IVERILOG iverilog)
 find_program(VVP vvp)
 set(IVERILOG_BASE "" CACHE PATH "Optional relocated Icarus backend directory")
 if(IVERILOG AND VVP)
-  foreach(test cleanup_sequencer monitor_heartbeat safety scheduler qcencoder pwm latency axi_bridge encoder_snapshot target_age shared_scheduler vivado_dev)
+  foreach(test board_status cleanup_sequencer monitor_heartbeat safety scheduler qcencoder pwm latency axi_bridge encoder_snapshot target_age shared_scheduler vivado_dev)
     add_test(NAME rtl_${test} COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/rtl_test.py
       --iverilog ${IVERILOG} --vvp ${VVP} --base "${IVERILOG_BASE}"
       --source ${CMAKE_SOURCE_DIR} --build ${CMAKE_BINARY_DIR} --test ${test})

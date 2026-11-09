@@ -1,5 +1,6 @@
 #include "dmotor_diag/uart.hpp"
 #include "gpio_diagnostic.hpp"
+#include "heartbeat_pin.hpp"
 #include "driver/gpio.h"
 #include "driver/uart.h"
 #include "esp_log.h"
@@ -9,7 +10,7 @@
 using namespace dmotor_diag;
 extern "C" void app_main() {
     // Set output latches LOW before enabling outputs. External pulldowns cover reset/boot.
-    const gpio_num_t inhibit[] = {GPIO_NUM_8, GPIO_NUM_9, GPIO_NUM_10, GPIO_NUM_11, GPIO_NUM_21};
+    const gpio_num_t inhibit[] = {GPIO_NUM_8, GPIO_NUM_9, GPIO_NUM_10, GPIO_NUM_11, GPIO_NUM_21, bench_heartbeat_pin};
     for (auto pin : inhibit)
         ESP_ERROR_CHECK(gpio_set_level(pin, 0));
     gpio_config_t pins{};
@@ -30,7 +31,8 @@ extern "C" void app_main() {
     ESP_ERROR_CHECK(uart_driver_install(UART_NUM_1, 512, 512, 0, nullptr, 0));
     ESP_LOGW(
         "bench",
-        "UART DIAGNOSTIC v1 + U1: permits LOW, HB default LOW, no ARM. UART1 TX17 RX18 115200 8N1");
+        "UART DIAGNOSTIC v1 + U1: permits LOW, HB GPIO%d default LOW, no ARM. UART1 TX17 RX18 115200 8N1",
+        static_cast<int>(bench_heartbeat_pin));
     Decoder decoder;
     uint64_t run = 0;
     uint32_t expected = 1, received = 0, sent = 0, rejected = 0, mismatch = 0;

@@ -8,10 +8,14 @@ module controller_axi_tb;
  wire awready,wready,bvalid,arready,rvalid;
  wire [1:0] bresp,rresp;wire [31:0] rdata;
  reg [3:0] qa=0,qb=0,physical_faults=0;reg halt_async=0;
+ reg maintenance_async=0;
+ wire led4_r,led4_g,led4_b,led5_r,led5_g,led5_b;
  reg hb_async=0,hb_run=1;
  always begin repeat(4)@(negedge clk);if(hb_run)hb_async=~hb_async;end
  wire [3:0] pwm,drive_enable,direction;wire shared_halt,coast_req;
  dmotor_controller_axi dut(.*);
+ defparam dut.board_status.RELEASE_CYCLES=4;
+ defparam dut.board_status.BLINK_HALF_CYCLES=8;
  reg [3:0] sampled_drive_enable;
  always @(posedge clk) begin
   sampled_drive_enable=reset ? 4'b0 : dut.drive_enable_raw;
@@ -57,7 +61,7 @@ module controller_axi_tb;
  end
  task direct_start(input [31:0] wd,input [31:0] age,input [31:0] limit=65536);begin
   @(negedge clk);reset=1;physical_faults=0;halt_async=0;repeat(4)step();@(negedge clk);reset=0;
-  write_word('h1008,1,0);
+  write_word('h1008,1,0);repeat(8)step();write_word('h1024,2,0);
   cfg[0]=1;for(i=0;i<20;i=i+1)write_word('h2000+i*4,cfg[i],0);
   write_word('h2080,1,0);
   write_word('h1054,3,2);write_word('h1054,1,0);write_word('h1058,limit,0);
@@ -77,7 +81,7 @@ module controller_axi_tb;
   cfg[13]=1000000;cfg[14]=40000;cfg[15]=20000;cfg[16]=128;
   repeat(4)step();@(negedge clk);reset=0;
   read_word('h1000);if(value!=32'h444d4932)$fatal(1,"identity");
-  write_word('h1008,7,0);
+  write_word('h1008,7,0);repeat(8)step();write_word('h1024,2,0);
   // Encoder-only utility lifecycle: no configuration, enable or watchdog writes.
   write_word('h1020,1,0);write_word('h1020,0,0);repeat(8)step();
   @(negedge clk);qb=1;repeat(8)step();@(negedge clk);qa=1;repeat(8)step();
@@ -161,7 +165,7 @@ module controller_axi_tb;
    $fatal(1,"watchdog did not halt all motors");
   // External HALT blocks atomic traffic with SLVERR rather than hanging AXI.
   @(negedge clk);reset=1;repeat(3)step();@(negedge clk);reset=0;
-  write_word('h1008,8,0);write_word('h1020,0,0);wait(dut.cleanup_complete || dut.direct_mode!=0);repeat(3)step();
+  write_word('h1008,8,0);repeat(8)step();write_word('h1024,2,0);write_word('h1020,0,0);wait(dut.cleanup_complete || dut.direct_mode!=0);repeat(3)step();
   @(negedge clk);#7;halt_async=1;
   step();if(dut.controller.halt_detected!==0)$fatal(1,"HALT bypassed first stage");
   step();if(dut.controller.halt_detected!==15 || drive_enable!==0)
@@ -213,6 +217,22 @@ module controller_axi_tb;
   write_word('h105c,32769,2);write_word('h105c,-32769,2);
   write_word('h105c,-32768,0);write_word('h1060,1,0);repeat(3200)step();
   if(drive_enable!=1 || !direction[0])$fatal(1,"configured ceiling boundary");
+  // Physical maintenance switch must dominate running direct drive.
+  @(negedge clk);maintenance_async=1;repeat(8)step();
+  if(pwm || drive_enable || !coast_req)$fatal(1,"maintenance failed to inhibit");
+  @(negedge clk);maintenance_async=0;repeat(12)step();
+  if(pwm || drive_enable || !coast_req)$fatal(1,"switch release restarted drive");
+  write_word('h1024,2,0);repeat(8)step();
+  if(!dut.maintenance_inhibit)$fatal(1,"running ACK cleared maintenance");
+  read_word('h1004);if(!value[16])$fatal(1,"maintenance fault status");
+  write_word('h100c,1,2); // Maintenance rejects enable.
+  write_word('h1020,1,0);repeat(8)step();
+  if(!dut.maintenance_inhibit)$fatal(1,"core reset cleared maintenance");
+  write_word('h1024,2,0);repeat(8)step();
+  if(dut.maintenance_inhibit || drive_enable || pwm)$fatal(1,"disabled explicit ACK");
+  direct_start(200000,200000,32768);
+  write_word('h105c,-32768,0);write_word('h1060,1,0);repeat(3200)step();
+  if(dut.maintenance_inhibit || drive_enable!=1)$fatal(1,"explicit maintenance recovery");
   // HB loss during real direct drive inhibits independently of the engine.
   write_word('h106c,1,2); // ACK cannot clear protection while enabled.
   hb_run=0;repeat(55)step();
@@ -232,7 +252,7 @@ module controller_axi_tb;
   read_word('h1064);if(value!=32'h48423131)$fatal(1,"HB capability");
   // At cold boot, a static pin must not permit even direct-mode enable.
   hb_run=0;@(negedge clk);reset=1;repeat(4)step();@(negedge clk);reset=0;
-  write_word('h1008,1,0);
+  write_word('h1008,1,0);repeat(8)step();write_word('h1024,2,0);
   cfg[0]=1;for(i=0;i<20;i=i+1)write_word('h2000+i*4,cfg[i],0);
   write_word('h2080,1,0);write_word('h1054,1,0);write_word('h1058,32768,0);
   write_word('h1020,0,0);wait(dut.cleanup_complete || dut.direct_mode!=0);repeat(3)step();

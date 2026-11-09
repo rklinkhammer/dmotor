@@ -1,5 +1,9 @@
 # ESP32-S3 UART / GPIO / HB bench diagnostic
 
+For the narrow-breadboard **UART/U1** heartbeat test, use the separate [GPIO3 pre-PCB profile](../../../../docs/board_heartbeat.md#pre-pcb-breadboard-variant-hb-on-gpio3). PCB/operational HB remains GPIO21; the INA acquisition image remains inhibited.
+
+Current board-status addition: [SW0 maintenance inhibit, LD4/LD5 and ESP32 heartbeat LEDs](../../../../docs/board_heartbeat.md). Synthetic HB/LED visual checks are operator-confirmed; U1 remains partially complete. See the linked procedure for the evidence and remaining electrical/interlock checks.
+
 **Pre-PCB implementation update (2026-11-08):** [Concurrent acquisition/UART diagnostic](../../../../docs/prepcb_acquisition.md)
 adds fixed-memory long runs, a Zynq tty receiver, synthetic/error-injection profiles,
 and task-level deadline observation. Existing standalone 100/100 physical evidence

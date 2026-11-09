@@ -1,5 +1,7 @@
 # Current system status
 
+Current board-status addition: [SW0 maintenance inhibit, LD4/LD5 and ESP32 heartbeat LEDs](board_heartbeat.md). Synthetic HB/LED visual checks are operator-confirmed; see [operator-confirmed synthetic heartbeat/LED checks](evidence/board_heartbeat/physical_confirmation_2026_11_08.md). Electrical timing and full interlock qualification remain pending.
+
 **Pre-PCB implementation update (2026-11-08):** [Concurrent acquisition/UART diagnostic](prepcb_acquisition.md)
 adds fixed-memory long runs, a Zynq tty receiver, synthetic/error-injection profiles,
 and task-level deadline observation. Existing standalone 100/100 physical evidence
@@ -12,7 +14,8 @@ samples. An explicit restored-link run passed 1,000/1,000 replies with zero erro
 69.999 s. I/O-only injection also passed: 400 expected failures, zero skipped releases
 and zero observer expirations, with Zynq rejecting the supplied snapshots. The updated receiver now explicitly reports `Sample rejected: failure`; its paired
 ESP32 rerun has 400 failures, zero skips/expirations and max 5.747 ms.
-Permits/HB remain inhibited; no operational health or recovery is claimed.
+Those acquisition diagnostics keep permits/HB inhibited; the separately tested
+U1 `hb10` intentionally generates synthetic HB. No operational health or recovery is claimed.
 
 Implementation tracking started 2026-11-04 from dmotor `20f5972`.
 [Execution plan](system_bringup_plan.md) · [active decisions](decisions.md) ·
@@ -44,7 +47,8 @@ The revised diagnostic implements the 16 ms loop with 4 ms (25%) reserve;
 the recovery model now uses 16 ms; operational deployment and assembled/loaded timing validation remain pending. U0 UART exchange/restart/reconnection
 checks passed. The current software suite passes 33/33 tests and portable sanitizer
 tests pass 5/5. U1 GPIO/HB modes are implemented, covered by the historical native PS suite
-and a passing ESP32-S3 build; U1 flashing and physical measurements are not recorded.
+and a passing ESP32-S3 build; U1 deployment and synthetic-HB/LED visual checks are operator-confirmed; measured
+waveforms, permit behavior and full interlock acceptance remain pending.
 Main now uses the [1 ms PS motor executor](ps_executor.md), with the matched
 board/ARM rebuild recorded in [system status](system_status.md).
 [Autonomous-motion architecture](autonomous_motion_architecture.md) remains a
@@ -85,7 +89,7 @@ scope, not qualification of the newly integrated monitor system.
 | G1b electrical/R4 | Open | [G1b bench record](gates/G1b.md) references rev-A designs; [diagnostic programs](bench_diagnostic_plan.md) planned, [UART pair built/tested](uart_bench.md); [physical U0 PASS](gates/G2.md): 1,000-exchange runs and endpoint restart/disconnect/reconnect checks pass; other cases remain open |
 | G1c monitor design | Open; 16 ms nominal/negative and one-INA health/wrong-address subcases PASS; operational integration and assembled qualification pending | [Design tables](g1c_monitor_design.md); thresholds/population, measured budget and isolation qualification remain open |
 | G1d documentation | [Prepared for self-review](gates/G1d.md) | Current records and initial archive created; matrix has 19 seed rows; extraction/self-review and full inventory migration remain open |
-| G2 | Open; U0, pre-PCB nominal/fault/link and one-INA health/wrong-address cases PASS; assembled electrical checks pending | [Consolidated physical result matrix](gates/G2.md); U1, independently validated conversion age/calibration, assembled loading and electrical response remain open |
+| G2 | Open; U0, pre-PCB/one-INA cases and U1 synthetic-HB/LED visual subset PASS; assembled electrical checks pending | [Consolidated physical result matrix](gates/G2.md); remaining U1 electrical/interlock cases, independently validated conversion age/calibration, assembled loading and electrical response remain open |
 | G3–G6 | Not accepted | Monitor recovery/protection and powered qualification remain open |
 | BV/GV | Architecture discussion active; implementation/acceptance deferred | [Autonomy proposal](autonomous_motion_architecture.md); first-release scope unchanged |
 | G7 | Not accepted | Matched release, gate records and completed documentation migration required |
@@ -233,7 +237,8 @@ is not completion of U10. Update this page in place rather than appending progre
 
 U0 diagnostic increment: Linux/PTY tests, ESP32-S3 ESP-IDF v6.1 build and
 Arty ARM `dmotor-runtime` package/QA pass. The recorded revision-11 SD export includes the ARM diagnostic utility. [Bench instructions and evidence](uart_bench.md); Robert supplied a physical U0 PASS. [U1 GPIO/HB modes](u1_gpio_bench.md) are now implemented and build-tested;
-flashing and physical observations remain pending. Simultaneous-stream stress remains open.
+deployment and synthetic-HB/LED visual checks are now operator-confirmed.
+Measured electrical/interlock acceptance and simultaneous-stream stress remain open.
 
 User-reported bench progress: both Zynq and ESP32 boot; the native USB console
 shows the ESP32 diagnostic banner. The [U0 UART tests passed](gates/G2.md): initial 100 exchanges plus four

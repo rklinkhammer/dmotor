@@ -1,4 +1,6 @@
 #include "gpio_diagnostic.hpp"
+#include "heartbeat_pin.hpp"
+#include "hb_indicator.hpp"
 #include "dmotor_diag/gpio.hpp"
 #include "driver/gpio.h"
 #include "driver/usb_serial_jtag.h"
@@ -29,6 +31,7 @@ struct Sample {
     uint32_t rejected_starts;
 };
 QueueHandle_t commands, samples;
+dmotor_monitor::HeartbeatIndicator indicator;
 std::atomic<bool> failed{false};
 const char* reason_name(HbEnd value) {
     switch (value) {
@@ -70,7 +73,8 @@ void control(void*) {
         for (auto pin : {GPIO_NUM_8, GPIO_NUM_9, GPIO_NUM_10, GPIO_NUM_11}) {
             ESP_ERROR_CHECK(gpio_set_level(pin, 0));
         }
-        ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_21, heartbeat.high() ? 1 : 0));
+        ESP_ERROR_CHECK(gpio_set_level(bench_heartbeat_pin, heartbeat.high() ? 1 : 0));
+        indicator.observe(heartbeat.high());
         Sample sample{};
         for (unsigned i = 0; i < sizeof(inputs) / sizeof(inputs[0]); ++i) {
             sample.levels |= static_cast<uint32_t>(gpio_get_level(inputs[i])) << i;
@@ -103,7 +107,7 @@ void help() {
     report(
         "DIAGNOSTIC ONLY: permits always LOW; no ARM, no sensor health. USB commands + Enter: gpio, quiet, hb10, stop, help");
     report(
-        "hb10 = SYNTHETIC 50 Hz GPIO21 for at most 10 s; motor drive power must be disconnected. quiet does NOT stop HB; use stop.");
+        "hb10 = SYNTHETIC 50 Hz GPIO%d for at most 10 s; motor drive power must be disconnected. quiet does NOT stop HB; use stop.", static_cast<int>(bench_heartbeat_pin));
 }
 void console(void*) {
     BenchConsole parser;
@@ -160,6 +164,7 @@ void console(void*) {
 }
 } // namespace
 void start_gpio_diagnostic() {
+    (void)indicator.start();
     gpio_config_t config{};
     for (auto pin : inputs) {
         if (pin != GPIO_NUM_39)

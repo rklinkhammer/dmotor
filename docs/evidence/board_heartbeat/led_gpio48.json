@@ -1,0 +1,11 @@
+{
+  "gpio": 48,
+  "build": "PASS",
+  "hardware_flashed": false,
+  "sha256": {
+    "software/esp32/components/hb_indicator/Kconfig": "598371d2d76c1eeeac2e3b5675e3579b4f1a7b1742a7446ee1b9f59813e8ce54",
+    "build/board_heartbeat/bench/sdkconfig": "eb09294e71c1fde9694df93022a7b54db692df20447a47ec8295924c86d9af10",
+    "build/board_heartbeat/bench/build/dmotor_uart_bench.elf": "62b1e137b4e978d85048af91cc947b8e6c78818f78b291a59eebf652cc547491",
+    "build/board_heartbeat/bench/build/dmotor_uart_bench.bin": "d00814390760ea9b5ab415884998dd23edc4070e570cf85f026a75b5366bb212"
+  }
+}

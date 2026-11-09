@@ -1,0 +1,2 @@
+board_status PASS: switch, sticky inhibit, release filtering, ACK, LED states
+/home/rklinkhammer/workspace/dmotor/tests/board_status_tb.sv:22: $finish called at 398 (1s)

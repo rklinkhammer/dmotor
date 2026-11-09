@@ -1,0 +1,23 @@
+Final build/validation output (full local log: project.log):
+# source [file join $root platforms vivado controller_area.tcl]
+## proc dmotor_controller_area {bd_file} {
+##     create_ip_run $bd_file
+##     set runs [get_runs -quiet *_controller_axi_*_synth_1]
+##     if {[llength $runs] != 1} {
+##         error "Expected one controller OOC synthesis run; found: $runs"
+##     }
+##     set_property STEPS.SYNTH_DESIGN.ARGS.DIRECTIVE AreaOptimized_high $runs
+##     if {[get_property STEPS.SYNTH_DESIGN.ARGS.DIRECTIVE $runs] ne "AreaOptimized_high"} {
+##         error "Controller area directive was not applied"
+##     }
+##     puts "DMOTOR_CONTROLLER_AREA_PASS: $runs = AreaOptimized_high"
+## }
+# dmotor_controller_area [get_files */design_1.bd]
+DMOTOR_CONTROLLER_AREA_PASS: design_1_controller_axi_0_0_synth_1 = AreaOptimized_high
+# set wrapper [make_wrapper -files [get_files */design_1.bd] -top]
+# add_files $wrapper
+# set_property top design_1_wrapper [current_fileset]
+# update_compile_order -fileset sources_1
+# report_ip_status -file [file join $output ip_status.txt]
+# close_project
+INFO: [Common 17-206] Exiting Vivado at Sun Nov  8 19:00:36 2026...

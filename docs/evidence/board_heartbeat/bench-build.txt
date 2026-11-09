@@ -1,0 +1,23 @@
+Final build/validation output (full local log: bench-build.log):
+[1079/1080] Generating binary image from built executable
+esptool v5.3.1
+Creating ESP32-S3 image...
+Merged 3 ELF sections.
+Successfully created ESP32-S3 image.
+Generated /home/rklinkhammer/workspace/dmotor/build/board_heartbeat/bench/build/dmotor_uart_bench.bin
+[1080/1080] cd /home/rklinkhammer/workspace/dmotor/build/board_heartbeat/bench/build && /opt/esp/python_env/idf6.1_py3.12_env/bin/python /opt/esp/idf/components/partition_table/check_sizes.py --offset 0x8000 partition --type app /home/rklinkhammer/workspace/dmotor/build/board_heartbeat/bench/build/partition_table/partition-table.bin /home/rklinkhammer/workspace/dmotor/build/board_heartbeat/bench/build/dmotor_uart_bench.bin
+dmotor_uart_bench.bin binary size 0x38e00 bytes. Smallest app partition is 0x100000 bytes. 0xc7200 bytes (78%) free.
+Executing action: all (aliases: build)
+Running cmake in directory /home/rklinkhammer/workspace/dmotor/build/board_heartbeat/bench/build
+Executing "cmake -G Ninja -B /home/rklinkhammer/workspace/dmotor/build/board_heartbeat/bench/build -DPYTHON_DEPS_CHECKED=1 -DPYTHON=/opt/esp/python_env/idf6.1_py3.12_env/bin/python -DESP_PLATFORM=1 -DSDKCONFIG=/home/rklinkhammer/workspace/dmotor/build/board_heartbeat/bench/sdkconfig -DSDKCONFIG_DEFAULTS=sdkconfig.defaults -DCCACHE_ENABLE=True /home/rklinkhammer/workspace/dmotor/software/esp32/diagnostics/bench"...
+Running ninja in directory /home/rklinkhammer/workspace/dmotor/build/board_heartbeat/bench/build
+Executing "ninja all"...
+
+Project build complete. To flash, run:
+ idf.py flash
+or
+ idf.py -p PORT flash
+or
+ python -m esptool --chip esp32s3 -b 460800 --before default-reset --after hard-reset write-flash --flash-mode dio --flash-size 2MB --flash-freq 80m 0x0 ../../../../build/board_heartbeat/bench/build/bootloader/bootloader.bin 0x8000 ../../../../build/board_heartbeat/bench/build/partition_table/partition-table.bin 0x10000 ../../../../build/board_heartbeat/bench/build/dmotor_uart_bench.bin
+or from the "/home/rklinkhammer/workspace/dmotor/build/board_heartbeat/bench/build" directory
+ python -m esptool --chip esp32s3 -b 460800 --before default-reset --after hard-reset write-flash "@flash_args"

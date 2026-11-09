@@ -8,10 +8,14 @@ module controller_cleanup_tb;
  wire awready,wready,bvalid,arready,rvalid;
  wire [1:0] bresp,rresp;wire [31:0] rdata;
  reg [3:0] qa=0,qb=0,physical_faults=0;reg halt_async=0;
+ reg maintenance_async=0;
+ wire led4_r,led4_g,led4_b,led5_r,led5_g,led5_b;
  reg hb_async=0,hb_run=1;
  always begin repeat(4)@(negedge clk);if(hb_run)hb_async=~hb_async;end
  wire [3:0] pwm,drive_enable,direction;wire shared_halt,coast_req;
  dmotor_controller_axi dut(.*);
+ defparam dut.board_status.RELEASE_CYCLES=4;
+ defparam dut.board_status.BLINK_HALF_CYCLES=8;
  reg [3:0] sampled_drive_enable;
  always @(posedge clk) begin
   sampled_drive_enable=reset ? 4'b0 : dut.drive_enable_raw;
@@ -51,7 +55,7 @@ module controller_cleanup_tb;
   reset_calls=reset_calls+1;
  initial begin
   repeat(4)step();@(negedge clk);reset=0;
-  write_word('h1008,7,0);
+  write_word('h1008,7,0);repeat(8)step();write_word('h1024,2,0);
   read_word('h1070);if(value!=32'h434c4e31)$fatal(1,"cleanup capability");
   write_word('h1074,1,2); // read-only
   // One populated channel; other contexts remain unconfigured.
@@ -73,13 +77,13 @@ module controller_cleanup_tb;
   write_word('h1020,0,2);
   write_word('h1020,1,0);
   read_word('h1074);if(value!=0)$fatal(1,"reset kept completion");
-  write_word('h1008,8,0);write_word('h1020,0,0);
+  write_word('h1008,8,0);repeat(8)step();write_word('h1024,2,0);write_word('h1020,0,0);
   wait(dut.controller.controller.engine.state==2);
   // Interrupt an accepted context reset in the actual HLS transport. An old
   // completion cannot satisfy the next request after the reset boundary.
   write_word('h1020,1,0);repeat(20)step();
   read_word('h1074);if(value!=0)$fatal(1,"late completion survived reset");
-  write_word('h1008,9,0);write_word('h1020,0,0);
+  write_word('h1008,9,0);repeat(8)step();write_word('h1024,2,0);write_word('h1020,0,0);
   wait(dut.cleanup_complete);
   read_word('h107c);if(value!=3)$fatal(1,"second request identity");
   read_word('h1078);if(value!=9)$fatal(1,"stale session");

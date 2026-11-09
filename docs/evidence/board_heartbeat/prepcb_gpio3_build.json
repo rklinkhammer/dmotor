@@ -1,0 +1,16 @@
+[
+  {
+    "heartbeat_gpio": 3,
+    "image": "build/prepcb_hb3/esp32/build/dmotor_uart_bench.bin",
+    "sha256": "b5b8e7d0d4ecd96f1b254f036985c14385e6a4a858780634c76989b631b2c8b3",
+    "build": "PASS",
+    "physical_validation": "pending for new image"
+  },
+  {
+    "heartbeat_gpio": 21,
+    "image": "build/board_heartbeat/bench/build/dmotor_uart_bench.bin",
+    "sha256": "71ea08c5c51d715de196ace71c3a37bcf47d8f011462a5164b313a56eb68cd96",
+    "build": "PASS",
+    "physical_validation": "pending for new image"
+  }
+]

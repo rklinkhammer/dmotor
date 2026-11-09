@@ -1,17 +1,19 @@
 #pragma once
 #include "safety_core.hpp"
+#include "hb_indicator.hpp"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "esp_timer.h"
 #include "driver/gpio.h"
 namespace dmotor_monitor {
-// Candidate task adapter. Deliberately hard-inhibited for pre-PCB integration.
-// No ARM or firmware option can enable pins in this build. A high-priority task
+// Permit outputs remain hard-inhibited. GPIO21 now carries qualified HB,
+// independently of ARM and permit state. A high-priority task
 // observes deadlines without taking the I2C owner's lock. This is not an ISR
 // timing guarantee; electrical latency and priority interference remain open.
 class MonitorSafety {
     portMUX_TYPE lock_=portMUX_INITIALIZER_UNLOCKED;
     SafetyCore core_;
+    HeartbeatIndicator indicator_;
     bool started_=false;
     static void task(void* arg) {
         auto& self=*static_cast<MonitorSafety*>(arg);
@@ -22,8 +24,10 @@ class MonitorSafety {
         }
     }
     void outputs() {
-        for(auto pin:{GPIO_NUM_8,GPIO_NUM_9,GPIO_NUM_10,GPIO_NUM_11,GPIO_NUM_21})
+        for(auto pin:{GPIO_NUM_8,GPIO_NUM_9,GPIO_NUM_10,GPIO_NUM_11})
             gpio_set_level(pin,0);
+        const bool hb=core_.heartbeat();
+        gpio_set_level(GPIO_NUM_21,hb?1:0); indicator_.observe(hb);
     }
 public:
     explicit MonitorSafety(unsigned population=15):core_(population) {}
@@ -39,6 +43,7 @@ public:
            xTaskCreate(task,"monitor_safety",3072,this,configMAX_PRIORITIES-2,nullptr)!=pdPASS) {
             fault(); return false;
         }
+        (void)indicator_.start(); // Indicator failure has no control authority.
         return true;
     }
     WorkToken begin(Us release) {

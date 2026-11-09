@@ -7,6 +7,8 @@ module dmotor_controller_axi(
  input wire [15:0] araddr,input wire arvalid,output wire arready,
  output wire [31:0] rdata,output wire [1:0] rresp,output wire rvalid,input wire rready,
  input wire [3:0] qa,qb,physical_faults,input wire halt_async,hb_async,
+ input wire maintenance_async,
+ output wire led4_r,led4_g,led4_b,led5_r,led5_g,led5_b,
  output wire [3:0] pwm,direction,output reg [3:0] drive_enable,output wire shared_halt,coast_req
 );
  import dmotor_controller_registers::*;
@@ -53,8 +55,9 @@ module dmotor_controller_axi(
  dmotor_monitor_heartbeat monitor(.clk(clk),.reset(reset),.core_reset(core_reset),
   .hb_async(hb_async),.acknowledge(monitor_ack),.fault(monitor_fault),
   .healthy(monitor_healthy),.qualified(monitor_qualified));
- assign coast_req=controller_coast || monitor_fault;
+ assign coast_req=controller_coast || monitor_fault || maintenance_inhibit;
  wire [3:0] drive_enable_raw;
+ wire maintenance_inhibit;
  // Diagnostic GPIO crosses to the PS AXI clock. Register its source to avoid
  // combinational glitches before the GPIO synchronizers. Motor gating stays
  // on the raw path; this readout trails it by one controller clock.
@@ -82,6 +85,13 @@ module dmotor_controller_axi(
  wire [127:0] watchdog_faults;
  reg [2687:0] snapshot_bank;
  reg [31:0] snapshot_sequence;
+ // Existing ACKNOWLEDGE bit 1, only during disabled/core-reset session.
+ dmotor_board_status board_status(.clk(clk),.reset(reset),.maintenance_async(maintenance_async),
+  .acknowledge(acknowledge_halt && core_reset && enabled==0 && session!=0),
+  .drive_authorized((|drive_enable_raw) && !controller_blocked && !controller_coast && monitor_qualified),
+  .hb_healthy(monitor_healthy),.inhibited(maintenance_inhibit),
+  .inhibit_red(led4_r),.inhibit_green(led4_g),.inhibit_blue(led4_b),
+  .hb_red(led5_r),.hb_green(led5_g),.hb_blue(led5_b));
  wire [127:0] generations={configurations[1920 +:32],configurations[1280 +:32],configurations[640 +:32],configurations[0 +:32]};
  wire [127:0] max_speeds={configurations[1952 +:32],configurations[1312 +:32],configurations[672 +:32],configurations[32 +:32]};
  wire atomic_ready,atomic_valid,atomic_okay;
@@ -92,7 +102,7 @@ module dmotor_controller_axi(
  assign host_response_okay=atomic_owner ? atomic_okay : local_okay;
  assign host_rdata=atomic_owner ? atomic_data : local_data;
  dmotor_motor_io controller(.ps_power_reset(ps_power_reset),.ps_valid(ps_valid),.ps_write(ps_write),.ps_address(ps_address),.ps_wdata(ps_wdata),.ps_strobes(ps_strobes),.ps_ready(ps_ready),.ps_response_valid(ps_response_valid),.ps_response_ready(ps_response_ready),.ps_response_okay(ps_response_okay),.ps_rdata(ps_rdata),.direct_mode(direct_mode),.direct_duty(direct_duty),.direct_valid(direct_valid),.clk(clk),.reset(reset),.core_reset(core_reset),
-  .inhibit(!monitor_qualified),.cancel_frame(1'b0),.halt_async(halt_async),.qa(qa),.qb(qb),.physical_faults(physical_faults),
+  .inhibit(!monitor_qualified || maintenance_inhibit),.cancel_frame(1'b0),.halt_async(halt_async),.qa(qa),.qb(qb),.physical_faults(physical_faults),
   .enable_request(enable_request),.disable_request(disable_request),.refresh_valid(refresh_valid),
   .encoder_initialize(encoder_initialize),.refresh_sequences(refresh_sequences),.refresh_session(refresh_session),
   .watchdog_timeout_cycles(watchdog_timeout_cycles),.acknowledge_local(acknowledge_local),
@@ -210,12 +220,12 @@ module dmotor_controller_axi(
        end
        CLEANUP_SESSION:if(!host_write)begin local_data<=cleanup_complete ? cleanup_session : 32'd0;local_okay<=1;end
        CLEANUP_REQUEST:if(!host_write)begin local_data<=cleanup_request;local_okay<=1;end
-       STATUS:if(!host_write)begin local_data<={9'd0,age_faults,controller_blocked,shared_halt,(fault || monitor_fault),stopped,ready_mask,configured,enabled};local_okay<=1;end
+       STATUS:if(!host_write)begin local_data<={9'd0,age_faults,controller_blocked,shared_halt,(fault || monitor_fault || maintenance_inhibit),stopped,ready_mask,configured,enabled};local_okay<=1;end
        SESSION:begin
         if(!host_write)begin local_data<=session;local_okay<=1;end
         else if(core_reset && enabled==0 && host_wdata!=0)begin session<=host_wdata;local_okay<=1;end
        end
-       ENABLE:if(host_write && host_wdata<16 && monitor_qualified && !core_reset && !shared_halt && !fault && protocol_initialized && (direct_mode==0 || host_wdata[3:0]==direct_mode) && (host_wdata[3:0]&configured)==host_wdata[3:0] && (host_wdata[3:0]&stop)==0)begin enable_request<=host_wdata[3:0];local_okay<=1;end
+       ENABLE:if(host_write && host_wdata<16 && monitor_qualified && !maintenance_inhibit && !core_reset && !shared_halt && !fault && protocol_initialized && (direct_mode==0 || host_wdata[3:0]==direct_mode) && (host_wdata[3:0]&configured)==host_wdata[3:0] && (host_wdata[3:0]&stop)==0)begin enable_request<=host_wdata[3:0];local_okay<=1;end
        DISABLE:if(host_write && host_wdata<16)begin disable_request<=host_wdata[3:0];local_okay<=1;end
        STOP:if(host_write && host_wdata<16)begin if(direct_mode!=0)disable_request<=host_wdata[3:0];pending_stop<=pending_stop|host_wdata[3:0];local_okay<=1;end
        REFRESH_SESSION:if(host_write)begin refresh_session<=host_wdata;local_okay<=1;end

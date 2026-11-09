@@ -7,7 +7,9 @@ injection, reboot/UART-loss and explicit restoration meet their diagnostic crite
 operator evidence. This establishes readiness/execution for that subset only.
 
 Integrated monitor/motor-board testing remains paused pending assembled boards.
-U1 electrical acceptance, PL-only failure response (U01/R4), supply/front-end
+U1 synthetic-HB/LED visual subcases are now operator-confirmed PASS
+([G2 record](G2.md#u1-synthetic-heartbeat-and-indicators--2026-11-08)).
+Remaining U1 electrical acceptance, PL-only failure response (U01/R4), supply/front-end
 checks and assembled-fixture readiness remain open. Synthetic heartbeat behavior
 is unchanged. No whole-gate acceptance or powered-operation approval is inferred.
 

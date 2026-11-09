@@ -1,0 +1,8 @@
+menu "DMOTOR bench fixture"
+config DMOTOR_PREPCB_HB_GPIO3
+    bool "Pre-PCB fixture: synthetic heartbeat on GPIO3 instead of GPIO21"
+    default n
+    help
+        Breadboard-only UART/U1 diagnostic routing. GPIO21 stays LOW.
+        Leave disabled for the PCB heartbeat connection on GPIO21.
+endmenu

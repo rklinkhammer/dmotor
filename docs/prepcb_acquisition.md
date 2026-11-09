@@ -1,5 +1,7 @@
 # Pre-PCB acquisition and UART integration diagnostic
 
+For the narrow-breadboard **UART/U1** heartbeat test, use the separate [GPIO3 pre-PCB profile](board_heartbeat.md#pre-pcb-breadboard-variant-hb-on-gpio3). PCB/operational HB remains GPIO21; the INA acquisition image remains inhibited.
+
 Implemented 2026-11-08 for the existing Zynq + ESP32-S3 + UART + one INA fixture.
 This extends the [100/100 standalone result](ina_bench_timing.md). **The concurrent
 acquisition/UART transport baseline now has an operator-reported physical PASS**. Motor power stays

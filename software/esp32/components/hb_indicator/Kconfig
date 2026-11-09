@@ -1,0 +1,6 @@
+menu "DMOTOR heartbeat indicator"
+config DMOTOR_HB_LED_GPIO
+    int "Addressable RGB LED GPIO (38 for DevKitC-1 v1.1; 48 for original)"
+    range 38 48
+    default 48
+endmenu

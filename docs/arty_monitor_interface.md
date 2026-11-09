@@ -1,5 +1,7 @@
 # Arty motor/monitor interface — saved BD integration, 2026-11-03
 
+Current board-status addition: [SW0 maintenance inhibit, LD4/LD5 and ESP32 heartbeat LEDs](board_heartbeat.md). Synthetic HB/LED visual checks are operator-confirmed; see [operator-confirmed synthetic heartbeat/LED checks](evidence/board_heartbeat/physical_confirmation_2026_11_08.md). Electrical timing and full interlock qualification remain pending.
+
 The saved block design supports controller revision 10, four motor channels, an
 internal drive-enable GPIO readout, and AXI UART Lite for the ESP32 monitor.
 The [2026-11-04 full EDF build](current_build_2026_11_04.md) includes these

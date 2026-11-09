@@ -44,6 +44,7 @@ for channel in range(4):
 for signal in ('qa', 'qb'):
     connected(f'{signal}_concat/dout', f'controller_axi_0/{signal}')
 for external, internal, direction in (
+    *[(p, 'controller_axi_0/'+p, 'I' if p=='maintenance_async' else 'O') for p in ('maintenance_async','led4_r','led4_g','led4_b','led5_r','led5_g','led5_b')],
     ('mon_hb', 'controller_axi_0/hb_async', 'I'),
     ('coast_req', 'controller_axi_0/coast_req', 'O'),
     ('mon_rx', 'axi_uartlite_0/rx', 'I'),
@@ -51,6 +52,11 @@ for external, internal, direction in (
 ):
     connected(external, internal)
     require(design['ports'][external]['direction'] == direction, f'{external} direction')
+# Board automation must not retain second owners of the SW0/LD4/LD5 pins.
+for legacy in ('rgb_led', 'sws_2bits'):
+    require(legacy not in design.get('interface_ports', {}), f'Duplicate board pin owner: {legacy}')
+require(parameter('axi_gpio_0', 'USE_BOARD_FLOW') == 'false', 'GPIO0 board automation must be disabled')
+require(parameter('axi_gpio_0', 'C_IS_DUAL') == '0', 'Legacy switch readback must be disabled')
 connected('axi_gpio_3/gpio_io_o', 'controller_axi_0/halt_async')
 connected('controller_axi_0/drive_enable', 'axi_gpio_3/gpio2_io_i')
 require(parameter('axi_gpio_3', 'C_GPIO2_WIDTH') == '4', 'drive_enable GPIO width')

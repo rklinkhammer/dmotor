@@ -214,44 +214,6 @@
           }
         }
       },
-      "rgb_led": {
-        "mode": "Master",
-        "vlnv_bus_definition": "xilinx.com:interface:gpio:1.0",
-        "vlnv": "xilinx.com:interface:gpio_rtl:1.0",
-        "hdl_attributes": {
-          "LOCKED": {
-            "value": "FALSE",
-            "value_src": "default"
-          }
-        },
-        "port_maps": {
-          "TRI_O": {
-            "physical_name": "rgb_led_tri_o",
-            "direction": "O",
-            "left": "5",
-            "right": "0"
-          }
-        }
-      },
-      "sws_2bits": {
-        "mode": "Master",
-        "vlnv_bus_definition": "xilinx.com:interface:gpio:1.0",
-        "vlnv": "xilinx.com:interface:gpio_rtl:1.0",
-        "hdl_attributes": {
-          "LOCKED": {
-            "value": "FALSE",
-            "value_src": "default"
-          }
-        },
-        "port_maps": {
-          "TRI_I": {
-            "physical_name": "sws_2bits_tri_i",
-            "direction": "I",
-            "left": "1",
-            "right": "0"
-          }
-        }
-      },
       "btns_4bits": {
         "mode": "Master",
         "vlnv_bus_definition": "xilinx.com:interface:gpio:1.0",
@@ -422,6 +384,34 @@
       "coast_req": {
         "type": "data",
         "direction": "O"
+      },
+      "maintenance_async": {
+        "direction": "I",
+        "type": "data"
+      },
+      "led4_r": {
+        "direction": "O",
+        "type": "data"
+      },
+      "led4_g": {
+        "direction": "O",
+        "type": "data"
+      },
+      "led4_b": {
+        "direction": "O",
+        "type": "data"
+      },
+      "led5_r": {
+        "direction": "O",
+        "type": "data"
+      },
+      "led5_g": {
+        "direction": "O",
+        "type": "data"
+      },
+      "led5_b": {
+        "direction": "O",
+        "type": "data"
       }
     },
     "components": {
@@ -2214,14 +2204,17 @@
           "C_INTERRUPT_PRESENT": {
             "value": "1"
           },
-          "GPIO2_BOARD_INTERFACE": {
-            "value": "sws_2bits"
+          "C_IS_DUAL": {
+            "value": "0"
           },
-          "GPIO_BOARD_INTERFACE": {
-            "value": "rgb_led"
+          "C_GPIO_WIDTH": {
+            "value": "6"
+          },
+          "C_ALL_OUTPUTS": {
+            "value": "1"
           },
           "USE_BOARD_FLOW": {
-            "value": "true"
+            "value": "false"
           }
         }
       },
@@ -2613,9 +2606,15 @@
         "vlnv": "xilinx.com:ip:axi_uartlite:2.0",
         "ip_revision": "40",
         "parameters": {
-          "C_BAUDRATE": { "value": "115200" },
-          "C_DATA_BITS": { "value": "8" },
-          "C_USE_PARITY": { "value": "0" }
+          "C_BAUDRATE": {
+            "value": "115200"
+          },
+          "C_DATA_BITS": {
+            "value": "8"
+          },
+          "C_USE_PARITY": {
+            "value": "0"
+          }
         },
         "xci_name": "design_1_axi_uartlite_0_0",
         "xci_path": "ip/design_1_axi_uartlite_0_0/design_1_axi_uartlite_0_0.xci",
@@ -2635,18 +2634,6 @@
       }
     },
     "interface_nets": {
-      "axi_gpio_0_GPIO": {
-        "interface_ports": [
-          "rgb_led",
-          "axi_gpio_0/GPIO"
-        ]
-      },
-      "axi_gpio_0_GPIO2": {
-        "interface_ports": [
-          "sws_2bits",
-          "axi_gpio_0/GPIO2"
-        ]
-      },
       "axi_gpio_1_GPIO": {
         "interface_ports": [
           "btns_4bits",
@@ -2967,6 +2954,48 @@
         "ports": [
           "mon_rx",
           "axi_uartlite_0/rx"
+        ]
+      },
+      "maintenance_async_board": {
+        "ports": [
+          "maintenance_async",
+          "controller_axi_0/maintenance_async"
+        ]
+      },
+      "led4_r_board": {
+        "ports": [
+          "led4_r",
+          "controller_axi_0/led4_r"
+        ]
+      },
+      "led4_g_board": {
+        "ports": [
+          "led4_g",
+          "controller_axi_0/led4_g"
+        ]
+      },
+      "led4_b_board": {
+        "ports": [
+          "led4_b",
+          "controller_axi_0/led4_b"
+        ]
+      },
+      "led5_r_board": {
+        "ports": [
+          "led5_r",
+          "controller_axi_0/led5_r"
+        ]
+      },
+      "led5_g_board": {
+        "ports": [
+          "led5_g",
+          "controller_axi_0/led5_g"
+        ]
+      },
+      "led5_b_board": {
+        "ports": [
+          "led5_b",
+          "controller_axi_0/led5_b"
         ]
       }
     },

@@ -105,9 +105,9 @@ clear policy and explicit authorization. Each such evaluation toggles HB once; t
 
 An independent `monitor_safety` FreeRTOS task observes the core every 1 ms at high
 priority. All core operations and GPIO writes use the same short critical section;
-I2C, logging and calibration do not run under that lock. Its GPIO adapter is
-**hard-inhibited**: it only writes LOW to permit GPIO8–11 and HB GPIO21. There is
-no enable switch. The sensor diagnostic exercises this adapter but lacks the
+I2C, logging and calibration do not run under that lock. Its GPIO adapter keeps
+permit GPIO8–11 **hard-inhibited LOW** and writes qualified HB to GPIO21. There is
+no setting that enables motor permits. The sensor diagnostic exercises this adapter but lacks the
 battery/calibration/policy/recovery proofs, so it cannot qualify operational outputs.
 The compile-check harness references the adapter without starting it.
 
@@ -350,7 +350,8 @@ now accepts motor damage from delayed monitoring/shutdown, conditional on verifi
 ITRIP. The 25 ms check applies at snapshot commit, not continuously between cycles;
 next release+12 ms liveness, invalid-data inhibition and fault epochs remain.
 Steps 1 and 2 of that decision are implemented as the [complete workload/policy
-candidate](monitor_policy.md). Physical outputs remain hard-inhibited. Calibration,
+candidate](monitor_policy.md). Physical motor permits remain hard-inhibited;
+qualified heartbeat is now emitted independently. Calibration,
 actual thresholds, four-device timing and ISR/recovery integration remain open;
 motor-survival deadline proof is no longer a release blocker. No new hardware run
 or gate acceptance is claimed.
@@ -362,4 +363,11 @@ motor permission, matching the recovery contract. Healthy monitoring while
 SAFE/disarmed or FAULT-latched advances modeled HB; failed monitoring stops HB.
 Resumed HB never clears a motor-fault latch or grants permission. See the
 [truth table and implementation semantics](monitor_policy.md#heartbeat-is-independent-of-motor-permission).
-The GPIO adapter remains hard-inhibited and this change is not a physical HB test.
+The GPIO adapter now emits qualified HB on GPIO21; motor permits remain
+hard-inhibited. The one-INA diagnostic still lacks the full monitoring proof and
+therefore keeps HB LOW. See [board heartbeat validation](board_heartbeat.md) for
+the U1 test, SW0 interlock and LD4/LD5 indicators. The operator has confirmed
+synthetic-HB blue indication, loss red indication and SW0-asserted LD4 red
+([record](evidence/board_heartbeat/physical_confirmation_2026_11_08.md)).
+Next fixture work is secure connection, waveform/timing capture and measured
+SW0 output/latch/ACK checks; operational sensor-qualified HB is still open.

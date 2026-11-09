@@ -2,10 +2,12 @@
 
 > Architecture update (2026-11-07): main uses the [1 ms PS motor executor](../DMOTOR_ARCH.md) with independent PL capture/PWM/protection and a matched PSF1 driver/daemon. Client contracts, commissioning-first scope, U0 evidence, the hardware pause and pending live recovery are unchanged.
 
-**Current scheduling (2026-11-06):** Further physical testing is paused until
-assembled monitor and motor boards are available, at Robert's request ([D04](decisions.md)).
-Completed U0 results remain valid; U1 is implemented/build-tested, with no physical
-U1 acceptance recorded. Procedures below are retained for resumption.
+**Current scheduling (2026-11-08):** Assembled monitor/motor-board testing remains
+paused pending boards ([D04](decisions.md)); current-fixture and standalone INA
+checks have proceeded. U0 remains valid and U1 synthetic-HB/LED visual subcases
+are operator-confirmed PASS; U1 overall remains PARTIAL. See the
+[G2 record](gates/G2.md#u1-synthetic-heartbeat-and-indicators--2026-11-08) for scope
+and remaining electrical/interlock tests.
 
 Status: in progress; Robert Klinkhammer is accountable owner/reviewer, using
 separate preparation and self-review records. This document makes the first

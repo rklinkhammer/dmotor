@@ -1,0 +1,23 @@
+Final build/validation output (full local log: esp32-build.log):
+Skipping linker script generation, section names unchanged
+[7/9] Linking CXX executable dmotor_acquisition_compile_check.elf
+[8/9] Generating binary image from built executable
+esptool v5.3.1
+Creating ESP32-S3 image...
+Merged 3 ELF sections.
+Successfully created ESP32-S3 image.
+Generated /home/rklinkhammer/workspace/dmotor/build/board_heartbeat/esp32/build/dmotor_acquisition_compile_check.bin
+[9/9] cd /home/rklinkhammer/workspace/dmotor/build/board_heartbeat/esp32/build && /opt/esp/python_env/idf6.1_py3.12_env/bin/python /opt/esp/idf/components/partition_table/check_sizes.py --offset 0x8000 partition --type app /home/rklinkhammer/workspace/dmotor/build/board_heartbeat/esp32/build/partition_table/partition-table.bin /home/rklinkhammer/workspace/dmotor/build/board_heartbeat/esp32/build/dmotor_acquisition_compile_check.bin
+dmotor_acquisition_compile_check.bin binary size 0x2c290 bytes. Smallest app partition is 0x100000 bytes. 0xd3d70 bytes (83%) free.
+Executing action: all (aliases: build)
+Running ninja in directory /home/rklinkhammer/workspace/dmotor/build/board_heartbeat/esp32/build
+Executing "ninja all"...
+
+Project build complete. To flash, run:
+ idf.py flash
+or
+ idf.py -p PORT flash
+or
+ python -m esptool --chip esp32s3 -b 460800 --before default-reset --after hard-reset write-flash --flash-mode dio --flash-size 2MB --flash-freq 80m 0x0 ../../../build/board_heartbeat/esp32/build/bootloader/bootloader.bin 0x8000 ../../../build/board_heartbeat/esp32/build/partition_table/partition-table.bin 0x10000 ../../../build/board_heartbeat/esp32/build/dmotor_acquisition_compile_check.bin
+or from the "/home/rklinkhammer/workspace/dmotor/build/board_heartbeat/esp32/build" directory
+ python -m esptool --chip esp32s3 -b 460800 --before default-reset --after hard-reset write-flash "@flash_args"

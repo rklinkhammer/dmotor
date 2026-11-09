@@ -216,3 +216,12 @@ set_property -dict { PACKAGE_PIN V13 IOSTANDARD LVCMOS33 } [get_ports coast_req]
 #set_property PACKAGE_PIN G18 [get_ports {netic20_g18}]; #IO_L16N_T2_35
 #set_property PACKAGE_PIN T9 [get_ports {netic20_t9}]; #IO_L12P_T1_MRCC_13
 #set_property PACKAGE_PIN U9 [get_ports {netic20_u9}]; #IO_L17P_T2_13
+
+# Maintenance inhibit SW0 and visual status (active-high RGB channels).
+set_property -dict { PACKAGE_PIN M20 IOSTANDARD LVCMOS33 } [get_ports maintenance_async]
+set_property -dict { PACKAGE_PIN N15 IOSTANDARD LVCMOS33 } [get_ports led4_r]
+set_property -dict { PACKAGE_PIN G17 IOSTANDARD LVCMOS33 } [get_ports led4_g]
+set_property -dict { PACKAGE_PIN L15 IOSTANDARD LVCMOS33 } [get_ports led4_b]
+set_property -dict { PACKAGE_PIN M15 IOSTANDARD LVCMOS33 } [get_ports led5_r]
+set_property -dict { PACKAGE_PIN L14 IOSTANDARD LVCMOS33 } [get_ports led5_g]
+set_property -dict { PACKAGE_PIN G14 IOSTANDARD LVCMOS33 } [get_ports led5_b]

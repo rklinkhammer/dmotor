@@ -1,0 +1,15 @@
+2026-11-08: pin ownership correction
+PASS saved BD validation and wrapper generation
+PASS static board-interface check
+PASS negative regression: reintroducing rgb_led or sws_2bits rejected
+PASS complete Vivado synthesis and synthesized pin assertions
+PIN_CHECK maintenance_async pin=M20 standard=LVCMOS33
+PIN_CHECK led4_r pin=N15 standard=LVCMOS33
+PIN_CHECK led4_g pin=G17 standard=LVCMOS33
+PIN_CHECK led4_b pin=L15 standard=LVCMOS33
+PIN_CHECK led5_r pin=M15 standard=LVCMOS33
+PIN_CHECK led5_g pin=L14 standard=LVCMOS33
+PIN_CHECK led5_b pin=G14 standard=LVCMOS33
+PASS no legacy RGB/switch ports in synthesized design
+No place/route or bitstream generation rerun in this check.
+Initial direct RTL-elaboration probe could not resolve out-of-context IP; replaced with the successful full synthesis run.

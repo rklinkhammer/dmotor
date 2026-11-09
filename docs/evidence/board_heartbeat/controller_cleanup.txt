@@ -1,0 +1,3 @@
+controller_cleanup PASS: combined cleanup; completion, session, request, reset, fault, exhaustion
+/home/rklinkhammer/workspace/dmotor/build/product/native/ps_controller_cleanup/controller_cleanup_tb.sv:102: $finish called at 237600000 (1ps)
+

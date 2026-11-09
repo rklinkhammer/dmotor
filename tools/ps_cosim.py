@@ -57,7 +57,7 @@ s=s.replace('     $ps_execute(ps_record,ps_reply);', '''     read_word('h4008,0,
      if(value[0])begin
      $ps_execute(ps_record,ps_reply);''').replace("write_word('h4020,1,0,1);ps_transactions=ps_transactions+1;","write_word('h4020,1,0,1);ps_transactions=ps_transactions+1;end")
 (out/f'{a.bench}_tb.sv').write_text(s)
-files=['timing','controller_registers','batch_registers','atomic_hls_adapter','atomic_mailbox_arbiter','shared_scheduler','target_age','pwm','shared_control','mailbox_control','shared_engine_transport','motor_engine_adapter','cleanup_sequencer','integrated_control','safety','qcencoder','encoder_snapshot','motor_io','monitor_heartbeat','axi_host','controller_axi']
+files=['timing','controller_registers','batch_registers','atomic_hls_adapter','atomic_mailbox_arbiter','shared_scheduler','target_age','pwm','shared_control','mailbox_control','shared_engine_transport','motor_engine_adapter','cleanup_sequencer','integrated_control','safety','qcencoder','encoder_snapshot','motor_io','monitor_heartbeat','board_status','axi_host','controller_axi']
 atomic=r/'build/vitis_atomic/hls/syn/verilog'
 cmd=[str(iv),'-g2012','-s',a.bench+'_tb','-o',str(out/(a.bench+'.vvp'))]+[str(profile/f'rtl/{n}.sv') for n in files]+[str(x) for x in sorted(atomic.glob('*.v'))]+[str(out/f'{a.bench}_tb.sv')]
 if a.base:cmd[1:1]=['-B',a.base]

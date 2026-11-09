@@ -82,5 +82,5 @@ proc export_block {root out name top generated sources} {
 }
 export_block $root $out controller_axi dmotor_controller_axi \
     [list [file join $root build vitis_atomic hls syn verilog]] \
-    {timing.sv controller_registers.sv batch_registers.sv atomic_hls_adapter.sv atomic_mailbox_arbiter.sv shared_scheduler.sv target_age.sv pwm.sv shared_control.sv mailbox_control.sv shared_engine_transport.sv motor_engine_adapter.sv cleanup_sequencer.sv integrated_control.sv safety.sv qcencoder.sv encoder_snapshot.sv motor_io.sv monitor_heartbeat.sv axi_host.sv controller_axi.sv}
+    {timing.sv controller_registers.sv batch_registers.sv atomic_hls_adapter.sv atomic_mailbox_arbiter.sv shared_scheduler.sv target_age.sv pwm.sv shared_control.sv mailbox_control.sv shared_engine_transport.sv motor_engine_adapter.sv cleanup_sequencer.sv integrated_control.sv safety.sv qcencoder.sv encoder_snapshot.sv motor_io.sv monitor_heartbeat.sv board_status.sv axi_host.sv controller_axi.sv}
 puts "PSF1 1 ms controller IP exported."

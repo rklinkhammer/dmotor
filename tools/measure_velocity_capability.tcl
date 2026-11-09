@@ -9,7 +9,7 @@ set out [file normalize $out]
 file mkdir $out
 cd $out
 create_project -force capability [file join $out project] -part xc7z020clg400-1
-foreach f {timing controller_registers batch_registers atomic_hls_adapter atomic_mailbox_arbiter shared_scheduler target_age pwm shared_control mailbox_control shared_engine_transport motor_engine_adapter cleanup_sequencer integrated_control safety qcencoder encoder_snapshot motor_io monitor_heartbeat axi_host controller_axi} {
+foreach f {timing controller_registers batch_registers atomic_hls_adapter atomic_mailbox_arbiter shared_scheduler target_age pwm shared_control mailbox_control shared_engine_transport motor_engine_adapter cleanup_sequencer integrated_control safety qcencoder encoder_snapshot motor_io monitor_heartbeat board_status axi_host controller_axi} {
     add_files [file join $root rtl ${f}.sv]
 }
 foreach dir [list [file join $root build vitis_atomic hls syn verilog] [file join $profile build vitis_dispatcher hls syn verilog]] {

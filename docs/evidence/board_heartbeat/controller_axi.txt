@@ -1,0 +1,18 @@
+enable request f cfg=f initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=           455750000
+fault time=          7611050000 hls_fault=00000000 reject=00000000 core_fault=0 scheduler=0 stop=f
+enable request 3 cfg=f initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=          7715850000
+enable request 1 cfg=1 initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=          8949800000
+enable request 1 cfg=1 initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=          9609000000
+fault time=         10612250000 hls_fault=00000000 reject=00000000 core_fault=0 scheduler=0 stop=0
+enable request 1 cfg=1 initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=         10638500000
+fault time=         11640150000 hls_fault=00000000 reject=00000000 core_fault=0 scheduler=0 stop=0
+enable request 1 cfg=1 initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=         11666050000
+fault time=         11729600000 hls_fault=00000000 reject=00000000 core_fault=0 scheduler=0 stop=0
+enable request 1 cfg=1 initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=         11755550000
+enable request 1 cfg=1 initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=         11845050000
+enable request 1 cfg=1 initialized=1 inhibit=0 local=00000000000000000000000000000000 ext=0 halt=0 enabled=0 time=         12040900000
+monitor integration PASS: gating, loss, status, protected ACK, reset and no restart
+direct-duty PASS: 0/25/50/100 percent, signed ceiling, mode lock, replay rejection, STOP, expiry, watchdog, faults and HALT
+controller_axi PASS: real AXI, atomic HLS + actual C++ PS engine, configuration, four-motor targets, encoder capture, telemetry shared physical fault, explicit recovery and watchdog expiration
+/home/rklinkhammer/workspace/dmotor/build/product/native/ps_controller_axi/controller_axi_tb.sv:269: $finish called at 12245876000 (1ps)
+

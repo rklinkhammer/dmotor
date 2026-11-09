@@ -26,7 +26,7 @@ if a.test == 'controller_cleanup':
     cmd += [str(r/'rtl'/f'{name}.sv') for name in
             ['controller_registers','motor_engine_adapter','cleanup_sequencer',
              'integrated_control','safety','qcencoder','encoder_snapshot','motor_io',
-             'monitor_heartbeat','axi_host','controller_axi']]
+             'monitor_heartbeat','board_status','axi_host','controller_axi']]
     if a.engine_profile:
         engine=a.engine_profile.resolve()/'build/vitis_dispatcher/hls/syn/verilog'
         if not (engine/'dmotor_mailbox_shared.v').is_file():

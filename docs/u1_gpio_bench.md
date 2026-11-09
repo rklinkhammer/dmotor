@@ -1,19 +1,25 @@
 # U1 — inhibited GPIO and synthetic heartbeat diagnostic
 
-**2026-11-08 update:** Standalone ESP32/INA characterization has resumed;
-see [measured results and revised monitoring test procedure](ina_bench_timing.md).
-This supersedes the blanket pause below only for that standalone work. Integrated
-board tests and U1 physical acceptance remain pending; synthetic HB is unchanged.
+For the narrow-breadboard **UART/U1** heartbeat test, use the separate [GPIO3 pre-PCB profile](board_heartbeat.md#pre-pcb-breadboard-variant-hb-on-gpio3). PCB/operational HB remains GPIO21; the INA acquisition image remains inhibited.
 
-**Current scheduling (2026-11-06):** Further physical testing is paused until
-assembled monitor and motor boards are available, at Robert's request ([D04](decisions.md)).
-Completed U0 results remain valid; U1 is implemented/build-tested, with no physical
-U1 acceptance recorded. Procedures below are retained for resumption.
+Current board-status addition: [SW0 maintenance inhibit, LD4/LD5 and ESP32 heartbeat LEDs](board_heartbeat.md). Synthetic HB/LED visual checks are operator-confirmed; see [operator-confirmed synthetic heartbeat/LED checks](evidence/board_heartbeat/physical_confirmation_2026_11_08.md). Electrical timing and full interlock qualification remain pending.
 
-Implemented in the existing `software/esp32/diagnostics/bench` application.
-Native tests and ESP32 build are development evidence; **U1 physical tests remain
-pending**. This firmware is not the operational monitor and never authorizes ARM.
-The existing U0 UART v1 request/reply remains available without a Zynq image change.
+**2026-11-08 status: U1 PARTIAL.** The operator confirmed `hb10` blue indication
+on ESP32 and Zynq, Zynq LD5 returning to flashing red on the stop/loss check, and
+LD4 remaining flashing red with SW0 asserted. See the
+[physical evidence](evidence/board_heartbeat/physical_confirmation_2026_11_08.md)
+and [G2 subcase dispositions](gates/G2.md#u1-synthetic-heartbeat-and-indicators--2026-11-08).
+The temporary-contact/breadboard limitation is recorded; reliable sustained
+connection, measured waveform/timing, permit-low and SW0 output/rearm validation
+remain open. Visual confirmation does not close all procedure steps below.
+
+The earlier 2026-11-06 physical-test pause is superseded for the reported current
+fixture checks and standalone ESP32/INA work. Assembled monitor/motor-board tests
+remain pending. Completed U0 results remain valid.
+
+Implemented in `software/esp32/diagnostics/bench`. This firmware is not the
+operational monitor and never authorizes ARM. Existing U0 UART v1 request/reply
+remains available. The heartbeat/LED PL addition requires its corresponding image.
 
 ## Meaning of permits low
 
@@ -133,4 +139,5 @@ this is not a hardware guarantee during a CPU hang or blocked interrupts.
 [Build/test evidence](evidence/u1_gpio/inputs.json) includes native parser/timer
 boundary tests and pinned IDF compilation. Record physical results in
 [G2](gates/G2.md): command, connections, levels, waveform/timing, run termination
-reason and UART coexistence result. No U1 gate is accepted by this implementation.
+reason and UART coexistence result. The visual subcases above are accepted as
+operator-reported functional evidence; U1 overall and G2 remain open.

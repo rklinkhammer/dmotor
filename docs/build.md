@@ -23,7 +23,9 @@ The board BD/XDC were migrated from the latest saved root `dvrmc/dvrmc.xpr`
 project, as selected by the user on 2026-10-17, and subsequently updated for
 four motor channels and the ESP32 monitor. The current development controller
 IP source is revision 13: PSF1 1 ms execution, retaining CLN1 disabled cleanup
-and the heartbeat/global coast interface. See the current evidence in [system status](system_status.md);
+and the heartbeat/global coast interface. The current source also adds
+[SW0 maintenance and LD4/LD5 status](board_heartbeat.md); this requires a newly
+built matched bitstream. See the current evidence in [system status](system_status.md);
 source revision alone does not establish a rebuilt or qualified image. Physical-fault
 inputs remain on the controller, currently tied inactive in the saved BD;
 drive-enable diagnostics connect to internal GPIO. The old checkout is retained as reference;

@@ -94,10 +94,12 @@ Duplicate completions and repeated release timestamps cannot manufacture HB edge
 `finish()` still returns motor permission; false does not necessarily mean failed
 monitoring. `monitoring_live()` exposes qualified monitoring separately.
 
-The physical adapter still forces **both HB and permits LOW**; modeled HB is not
-yet wired to GPIO. No new pin/voltage, UART format, PL timer or external watchdog
-setting is introduced. Operational HB output and electrical timing qualification
-remain pending. U1 `hb10` remains a separate synthetic 50 Hz test waveform.
+The physical adapter now writes qualified HB to **GPIO21**, independently of
+ARM and motor permission. Motor permits remain hard-inhibited LOW. The onboard
+RGB indicator observes generated edges; Arty LD5 observes received HB health.
+No UART format, HB pin/voltage, PL supervision timeout or external watchdog setting
+changes. Electrical timing qualification remains pending. U1 `hb10` remains a
+separate synthetic 50 Hz test waveform. See [board heartbeat and maintenance](board_heartbeat.md).
 
 ## ESP32 integration
 
@@ -116,7 +118,8 @@ serialized snapshot; no logging or calibration writes occur inside the cycle.
 Application-owned objects must outlive their tasks; runtime reconfiguration is not
 provided. ISR/watchdog and recovery/ARM integration remain subsequent work.
 
-The GPIO adapter remains **hard-inhibited**, and this worker supplies neither
+The GPIO adapter keeps **motor permits hard-inhibited** while emitting qualified
+heartbeat, and this worker supplies neither
 recovery nor ARM authorization. There is no setting that enables physical permits.
 The updated `build_check` target compile-links the full path but deliberately does
 not start it: **it is not a firmware image to flash for a motor test**. Existing
@@ -147,3 +150,11 @@ hardware before bounded powered commissioning. Motor thermal survival modeling
 is no longer a release blocker. G1a/G1b/G1c/G2 remain open, G3–G7 unaccepted.
 
 Heartbeat-separation regression evidence: [results and hashes](evidence/heartbeat_separation/results.json), 33/33 native and 5/5 sanitizer tests, ARM/QEMU and ESP32 compile/link pass. No physical waveform acceptance is claimed.
+
+## Physical heartbeat evidence scope — 2026-11-08
+
+The operator confirmed the UART/U1 synthetic-HB and LED visual checks
+([record](evidence/board_heartbeat/physical_confirmation_2026_11_08.md)). This
+advances U1/G2 functional connectivity evidence only: the synthetic 50 Hz source
+does not validate the operational 16 ms monitoring-completion waveform, workload
+proofs, deadline response or permit policy. Those gates remain open.
