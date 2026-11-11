@@ -1,0 +1,6 @@
+PASS static scaffold: device, 1 GiB DDR, 20 MHz clock, motor directions, unique scalar pin assignments
+PASS duplicate HB constraint negative regression
+PASS Vivado 2026.1 project creation; all six IP up-to-date
+PASS generated BD: xc7z020clg400-1, DDR high address 0x3FFFFFFF, controller_axi 0.18
+PASS tools/build.py --platform zybo-z7-20 --dry-run and Python compilation
+NOT RUN full BD validation, synthesis, route, bitstream, boot or hardware test: controller intentionally unwired

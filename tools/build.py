@@ -4,7 +4,7 @@ import argparse,fcntl,hashlib,json,os,shutil,subprocess,sys
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/'build/product'
-BOARD_PLATFORMS=('arty-z7-20','dvrz')
+BOARD_PLATFORMS=('arty-z7-20','dvrz','zybo-z7-20')
 INPUTS=('src','include','rtl','tests','tools','platforms','abi','constraints','software')
 def fingerprint(board=True):
  # Include new source files, but never generated ESP-IDF build/cache output.
@@ -34,7 +34,9 @@ def main():
  a=p.parse_args();key={'source_sha256':fingerprint(board=False),'amd_root':str(a.amd_root.resolve()),'profile':'PSF1-1000us'}
  print(f'DMOTOR source: {ROOT}\nHardware fingerprint: {key["source_sha256"]}',flush=True)
  if a.dry_run:
-  print('Stages: direct 1 ms product sources -> atomic HLS csim/synthesis/cosim -> native + RTL/PS co-simulation + PS software tests -> controller IP export'+(' -> original board project' if a.stage=='project' else ''));return
+  print('Stages: direct 1 ms product sources -> atomic HLS csim/synthesis/cosim -> native + RTL/PS co-simulation + PS software tests -> controller IP export'+(f' -> {a.platform} board project' if a.stage=='project' else ''));return
+ if a.stage=='project' and a.platform=='zybo-z7-20':
+  run([sys.executable,ROOT/'tools/check_zybo_interface.py','--require-pins'])
  local=ROOT/'build/tools/usr';iv=shutil.which('iverilog') or str(local/'bin/iverilog');vvp=shutil.which('vvp') or str(local/'bin/vvp')
  base=str(local/'lib/x86_64-linux-gnu/ivl') if iv==str(local/'bin/iverilog') else ''
  if not Path(iv).is_file() or not Path(vvp).is_file():p.error('Install Icarus Verilog including VPI development headers')
@@ -62,9 +64,9 @@ def main():
    stamp.write_text(json.dumps({'inputs':key,'packaged_sha256':packaged_hash()},indent=2)+'\n')
   else:print('Reusing fingerprint-matched tested 1 ms PSF1 IP/software.',flush=True)
   if a.stage=='project':
-   project=OUT/'vivado' if a.platform=='arty-z7-20' else OUT/a.platform/'vivado'
+   project=OUT/'vivado' if a.platform=='arty-z7-20' else OUT/a.platform/('release-vivado' if a.platform=='zybo-z7-20' else 'vivado')
    if project.exists():shutil.rmtree(project)
-   run([a.amd_root/'Vivado/bin/vivado','-mode','batch','-source',f'platforms/{a.platform}/vivado/create.tcl','-tclargs',project])
+   run([a.amd_root/'Vivado/bin/vivado','-mode','batch','-source',f'platforms/{a.platform}/vivado/create.tcl','-tclargs',project]+(['build'] if a.platform=='zybo-z7-20' else []))
   print('Complete: '+str(OUT),flush=True)
 if __name__=='__main__':
  try:main()

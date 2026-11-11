@@ -32,6 +32,17 @@ drive-enable diagnostics connect to internal GPIO. The old checkout is retained 
 it is no longer the default build input. No .xpr, .xci or run outputs need to be
 copied into the new source directory. Vivado generates them from the tracked BD.
 
+## Zybo Z7-20 editing platform
+
+The supplied Zybo release is imported as `--platform zybo-z7-20`, targeting
+Z7-20 with 1 GiB DDR. [Open/edit/save-back instructions and wiring guide](../platforms/zybo-z7-20/README.md)
+cover the generated `build/product/zybo-z7-20/vivado/zybo-z7-20.xpr` project.
+The saved user-wired design now supports build mode (validated BD and wrapper)
+as well as the separate editing project. [EDF Zybo workflow](../../edf-dev/docs/zybo.md)
+provides routed hardware, Linux/boot and WIC export. Complete image/boot validation
+remains pending.
+Arty remains the default qualified-build workflow; Zybo physical acceptance is open.
+
 ## Current hardware build
 
 On the Linux host with AMD 2026.1 tools in `/opt/vitis/2026.1`:

@@ -1,0 +1,13 @@
+2026-11-10: garbled USB UART investigation
+Digilent downloaded hw.srcs/sources_1/bd/system/system.bd and board preset agree:
+PS reference 33.333333 MHz; 1 GiB DDR; UART1 MIO48/49; 115200 baud.
+Imported dmotor BD had PS reference 50 MHz. Corrected to 33.333333.
+PASS negative regression: 50 MHz rejected by static Zybo checker.
+PASS Vivado build-mode Validate Design, output-product and wrapper generation.
+Generated PS7 init PLL feedback divisors: ARM 39, DDR 32, IO 30
+(previous installed bundle ARM 26, DDR 21, IO 20).
+Generated actual FCLK0=100 MHz, FCLK1=20 MHz, UART peripheral clock=100 MHz.
+EDF boot-domain DTS console preparation now selects UART1/115200 as well as Linux.
+47 EDF tests: 44 passed, 3 runtime tests skipped.
+No routed bitstream/full EDF rebuild or physical boot test performed for this correction.
+Old installed hardware manifests and immutable exported images left unchanged.

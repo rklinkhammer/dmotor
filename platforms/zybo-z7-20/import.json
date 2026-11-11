@@ -1,0 +1,245 @@
+{
+  "source_project": "/home/rklinkhammer/workspace/zybo-7z-20/zybo-7z-20.xpr",
+  "source_bd_sha256": "96d8bf63ff2c0d95af55102a081232607d718b54e41a89feafe5c56465c8e5cd",
+  "source_xdc_sha256": "5ecf90225bf6a4976342ad71ec6fc174800841d7202a703d989da81b66ff36c0",
+  "target_part": "xc7z020clg400-1",
+  "board": "digilentinc.com:zybo-z7-20:part0:1.2",
+  "ddr_preset_changes": {
+    "PCW_DDR_RAM_HIGHADDR": {
+      "before": "0x1FFFFFFF",
+      "after": "0x3FFFFFFF"
+    },
+    "PCW_DDRPLL_CTRL_FBDIV": {
+      "before": null,
+      "after": "32"
+    },
+    "PCW_DDR_DDR_PLL_FREQMHZ": {
+      "before": null,
+      "after": "1066.667"
+    },
+    "PCW_DDR_HPRLPR_QUEUE_PARTITION": {
+      "before": null,
+      "after": "HPR(0)/LPR(32)"
+    },
+    "PCW_DDR_HPR_TO_CRITICAL_PRIORITY_LEVEL": {
+      "before": null,
+      "after": "15"
+    },
+    "PCW_DDR_LPR_TO_CRITICAL_PRIORITY_LEVEL": {
+      "before": null,
+      "after": "2"
+    },
+    "PCW_DDR_PERIPHERAL_DIVISOR0": {
+      "before": null,
+      "after": "2"
+    },
+    "PCW_DDR_WRITE_TO_CRITICAL_PRIORITY_LEVEL": {
+      "before": null,
+      "after": "2"
+    },
+    "PCW_UIPARAM_DDR_BANK_ADDR_COUNT": {
+      "before": null,
+      "after": "3"
+    },
+    "PCW_UIPARAM_DDR_BOARD_DELAY0": {
+      "before": "0.176",
+      "after": "0.221"
+    },
+    "PCW_UIPARAM_DDR_BOARD_DELAY1": {
+      "before": "0.159",
+      "after": "0.222"
+    },
+    "PCW_UIPARAM_DDR_BOARD_DELAY2": {
+      "before": "0.162",
+      "after": "0.217"
+    },
+    "PCW_UIPARAM_DDR_BOARD_DELAY3": {
+      "before": "0.187",
+      "after": "0.244"
+    },
+    "PCW_UIPARAM_DDR_CL": {
+      "before": null,
+      "after": "7"
+    },
+    "PCW_UIPARAM_DDR_CLOCK_0_LENGTH_MM": {
+      "before": "0",
+      "after": "18.8"
+    },
+    "PCW_UIPARAM_DDR_CLOCK_0_PACKAGE_LENGTH": {
+      "before": "54.563",
+      "after": "80.4535"
+    },
+    "PCW_UIPARAM_DDR_CLOCK_1_LENGTH_MM": {
+      "before": "0",
+      "after": "18.8"
+    },
+    "PCW_UIPARAM_DDR_CLOCK_1_PACKAGE_LENGTH": {
+      "before": "54.563",
+      "after": "80.4535"
+    },
+    "PCW_UIPARAM_DDR_CLOCK_2_LENGTH_MM": {
+      "before": "0",
+      "after": "18.8"
+    },
+    "PCW_UIPARAM_DDR_CLOCK_2_PACKAGE_LENGTH": {
+      "before": "54.563",
+      "after": "80.4535"
+    },
+    "PCW_UIPARAM_DDR_CLOCK_3_LENGTH_MM": {
+      "before": "0",
+      "after": "18.8"
+    },
+    "PCW_UIPARAM_DDR_CLOCK_3_PACKAGE_LENGTH": {
+      "before": "54.563",
+      "after": "80.4535"
+    },
+    "PCW_UIPARAM_DDR_COL_ADDR_COUNT": {
+      "before": null,
+      "after": "10"
+    },
+    "PCW_UIPARAM_DDR_CWL": {
+      "before": null,
+      "after": "6"
+    },
+    "PCW_UIPARAM_DDR_DEVICE_CAPACITY": {
+      "before": null,
+      "after": "4096 MBits"
+    },
+    "PCW_UIPARAM_DDR_DQS_0_LENGTH_MM": {
+      "before": "0",
+      "after": "22.8"
+    },
+    "PCW_UIPARAM_DDR_DQS_0_PACKAGE_LENGTH": {
+      "before": "101.239",
+      "after": "105.056"
+    },
+    "PCW_UIPARAM_DDR_DQS_1_LENGTH_MM": {
+      "before": "0",
+      "after": "27.9"
+    },
+    "PCW_UIPARAM_DDR_DQS_1_PACKAGE_LENGTH": {
+      "before": "79.5025",
+      "after": "66.904"
+    },
+    "PCW_UIPARAM_DDR_DQS_2_LENGTH_MM": {
+      "before": "0",
+      "after": "22.9"
+    },
+    "PCW_UIPARAM_DDR_DQS_2_PACKAGE_LENGTH": {
+      "before": "60.536",
+      "after": "89.1715"
+    },
+    "PCW_UIPARAM_DDR_DQS_3_LENGTH_MM": {
+      "before": "0",
+      "after": "29.4"
+    },
+    "PCW_UIPARAM_DDR_DQS_3_PACKAGE_LENGTH": {
+      "before": "71.7715",
+      "after": "113.63"
+    },
+    "PCW_UIPARAM_DDR_DQS_TO_CLK_DELAY_0": {
+      "before": "-0.073",
+      "after": "-0.050"
+    },
+    "PCW_UIPARAM_DDR_DQS_TO_CLK_DELAY_1": {
+      "before": "-0.034",
+      "after": "-0.044"
+    },
+    "PCW_UIPARAM_DDR_DQS_TO_CLK_DELAY_2": {
+      "before": "-0.03",
+      "after": "-0.035"
+    },
+    "PCW_UIPARAM_DDR_DQS_TO_CLK_DELAY_3": {
+      "before": "-0.082",
+      "after": "-0.100"
+    },
+    "PCW_UIPARAM_DDR_DQ_0_LENGTH_MM": {
+      "before": "0",
+      "after": "22.8"
+    },
+    "PCW_UIPARAM_DDR_DQ_0_PACKAGE_LENGTH": {
+      "before": "104.5365",
+      "after": "98.503"
+    },
+    "PCW_UIPARAM_DDR_DQ_1_LENGTH_MM": {
+      "before": "0",
+      "after": "27.9"
+    },
+    "PCW_UIPARAM_DDR_DQ_1_PACKAGE_LENGTH": {
+      "before": "70.676",
+      "after": "68.5855"
+    },
+    "PCW_UIPARAM_DDR_DQ_2_LENGTH_MM": {
+      "before": "0",
+      "after": "22.9"
+    },
+    "PCW_UIPARAM_DDR_DQ_2_PACKAGE_LENGTH": {
+      "before": "59.1615",
+      "after": "90.295"
+    },
+    "PCW_UIPARAM_DDR_DQ_3_LENGTH_MM": {
+      "before": "0",
+      "after": "29.4"
+    },
+    "PCW_UIPARAM_DDR_DQ_3_PACKAGE_LENGTH": {
+      "before": "81.319",
+      "after": "103.977"
+    },
+    "PCW_UIPARAM_DDR_DRAM_WIDTH": {
+      "before": null,
+      "after": "16 Bits"
+    },
+    "PCW_UIPARAM_DDR_ECC": {
+      "before": null,
+      "after": "Disabled"
+    },
+    "PCW_UIPARAM_DDR_FREQ_MHZ": {
+      "before": "525",
+      "after": "533.333333"
+    },
+    "PCW_UIPARAM_DDR_MEMORY_TYPE": {
+      "before": "DDR 3",
+      "after": "DDR 3 (Low Voltage)"
+    },
+    "PCW_UIPARAM_DDR_PARTNO": {
+      "before": "MT41K128M16 JT-125",
+      "after": "MT41K256M16 RE-125"
+    },
+    "PCW_UIPARAM_DDR_ROW_ADDR_COUNT": {
+      "before": null,
+      "after": "15"
+    },
+    "PCW_UIPARAM_DDR_SPEED_BIN": {
+      "before": null,
+      "after": "DDR3_1066F"
+    },
+    "PCW_UIPARAM_DDR_T_FAW": {
+      "before": null,
+      "after": "40.0"
+    },
+    "PCW_UIPARAM_DDR_T_RAS_MIN": {
+      "before": null,
+      "after": "35.0"
+    },
+    "PCW_UIPARAM_DDR_T_RC": {
+      "before": null,
+      "after": "48.75"
+    },
+    "PCW_UIPARAM_DDR_T_RCD": {
+      "before": null,
+      "after": "7"
+    },
+    "PCW_UIPARAM_DDR_T_RP": {
+      "before": null,
+      "after": "7"
+    }
+  },
+  "status": "editable scaffold; controller connections pending",
+  "clock_correction_2026_11_10": {
+    "parameter": "PCW_CRYSTAL_PERIPHERAL_FREQMHZ",
+    "before": "50.000000",
+    "after": "33.333333",
+    "reference": "/home/rklinkhammer/Downloads/hw/hw.srcs/sources_1/bd/system/system.bd",
+    "reference_sha256": "932a5c37409e80a89668dbe8bf259962e555efe7044b227568e82345eafc16a2"
+  }
+}

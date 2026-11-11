@@ -1,5 +1,11 @@
 # Current system status
 
+**Zybo platform integration:** [Zybo Z7-20 / 1 GiB editing scaffold](../platforms/zybo-z7-20/README.md)
+is imported and opens in Vivado with current controller IP. User-renamed signals
+are preserved; the user-wired source passes build-mode BD validation and wrapper
+generation. EDF now supports the target and full hardware/image/WIC workflow;
+full routed release, image build and hardware acceptance remain pending. Existing Arty gate evidence is unchanged.
+
 Current board-status addition: [SW0 maintenance inhibit, LD4/LD5 and ESP32 heartbeat LEDs](board_heartbeat.md). Synthetic HB/LED visual checks are operator-confirmed; see [operator-confirmed synthetic heartbeat/LED checks](evidence/board_heartbeat/physical_confirmation_2026_11_08.md). Electrical timing and full interlock qualification remain pending.
 
 **Pre-PCB implementation update (2026-11-08):** [Concurrent acquisition/UART diagnostic](prepcb_acquisition.md)

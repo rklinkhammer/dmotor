@@ -1,0 +1,10 @@
+{
+  "application": "UART/U1 diagnostic",
+  "hb_gpio": 21,
+  "led_gpio": 48,
+  "build": "PASS",
+  "flash_performed": false,
+  "board_availability": "operator reports built motor and monitor boards",
+  "image": "build/board_heartbeat/bench/build/dmotor_uart_bench.bin",
+  "sha256": "776fb5901d5c07a3750427984149554d0e52a80241bed70951fd06d18815655f"
+}

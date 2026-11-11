@@ -1,5 +1,12 @@
 # Board heartbeat and maintenance inhibit
 
+**Current fixture (2026-11-10):** The operator now has built motor and monitor
+boards. Return HB to **GPIO21** using the normal UART/U1 PCB diagnostic image
+(`build/board_heartbeat/bench`), with the pre-PCB GPIO3 option disabled. The
+operational monitor already uses GPIO21. The RGB LED remains GPIO48. GPIO3
+firmware is retained only for the earlier breadboard fixture; do not flash that
+variant for the PCB HB connection. Board availability is not gate acceptance.
+
 Implemented in source for Arty Z7-20. Controller IP packaging and saved block-design
 validation are checked. The pin-ownership correction also passed complete
 synthesis and all seven synthesized pin/IOSTANDARD assertions. The operator has
