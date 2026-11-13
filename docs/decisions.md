@@ -165,3 +165,19 @@ the carrier maximum. Sustained high IPROPI current is a conservative stall proxy
 when motion evidence is unavailable; optional commanded/no-motion confirmation
 requires valid timestamped motion observations. No new encoder/UART interface is
 assumed. [Implementation and qualification limits](monitor_policy.md).
+
+## D11 — Current assembled fixture and default Zynq (2026-11-12)
+
+Robert identifies one assembled monitor board, one motor board and a Zybo, and
+selects **Zybo Z7-20 as the default Zynq board**. D04's assembly-wait condition
+is satisfied for this fixture; inhibited integration can proceed under its test
+envelope. This supersedes D06's future-only Zybo deployment description. Arty
+remains supported, but its results do not qualify Zybo. Commands explicitly select
+Zybo while legacy CLI defaults may remain Arty. The available population is one
+motor board, not the four-board system drawn in power-distro.
+
+Robert also confirms that the current Zybo detects ESP32 `hb10`. Record synthetic
+HB detection PASS only; loss timing and electrical/operational acceptance remain
+open. Commissioning-first scope, dmotor_client ownership, D10's conditional risk
+acceptance and unavailable live recovery remain unchanged. No gate is closed or
+powered operation approved solely by board availability or this visual result.

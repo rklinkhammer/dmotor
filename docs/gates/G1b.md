@@ -1,5 +1,7 @@
 # G1b — hobby bench bring-up record
 
+**2026-11-12 scope:** one assembled monitor, one motor board and default Zybo. Assembly wait ended; conditional electrical acceptance remains open. Use the [current sequence](../system_bringup_plan.md#current-one-board-sequence--2026-11-12); historical Arty rows below are not Zybo passes.
+
 **Status updated 2026-11-08: G1b remains OPEN.** The pre-PCB diagnostic tools
 are implemented and exercised: nominal acquisition/UART, delayed and I/O-only
 injection, reboot/UART-loss and explicit restoration meet their diagnostic criteria.

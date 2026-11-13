@@ -1,5 +1,7 @@
 # Monitor implementation follow-up — 2026-11-08
 
+**Current fixture (2026-11-12):** one assembled monitor/motor board and default Zybo. Use [the current ordered plan](system_bringup_plan.md#current-one-board-sequence--2026-11-12). Earlier pre-PCB profiles/results below retain their scope; PCB HB uses GPIO21, and Zybo monitor UART is expected ttyPS1.
+
 The first three implementation items in `system_status.md` now have code and host
 validation. Operational deployment is still blocked by calibration, protection
 policy, tighter conversion-age qualification, recovery integration and electrical

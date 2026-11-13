@@ -3,8 +3,9 @@
 Imported from `/home/rklinkhammer/workspace/zybo-7z-20` on 2026-11-08.
 The original release is untouched. `import.json` records source hashes and DDR
 changes. The user has now wired and validated the saved design. It supports both a GUI
-editing project and an EDF build project. Hardware release/boot acceptance is
-still pending. See [EDF Zybo workflow](../../../edf-dev/docs/zybo.md).
+editing project and an EDF build project. Routed hardware and WIC outputs now exist; target boot/DDR acceptance and matched
+installed-image identity remain pending. Zybo is the default board (2026-11-12);
+[status and current HB detection evidence](../../docs/system_status.md). See [EDF Zybo workflow](../../../edf-dev/docs/zybo.md).
 
 The supplied project targeted Z7-10 / 512 MiB. At the user's direction, this
 platform uses `xc7z020clg400-1`, board `digilentinc.com:zybo-z7-20:part0:1.2`, and
@@ -110,8 +111,9 @@ Arty remains the default platform and its flow is unchanged.
 Validation completed: static import checks, negative duplicate-pin regression,
 Vivado project creation, saved Z7-20/1 GiB configuration and controller IP catalog
 status. The subsequent user-wired source passes build-mode BD validation and wrapper
-generation. Physical pin review, routed timing, DDR boot and all Zybo hardware
-acceptance remain pending. Existing Arty and
+generation. Routed timing now passes in the latest audited bundle. Physical pin review, DDR
+boot and remaining Zybo electrical acceptance remain pending; synthetic HB detection
+is operator-confirmed. Existing Arty and
 pre-PCB diagnostic results are not transferred to Zybo gates.
 
 ## EDF hardware and WIC workflow

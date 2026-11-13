@@ -1,55 +1,97 @@
 # Integrated Zynq and ESP32 development and bring-up plan
 
-**Gate reconciliation (2026-11-08):** [G2 completed-case matrix](gates/G2.md#pre-pcb-acquisitionuart-results--2026-11-08)
-records all supplied nominal, delayed/I/O-only fault, link-loss and restored-link
-results. [Current next steps](system_status.md#next-implementation-and-validation)
-separate work possible now from assembled-board validation. G1b/G1c/G2 remain
-open with these subcases passed; G3–G6 and release G7 are not accepted.
+Updated **2026-11-12** for **Zybo Z7-20 (default), one assembled monitor and one
+assembled motor board**. The assembly-wait restriction no longer blocks this
+fixture. Arty remains supported but is not the current acceptance platform.
+Current Zybo detection of ESP32 `hb10` is operator-confirmed; preserve that passed
+subcase. No additional electrical, encoder, timing or powered result is inferred.
 
-**Pre-PCB implementation update (2026-11-08):** [Concurrent acquisition/UART diagnostic](prepcb_acquisition.md)
-adds fixed-memory long runs, a Zynq tty receiver, synthetic/error-injection profiles,
-and task-level deadline observation. Existing standalone 100/100 physical evidence
-remains valid for its original image. The concurrent run now reports 10,000/10,000
-acquisitions and 1,000/1,000 Zynq replies, no failures/skips/expirations, max
-acquisition 8.215 ms. Delayed injection also passed its diagnostic criteria: 400 expected failures,
-400 skipped releases and 400 observer expirations; Zynq rejected the supplied
-snapshots. Reboot and two UART-loss cases now show expected receiver timeouts after valid
-samples. An explicit restored-link run passed 1,000/1,000 replies with zero errors in
-69.999 s. I/O-only injection also passed: 400 expected failures, zero skipped releases
-and zero observer expirations, with Zynq rejecting the supplied snapshots. Permits/HB remain inhibited; no operational health or recovery is claimed.
+[Current status](system_status.md) · [Consolidated issues](open_issues.md) ·
+[Gate evidence](gates/G2.md) · [Previous plan snapshot](archive/workspace-reconciliation-2026-11-12/README.md).
+The B1–B7 gates below retain their acceptance requirements; this sequence applies
+them to the available one-channel fixture. Commissioning-first scope, D10's
+conditional motor-damage acceptance and unavailable live recovery are unchanged.
 
-## Current work direction — 2026-11-08
+## Current one-board sequence — 2026-11-12
 
-Integrated monitor/motor-board testing remains paused pending assembled boards.
-Robert has resumed standalone ESP32/INA bench characterization; see the
-[measured I2C results and revised 16 ms requirement](ina_bench_timing.md).
-The revised bounded diagnostic reports **100/100 complete acquisitions** at the
-standalone fixture: maximum release-to-end 7.697 ms, INA window 7.272 ms, ADC
-0.315 ms and lateness 0.110 ms. See the linked raw excerpt and validation scope.
-The revised diagnostic implements the 16 ms loop with 4 ms (25%) reserve;
-operational monitor/recovery-model migration and assembled/loaded timing validation remain pending. U0 UART exchange/restart/reconnection
-checks passed. U1 GPIO/HB modes are implemented, covered by the current 29-test native PS suite
-and a passing ESP32-S3 build; U1 flashing and physical measurements are not recorded.
-Main now uses the [1 ms PS motor executor](ps_executor.md), with the matched
-board/ARM rebuild recorded in [system status](system_status.md).
-[Autonomous-motion architecture](autonomous_motion_architecture.md) remains a
-separate workstream; standalone INA results do not qualify the assembled system. Commissioning remains the first release; no hardware gate
-is closed or waived by this pause.
+### 1. Record and inspect the available fixture — now
 
+- Record Zybo, monitor and motor board revisions, actual ESP32 module, populated
+  motor index, INA straps/address, ITRIP/DIAG network and installed bulk/TVS parts.
+- Record installed FPGA/driver/software/ESP32 image hashes against the
+  [existing Zybo artifact manifests](evidence/workspace_reconciliation_2026_11_12/README.md).
+  Preserve the working image before changing it. Do not require a rebuild just to
+  gather missing identity or boot evidence.
+- Inspect the [battery/power diagram](../../motor-interface-integrated/power-distro/README.md)
+  for the actual bench supply: monitor raw supply, Zybo regulated 5V, separate
+  MON/FPGA 3V3. Check J10/J11 pin3-only sense wiring, grounds and rail-off backfeed.
+  Populate only one motor output branch; unused branches remain disconnected.
+- Confirm STOP and maintenance inhibit and keep motor drive disconnected for
+  signal/encoder tests. Any logic requiring VM for measurement belongs to a
+  separately reviewed current-limited, motor-disconnected electrical step.
 
-**Status: IMPLEMENTATION STARTED — 2026-11-04; technical gates remain open.** Historical plan baseline: dmotor `63d5cdb`. Architecture updated 2026-11-07 to the 1 ms PS executor; see D05.
-This amended proposal incorporates the supplied plan review and retains the seven
-bring-up stages B1–B7, with a separate optional vehicle-development workstream BV.
-It does not approve powered operation, adopt the proposed recovery contract, or
-claim completion of hardware tests. B1–B7 and BV are integrated-plan identifiers;
-they must not be confused with the older PS-only Phases 0–6 in the [archived software plan](archive/pre-ps-executor-2026-11-07/DMOTOR_SW.md).
-The inspected implementation baseline remains `63d5cdb`; the review document
-revision is its Git commit (`git log -1 -- docs/system_bringup_plan.md`).
+Exit: dated fixture/image/continuity record, known inhibited electrical setup and
+G1b disposition for those tests. This is not powered-motor approval.
 
-Review alongside the [documentation consolidation plan](documentation_consolidation_plan.md).
-The first extraction/archive increment is recorded in its manifest; remaining
-migrations and document acceptance are tracked under G1d/U10. After adoption, maintain current state, decisions
-and unresolved work directly instead of appending successive historical narratives.
+### 2. Complete Zybo + monitor + motor IO validation — next bench work
+
+- Keep the current **`hb10` detection PASS**. Use the PCB UART/U1 bench image,
+  with `CONFIG_DMOTOR_PREPCB_HB_GPIO3` disabled and expected HB GPIO21. Record the
+  boot banner and continuity; a previous breadboard GPIO3 result is not PCB wiring.
+- Use [UART/U1 diagnostics](u1_gpio_bench.md) and [UART procedure](uart_bench.md).
+  On Zybo the monitor is PS UART0, expected **`/dev/ttyPS1`**, not Arty ttyUL0;
+  USB UART1 is the 115200 console, expected ttyPS0. Confirm device-tree aliases,
+  no monitor getty and exclusive ownership before opening the port.
+- Measure HB waveform, loss detection, latched halt and deliberate rearm. Observe
+  SW0 assertion/release, physical STOP/HALT, permit CPU/gate/DRVOFF levels and
+  reset/startup behavior; LED color alone is not output-inhibition evidence.
+- Exercise supervisor/watchdog and rail-loss cases within G1b's inhibited envelope;
+  record partial-population STOP behavior and remaining PL-only failure limitations.
+- With externally disconnected drive, use the installed matching utility:
+  `sudo dmotor-encoder --externally-inhibited 0` for the board wired to channel 0.
+  Manually turn the shaft; record both directions, counts/output revolution and
+  channel isolation. Verify encoder 5V load and buffered FPGA levels first.
+  The [October encoder report](../../edf-dev/docs/encoder-platform-validation.md)
+  is historical Arty build evidence, not a Zybo measurement or a fixed CPR proof.
+
+Exit: current-fixture UART, HB/loss, STOP/permit and encoder records in G2. Missing
+subtests stay open; do not rerun unrelated historical diagnostics as prerequisites.
+
+### 3. Qualify the single-board sensor workload — implementation plus bench
+
+- Run the inhibited physical-INA health diagnostic on the **actual fitted address**.
+  The earlier loose INA was 0x44; design motor0 is 0x40. Confirm rather than assume.
+  Follow [monitor diagnostics](monitor_next_steps.md) for exact build profiles.
+- Calibrate installed battery ADC and motor IPROPI/shunt channels using known
+  references; verify polarity, range, config/identity and conversion freshness.
+- Configure or implement an explicit one-board population in the inhibited workload.
+  Review existing population/calibration support before modifying it. An expected
+  missing sensor must inhibit; absent channels stay disabled, with no fabricated
+  healthy samples. Preserve the four-context controller interface.
+- Measure actual 16 ms cycles, <12 ms complete work and >=4 ms reserve, including
+  ADC/filter/policy traffic. Test missing/invalid/config-mismatched sensor data,
+  late reads and stalled workers. Retain D10 snapshot-at-commit/liveness semantics.
+- Keep physical permits hard-inhibited until operational output and recovery work
+  is implemented and qualified. Synthetic `hb10` must never stand in for monitor
+  health in a powered test.
+
+Exit: one-board timing/calibration/population evidence, and explicit remaining
+G1c/G3 work. Four-device bus loading and simultaneous-motor timing are deferred
+expansion tests; one-device repetition cannot close them.
+
+### 4. Finish joint safety/admission, then bounded powered commissioning
+
+Complete B3–B5 for the selected one-channel scope: output integration, ISR/WDT
+isolation, persistence, deliberate ARM/recovery, measured PS deadlines, link loss,
+late results and no unintended restart. Do not bypass unavailable live recovery
+with a diagnostic heartbeat. Resolve U01 or record the adopted restricted failure
+model. Verify the assembled ITRIP network/level before any powered motor test.
+
+After explicit G5/G6 entry review, use [powered commissioning](../software/linux/powered-commissioning.md)
+for bounded single-motor direct duty, then velocity. Verify polarity and stop/fault
+response before increasing duty or load. Expand to additional boards only with
+separate population, bus-load, power-transient and multi-channel validation. G7 may
+only describe the explicitly accepted scope; vehicle/autonomy BV/GV remains deferred.
 
 ## 1. Objective, boundaries and baseline
 
@@ -197,8 +239,8 @@ FPGA reconfiguration; software HALT may disappear when fabric is reconfigured.
 - Test physical STOP and permit/DRVOFF paths before relying on firmware. Measure
   safe/inactive levels at boot, reset and power sequencing; record unresolved cases.
 - Boot the matched EDF image. Identify kernel, PL capabilities, driver binding,
-  UART node and software source hash. Verify UART Lite is enabled and not a console
-  or getty; PS console remains separate. Check exclusive device ownership/HALT.
+  UART node and software source hash. Verify Zybo PS UART0 (expected ttyPS1) is enabled and not a console
+  or getty; USB console remains on PS UART1 (expected ttyPS0). Check exclusive device ownership/HALT.
 - Flash a distinctly identified inhibited ESP32 diagnostic build once available:
   permits initialize low, no arm path. Verify board GPIO map, mandatory battery
   channels, populated motor sensors, I2C addressing, ADC scaling and fault inputs.
@@ -221,8 +263,8 @@ PL-failure cases tracked under the G1 failure model. This gate does not authoriz
 Use the [bench diagnostic program plan](bench_diagnostic_plan.md) as the concrete
 implementation list: first the Zynq Linux UART utility and ESP32-S3 UART-only
 image, then inhibited GPIO/HB modes. The dedicated PL clock-stop variant and
-isolated core-reset support are later, independent tasks. Existing UART transport
-and host simulations are building blocks, not ready-to-run two-board diagnostics.
+isolated core-reset support are later, independent tasks. The UART and GPIO/HB diagnostics now exist and have earlier fixture evidence;
+qualify their deployed identities and wiring on the current Zybo fixture.
 Full operational ESP32 firmware is not a prerequisite for the UART pair.
 
 For this hobby project, use the [G1b bench record](gates/G1b.md): reference existing
@@ -242,11 +284,12 @@ and target evidence must be supplied before this checkpoint can be completed.
 1. Keep motor drive power disconnected and physical STOP asserted. Confirm the
    diagnostic ESP32 image initializes permits low and has no ARM path. Verify
    rails, shared ground and 3.3 V signal levels before connecting the harness.
-2. Check the reviewed harness mapping: Zynq TX CK_IO0/T14 to monitor J7-5 RX;
-   monitor J7-4 TX to Zynq RX CK_IO1/U12; J7-1/6 ground. J7 carries no supply.
-   Confirm the actual board revision against the harness drawing.
-3. Boot the matched PL/kernel/device-tree image. Identify the UART Lite device
-   from its binding/address (0x42C00000), not a guessed tty number. Confirm
+2. Check the reviewed Zybo PS UART0 MIO14/15 harness: Zynq TX to monitor
+   J7-5 RX; monitor J7-4 TX to Zynq RX; J7-1/6 ground. J7 carries no supply.
+   Verify TX/RX at the actual connector; do not use the old Arty CK_IO wiring
+   or the auxiliary PL UART for this connection.
+3. Boot the matched PL/kernel/device-tree image. Identify PS UART0 from its
+   device-tree binding/alias (expected ttyPS1), not a guessed tty number. Confirm
    115200 8N1 at both ends, no flow control, and no console/getty or competing
    process using that device. Keep the PS console separate.
 4. With a bounded diagnostic sender/receiver at each end, send known counted
@@ -271,7 +314,8 @@ test or authorize motor drive power.
 **Entry:** G1a + G1c for complete firmware implementation; G1a alone permits
 early state-machine tests. G2 hardware evidence is required for target acceptance.
 
-- Implement a host-testable C safety core under `software/esp32/components/`, with
+- Complete and qualify the existing host-testable safety-core candidate under
+  `software/esp32/components/`, with
   explicit time/sample inputs and outputs. Cover BOOT/SAFE/ARM_PENDING/ARMED/FAULT,
   fault latching, recovery epochs, held ARM, STOP and population/calibration rules.
 - Implement ESP-IDF board adapters: safe GPIO initialization, sensor acquisition,
@@ -397,7 +441,7 @@ behavior. A commissioning-only release may proceed to G7 with that restriction.
 ### BV — Separate vehicle-development workstream (subsequent vehicle release)
 
 **Architecture exploration:** active at Robert's request while board testing is
-paused; see the [autonomy proposal](autonomous_motion_architecture.md). This does
+deferred; see the [autonomy proposal](autonomous_motion_architecture.md). This does
 not change the commissioning-first release or authorize implementation against
 unreviewed motion contracts.
 
@@ -492,15 +536,3 @@ integration or create a second firmware/protocol implementation.
 
 Unaccepted contracts and gate criteria remain reviewable proposals even when committed. Record review comments
 against their commit hashes; a commit establishes identity, not gate approval.
-
-## Consolidated physical-health disposition — 2026-11-08
-
-[Current G2 matrix](gates/G2.md#physical-ina-health-results--2026-11-08) records
-one-INA nominal PASS (one warm-up + 99 good; max 3,918 us) and wrong-address
-rejection PASS (100 io failures; max 739 us). The updated receiver reason test now passes with explicit `failure` and 400
-injected failures without skips/expirations. Expected-register mismatch is
-operator-reported completed elsewhere; raw-evidence linkage remains pending. These diagnostic subcases advance
-U03/U06 evidence, not SYS-03–06 or electrical acceptance. G1a/G1b/G1c/G2 remain
-open; G3–G6 and G7 remain unaccepted. Commissioning-first scope, 1 ms PS loop,
-16 ms monitor/25% reserve and assembled-board pause are unchanged.
-[Next implementation and validation](system_status.md#next-implementation-and-validation).

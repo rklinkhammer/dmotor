@@ -1,110 +1,61 @@
-# Current unresolved system issues
+# Current system issues and relevant resolved findings
 
-**2026-11-08 evidence update:** [G2's consolidated results](gates/G2.md) record
-nominal acquisition/UART, delayed and I/O-only injection, reboot/UART loss and
-explicit restored-link PASS. U03 now has a measurement-supported 16 ms diagnostic
-baseline (4 ms reserved); U04 has task-level injected-expiry evidence; U05 has
-receiver rejection/timeout evidence; U07 has concurrent UART evidence. None is
-closed: loaded operational timing, isolation/electrical response, exact rejection
-reason validation on target, independently bounded conversion age/calibration and
-assembled population remain unresolved. The one-device physical-health run passed
-(warm-up + 99 good, max 3.918 ms), as did wrong-address rejection (100 io failures,
-max 0.739 ms). These advance U03/U06; no issue closes. The updated receiver now has physical explicit-failure evidence (400 injected
-failures, no skips/expirations). Register mismatch is reported complete in another
-chat; its existing capture needs linking. U05/U06 remain open for broader qualification.
+Reconciled **2026-11-12** for the default **Zybo + one monitor + one motor board**
+fixture. This is the consolidated current register across dmotor, EDF and the
+hardware repository. Robert Klinkhammer is accountable owner/reviewer for all
+rows. Implemented fixes are distinguished from physical qualification.
 
-The previous 10 ms / 65 ms stale / 520 ms LVC targets are superseded by 16 / 89 /
-532 ms respectively; the derived detection bounds remain conditional/unqualified.
-See [next implementation and validation](system_status.md#next-implementation-and-validation).
+[Current status](system_status.md) · [Next tests](system_bringup_plan.md#current-one-board-sequence--2026-11-12)
+· [Verbatim previous registers and archive manifest](archive/workspace-reconciliation-2026-11-12/README.md).
+Historical closed design/fabrication matters and Arty build chronology live in the
+archive. Original issue IDs remain traceable. U08 vehicle work is deferred, not
+closed; it is outside this fixture and commissioning release.
 
-> Architecture update (2026-11-07): main uses the [1 ms PS motor executor](../DMOTOR_ARCH.md) with independent PL capture/PWM/protection and a matched PSF1 driver/daemon. Client contracts, commissioning-first scope, U0 evidence, the hardware pause and pending live recovery are unchanged.
+## Open work affecting the current fixture
 
-This is the current issue register, extracted from the plan at `20f5972`.
-Robert Klinkhammer is the accountable owner for every row; listed subsystem roles
-identify the expertise/evidence needed. Time-separated self-review is the selected
-acceptance method. No technical issue is closed by this extraction.
+| ID / origin | Current disposition and action | Closure evidence / gate |
+|---|---|---|
+| U01 / R4 | Independent PL-only clock/reset/config/power failure response remains unresolved; monitor watchdog alone does not cover it | Measured failure experiments or explicit restricted failure model; G1b/G5/G6 |
+| U02 / recovery | CLN1/PSF1 and host models implemented; operational monitor pairing, persistent sessions, ARM/recovery coordinator and race qualification incomplete | Adopted transition contract, adversarial tests and physical recovery traces; G1a/G4/G5. No live recovery claim |
+| U03 / timing | 16 ms period, <12 ms work / >=4 ms reserve retained; previous one-INA measurements support diagnostics only | Actual one-board workload and age/deadline measurements; later four-device timing separately; G1c/G3 |
+| U04 / IDF isolation | Task-level injected expiry works; ISR/cache/flash/WDT independence and blocked-worker behavior need qualification | Measured stalls, late results and output inhibition; G3/G5 |
+| U05 / PS timing | Explicit receiver failure reporting and loss timeouts demonstrated on prior fixture; loaded 1 ms worker and bounded logging/storage remain open | Current Zybo load/deadline evidence, including 800 us hardware limit; G4/G5 |
+| U06 / population and calibration | One actual motor sensor, battery ADCs, IPROPI mapping and policy thresholds must be configured; missing/corrupt data must inhibit | Verified address, known-reference calibration/persistence, invalid/missing sensor cases and current-policy tests; G1c/G3/G6 |
+| U07 / hardware interface; I7 | HB/coast/PL protection implemented; current Zybo `hb10` detection confirmed. Full electrical acceptance is open | UART mapping, actual GPIO21 connection, HB loss/latch/rearm, STOP/HALT/DRVOFF and manual encoder evidence; G2/G5 |
+| U09 / release; EDF console | Latest Zybo hardware/WIC artifacts exist; dirty build fingerprint differs from current HEAD. Clock/console source corrections implemented; exact installed image not recorded | Match target to manifests, readable 115200 console, DDR/Ethernet/controller checks; G2/G7 |
+| U10 / documentation | Current status/register/plan reconciled; original issue logs snapshotted. Historical assertions are not current authority | Requirement/link review and dated gate acceptance; G1d/G7 |
+| U11 / powered entry | Owner/self-review method selected; current one-channel powered procedure and gate disposition not yet accepted | Verified ITRIP, operating limits and G5/G6 entry record; D10 waives motor-survival deadline only |
+| H01 / I6 ITRIP/DIAG | Verify fitted R13/RV1 and selected ITRIP band; R13 DNP leaves high default. Do not treat the trimmer as continuous current control. Retain R5 9.1k specification | Actual fitted values, driver-specific level data and bounded trip/coast/chop measurement before powered use; G1b/G6 |
+| H02 / I3,I5 | I2C pull-up/module-shunt preparation and absent-board handling need assembled checks; old bench INA was 0x44, design motor0 is 0x40 | Identify actual address/straps; no assumption either address is correct. Missing INA must fault expected channel; ignore floating nFAULT/IPROPI from absent boards; G2/G3 |
+| H03 / I4,I10 | STOP sense pull-up correction and MAX706R/74HC08 HALT gate exist; verify actual partial population and supervisor | STOP closed/open/bounce, permits low at boot/reset, HALT, watchdog timeout and no unintended restart. WDO recovery is not latched; G1b/G2/G5 |
+| H04 / I6 power/ADC | Re-ratio protects positive midpoint miswire in analysis; reversed sense and supply-off backfeed remain unqualified | Measure rail-off/back-power/clean startup; check battery ADC scaling and chosen fault envelope; do not repeat historic claim that backfeed is proven harmless |
+| H05 / I6 power-distro | Converter/fuse/cable/heatsink selection, regeneration and motor-board bulk/TVS behavior still open | One populated branch, measured rail droop/overshoot and thermal behavior; encoder L7805 load check (<=100mA assumption); G1b/G6 |
+| H06 / I8 | HB GPIO21 avoids RGB pin conflict; PCB firmware must not use breadboard GPIO3 override. Verify received ESP32 variant permits GPIO35–37 use | Actual board/module identity and pin continuity recorded; G2 |
 
-| ID / prior finding | Required decision or work | Owner role | Blocks / closure evidence |
-|---|---|---|---|
-| U01 / R4 | Independent PL-failure response or expressly restricted failure model; rev-A changes if needed | Hardware + PL + system | G1b candidate, final G5/G6; separate clock/reset/config/power fault measurements |
-| U02 / R1,R3 and follow-ups | Adopt/amend v4, determine cleanup proof/remaining ABI, implement recovery and ARM admission | PS + ESP32 + PL | G4/G5; transition matrix, shared simulation and physical recovery traces |
-| U03 / R5 | Absolute acquisition budget, timeout policy and derived detection limits | ESP32 | G1c/G3; transaction budget and worst-case target traces |
-| U04 / R6 | Validate pinned IDF/ISR/flash/WDT isolation; define update inhibition | ESP32 | G3/G5; call/data audit and cache/flash/stall tests |
-| U05 / R7 | Bounded Linux diagnostics and scheduler behavior | PS | G4/G5; stdout/storage/load tests and measured deadlines |
-| U06 / R8 | Calibration, population, thresholds, persistence, hysteresis and cause-bit allocation | Hardware + ESP32 | G1c/G3/G6; reviewed schema, corrupt/missing sensor tests and calibrated measurements |
-| U07 / R2 | Qualify implemented rev-10 pin/PL/UART integration; retain future physical-fault routing as separate scope | Hardware + PL/PS | G2/G5; connector checks and traces (not an assertion that implementation is still absent) |
-| U08 / R10 | Normal application ownership, planning, pose/queue policy and vehicle acceptance limits | PS + controls | BV/GV for full-vehicle scope; agreed requirements, simulation and loaded tests |
-| U09 | Match newest source/client SDK to ARM/ESP32 release and deployment evidence | Build/release | G7; manifests, target package tests and clean deployment |
-| U10 / R9 | Replace accumulated status/history with current documents and archive without losing requirements | Documentation + subsystem reviewers | G1d ownership/matrix; migration completion before G7 with manifest/link audit and no unowned requirements |
-| U11 | Owner/review method selected (D02); assign operational duties and approve integrated powered-test procedure | System + hardware/operator | Before respective acceptance tests; B6 entry requires approved procedure and operational controls |
+## Resolved or implemented findings still relevant to this assembly
 
-Proposed v4 timing targets (including ISR and stale-sample/LVC bounds) are inputs
-to U03/U06 review, not measured facts. Electrical thresholds and vehicle tolerances
-remain unspecified where not accepted; this plan does not manufacture values.
+| Finding | Recorded resolution / evidence | Retained check or limitation |
+|---|---|---|
+| I1 carrier nFAULT overvoltage | Motor carrier VDD/SLEEP moved to monitor 3V3 in board design | Verify assembled rail/nFAULT levels; FPGA and MON 3V3 must not be tied |
+| I2 address allocation | Four design addresses 0x40–0x43; battery current INA removed in favor of pack ADCs | Single fixture only: record actual INA identity. A repeated read of one device is not four-board evidence |
+| I4 STOP semantics | R10 pull-up changed to 3.3k; closed chain LOW is healthy, open/non-solid-low means STOP | Partial-population and bounce measurements remain H03 |
+| I8 HB/RGB conflict | HB assigned GPIO21; GPIO3 was only a breadboard diagnostic override | Restore PCB profile, record actual LED variant independently |
+| I9 balance current paths | Only monitor J10.3 (midpoint) and J11.3 (full pack) connect; pins 1/2 NC | Verify assembled continuity; no duplicate battery-series or ground path via balance leads |
+| I10 watchdog gate | MAX706R/74HC08, permit pulldowns and HALT gate added; prior wrong threshold/pinout corrected | Actual device identity, timeout and reactivation behavior remain H03 |
+| Zybo clock/console | PS clock corrected 50 → 33.333333 MHz; EDF boot/Linux console directed to USB UART1, 115200 | Routed/WIC output exists; attach target boot identity/result under U09 |
+| Zybo HB | Operator reports current Zybo detects ESP32 `hb10` on 2026-11-12 | PASS synthetic detection only; no sensor qualification, loss-time bound or motor permit claim |
+| Diagnostic failures | Prior UART ownership problem resolved; INA bench found 0x44; explicit failure reporting and 16 ms timing diagnostic passed | Preserve [G2 results](gates/G2.md), do not reopen solved bench failures or transfer them to new assembly |
+| Schematic overwrite | Two-sheet power-distro restored from 19:10 backup; ERC zero; operator reopened | Prototype design only; converter selection and hardware tests remain H05 |
 
-## Current dispositions
+## Scope and archive rules
 
-Integrated board tests for U01/U03/U04/U06/U07 remain paused pending assembled
-monitor/motor boards (D04). Standalone pre-PCB tests have resumed and their
-completed subset is recorded in G2; none of these issues is closed. U1 build/test
-evidence exists but electrical acceptance remains pending.
+The assembly wait is resolved for this one-board fixture. Four-motor population,
+full-vehicle planning and autonomous behavior remain later work. Earlier fabrication
+fit/order, cost, package lifecycle and superseded design-review narratives are
+archived; material residuals (ITRIP, STOP, backfeed, power and actual module variant)
+remain above. Historical encoder/build reports retain their original scope.
 
-
-- **U08:** [architecture discussion](autonomous_motion_architecture.md) active;
-  implementation/qualification remains for the subsequent vehicle release. First
-  release is commissioning-only.
-- **U10:** in progress; five source documents snapshotted with hashes and exact
-  originals. Current status/decisions/issues are extracted. Mixed component/architecture
-  content and companion-repository inventories still require review and migration.
-- **U11:** owner and review-method selection resolved by the user. Integrated powered
-  procedure approval, named operators/spotters where required, and completed individual
-  gate review records remain open. Self-review is not automatic gate acceptance.
-- **U02:** [source audit](g1a_cleanup_admission.md) finds per-motor lazy RESET_CONTEXT
-  initialization in the baseline. CLN1 now exposes combined cleanup completion,
-  with kernel/PS verification. The previous motor-HLS/AXI cleanup and ARM builds passed; current PSF1 qualification is tracked in [system status](system_status.md). Remaining
-  boundary/race coverage, board qualification, review and recovery admission
-  integration remain open; build/test success does not close G1a.
-- **U01–U07/U09:** remain open as scoped above. Use the [G1 work package](g1_work_package.md)
-  for the next concrete contract/proof tasks. Do not close them from historical review tables.
-
-Closed findings and prior review rounds remain in the [archive](archive/index.md);
-retain their evidence links when recording a closure here.
-
-G1a/G1c source increment (2026-11-06): [read-only client status](g1a_client_status.md)
-and [monitor design tables](g1c_monitor_design.md) are prepared. Neither closes
-U02–U06. Review the non-atomic attestation limitation, storage-loss policy, actual
-population/thresholds and cycle budget before operational integration.
-
-U03/U04 increment (2026-11-07): [deadline adapter candidate](g1c_i2c_deadline_adapter.md)
-rejects partial/late acquisition and zero-tick waits. Stock IDF whole-call execution
-bounds, independent deadline inhibit, operational integration and target measurements
-remain open. This does not close U03/U04/U06 or select thresholds.
-
-## Monitor follow-up implementation — 2026-11-08
-
-[Implementation and validation record](monitor_next_steps.md) adds explicit receiver
-rejections, physical-device freshness/configuration checks, calibration integrity,
-16 ms recovery simulation and a serialized safety-core candidate with a
-hard-inhibited task adapter. U03–U06 and G1a/G1c/G3–G5 remain open: no calibrated
-operational application, sustained conversion-age proof, ISR/watchdog qualification
-or new electrical hardware result is asserted. The one-INA six-read path and
-four-INA 24-read path require new timing evidence. G1b/G2 are not closed by builds.
-
-**Long one-INA physical-health result:** [10,000-cycle nominal capture](evidence/sensor_health_long/physical-run.txt)
-passes with 9,999 good and one warming, max 3,905 us, lateness 24 us, calculated
-age bound 20,240 us, and zero bus/guard/late/deadline counts. This advances U03/U06
-and G2 diagnostic evidence only. The 4,760 us remaining age validity does not
-cover another 16 ms cycle; conversion-bound proof, sustained output qualification,
-four-device timing, calibration and electrical gates remain open. See
-[next work](monitor_next_steps.md#validated-10000-cycle-result).
-
-## D10 best-effort current monitoring
-
-[Accepted requirement change](decisions.md#d10--best-effort-motor-overload-protection-and-accepted-motor-damage-risk)
-waives guaranteed motor-damage prevention timing, conditional on verified ITRIP.
-[Workload/policy implementation](monitor_policy.md) adds full ADC/INA acquisition,
-calibrated current/time/stall and battery policy, plus independent next-cycle
-liveness. Physical outputs remain hard-inhibited. U03/U06 no longer require motor
-thermal-survival proofs but still require configured thresholds, measured budgets
-and valid sensor/calibration behavior. Stop/fault/recovery and electrical gates
-remain open. Existing physical diagnostic evidence is not policy qualification.
+For new results, update the existing row and G2/evidence record with source/image
+identity, actual population, stimulus, expected/observed behavior and limitations.
+Close only the demonstrated subcase; do not turn build or visual evidence into
+powered acceptance. No firmware or electrical test was performed by this audit.

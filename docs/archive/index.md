@@ -39,3 +39,7 @@ index does not by itself complete their review or transfer their requirements.
 
 - [Previous motion component/HLS reference](pre-ps-executor-2026-11-07/motion_executor.md)
 - [Previous controller/HLS integration record](pre-ps-executor-2026-11-07/controller_axi.md)
+
+## 2026-11-12 workspace reconciliation
+
+[Snapshot manifest and disposition](workspace-reconciliation-2026-11-12/README.md): current status, issues, bring-up plan and companion hardware issue register before consolidation.

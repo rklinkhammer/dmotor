@@ -1,0 +1,6 @@
+{
+  "source": "/home/rklinkhammer/workspace/dmotor/build/product/zybo-z7-20/release-vivado/zybo-z7-20.xpr",
+  "xsa_sha256": "0e4a4c95b37b285ab882e42f7dc48cae754f8c51ceca0ff351255b9df31212a3",
+  "generate_only": false,
+  "dmotor_source": "/home/rklinkhammer/workspace/dmotor"
+}

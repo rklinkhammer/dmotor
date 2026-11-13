@@ -1,0 +1,18 @@
+[
+  {
+    "source": "dmotor/docs/system_status.md",
+    "sha256": "a52f86264506677faaa26746c1aece124f674f91446959aecd553d2f6ce307c9"
+  },
+  {
+    "source": "dmotor/docs/open_issues.md",
+    "sha256": "b869448968237983c0fbc6d421c01dbbb61982bce5b783a5549efaa56698bf84"
+  },
+  {
+    "source": "dmotor/docs/system_bringup_plan.md",
+    "sha256": "5008eaf8ca81a645c5bd49eee9b3ad8f2b22bf18859a7f1ba539544d061dd815"
+  },
+  {
+    "source": "motor-interface-integrated/ISSUES.md",
+    "sha256": "1af0d7998cf27b9b72730b71a3ed6ff1687f13158725d7ce2cf7155a5d2f2050"
+  }
+]
